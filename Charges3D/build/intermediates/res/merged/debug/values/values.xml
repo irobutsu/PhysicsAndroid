@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Charges3D/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="E_Line_off">(E-line)</string>
+    <string name="E_Line_on">[E-line]</string>
+    <string name="V_Line_off">(V-line)</string>
+    <string name="V_Line_on">[V-line]</string>
+    <string name="add_Minus">add a - charge</string>
+    <string name="add_Plus">add a + charge</string>
+    <string name="allErase">erase All Charge</string>
+    <string name="app_name">Charges 3D</string>
+    <string name="mode_0">do not draw horizontal line</string>
+    <string name="mode_1">draw by surface</string>
+    <string name="mode_2">draw by line</string>
+    <string name="q1_equal">Q1=</string>
+    <string name="q2_equal">Q2=</string>
+    <string name="resetScreen">Init 3Dview</string>
+    <string name="rm_Charge">remove a charge </string>
+</resources>

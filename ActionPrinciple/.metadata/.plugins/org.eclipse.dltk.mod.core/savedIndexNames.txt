@@ -1,0 +1,5 @@
+/Users/maeno/Dropbox/gitHub/android_phys/.metadata/.plugins/org.eclipse.dltk.mod.core/1238268854.index
+/Users/maeno/Dropbox/gitHub/android_phys/.metadata/.plugins/org.eclipse.dltk.mod.core/1855479809.index
+/Users/maeno/Dropbox/gitHub/android_phys/.metadata/.plugins/org.eclipse.dltk.mod.core/694915565.index
+/Users/maeno/Dropbox/gitHub/android_phys/.metadata/.plugins/org.eclipse.dltk.mod.core/254635359.index
+/Users/maeno/Dropbox/gitHub/android_phys/.metadata/.plugins/org.eclipse.dltk.mod.core/295891313.index

@@ -1,0 +1,434 @@
+<!Doctype html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>定数係数線形微分方程式の解</title>
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+	<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css" />
+	<script src="jquery-1.11.1.min.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="vector.js"></script>
+	<script type="text/javascript" src="yajirushi.js"></script>
+	<script type="text/javascript" src="rescalecanvas.js"></script>
+	<script type="text/javascript" src="graphcanvas.js"></script>
+	<script type="text/javascript" src="phystem.js"></script>
+	<script type="text/javascript" src="phystemwithtygraph.js"></script>
+	<script type="text/javascript" src="connector.js"></script>
+	<script type="text/javascript" src="bane.js"></script>
+	<link rel="STYLESHEET" href="ss.css" type="text/css">
+	<script type="text/javascript">
+	</script>
+  </head> 
+  <body>
+	<div data-role="page" id="index">
+	  <div data-role="header">
+		<h3>自然科学のための数学第20講</h3>
+	  </div>
+	  <div data-role="content">
+		<ul>
+		  <li><a href="#example">空気抵抗を受ける質点</a></li>
+		  <li><a href="#airfall">空気抵抗を受けて落下する質点</a></li>
+		  <li><a href="#teikousindou">空気抵抗を受ける振動子</a></li>
+		  <li><a href="#gensuimove">運動の様子</a></li>
+		</ul>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#example" data-icon="arrow-r">空気抵抗を受ける質点</a>
+	  </div>
+	</div>
+	<div data-role="page" id="example">
+	  <div data-role="header">
+		  <h2>空気抵抗を受ける質点</h2>
+	  </div>
+	  <script type="application/javascript">
+	   var ps,ps2;
+	   var m1,m2;
+	   var air;
+	   var v0=4;
+	   var v02=4;
+	   var t=0;
+	   var gy0=0;
+	   $(document).delegate('#example','pageinit',function(e) {
+		 ps=new Phystem("canvas1",12,1.5,0.8,-2,-0.75);
+		 ps.drawFFlg=true;
+		 ps.hasNoEdge=true;
+		 ps.writeX=true;
+		 m1=new DynamicalObject(ps,0,0,v0,0,1,"rgba(255,255,0,0.5)");
+		 air=new NonDynamicalObject(ps);
+		 air.interactionForce=function(to) {
+		   return new Vector(-to.v.x,-to.v.y);
+		 }
+		 air.draw=function() {};
+		 ps.start();
+		 ps2=new Phystem("canvas2",2,12,0.1,-1,-2); 
+		 graph=new RescaleCanvas("canvas3",12,12,0.6,-1,-2);
+		 graph.writeBackGround();
+		 ps2.drawFFlg=true;
+		 ps2.hasNoEdge=true;
+		 ps2.writeY=true;
+		 t=0;
+		 ps2.writeContents=function() {
+		   Phystem.prototype.writeContents.call(this);
+		   graph.writeLine(t,gy0,t+0.04,m2.p.y,"rgb(255,0,0)");
+		   t+=0.04;
+		   gy0=m2.p.y;
+	   };
+	   m2=new DynamicalObject(ps2,0,0,0,v02,1,"rgba(255,255,0,0.5)");
+	   air2=new NonDynamicalObject(ps2);
+	   air2.interactionForce=function(to) {
+		 return new Vector(-to.v.x,-to.v.y);
+	   }
+	   air2.draw=function() {};
+	   ps2.start();
+	   });
+	   function start() {
+		 m1.p.setXY(0,0);
+		 m1.v.setXY(v0,0); 
+	   }
+	   function clearStart2() {
+		 graph.clearALL();
+		 graph.writeBackGround();
+		 start2();
+	   }
+	   function start2() {
+		 t=0;
+		 gy0=0;
+		 m2.p.setXY(0,0);
+		 m2.v.setXY(0,v02); 
+	   }
+	  </script>
+	  <div data-role="content">
+		<div class="setsumei">速度に比例する抵抗を受ける場合の運動は、下のように起こる。初速度を変えて「再スタート」させてみよう（初期位置は固定されている）</div>
+		<p><canvas id="canvas1"></canvas></p>
+		<p>初速度=<input type="range" value="4" min="0" max="10" step="0.1" onchange="v0=this.valueAsNumber;"></p>	
+		<p><button onClick="start();">再スタート</button></p>
+
+		<hr>
+		<p>物体がFという力を受けるとき、運動方程式</p>
+		<p>m(d<sup>2</sup>/dt<sup>2</sup>)x= F</p>
+		<p>が成り立つことが力学で知られている。このFが-K(dx/dt)のようにxの時間微分に比例する場合（実際、速度が遅い場合の空気抵抗はだいたいこの式であっている）、すなわち、</p>
+		<p>m(d<sup>2</sup>/dt<sup>2</sup>)x= -K(dx/dt)</p>
+		<p>という微分方程式になる。</p>
+		<p>この微分方程式の解は</p>
+		<p>x(t)= C<sub>1</sub> + C<sub>2</sub>exp(-(K/m)t)</p>
+		<p>となる。最初にx=0にあるとして、いろいろな初速度を与えた場合の運動の様子が次のグラフである。</p>
+		<p><canvas id="canvas2"></canvas><canvas id="canvas3"></canvas></p>
+		<p>初速度=<input type="range" value="4" min="0" max="10" step="0.1" onchange="v02=this.valueAsNumber;"></p>	
+		<p><button onClick="start2();" data-inline="true">再スタート</button>
+		  <button onClick="clearStart2();" data-inline="true">クリアして再スタート</button>
+		</p>
+		グラフでは、C<sub>1</sub>=v<sub>0</sub>m/K,C<sub>2</sub>=-v<sub>0</sub>m/Kと選んである。
+		<p>(dx/dt)=-{K/m}C<sub>2</sub>exp(-(K/m)t)</p>
+		<p>であるから、これでx(0)=0,(dx/dt)(0)=v<sub>0</sub>になる。初速度に比例した距離だけ移動できることがわかる（ただし、「止まるまでの時間」は∞である！）。
+
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#index" data-icon="arrow-l">目次</a>
+		<a href="#airfall" data-icon="arrow-r">空気抵抗を受けて落下する質点</a>
+	  </div>
+	</div>
+	<div data-role="page" id="airfall">
+	  <div data-role="header">
+		<h2>空気抵抗を受けて落下する質点</h2>
+	  </div>
+	  <script type="application/javascript">
+	   var p3;
+	   var m3;
+	   var air3;
+	   var v03=0;
+	   var t3=0;
+	   var gy03=0;
+	   var graph2;
+	   var p4;
+	   var m4;
+	   var air4;
+	   var v04=0;
+	   var t4=0;
+	   var gy04=0;
+	   var graph4;
+	   $(document).delegate('#airfall','pageinit',function(e) {
+		 ps3=new Phystem("canvas4",2,12,0.1,-1,-10); 
+		 graph2=new RescaleCanvas("canvas5",12,12,0.6,-1,-10);
+		 graph2.writeBackGround();
+		 ps3.drawFFlg=true;
+		 ps3.hasNoEdge=true;
+		 ps3.writeY=true;
+		 t3=0;
+		 ps3.writeContents=function() {
+		   Phystem.prototype.writeContents.call(this);
+		   graph2.writeLine(t3,gy03,t3+0.04,m3.p.y,"rgb(255,0,0)");
+		   t3+=0.04;
+		   gy03=m3.p.y;
+		 };
+		 m3=new DynamicalObject(ps3,0,0,0,v03,1,"rgba(255,255,0,0.5)");
+		 air3=new NonDynamicalObject(ps3);
+		 air3.interactionForce=function(to) {
+		   return new Vector(-to.v.x,-to.v.y);
+		 }
+		 air3.draw=function() {};
+		 earth=new NonDynamicalObject(ps3);
+		 earth.interactionForce=function(to) {
+		   return new Vector(0,-to.mass);
+		 }
+		 earth.draw=function() {};
+		 ps3.start();
+		 ps4=new Phystem("canvas6",2,12,0.1,-1,-6); 
+		 graph4=new RescaleCanvas("canvas7",12,12,0.6,-1,-6);
+		 graph4.writeBackGround();
+		 ps4.drawFFlg=true;
+		 ps4.hasNoEdge=true;
+		 ps4.writeY=true;
+		 t4=0;
+		 ps4.writeContents=function() {
+		   Phystem.prototype.writeContents.call(this);
+		   graph4.writeLine(t4,gy04,t4+0.04,m4.p.y,"rgb(255,0,0)");
+		   t4+=0.04;
+		   gy04=m4.p.y;
+		 };
+		 m4=new DynamicalObject(ps4,0,gy04,0,v04,1,"rgba(255,255,0,0.5)");
+		 air4=new NonDynamicalObject(ps4);
+		 air4.interactionForce=function(to) {
+		   return new Vector(-to.v.x,-to.v.y);
+		 }
+		 air4.draw=function() {};
+		 earth=new NonDynamicalObject(ps4);
+		 earth.interactionForce=function(to) {
+		   return new Vector(0,-to.mass);
+		 }
+		 earth.draw=function() {};
+		 ps4.start();
+	   });
+	   function clearStart3() {
+		 graph2.clearALL();
+		 graph2.writeBackGround();
+		 start3();
+	   }
+	   function start3() {
+		 t3=0;
+		 gy03=0;
+		 m3.p.setXY(0,0);
+		 m3.v.setXY(0,v03); 
+	   }
+	   function clearStart4() {
+		 graph4.clearALL();
+		 graph4.writeBackGround();
+		 start4();
+	   }
+	   function start4() {
+		 t4=0;
+		 gy04=-v04;
+		 m4.p.setXY(0,gy04);
+		 m4.v.setXY(0,v04); 
+	   }
+	  </script>
+	  <div data-role="content">
+		<p>運動方程式に重力F=-mgを加えて</p>
+		<p>m(d<sup>2</sup>/dt<sup>2</sup>)x= -K(dx/dt)-mg</p>
+		<p>として解くと、</p>
+		<p> x= C<sub>1</sub> + C<sub>2</sub> exp(-(K/m)t)- (mg/ K)t</p>
+		<p>という式になる。</p>
+		<p>下のグラフはC<sub>1</sub>+C<sub>2</sub>（すなわち、t=0での値）を固定してC<sub>2</sub>を変化させた時のグラフである。</p>
+		<p>C<sub>1</sub>+C<sub>2</sub>を一定にするということはt=0での位置を同じにするということになる（グラフからもそれが読み取れる）。</p>
+		<div class="setsumei">C<sub>2</sub>を変化させるということは初速度を変化させるということなので、スライダで初速度を変えることができるようにしてある。いろいろな初速度の場合の運動を確認しよう。</div>
+		<p><canvas id="canvas4"></canvas><canvas id="canvas5"></canvas></p>
+		<p>初速度=<input type="range" value="0" min="-4" max="4" step="0.1" onchange="v03=this.valueAsNumber;"></p>	
+		<p><button onClick="start3();" data-inline="true">再スタート</button>
+		  <button onClick="clearStart3();" data-inline="true">クリアして再スタート</button>
+		</p>
+		<p>下のグラフは、C<sub>1</sub>を固定してC<sub>2</sub>を変化させた時のグラフである。</p>
+		<p>C<sub>2</sub>はt=∞において消える項の係数なので、他を変えずにC<sub>2</sub>だけを変えると、最終的状態は同じになる（グラフからもそれが読み取れる）。</p>
+		<p><canvas id="canvas6"></canvas><canvas id="canvas7"></canvas></p>
+		<p>C<sub>2</sub>=<input type="range" value="-1" min="-4" max="4" step="0.1" onchange="v04=-1-this.valueAsNumber;"></p>	
+		<p><button onClick="start4();" data-inline="true">再スタート</button>
+		  <button onClick="clearStart4();" data-inline="true">クリアして再スタート</button>
+		</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#example" data-icon="arrow-l">空気抵抗を受ける質点</a>
+		<a href="#teikousindou" data-icon="arrow-r">空気抵抗を受ける振動子</a>
+	  </div>
+	</div>
+	<div data-role="page" id="teikousindou">
+	  <div data-role="header">
+		<h2>空気抵抗を受ける振動子</h2>
+	  </div>
+	  <div data-role="content">
+		<script type="application/javascript">
+		 var g1,g2,g3;
+		 $(document).delegate('#teikousindou','pageinit',function(e) {
+		   g1=new GraphCanvas("graph1",10,7,0.8,-1,-2);
+		   writeGraph1();
+		 });
+		 function writeGraph1() {
+		   $('#LaregeK1').html(K1);
+		   $('#k1').html(k1);
+		   g1.clearALL();
+		   g1.writeBackGround();
+		   if( 4*k1>K1*K1 ) {
+			 $('#C1_1').html("A="+C1_1);
+			 $('#C1_2').html("B="+C1_2);
+			 g1.setFunction(f1_1);
+			 g1.writeFunction("rgba(255,0,0,0.5)",500);
+			 g1.setFunction(cf1_1);
+			 g1.writeFunction("rgb(255,0,0)",500);
+			 g1.setFunction(f1_2);
+			 g1.writeFunction("rgba(0,0,255,0.5)",500);
+			 g1.setFunction(cf1_2);
+			 g1.writeFunction("rgb(0,0,255)",500);
+			 g1.setFunction(f1);
+			 g1.writeFunction("rgb(0,0,0)",500);
+		   } else if( 4*k1 == K1*K1 ) {
+			 $('#C1_1').html("C<sub>0</sub>="+C1_1);
+			 $('#C1_2').html("C<sub>1</sub>="+C1_2);
+			 g1.setFunction(f2_1);
+			   g1.writeFunction("rgba(255,0,0,0.5)");
+			   g1.setFunction(cf2_1);
+			   g1.writeFunction("rgb(255,0,0)");
+			   g1.setFunction(f2_2);
+			   g1.writeFunction("rgba(0,0,255,0.5)");
+			   g1.setFunction(cf2_2);
+			   g1.writeFunction("rgb(0,0,255)");
+			   g1.setFunction(f2);
+			   g1.writeFunction("rgb(0,0,0)");
+		   } else {
+			 $('#C1_1').html("C<sub>+</sub>="+C1_1);
+			 $('#C1_2').html("C<sub>-</sub>="+C1_2);	 
+			   g1.setFunction(f3_1);
+			   g1.writeFunction("rgba(255,0,0,0.5)");
+			   g1.setFunction(cf3_1);
+			   g1.writeFunction("rgb(255,0,0)");
+			   g1.setFunction(f3_2);
+			   g1.writeFunction("rgba(255,0,0,0.5)");
+			   g1.setFunction(cf3_2);
+			   g1.writeFunction("rgb(0,0,255)");
+			   g1.setFunction(f3);
+			   g1.writeFunction("rgb(0,0,0)");
+		   }
+		 }
+		 var C1_1=1;
+		 var C1_2=1;
+		 var K1=1;
+		 var k1=1;
+		 
+		 function f1_1(x) { return Math.exp(-(K1/2)*x)*Math.cos(Math.sqrt(4*k1-K1*K1)/2*x);}
+		 function cf1_1(x) { return C1_1*f1_1(x);}
+		 function f1_2(x) { return Math.exp(-(K1/2)*x)*Math.sin(Math.sqrt(4*k1-K1*K1)/2*x);}
+		 function cf1_2(x) { return C1_2*f1_2(x);}
+		 function f2_1(x) { return Math.exp(-(K1/2)*x);}
+		 function cf2_1(x) { return C1_1*f2_1(x);}
+		 function f2_2(x) { return x*Math.exp(-(K1/2)*x);}
+		 function cf2_2(x) { return C1_2*f1_2(x);}
+		 function f3_1(x) { return Math.exp((-K1-Math.sqrt(K1*K1-4*k1))/2*x);}
+		 function cf3_1(x) { return C1_1*f3_1(x);}
+		 function f3_2(x) { return Math.exp((-K1+Math.sqrt(K1*K1-4*k1))/2*x);}
+		 function cf3_2(x) { return C1_2*f3_2(x);}
+		 function f1(x) { return f1_1(x)*C1_1+f1_2(x)*C1_2; }
+		 function f2(x) { return f2_1(x)*C1_1+f2_2(x)*C1_2; }
+		 function f3(x) { return f3_1(x)*C1_1+f3_2(x)*C1_2; }
+		</script>
+		<p>次に、運動方程式に復元力 F=-kx を加えた、</p>
+		<p> m(d<sup>2</sup>/dt<sup>2</sup>)x= -K(dx/dt)-kx</p>
+		<p>を解くと、解は以下の三つの場合に別れる。</p>
+ 
+		<h4>K<sup>2</sup>-4mk<0の場合</h4>
+
+		<p>この場合はの解は、三角関数を使って表現するなら、</p>
+		<p>x=exp(-(K/2m)t)(A cos  t + B sin  t)</p>
+		<p>である（A,Bは実数の定数）。</p>
+		<h4>K<sup>2</sup>-4mk=0の場合</h4>
+
+		<p>この場合、λ_+=λ_-となる。よって添字は取って、λ=-{K\over 2m}と書こう。重解が出る場合であるから、解は</p>
+		x=(C<sub>1</sub>t+C_0)exp(λt)
+		<p>となる。この解は「臨界振動」と呼ばれ、K<sup>2</sup>-4mk<0とK<sup>2</sup>-4mk>0のちょうど境目にあたる。</p>
+
+
+
+		<h4>K<sup>2</sup>-4mk>0の場合</h4>
+		<p>この場合は単純に、</p>
+		<p>x=C<sub>+</sub>exp( <sub>+</sub>t)+C<sub>-</sub> exp( <sub>-</sub>t)</p>
+		<p>が解である。λ_\pmはどちらも負の数になるから、この二つの解のどちらも「指数関数的に減衰する解」である。</p>
+		<div class="setsumei">以下に
+		  x=exp(-(K/2m)t)(A cos ωt + B sin ωt)
+		  <br>と
+		  x=(C<sub>1</sub>t+C_0)exp(λt)
+		   <br>と
+		   x=C<sub>+</sub>exp(λ<sub>+</sub>t)+C<sub>-</sub> exp(λ<sub>-</sub>t)
+		   <br>のグラフを示す（k,Kの値により変化する）（mは1で固定）。<br>
+		   前についた係数も変化させることができるので、いろいろ変化させてみて実際の解がどうなるかをみよう。
+		</div>
+		<p align="center"><canvas id="graph1"></canvas></p>
+		<p><span id="C1_1">A=1</span><input id="c1sl" type="range" value="1" min="-3" max="3" step="0.1" onchange="C1_1=this.value; writeGraph1();"></p>
+		<p><span id="C1_2">B=1</span><input id="c2sl" type="range" value="1" min="-3" max="3" step="0.1" onchange="C1_2=this.value; writeGraph1();"></p>
+		<p>K=<span id="LaregeK1">1</span><input id="LaregeKsl" type="range" value="1" min="0" max="6" step="0.1" onchange="K1=this.value; writeGraph1();"></p>
+		<p>k=<span id="k1">1</span><input id="ksl" type="range" value="1" min="0" max="6" step="0.1" onchange="k1=this.value; writeGraph1();"></p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#airfall" data-icon="arrow-l">空気抵抗を受けて落下する質点</a>
+		<a href="#gensuimove" data-icon="arrow-r">運動の様子</a>
+	  </div>
+	</div>
+	<div data-role="page" id="gensuimove">
+	  <div data-role="header">
+		<h1>運動の様子</h1>
+	  </div>
+	  <div data-role="content">
+		<script>
+		 var gs;
+		 var omori;
+		 var k5=4;
+		 var bane;
+		 var M;
+		 var v05=4;
+		 var x05=0;
+		 $(document).delegate('#gensuimove','pageinit',function(e) {
+		   gs=new PhystemWithTYGraph("canvas8","gcanvas",0.5,10,6,0.7);
+		   M=new NonDynamicalObject(gs,0,-3,"rgb(0,0,0)");
+		   M.r=0.1;
+		   omori=new DynamicalObject(gs,0,x05,0,v05,1,"rgba(255,0,0,0.5)");
+		   omori.r=0.1;
+		   bane=new Bane(gs,M,omori,k5,3,"rgba(0,100,0,0.5)");
+		   gs.makeAir();
+		   gs.start();
+		 });
+		 function changey0() {
+		   x05=Number(document.getElementById('slx05').value);
+		   document.getElementById('y0').innerHTML=x05;
+		 }
+		 function changevy0() {
+		   v05=Number(document.getElementById('slv05').value);
+		   document.getElementById('vy0').innerHTML=v05;
+		 }
+		 function changek() {
+		   bane.k=Number(document.getElementById('slk').value);
+		   document.getElementById('k5').innerHTML=bane.k;
+		 }
+		 function changeK() {
+		   gs.airResist=Number(document.getElementById('slLargeK').value);
+		   document.getElementById('K').innerHTML=gs.airResist;
+		 }
+		</script>
+
+		<div class="setsumei">下の図はさまざまな初速度と位置に対応する運動の様子である。</div>
+		<div align="center">
+	  <canvas id="canvas8" style="-ms-touch-action:none;"></canvas>
+	  <canvas id="gcanvas" style="-ms-touch-action:none;"></canvas>
+	</div>
+	<p>
+	  初期位置:y<sub>0</sub>=<span id="y0">0</span>　<input id="slx05" type="range" value="0" step="0.1" min="-3" max="3" onchange="changey0();"></p>
+	<p>
+	  初速度:v<sub>y0</sub>=<span id="vy0">4</span>　<input id="slv05" type="range" value="4" step="0.1" min="-8" max="8" onchange="changevy0();"><button onClick="gs.graphRestart(x05,v05);">再スタート</button></p>
+	<hr>
+	<p>
+	  バネ定数:k=<span id="k5">4</span>　<input id="slk" type="range" value="4" step="0.1" min="0.1" max="10" onchange="changek();"></p>
+	<p>
+	  空気抵抗:K=<span id="K">1</span>　<input id="slLargeK" type="range" value="1" step="0.1" min="0" max="10" onchange="changeK();"></p>
+
+	<hr>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#teikousindou" data-icon="arrow-l">空気抵抗を受ける振動子</a>
+	  </div>
+	</div>
+  </body>
+</html>

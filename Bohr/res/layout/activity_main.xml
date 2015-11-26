@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <ToggleButton
+                    android:id="@+id/tbParticle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="ToggleButton"
+                    android:textOff="粒子OFF"
+                    android:textOn="粒子ON" />
+
+                <ToggleButton
+                    android:id="@+id/tbWave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ToggleButton"
+                    android:textOff="波動OFF"
+                    android:textOn="波動ON" />
+
+                <CheckBox
+                    android:id="@+id/cb1s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="1s" />
+
+                <CheckBox
+                    android:id="@+id/cb2s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2s" />
+
+                <CheckBox
+                    android:id="@+id/cb3s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3s" />
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
+
+  
+
+</RelativeLayout>

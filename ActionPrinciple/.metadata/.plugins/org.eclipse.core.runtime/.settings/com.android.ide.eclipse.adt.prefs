@@ -1,0 +1,8 @@
+com.android.ide.eclipse.adt.autoPickTarget=false
+com.android.ide.eclipse.adt.fixLegacyEditors=1
+com.android.ide.eclipse.adt.palette=PREVIEW
+com.android.ide.eclipse.adt.sdk=/Users/maeno/android-sdk
+com.android.ide.eclipse.adt.xmlEditor=true
+design.palette.flyout.width=348
+design.structure.flyout.width=280
+eclipse.preferences.version=1

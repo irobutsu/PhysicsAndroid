@@ -1,0 +1,608 @@
+<!Doctype html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>カルノーサイクルとエントロピー</title>
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+		<link rel="stylesheet" href="jquery.mobile-1.1.0.min.css" />
+		<script src="jquery-1.7.2.min"></script>
+		<script src="jquery.mobile-1.1.0.min.js"></script>
+		<script src="vector.js" type="text/javascript"></script>
+		<script src="yajirushi.js" type="text/javascript"></script>
+		<script src="rescalescreenxy.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="dragmanscreen.js" type="text/javascript"></script>
+		<script src="draggablepoint.js" type="text/javascript"></script>
+		<link rel="STYLESHEET" href="ss.css" type="text/css">
+		<script type="text/javascript">
+		var sc,scp,scvt,scst;
+		var ct,ctp,ctvt,ctst;
+		var pImg,vImg,tImg,sImg;
+		$(document).delegate('#carnot','pageinit',function(e) {
+			pImg=new Image();
+			vImg=new Image();
+			tImg=new Image();
+			sImg=new Image();
+			pImg.src="p.png";
+			vImg.src="v.png";
+			tImg.src="t.png";
+			sImg.src="s.png";
+			sc=new DragmanScreen("carnotcanvas",14,14,0.45);
+			scp=new RescaleScreen("pistoncanvas",14,4,0.45);
+			scvt=new RescaleScreenXY("canvasvt",14,26,0.45,0.5);
+			scst=new RescaleScreenXY("canvasst",14,26,0.45,0.5);
+			sct=new RescaleScreen("tempcanvas",10,1,0.4);
+			sc.setBottom(-0.5);
+			sc.setLeft(-1);
+			sc.setXLabel(vImg);
+			sc.setYLabel(pImg);
+			scvt.setXLabel(vImg);
+			scvt.setYLabel(tImg);
+			scst.setXLabel(sImg);
+			scst.setYLabel(tImg);
+			scvt.setBottom(-0.5);
+			scvt.setLeft(-1);
+			scst.setBottom(-0.5);
+			scst.setLeft(-1);
+			scp.setBottom(-1);
+			scp.setLeft(-1);
+			sct.setBottom(0);
+			sct.setLeft(0);
+			sc.gobackOriginalSize();
+			scvt.gobackOriginalSize();
+			scst.gobackOriginalSize();
+			scp.gobackOriginalSize();
+			sct.gobackOriginalSize();
+			yaP=new Yajirushi("rgba(200,200,100,0.9)");
+			yaQ=new Yajirushi("rgba(200,200,200,0.9)");
+			ct=sc.canvas.getContext("2d");
+			ctvt=scvt.canvas.getContext("2d");
+			ctst=scst.canvas.getContext("2d");
+			ctp=scp.canvas.getContext("2d");
+			ctt=sct.canvas.getContext("2d");
+			sc.writeContents=function() {
+				write_func();
+			}
+			write_temp0();
+			point1=new DraggablePoint(7,3,0.4,"rgba(255,0,0,0.5)");
+			point2=new DraggablePoint(6,2,0.4,"rgba(0,0,255,0.5)");
+			point1.setXY=function(xx,yy,x0,y0,x1,y1) {
+				if( xx <= 0 ) {
+					this.x=0.1;
+				} else {
+					this.x=xx;
+				}
+				this.y=Ta/this.x;
+				if( this.y > sc.topy ) {
+					this.y=sc.topy;
+					this.x=Ta/this.y;
+				}
+				report();
+			};
+			point2.setXY=function(xx,yy,x0,y0,x1,y1) {
+				if( xx <= 0 ) {
+					this.x=0.1;
+				} else {
+					this.x=xx;
+				}
+				this.y=Tb/this.x;
+				if( this.y > sc.topy ) {
+					this.y=sc.topy;
+					this.x=Tb/this.y;
+				}
+				report();
+			};
+			sc.pushDragObjList(point1);
+			sc.pushDragObjList(point2);
+			reset();
+			report();
+			go();
+		});
+		function reset() {
+			point1.x=2;
+			point1.y=8;
+			point2.x=10;
+			point2.y=1;
+		}
+		var minT=4;
+		var maxT=25;
+		var N=50;
+		function report() {
+			var V1=point1.x;
+			var P1=point1.y;
+			var T1=Ta;
+			var V2=point2.x;
+			var P2=point2.y;
+			var T2=Tb;
+			//point3は、温度がT2で、断熱過程によりpoint1から到着できる点
+			var V3=V1*Math.pow(T1/ T2, 1.0/ gammamone);
+			var P3=T2/ V3;
+			//point4は、温度がT1で、断熱過程によりpoint2から到着できる点
+			var V4=V2*Math.pow(T2/ T1,1.0/ gammamone);
+			var P4=T1/ V4;
+			// サイクルは1→4→2→3→1と回る。
+
+			
+			$("#akaondo").html(marume(T1));
+			$("#aoondo").html(marume(T2));
+			var ratio;
+			var tokeimawari;
+			ratio=1-T2/T1;
+			if( V3<V2 ) {
+				tokeimawari=true;
+			} else {
+				tokeimawari=false;
+			}
+			$("#ratio").html(ratio);
+
+			// 等温操作での熱量の計算は仕事でいいから、RT∫dV/V = RT log(V)
+				var Qin,Qout;
+			Qin=T1*Math.log(V4/V1);
+			Qout=T2*Math.log(V2/V3);
+			$("#Qin").html(marume(Qin));
+			$("#Qout").html(marume(Qout));
+			$("#Work").html(marume(Qin-Qout));
+			
+			
+		}
+		function marume(x) {
+			var xx=100*x;
+			return Math.round(xx)/100;
+		}
+		var gamma=5.0/ 3.0;
+		var gammamone=2.0/ 3.0;
+
+		function write_func() {
+			sc.clearALL();
+			sc.writeCoordinate();
+			scvt.clearALL();
+			scvt.writeCoordinate();
+			scst.clearALL();
+			scst.writeCoordinate();
+			point1.write(ct);
+			point2.write(ct);
+			
+			var V1=point1.x;
+			var P1=point1.y;
+			var T1=Ta;
+			var V2=point2.x;
+			var P2=point2.y;
+			var T2=Tb;
+
+			// T1≧T2は保証されている。
+
+			ct.strokeStyle="rgba(255,0,50,0.5)";
+
+			//point3は、温度がT2で、断熱過程によりpoint1から到着できる点
+			var V3=V1*Math.pow(T1/ T2, 1.0/ gammamone);
+			var P3=T2/ V3;
+			//point4は、温度がT1で、断熱過程によりpoint2から到着できる点
+			var V4=V2*Math.pow(T2/ T1,1.0/ gammamone);
+			var P4=T1/ V4;
+
+			//point1→point4への等温過程
+			var minV=T1/sc.topy;
+			var maxV=sc.rightwx;
+
+			var stepV41=(V4-V1)/ N;
+			var stepV=(maxV-minV)/ N;
+			ct.strokeStyle=rgb_temp(T1,minT,maxT-minT);
+
+			ct.beginPath();
+			ct.moveTo(minV,T1/minV);
+			for(i=1; i<=N ; i++ ) {
+				ct.lineTo(minV+stepV*i,T1/(minV+stepV*i));
+			}
+			ct.stroke();
+
+			ctvt.lineWidth=scvt.stdStrokeWidth*4;
+			ctvt.beginPath();
+			ctvt.strokeStyle=rgb_temp(T1,minT,maxT-minT);
+			ctvt.moveTo(scvt.leftwx,T1);
+			ctvt.lineTo(scvt.rightwx,T1);
+			ctvt.stroke();
+			ctvt.lineWidth=scvt.stdStrokeWidth;
+
+			ctst.lineWidth=scst.stdStrokeWidth*4;
+			ctst.beginPath();
+			ctst.strokeStyle=rgb_temp(T1,minT,maxT-minT);
+			ctst.moveTo(scst.leftwx,T1);
+			ctst.lineTo(scst.rightwx,T1);
+			ctst.stroke();
+			ctst.lineWidth=scst.stdStrokeWidth;
+
+			
+			// point4→point2への断熱過程
+			ct.strokeStyle="rgba(100,0,100,0.5)";
+			ct.beginPath();
+			ct.moveTo(V4,P4);
+			var stepV24=(V2-V4)/ N;
+			for(i=1; i<=N ; i++ ) {
+				ct.lineTo(V4+stepV24*i,P4*Math.pow((V4/ (V4+stepV24*i)),gamma));
+			}
+			ct.stroke();
+
+			ctvt.strokeStyle="rgba(100,0,100,0.5)";
+			ctvt.beginPath();
+			ctvt.moveTo(V4,T1);
+			for(i=1; i<=N; i++ ) {
+				ctvt.lineTo(V4+stepV24*i,T1*Math.pow((V4/ (V4+stepV24*i)),gammamone));
+			}
+			ctvt.stroke();
+
+			ctst.strokeStyle="rgba(100,0,100,0.5)";
+			ctst.beginPath();
+			var S1=Math.log(T1)/gammamone+Math.log(V4);
+			ctst.moveTo(S1,T1);
+			ctst.lineTo(S1,T2);
+			ctst.stroke();
+			
+			// point2→point3への等温過程
+			minV=T2/sc.topy;
+			stepV=(maxV-minV)/N;
+			var stepV32=(V3-V2)/ N;
+			ct.strokeStyle=rgb_temp(T2,minT,maxT-minT);
+			ct.beginPath();
+			ct.moveTo(minV,T2/minV);
+			for(i=1; i<=N; i++ ) {
+				ct.lineTo(minV+stepV*i,T2/ (minV+stepV*i));
+			}
+			ct.stroke();
+
+			ctvt.lineWidth=scvt.stdStrokeWidth*4;
+			ctvt.beginPath();
+			ctvt.strokeStyle=rgb_temp(T2,minT,maxT-minT);
+			ctvt.moveTo(scvt.leftwx,T2);
+			ctvt.lineTo(scvt.rightwx,T2);
+			ctvt.stroke();
+			ctvt.lineWidth=scvt.stdStrokeWidth;
+
+			ctst.lineWidth=scst.stdStrokeWidth*4;
+			ctst.beginPath();
+			ctst.strokeStyle=rgb_temp(T2,minT,maxT-minT);
+			ctst.moveTo(scst.leftwx,T2);
+			ctst.lineTo(scst.rightwx,T2);
+			ctst.stroke();
+			ctst.lineWidth=scst.stdStrokeWidth;
+
+			ct.strokeStyle="rgba(100,0,100,0.5)";
+			ct.beginPath();
+			ct.moveTo(V3,P3);
+			// point3→point1への断熱過程
+			var stepV13=(V1-V3)/ N;
+			for(i=1; i<=N; i++ ) {
+				ct.lineTo(V3+stepV13*i,P3*Math.pow((V3/ (V3+stepV13*i)),gamma));
+			}
+			ct.stroke();
+			ctvt.strokeStyle="rgba(100,0,100,0.5)";
+			ctvt.beginPath();
+			ctvt.moveTo(V3,T2);
+			for(i=1; i<=N; i++ ) {
+				ctvt.lineTo(V3+stepV13*i,T2*Math.pow((V3/ (V3+stepV13*i)),gammamone));
+			}
+			ctvt.stroke();
+			ctst.strokeStyle="rgba(100,0,100,0.5)";
+
+			ctst.beginPath();
+			S1=Math.log(T2)/gammamone+Math.log(V3);
+			ctst.moveTo(S1,T1);
+			ctst.lineTo(S1,T2);
+			ctst.stroke();
+
+			
+			//if( t<=0 ) {
+			//t=N*4+41;
+			if( t>=N*4+40 ) {
+				t=0;
+			}
+			var p,v;
+			if( t<N ) {
+				v=V1+stepV41*t;
+				p=P1*V1/ v;
+			} else if( t<N+10 ) {
+				v=V4;
+				p=P4;
+			} else if( t<N*2+10 ) {
+				v=V4+stepV24*(t-N-10);
+				p=P4*Math.pow((V4/ v),gamma);
+			} else if( t<N*2+20 ) {
+				v=V2;
+				p=P2;
+			} else if( t<N*3+20 ) {
+				v=V2+stepV32*(t-N*2-20);
+				p=P2*V2/ v;
+			} else if( t< N*3+30 ) {
+				v=V3;
+				p=P3;
+			} else if( t< N*4+30){
+				v=V3+stepV13*(t-N*3-30);
+				p=P3*Math.pow((V3/ v),gamma);
+			} else {
+				v=V1;
+				p=P1;
+			}
+			ct.fillStyle="rgb(0,0,0)";
+			ct.beginPath();
+			ct.arc(v,p,0.1,0,2*Math.PI,false);
+			ct.fill();
+			ctvt.save();
+			ctvt.fillStyle="rgb(0,0,0)";
+			ctvt.beginPath();
+			ctvt.scale(1,2);
+			ctvt.arc(v,p*v*0.5,0.1,0,2*Math.PI,false);
+			ctvt.fill();
+			ctvt.restore();
+
+			ctst.save();
+			ctst.fillStyle="rgb(0,0,0)";
+			ctst.beginPath();
+			ctst.scale(1,2);
+			ctst.arc(Math.log(p*v)/gammamone+Math.log(v),p*v*0.5,0.1,0,2*Math.PI,false);
+			ctst.fill();
+			ctst.restore();
+			// write_piston(v,p,p*v,P1*V1,P2*V2,V4-V1,V2-V4);
+			write_piston(v,p,p*v,maxT,minT,V1-V4,V4-V2);
+		}
+		var yaP,yaQ;
+		function write_piston(v,p,T,tmax,tmin,firstBouchou,secondBouchou) {
+			// tmax > tminとは限らないことに注意。
+			ctp.fillStyle="rgb(255,255,255)";
+			ctp.fillRect(scp.leftwx,scp.bottomy,scp.w,scp.h);
+			ctp.fillStyle="rgb(0,0,0)";
+			ctp.fillRect(0,0,scp.w,2);
+			ctp.fillStyle="rgb(255,255,255)";
+			ctp.fillRect(0.1,0.1,scp.w,1.8);
+			ctp.fillStyle="rgb(50,50,50)";
+			ctp.fillRect(v,0.1,0.3,1.8);
+			var tdiff=tmax-tmin;
+			if( tdiff <0 ) {
+				tdiff = -tdiff;
+				tmin=tmax;
+			}
+			
+			var i;
+			for(i=0; i<4; i++ ) {
+				yaP.setXY(v+0.04,0.5*i+0.25,p*0.5);
+				yaP.setTheta(-0.5*Math.PI);
+				yaP.setL(p*0.25);
+				yaP.draw(ctp);
+			}
+			write_temp(T,tmin,tdiff);
+			ctp.fillStyle=rgb_temp(T,tmin,tdiff);
+			ctp.fillRect(0.1,0.1,v-0.1,1.8);
+			var ofset=0;
+			var firstS,secondS,thirdS,forthS;
+			if( firstBouchou>0 ) {
+				firstS="圧縮";
+				thirdS="膨張";
+			} else {
+				firstS="膨張";
+				thirdS="圧縮";
+			}
+			if( secondBouchou>0 ) {
+				secondS="圧縮";
+				forthS="膨張";
+			} else {
+				secondS="膨張";
+				forthS="圧縮";
+			}
+			if( t<N ) {
+				ofset=0;
+				$("#now").html(
+					"<span class='aka'>等温"+firstS+"</span>→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+			} else if( t<N+10 ) {
+				ofset = t-N;
+				$("#now").html("等温"+firstS+"→<span class='aka'>熱浴を取り去る</span>→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+			} else if( t<N*2+10 ) {
+				ofset = 10;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"<span class='aka'>断熱"+secondS+"</span>→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+			} else if( t<N*2+20 ) {
+				ofset = N*2+20-t;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→<span class='aka'>熱浴で包む</span>→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+			} else if( t<N*3+20 ) {
+				ofset=0;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→<span class='aka'>等温"+thirdS+"</span>→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+			} else if( t< N*3+30 ) {
+				ofset = t-N*3-20;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→<span class='aka'>熱浴を取り去る</span>→断熱"+forthS+"→熱浴で包む→");
+
+			} else if( t< N*4+30 ){
+				ofset=10;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→<span class='aka'>断熱"+forthS+"</span>→熱浴で包む→");
+
+			} else {
+				ofset = 4*N+40-t;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→<span class='aka'>熱浴で包む→</span>");
+
+			}
+			ctp.fillStyle=rgb_temp(T,tmin,tdiff);
+			ofset *= 0.1;
+			ctp.beginPath();
+			ctp.moveTo(scp.leftwx,scp.topy);
+			ctp.lineTo(scp.rightwx,scp.topy);
+			ctp.lineTo(scp.rightwx,scp.topy-1+ofset);
+			ctp.lineTo(-ofset,scp.topy-1+ofset);
+			ctp.lineTo(-ofset,scp.bottomy+1-ofset);
+			ctp.lineTo(scp.rightwx,scp.bottomy+1-ofset);
+			ctp.lineTo(scp.rightwx,scp.bottomy);
+			ctp.lineTo(scp.leftwx,scp.bottomy);
+			ctp.closePath();
+			ctp.fill();
+			if( t< N) {
+				writeQ(firstBouchou,p,v);
+			} else if( t<N*3+20 && t> N*2+20 ) {
+				writeQ(-firstBouchou,p,v);
+			}
+		}
+		function writeQ(firstBouchou,p,v) {
+			var xx;
+			if( firstBouchou>0 ) {
+				xx=0.125*p+0.05;
+				yaQ.setTheta(0.5*Math.PI);	
+			} else {
+				xx=-0.125*p+0.05;
+				yaQ.setTheta(-0.5*Math.PI);
+			}
+			yaQ.setL(0.25*p);
+			yaQ.setXY(xx,1);
+			yaQ.draw(ctp);
+			var x1;
+			x1=v/ 3;
+			if( firstBouchou>0 ) {
+				yaQ.setTheta(Math.PI);
+			} else {
+				yaQ.setTheta(0);
+			}
+			yaQ.setXY(x1,xx);
+			yaQ.draw(ctp);
+			x1 *= 2;
+			yaQ.setXY(x1,xx);
+			yaQ.draw(ctp);
+			x1= v/ 3;
+			if( firstBouchou>0 ) {
+				yaQ.setTheta(0);
+			} else {
+				yaQ.setTheta(Math.PI);
+			}
+			yaQ.setXY(x1,2-xx);
+			yaQ.draw(ctp);
+			x1 *= 2;
+			yaQ.setXY(x1,2-xx);
+			yaQ.draw(ctp);
+			x1= v/ 3;
+		}
+		function rgb_temp(T,tmin,tdiff) {
+			var r=Math.ceil((T-tmin)/ tdiff*255);
+			var b=255-r;
+			var g=Math.ceil(b*0.8+50);
+			return "rgb("+r+","+g+","+b+")";
+		}
+		function write_temp0() {
+			var i;
+			var step=sct.w/ N;
+			for(i=0; i<N; i++ ) {
+				ctt.fillStyle=rgb_temp(i,0,N);
+				ctt.beginPath();
+				ctt.moveTo(i*step,1);
+				ctt.lineTo(i*step,0.5);
+				ctt.lineTo((i+1.1)*step,0.5);
+				ctt.lineTo((i+1.1)*step,1);
+				ctt.closePath();
+				ctt.fill();
+			}
+		}
+		function write_temp(T,tmin,tdiff) {
+			ctt.fillStyle="rgb(200,200,200)";
+			ctt.fillRect(0,0,sct.w,0.5);
+			var x;
+			x=((T-tmin)/ tdiff);
+			ctt.fillStyle="rgb(0,0,0)";
+			ctt.beginPath();
+			ctt.moveTo(x*sct.w,0.5);
+			ctt.lineTo(x*sct.w+0.3,0);
+			ctt.lineTo(x*sct.w-0.3,0);
+			ctt.closePath();
+			ctt.fill();
+		}
+		var t=0;
+		var stopFlg=false;
+		function startstop() {
+			if( stopFlg ) {
+				stopFlg=false;
+				go();
+			} else {
+				stopFlg=true;
+			}
+		}
+		function go() {
+			if( stopFlg ) {
+				return;
+			} else {
+				write_func();
+				t++;
+				setTimeout("go();",200);
+			}
+		}
+		var Ta=16;
+		var Tb=10;
+		function changeTA() {
+			var t=Number($('#Ta').val());
+			if( t<Tb ) {
+				Ta=Tb;
+			} else {
+				Ta=t;
+			}
+			var Pa=Ta/point1.x;
+			if( Pa > sc.topy ) {
+				Pa=sc.topy;
+				point1.y=Pa;
+				point1.x=Ta/Pa;
+			} else {
+				point1.y=Pa;
+			}
+			if( t != Ta ) {
+				$('#Ta').val(Ta);
+				$('#Ta').slider('refresh');
+			}
+			report();
+		}
+		function changeTB() {
+			var t=Number($('#Tb').val());
+			if( t>Ta ) {
+				Tb=Ta;
+			} else {
+				Tb=t;
+			}
+			var Pb=Tb/point2.x;
+			if( Pb > sc.topy ) {
+				Pb=sc.topy;
+				point2.y=Pb;
+				point2.x=Tb/Pb;
+			} else {
+				point2.y=Pb;
+			}
+			if( t != Tb ) {
+				$('#Tb').val(Tb);
+				$('#Tb').slider('refresh');
+			}
+			report();
+		}
+		</script>
+	</head> 
+	<body>
+		<div data-role="page" id="carnot">
+			<div data-role="header">
+				<h2>カルノーサイクルとエントロピー</h2>
+			</div>
+			<div data-role="content">
+				<p><canvas id="carnotcanvas"></canvas></p>
+				<p><canvas id="canvasvt"></canvas>　<canvas id="canvasst"></canvas></p>
+				<p><span id="now"></span></p>
+				<p><canvas id="pistoncanvas"></canvas></p>
+				<p>温度計→（低温）<canvas id="tempcanvas"></canvas>（高温）</p>
+				<p><span class="aka">●</span>の温度：<input type="range" id="Ta" min="4" max="25" value="16" step="0.2" data-inline="true" onchange="changeTA();"></p>
+				</p>
+				<p><span class="ao">●</span>の温度：<input type="range" id="Tb" min="4" max="25" value="10" step="0.2" data-inline="true" onchange="changeTB();"></p>
+				<p>
+					カルノーサイクルの効率＝<span id="ratio"></span>
+				</p>
+				<p><span class="aka">●</span>の温度での吸熱量Q<sub>1</sub>=<span id="Qin"></span>　<span class="ao">●</span>の温度放熱量Q<sub>2</sub>=<span id="Qout"></span>　仕事量W=<span id="Work"></span></p>
+				<hr>
+				<div class="setsumei">
+					<p>　物質量Nと気体定数Rは1にして計算してある。</p>
+					<p>　四つの「角」のうち二つ（図の赤と青の●）はドラッグして動かせるので、サイクルの行程を変化させていろいろ試してみて欲しい。</p>
+					<p>　ただし、温度は4から25の範囲までしか変化しないし、<span class="aka">●</span>の温度は<span class="ao">●</span>の温度より高くないといけない。</p>		  
+				</div>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">EM Induction</string>
+    <string name="resetScreen">reset view</string>
+    <string name="stop">Stop</string>
+    <string name="go">Go</string>
+</resources>
+

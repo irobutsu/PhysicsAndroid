@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">電磁誘導</string>
+    <string name="resetScreen">視点初期化</string>
+    <string name="stop">中断中</string>
+    <string name="go">実行中</string>
+</resources>

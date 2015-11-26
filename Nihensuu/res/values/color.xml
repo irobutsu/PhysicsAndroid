@@ -1,0 +1,6 @@
+
+    <resources>
+        <color name="red">#FF0000</color>
+		<color name="blue">#0000FF</color>
+  <color name="magenta">#FF00FF</color>
+    </resources>

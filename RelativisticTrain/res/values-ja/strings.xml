@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">相対論的電車</string>
+   <string name="v_equal">光速の</string>
+    <string name="percent">％</string>
+</resources>

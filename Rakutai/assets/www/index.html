@@ -1,0 +1,790 @@
+<!doctype html>
+<html>
+  <head>
+	<title>運動と質量</title>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+    
+	<script type="text/javascript">
+     var dt=0.04; // アニメーションの１コマの時間の刻み。
+     var ct; // グラフィック・コンテキスト
+	 // 以下は２次元ベクトルを実現するオブジェクト。
+     var Vector=function(xx,yy) {
+	   this.x=xx;
+	   this.y=yy;
+     }
+     Vector.prototype={
+       copy:function(V) {this.x=V.x; this.y=V.y;},
+       makeCopy:function() { return new Vector(this.x,this.y); },
+       setXY:function(xx,yy) { this.x=xx; this.y=yy;},
+       add:function(V) {this.x += V.x; this.y += V.y;},
+       sub:function(V) {this.x -= V.x; this.y -= V.y;},
+       sum:function(V) { return new Vector(this.x +V.x,this.y+V.y); },
+       diff:function(V) { return new Vector(this.x -V.x,this.y-V.y); },
+	   mul:function(a) { this.x *= a; this.y *=a; },
+	   div:function(a) { this.x /= a; this.y /=a; },
+	   prod:function(a) { return new Vector(this.x*a,this.y*a); },
+	   iprod:function(V) { return this.x*V.x+this.y*V.y;},
+	   eprod:function(V) { return this.x*V.y-this.y*V.x;},
+	   quot:function(a) { return new Vector(this.x/a,this.y/a); },
+	   addVt:function(V,t){ this.x += V.x*t,this.y += V.y*t; }
+     }
+	 // 矢印のコンストラクタ。色と長さの初期値をセットするだけ。
+	 var Yajirushi=function(cl) {
+	   this.color=cl;
+	   this.len=1;
+	   this.p=new Vector(0,0); // .pは根元の位置。
+	   this.v=new Vector(0,1); // .vは矢印の向きのベクトル
+	   this.theta=0; // θ=0は真下（y軸向き）。
+	 }
+
+	 Yajirushi.prototype=
+	 {	
+	  setXY:function(xx,yy) {this.p.x=xx; this.p.y=yy;},
+	  setL:function(l) { this.len=l; this.v.x=-l*Math.sin(this.theta); this.v.y=l*Math.cos(this.theta);},
+	  setTheta:function(th) {this.theta=th; this.v.x=-this.len*Math.sin(th); this.v.y=this.len*Math.cos(th);},
+	  setVXY:function(vx,vy) {
+		 this.v.x=vx; this.v.y=vy;
+		 this.len=Math.sqrt(vy*vy+vx*vx);
+		 this.theta=Math.atan2(-vx,vy);
+	   },
+	  draw:function(ct) {
+		 //ct.strokeStyle="rgb(0,0,0)";
+		 ct.fillStyle=this.color;
+		 ct.save();
+		 
+		 ct.translate(this.p.x,this.p.y);
+		 ct.rotate(this.theta);
+		 ct.beginPath();
+		 var ll=0.05*this.len;
+		 var lll=0.8*this.len;
+		 ct.moveTo(ll,0);
+		 ct.lineTo(-ll,0);
+		 ct.lineTo(-ll,lll);
+		 ct.lineTo(-2*ll,lll);
+		 ct.lineTo(0,this.len);
+		 ct.lineTo(2*ll,lll);
+		 ct.lineTo(ll,lll);
+		 ct.closePath();
+		 ct.fill();
+		 ct.restore();
+	   }
+						  }
+
+	 // 力の矢印。作用点に○が入るのが矢印との違い。
+	 var YajirushiF=function(cl) {
+	   // 親クラスのコンストラクタを呼ぶ。
+	   Yajirushi.call(this,cl);
+	 }
+	 
+	 YajirushiF.prototype=new Yajirushi();
+	 // YajirushiFはYajirushiから継承。
+
+	 // drawだけは再定義します。
+	 YajirushiF.prototype.draw=function(ct) {
+	   ct.strokeStyle="rgba(0,0,0,0.3)";
+	   ct.fillStyle=this.color;
+	   ct.save();		
+	   ct.translate(this.p.x,this.p.y);
+	   ct.rotate(this.theta);
+	   ct.beginPath();
+	   var ll=0.03*this.len;
+	   var lll=0.8*this.len;
+	   ct.arc(0,ll*2,ll*2,2*Math.PI/6,-8*Math.PI/6,true);
+	   ct.lineTo(-ll,lll);
+	   ct.lineTo(-2*ll,lll);
+	   ct.lineTo(0,this.len);
+	   ct.lineTo(2*ll,lll);
+	   ct.lineTo(ll,lll);
+	   ct.closePath();
+	   ct.fill();
+	   ct.stroke();
+	   ct.restore();
+	 }
+	 // 運動するオブジェクトは、全て以下のMovingObjsのリストに格納される。
+	 var MovingObjs=function() {
+	   this.list=[];
+	 }
+	 var movingObjs=new MovingObjs();
+	 MovingObjs.prototype.checkCollisionDone=function() {
+	   var i;
+	   for(i=0 ; i<this.list.length ; i++ ) {
+		 if(!this.list[i].checkCollisionFlg ) {
+		   return false;
+		 }
+	   }
+	   return true;
+	 }
+	 var a=0;
+	 var MovingObject=function() {
+	   this.class="MovingObject";
+	   this.p=new Vector(0,0); // 現在位置
+	   this.pp=new Vector(0,0); // 一つ前の位置
+	   this.v=new Vector(0,0); // 速度
+	   this.pv=new Vector(0,0); // 一つ前の速度
+	   this.a =new Vector(0,0); // 加速度
+	   this.touchPoint=new Vector(0,0); // タッチされている場所
+	   this.F=[]; // 働いている力のリスト
+	   this.touchP=[];
+	   movingObjs.list.push(this); // 自分をmovingObjs.listに登録する。
+	   this.tmpPos=new Vector(0,0); // ドラッグ途中の「一時的な座標」
+	 }
+	 MovingObject.prototype={
+	   mass:1,
+	   onEarth:false,
+	   col:"rgb(228,228,228)",
+	   setPos:function(pos) {
+		 this.p=pos;
+	   },
+	   setPPos:function(pos) {
+		 this.p=pos;
+	   },
+	   setXY:function(xx,yy) {
+		 this.p.setXY(xx,yy);
+	   },
+	   setX:function(xx) {
+		 this.p.x=xx;
+	   },
+	   setY:function(yy) {
+		 this.p.y=yy;
+	   },
+	   setVXY:function(vvx,vvy) {
+		 this.v.setXY(vvx,vvy);
+	   },
+	   setAXY:function(vvx,vvy) {
+		 this.a.setXY(vvx,vvy);
+	   },
+	   setCol:function(c){this.col=c;},
+	   setMass:function(m) { this.mass=m;},
+	   prepareForNext:function() {
+		 this.pp.copy(this.p);
+		 this.pv.copy(this.v);
+	   },
+	   nextStep:function(deltaT) {
+		 var i;
+		 this.a.x=0; this.a.y=0;
+		 for(i=0 ; i< this.F.length ; i++ ) {
+		   this.a.add(this.F[i].v);
+		 }
+		 
+		 this.a.div(this.mass);
+		 this.p.addVt(this.v,deltaT);
+		 this.v.addVt(this.a,deltaT);
+	   },
+	   draw:function(ct,ct2) {
+		 ct.beginPath();
+		 ct.arc(this.p.x,this.p.y,this.mass,0,2*Math.PI,false);
+		 ct.fillStyle="rgba(0,0,0,0.5)";
+		 ct.fill();
+		 ct2.beginPath();
+		 ct2.arc(this.p.x,this.p.y,this.mass,0,2*Math.PI,false);
+		 ct2.fillStyle="rgba(0,0,0,0.5)";
+		 ct2.fill();
+	   },
+	   drawOne:function(ct,ct2) {
+		 ct.beginPath();
+		 ct.arc(this.p.x,this.p.y,this.mass,0,2*Math.PI,false);
+		 ct.fillStyle="rgba(0,0,0,0.5)";
+		 ct.fill();
+	   },
+	   drawV:function(ct) {
+		 var v=new Yajirushi("rgba(0,0,255,0.5)");
+		 v.setXY(this.p.x,this.p.y);
+		 v.setVXY(this.v.x,this.v.y);
+		 v.draw(ct);
+	   },
+	   drawVdash:function(ct) {
+		 var vy=new Yajirushi("rgba(0,0,255,0.5)");
+		 vy.setXY(this.p.x,this.p.y);
+		 vy.setVXY(this.v.x+v+a*g*dt*t,this.v.y);
+		 vy.draw(ct);
+	   },
+	   drawA:function(ct) {
+		 var v=new Yajirushi("rgba(255,0,0,0.5)");
+		 v.setXY(this.p.x,this.p.y);
+		 v.setVXY(this.a.x,this.a.y);
+		 v.draw(ct);
+	   },
+	   drawAtwo:function(ct) {
+		 var v=new Yajirushi("rgba(255,0,0,0.5)");
+		 v.setXY(this.p.x+this.v.x,this.p.y+this.v.y);
+		 v.setVXY(this.a.x,this.a.y);
+		 v.draw(ct);
+	   },
+	   drawAtwodash:function(ct) {
+		 var vy=new Yajirushi("rgba(255,0,0,0.5)");
+		 vy.setXY(this.p.x+this.v.x+v+a*g*dt*t,this.p.y+this.v.y);
+		 vy.setVXY(this.a.x+a*g,this.a.y);
+		 vy.draw(ct);
+	   },
+	   onEarth:function() {
+		 return this.p.y == 0;
+	   },
+	   addF:function(f) {
+		 this.F.push(f);
+	   },
+	   addFCenter:function(fx,fy,c) {
+		 var F=new YajirushiF(c);
+		 F.setXY(this.p.x,this.p.y);
+		 F.setVXY(fx,fy);
+		 this.addF(F);
+	   },	
+	   addFBottom:function(fx,fy,c) {
+		 var ff=new YajirushiF(c);
+		 ff.setXY(this.p.x,this.p.y+this.mass);
+		 ff.setVXY(fx,fy);
+		 this.addF(ff);
+	   },
+	   drawF:function(ct) {
+		 var i;
+		 for( i=0 ; i< this.F.length ; i++ ) {
+		   this.F[i].draw(ct);
+		 }
+	   },
+	   checkCollisionFlg:false,
+	   checkCollision:function() {
+		 this.checkCollisionFlg=true;
+		 // これはスタブ。
+	   },
+	   inTouch:function(x,y) {
+		 this.touchPoint.x=x-this.p.x;
+		 this.touchPoint.y=y-this.p.y;
+		 return (x-this.p.x)*(x-this.p.x) + (y-this.p.y)*(y-this.p.y) < this.mass*this.mass ;
+		 // これはスタブ。	
+	   },
+	   totalFx:function() {
+		 var i;
+		 var fx=0;
+		 for(i=0; i<this.F.length ; i++ ) {
+		   fx += this.F[i].v.x;
+		 }
+		 fx -= this.mass*a*g;
+		 return fx;
+	   },
+	   totalFy:function() {
+		 var i;
+		 var fy=0;
+		 for(i=0; i<this.F.length ; i++ ) {
+		   fy += this.F[i].v.y;
+		 }
+		 return fy;
+	   },
+	   draggingPointerID:-1,
+	   tamattaFlg:false, // マウス軌跡がdcountMax個たまると真になる。
+	   dcount:0,
+	   dcNow:0,
+	   // ↑この二つは、ためているマウス軌跡のためのカウンタ。
+	   dcMax:9, // マウス軌跡を何個貯めるか。
+	   // 3×奇数でなくてはいけない。
+	   dcMax3:3, // 上記の数÷3
+	   dcCenter:4, // 0~dcMax-1の中心に来る数。
+	   pushDraggP:function() {
+		 this.dcount++;
+		 this.dcNow++; // 最初にカウントアップしているので、this.touchP[0]は、一周するまでは値が入らない。
+		 if( this.dcNow >= this.dcMax ) {
+		   this.dcNow=0;
+		   this.tamattaFlg=true;
+		 }
+		 var pp=this.tmpPos.diff(this.touchPoint);
+		 pp=this.adjustPoint(pp);
+		 this.touchP[this.dcNow]=pp;
+	   },
+	   adjustPoint:function(pp) {
+		 // スタブ。
+		 if( pp.x > trightx-this.mass ) { pp.x =trightx-this.mass; }
+		 if( pp.x < tleftx+this.mass ) { pp.x =tleftx+this.mass; }
+		 if( pp.y < ttopy+this.mass ) { pp.y =  ttopy+this.mass; }
+		 if( pp.y > -this.mass ) { pp.y = -this.mass; }
+		 return new Vector(pp.x,pp.y);
+	   },
+	   getDraggP:function(deltaT) {
+		 var i;
+		 var P=[];
+		 for( i=0 ; i< this.dcMax ; i++ ) {
+		   var k=this.dcNow-i;
+		   if( k<0 ) { k+=this.dcMax; }
+		   P[i]=this.touchP[k];
+		 }
+		 var partF=P[0].makeCopy();
+		 for( i=1 ; i< this.dcMax3 ; i++ ) {
+		   partF.add(P[i]);
+		 }
+		 var partM=P[this.dcMax3].makeCopy();
+		 for( i=this.dcMax3+1 ; i< 2*this.dcMax3 ; i++ ) {
+		   partM.add(P[i]);
+		 }
+		 var partP=P[2*this.dcMax3].makeCopy();
+		 for( i=2*this.dcMax3+1 ; i< this.dcMax ; i++ ) {
+		   partP.add(P[i]);
+		 }
+		 this.p=P[this.dcCenter];
+		 //this.p=partM.sum(partF).sum(partP).quot(this.dcMax);
+		 this.a=(partF.sum(partP).diff(partM.prod(2))).quot(this.dcMax3*this.dcMax3*deltaT);
+		 for(i=this.dcMax3; i< this.dcCenter; i++ ) {
+		   partF.add(P[i]);
+		 }
+		 for(i=this.dcCenter+1; i< 2*this.dcMax3 ; i++ ) {
+		   partP.add(P[i]);
+		 }
+		 this.v=partF.diff(partP).quot(this.dcMax*(this.dcMax+1)*deltaT*0.5);
+	   },
+	   startDragg:function(j,x,y){
+		 this.draggingPointerID=j;
+		 this.touchP=[];
+		 // タッチポイントのリストをクリア。
+		 this.tamattaFlg=false;
+		 this.dcNow=0;
+		 this.dcount=0;
+		 this.tmpPos=new Vector(x,y);
+	   },
+	   resetDragg:function() {
+		 this.draggingPointerID=-1;
+	   }
+	 }
+
+	 var Ball=function(xx,yy,rr) {
+	   MovingObject.call(this);      
+	   this.r=rr;
+	   this.class="Ball";
+	   this.setPos(new Vector(xx,yy));
+	 }
+
+	 Ball.prototype=new MovingObject();
+	 Ball.prototype.drawOne=function(ct) {
+	   ct.fillStyle=this.col;
+	   ct.beginPath();
+	   ct.arc(this.p.x,this.p.y,this.r,0,2*Math.PI,false);
+	   ct.fill();
+	 }
+
+	 Ball.prototype.addFBottom=function(fx,fy,c) {
+	   var ff=new YajirushiF(c);
+	   ff.setXY(this.p.x,this.p.y+this.r);
+	   ff.setVXY(fx,fy);
+	   this.addF(ff);
+	 }
+
+	 Ball.prototype.addFHear=function(x,y,fx,fy,c) {
+	   var ff=new YajirushiF(c);
+	   ff.setXY(this.p.x+x,this.p.y+y);
+	   ff.setVXY(fx,fy);
+	   this.addF(ff);
+	 }
+
+	 Ball.prototype.checkCollision=function(deltaT) {
+	   if( this.onEarth ) {
+		 if( this.p.y+this.r < -0.01 ) {
+		   // 何かの事情で床から離れた。
+		   this.onEarth=false; 
+		 } else {
+		   this.p.y=-this.r;
+		   this.v.y=0;
+		   this.addFBottom(-this.totalFx(),-this.totalFy(),"rgba(255,255,0,0.3)");
+		   this.a.y=0;
+		 }
+	   } 
+	   // 床・壁との接触を考える。今のところ、はね返り係数0としている。
+	   if( this.p.y+this.r >= 0 ) {
+		 this.p.y=-this.r;
+		 this.v.y=0;
+		 this.v.x=0;
+		 this.onEarth=true;
+		 this.addFBottom(-this.totalFx(),this.mass*(this.v.y-this.pv.y)/ deltaT-this.totalFy(),"rgba(255,255,0,0.3)");
+	   } else {
+		 this.onEarth=false;
+	   }
+	   if( this.p.y-this.r < ttopy ){
+		 this.p.y=ttopy+this.r;
+		 this.v.y=0;
+		 this.v.x=0;
+		 this.addFTop(-this.totalFx(),this.mass*(this.v.y-this.pv.y)/ deltaT-this.totalFy(),"rgba(255,255,0,0.3)");
+	   }
+	   if( this.p.x -this.r < tleftx ) {
+		 this.p.x=tleftx+this.r;
+		 this.v.x=0;
+		 this.addFLeft(this.mass*(this.v.x-this.pv.x)/ deltaT-this.totalFx(),0,"rgba(255,255,0,0.3)");
+	   } else if( this.p.x + this.r > trightx ) {
+		 this.p.x=trightx-this.r;
+		 this.v.x=0;		
+		 this.addFRight(this.mass*(this.v.x-this.pv.x)/ deltaT-this.totalFx(),0,"rgba(255,255,0,0.3)");
+	   }
+	   this.checkCollisionFlg=true;
+	 }
+	 Ball.prototype.adjustPoint=function(pp) {
+	   if( pp.x > trightx-this.r ) { pp.x =trightx-this.r; }
+	   if( pp.x < tleftx+this.r ) { pp.x =tleftx+this.r; }
+	   if( pp.y < ttopy+this.r ) { pp.y =  ttopy+this.r; }
+	   if( pp.y > -this.r ) { pp.y = -this.r; }
+	   return new Vector(pp.x,pp.y);
+	 },
+
+
+	 Ball.prototype.addFBottom=function(fx,fy,c) {
+	   var F=new YajirushiF(c);
+	   F.setXY(this.p.x,this.p.y+this.r);
+	   F.setVXY(fx,fy);
+	   this.addF(F);
+	 }
+	 Ball.prototype.addFTop=function(fx,fy,c) {
+	   var F=new YajirushiF(c);
+	   F.setXY(this.p.x,this.p.y-this.r);
+	   F.setVXY(fx,fy);
+	   this.addF(F);
+	 }
+	 Ball.prototype.addFLeft=function(fx,fy,c) {
+	   var F=new YajirushiF(c);
+	   F.setXY(this.p.x-this.r,this.p.y);
+	   F.setVXY(fx,fy);
+	   this.addF(F);
+	 }
+	 Ball.prototype.addFRight=function(fx,fy,c) {
+	   var F=new YajirushiF(c);
+	   F.setXY(this.p.x+this.r,this.p.y);
+	   F.setVXY(fx,fy);
+	   this.addF(F);
+	 }
+
+	 Ball.prototype.inTouch=function(x,y){
+	   this.touchPoint.x=x-this.p.x;
+	   this.touchPoint.y=y-this.p.y;
+	   return (x-this.p.x)*(x-this.p.x) + (y-this.p.y)*(y-this.p.y) < this.r*this.r ;
+	 }
+
+	 var tw=4; // 画面の横サイズ（実際のピクセルとは違う）
+	 var th=4; // 縦サイズ
+	 var tleftx=-2; // 左壁の座標
+	 var trightx=2; // 右壁の座標
+	 var tbottomy=0.5; // 画面下の座標
+	 var ttopy=-3.5;    // 画面上の座標
+	 // 以上４つは、w,hと整合が取れるように設定すること。trightx-tleftx=tw,tbottomy-ttopy=th
+	 // html5のcanvasの都合で、x軸は右向き、y軸は下向きなので注意。
+	 // y=0を「地面」にする。
+	 // 以下の描画は全てこの座標系で行います。
+
+     
+	 var ct, color = "#000";	
+
+	 function init() {
+	   // setup a new canvas for drawing wait for device init
+       setTimeout(function(){
+		 newCanvas();
+       }, 1000);
+	 }
+
+     var canvas;
+	 var firstCall=true;
+
+	 function newCanvas(){
+       // setup canvas
+	   canvas=document.getElementById("canvas");	
+	   var wx=document.body.clientWidth*0.9;
+	   var hy=document.documentElement.clientHeight*0.9;
+	   if( wx > hy ) {
+		 wx=hy;
+	   }
+	   canvas.width=wx;
+	   canvas.height=wx*th/ tw;
+	   ct=canvas.getContext("2d");
+       setCoordinates();
+	   
+	   // setup to trigger drawing on mouse or touch
+	   if( window.navigator.msPointerEnabled ) {
+		 canvas.addEventListener(
+		   "MSPointerDown",
+		   function(event) {
+			 event.preventManupulation();
+			 ptdownsub(event.pointerID,event.pageX,event.pageY);
+		   },
+		   false
+		 );
+		 canvas.addEventListener(
+		   "MSPointerMove",
+		   function(event) {
+			 event.preventManupulation();
+			 ptmovesub(event.pointerID,
+					   fomMxtoCx(event.pageX),
+					   fromMytoCy(event.pageY));
+		   },
+		   false);
+		 canvas.addEventListener(
+		   "MSPointerUp",
+		   function(event) {
+			 event.preventManupulation();
+    	     ptendsub(e.pointerID);
+		   },
+		   false);
+	   } else {
+		 canvas.addEventListener(
+		   "touchstart",
+		   function(event) {
+			 event.preventDefault();
+			 var i;
+			 for(i=0 ; i< event.touches.length; i++ ) {
+	    	   var e = event.touches[i];
+	    	   var rect = event.target.getBoundingClientRect();
+    		   ptdownsub(e.identifier,
+						 fromMxtoCx(e.clientX - rect.left),
+						 fromMytoCy(e.clientY - rect.top ));
+			 }
+		   }
+		   ,false
+		 );
+		 canvas.addEventListener(
+		   "touchmove",
+		   function(event) {
+			 event.preventDefault();
+			 var i;
+			 for(i=0 ; i< event.touches.length; i++ ) {
+	    	   var e = event.touches[i];
+   			   var rect = event.target.getBoundingClientRect();
+    	       ptmovesub(e.identifier,
+						 fromMxtoCx(e.clientX - rect.left),
+						 fromMytoCy(e.clientY - rect.top ));
+			 }
+		   },
+		   false);
+		 canvas.addEventListener(
+		   "touchend",
+		   function(event) {
+			 event.preventDefault();
+			 for(j=0; j<event.changedTouches.length; j++ ) {
+    	       var e=event.changedTouches[j];
+    	       ptendsub(e.identifier);
+			 }
+		   },
+		   false);
+	   }
+	   canvas.onmousedown = function(e) {
+		 e.preventDefault();
+		 var mouseX = e.clientX - e.target.getBoundingClientRect().left;
+		 var mouseY = e.clientY - e.target.getBoundingClientRect().top;
+		 ptdownsub(0,fromMxtoCx(mouseX),fromMytoCy(mouseY));
+	   };
+	   canvas.onmousemove = function(e) {
+		e.preventDefault();
+		var mouseX = e.clientX - e.target.getBoundingClientRect().left;
+		var mouseY = e.clientY - e.target.getBoundingClientRect().top;
+		ptmovesub(0,fromMxtoCx(mouseX),fromMytoCy(mouseY));
+	   };
+	   canvas.onmouseup = function(e) {
+		 ptendsub(0);
+	   };
+	   this.canvas.onmouseout = function(e) {
+		 ptendsub(0);
+	   };
+	   resetALL();
+	   fallFromTop();
+	   if( firstCall ) {
+		 anime();
+		 firstCall=false;
+	   }
+	 }
+	 function ptdownsub(j,x,y) {
+	   var i;
+       for(i=0; i<movingObjs.list.length ; i++ ) {
+		 if(movingObjs.list[i].inTouch(x,y) ) {
+		   movingObjs.list[i].startDragg(j,x,y);
+		   return;
+		 }
+       }
+	 }
+	 function ptmovesub(j,x,y) {
+	   var i=0;
+	   for( i=0; i< movingObjs.list.length; i++ ) {
+		 if( movingObjs.list[i].draggingPointerID == j ) {
+		   movingObjs.list[i].tmpPos=new Vector(x,y);
+		 }
+	   }
+	 }
+     
+	 function ptendsub(j) {
+	   var i=0;
+	   for( i=0; i< movingObjs.list.length; i++ ) {
+		 if( movingObjs.list[i].draggingPointerID == j ) {
+		   movingObjs.list[i].resetDragg();
+		 }
+	   }
+	 }
+
+	 function normalCoordinates() {
+	   ct.setTransform(1,0,0,1,0,0);
+	   stdStrokeWidth=1;
+	   ct.lineWidth=stdStrokeWidth;
+	 }
+	 
+
+	 function setCoordinates() {
+	   var sc=canvas.width/ tw;
+	
+	   ct.setTransform(sc,0,0,sc,0,0);
+	   ct.translate(-tleftx,-ttopy);
+
+	   stdStrokeWidth=tw/ 150;
+	   ct.lineWidth=stdStrokeWidth;
+	 }
+
+
+	 function fromMxtoCx(mx) {
+	   return mx/ canvas.width*tw+tleftx;
+	 }
+	 function fromMytoCy(my) {
+	   return my/ canvas.height*th+ttopy;
+	 }
+
+	 function fromCxtoTX(cx) {
+	   return (cx-tleftx)*canvas.width/ tw;	
+	 }
+	 function fromCytoTY(cy) {
+	   return (cy-ttopy)*canvas.height/ th;	
+	 }
+
+	 var box;
+	 var ball;
+	 function resetALL() {
+	   movingObjs.list=[];
+	   ball=new Ball(1,-2,0.25);
+	   ball.setMass(1);
+	   // boxという名前だがボールにする。
+	   box=new Ball(0,-1,0.25);
+	   box.setMass(2);
+
+	   box.setXY(1,-3.25);
+	   box.setVXY(0,0);	
+	   ball.setXY(0,-3.25);
+	   ball.setVXY(0,0);
+	   ball.setCol("rgba(200,200,200,0.9)");
+	   box.setCol("rgba(100,100,100,0.9)");
+	   
+	   //var boxtwo=new Box(2,-1,0.5,0.3);
+	   //boxtwo.setVXY(-0.5,-0.1);
+	 }
+
+	 function drawBackGround() {
+	   ct.fillStyle="rgb(200,255,255)"
+	   ct.fillRect(tleftx,ttopy,tw,th-tbottomy);
+	   ct.fillStyle="rgb(30,235,20)"
+	   ct.fillRect(tleftx,0,tw,tbottomy);
+	 }
+
+
+	 var g=0.4;
+     var t=0;
+	 var moveFlg=true;
+	 var constGFlg=false;
+	 var teikouFlg=false;
+	 var k=1;
+	 function anime() {
+	   var i;
+	   drawBackGround();
+	   t += 1;
+	   
+	   for( i=0 ; i< movingObjs.list.length ; i++ ) {
+		 var obj=movingObjs.list[i];
+		 obj.F.length=0; // かかっている力をいったんクリア
+		 if( obj.draggingPointerID != -1 ) {
+		   obj.pushDraggP();
+		   if( obj.tamattaFlg == true ) {
+			 obj.getDraggP(dt);
+		   } else {
+			 
+		   }
+		   // この場合運動はドラッグの結果として起こることに注意。
+		   if( GFlg ) {
+			 if( constGFlg ) {
+			   obj.addFCenter(0,g,"rgba(255,0,255,0.7)"); // もしも重力が一定なら。
+			 } else {
+			   obj.addFCenter(0,obj.mass*g,"rgba(255,0,255,0.7)"); // 重力を追加。
+			 }
+		   }
+		   if( teikouFlg ) {
+			 var V=Math.sqrt(obj.v.x*obj.v.x+obj.v.y*obj.v.y);
+			 obj.addFHear(obj.r*obj.v.x/V,obj.r*obj.v.y/V,-k*obj.v.x,-k*obj.v.y,"rgba(0,255,255,0.9)");
+		   }
+		 } else {
+		   if( GFlg ) {
+			 if( constGFlg ) {
+			   obj.addFCenter(0,g,"rgba(255,0,255,0.7)"); // もしも重力が一定なら。
+			 } else {
+			   obj.addFCenter(0,obj.mass*g,"rgba(255,0,255,0.7)"); // 重力を追加。
+			 }
+		   }
+		   if( teikouFlg ) {
+			 var V=Math.sqrt(obj.v.x*obj.v.x+obj.v.y*obj.v.y);
+			 obj.addFHear(obj.r*obj.v.x/V,obj.r*obj.v.y/V,-k*obj.v.x,-k*obj.v.y,"rgba(0,255,255,0.9)");
+		   }
+		   obj.nextStep(dt);
+		   // 重力による運動を計算。この結果どこかにぶつかっている場合は、
+		   // 次のループ内↓で補正。
+		 }
+		 obj.checkCollisionFlg=false; // 補正が済んでないことを示すフラグ
+		 obj.drawOne(ct);
+	   }
+	   do {
+		 for( i=0 ; i< movingObjs.list.length ; i++ ) {
+		   var obj=movingObjs.list[i];
+		   obj.checkCollision(dt);
+		 }
+	   } while( !movingObjs.checkCollisionDone() );
+	   for( i=0 ; i< movingObjs.list.length ; i++ ) {
+		 var obj=movingObjs.list[i];
+		 obj.drawV(ct);
+		 obj.drawAtwo(ct);
+		 obj.drawF(ct);
+		 obj.prepareForNext();
+	   }
+	   if( moveFlg ) {
+		 setTimeout("anime()",40);
+	   }
+	 }
+	 function fallFromTop() {
+	   t=0;
+	   box.setXY(1,-3.25);
+	   box.setVXY(0,0);	
+	   ball.setXY(0,-3.25);
+	   ball.setVXY(0,0);	
+	 }
+	 function startstop() {
+	   if( moveFlg ) {
+		 moveFlg=false;
+	   } else {
+		 moveFlg=true;
+		 anime();
+	   }		
+	 }
+	 var GFlg=true;
+	 function setFzero() {
+	   GFlg=false;
+	   constGFlg=true;
+	 }
+	 function setFConst() {
+	   GFlg=true;
+	   constGFlg=true;
+	 }
+	 function setFmg() {
+	   GFlg=true;
+	   constGFlg=false;
+     }
+	 function checkTeikou() {
+       if (document.getElementById('teikoucb').checked) {
+         teikouFlg=true;
+       } else {
+         teikouFlg=false;
+       }
+	 }
+
+	</script>
+  </head>
+  <body onload="init();">
+	<canvas id="canvas" width="100" height="100" class="floatright"></canvas>
+	<div>
+	  <button data-inline="true" onClick="fallFromTop();zanzouList=new Array();">上から同時に初速度０で落とす</button>
+	  <button data-inline="true" onClick="startstop();" id="startstop">一時停止/解除</button>
+	  <br>
+	  <label><input type="radio" id="mg" name="g" onclick="setFzero();">無重力</label>
+	  <label><input type="radio" id="mg" name="g" checked="true" onclick="setFmg();">質量に比例した重力</label>
+	  <label><input type="radio" id="constF" name="g" onclick="setFConst();">質量に無関係な一定力</label>
+	  <br>
+	  <label><input type="checkbox" id="teikoucb" onclick="checkTeikou();">空気抵抗ON/OFF</label>
+	</div>
+  </body>
+</html>

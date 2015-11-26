@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,target-densityDpi=device-dpi,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>F,U,Sの立体図</title>
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link rel="stylesheet" href="jquery.mobile-1.1.0.min.css" />
+		<script src="jquery-1.7.2.min"></script>
+		<script src="jquery.mobile-1.1.0.min.js"></script>
+		<link rel="STYLESHEET" href="ss.css" type="text/css">
+	<script src="three.min.js" type="application/javascript"></script>
+	<script src="TrackballControls.js" type="application/javascript"></script>
+	<script src="threejsscreen.js" type="application/javascript"></script>
+	<title>第５講　鏡の国は何が違う？</title>
+	<script type="text/javascript">
+	 var NUMX=20;
+	 var NUMY=20;
+	 var plot3d;
+	 var ts;
+	 var phi=0;
+	 var theta=0;
+	 var psi=0;
+	 var yuka,kagami;
+	 var kabe,kabe2;
+	 var white=new THREE.MeshLambertMaterial({color: 0xEEEEEE,ambient: 0xEEEEEE});
+	 var black=new THREE.MeshLambertMaterial({color: 0x333333,ambient: 0x444444});
+	 var yellow=new THREE.MeshLambertMaterial({color: 0x888800,ambient: 0x888800});
+	 var red=new THREE.MeshLambertMaterial({color: 0xFF0000,ambient:0xFF0000});
+	 var blue=new THREE.MeshLambertMaterial({color: 0x0000FF,ambient:0x0000FF});
+	 var green=new THREE.MeshLambertMaterial({color: 0x00AA00,ambient:0x00AA00});
+
+	 
+
+	 var texture;
+	 var kabem;
+	 var texture2;
+	 var kabem2;
+	 var yukam;
+	 var kagamim;
+	 var yukag;
+	 var kagamig;
+	 var kabeg;
+	 var xyz;
+	 function initBackGround() {
+	   yukam=new THREE.MeshLambertMaterial({color: 0xFF0000,transparent:true,opacity:0.8,shading: THREE.SmoothShading, side: THREE.DoubleSide});
+	   plotg=new THREE.PlaneGeometry(2, 2, NUMX, NUMY);
+	   plot3d=new THREE.Mesh(plotg,yukam);
+	   plot3d.position.set(1,1,0);
+	   makeGraphFTV();
+	   xyz=makeCoordinate(red,blue,green,0.6);
+	 }
+	 function makeGraphFTV() {
+	   //	   plot3d.geometry.verticesNeedUpdate=true;//これを忘れずに書く
+	   for (var i=0;i<NUMX+1;i++) {
+		 for (var j=0;j<NUMY+1;j++) {
+		   var x=i;
+		   var y=(NUMY-j);
+		   if( x==0 ) {
+			 x=0.0001;
+		   }
+		   if( y==0 ) {
+			 y=0.0001;
+		   }
+           //(i,j)のvertexを得る
+           var index = j * (NUMX + 1) + i % (NUMX + 1);
+           var vertex = plot3d.geometry.vertices[index];
+           var amp=0.005;//振幅
+           vertex.z = -amp*x*(1.5*Math.log(x)+Math.log(y));
+		   //		 vertex.z = amp*Math.sin(0.3*i);	 
+		 }           
+	   }
+	 }
+	 function makeCoordinate(xm,ym,zm,b) {
+	   if( b== undefined ) { b=1;}
+	   var cood=new Object();
+
+	   cood.xjiku=new THREE.Mesh(new Yajirushi(1,b*0.03),xm);
+	   cood.yjiku=new THREE.Mesh(new Yajirushi(1,b*0.03),ym);
+	   cood.zjiku=new THREE.Mesh(new Yajirushi(1,b*0.03),zm);
+	   cood.xjiku.rotation.set(0,0,-0.5*Math.PI);
+	   cood.zjiku.rotation.set(0.5*Math.PI,0,0);
+	   return cood;
+	 }
+	 var Yajirushi=function(len,w,ya,yaw) {
+	if( len == undefined ) {
+		len=1;
+	}
+	if( w==undefined ) {
+		w=0.03;
+	}
+	if( yaw==undefined ) {
+		yaw=1.6;
+	}
+	if( ya==undefined ) {
+		ya=0.2;
+	}
+	THREE.CylinderGeometry.call(this,w*len,w*len,len*(1-ya),(ts.useWebGL() ? 8 : 3));
+	var i;
+	for(i=0; i<this.vertices.length; i++ ) {
+		this.vertices[i].y += 0.5*len*(1-ya);
+	}
+	this.capg=new THREE.Mesh(new THREE.CylinderGeometry(0,yaw*w*len,len*ya,(ts.useWebGL() ? 8 : 3)));
+	for(i=0; i<this.capg.geometry.vertices.length; i++ ) {
+		this.capg.geometry.vertices[i].y += len*(1-0.5*ya);
+	}
+	THREE.GeometryUtils.merge(this,this.capg);
+}
+Yajirushi.prototype=Object.create(THREE.CylinderGeometry.prototype);
+Yajirushi.prototype.constructor=Yajirushi;
+
+	 $(document).delegate('#page0','pageshow',function(e) {
+	   ts=new ThreejsScreen("tcanvas",0.7,0.8);
+	   initBackGround();
+//	   man=makeHuman(true);
+//	   mirrorMan=makeHuman(false);
+
+	   ts.camera.position.set(5,5,5);
+	   
+//	   ts.scene.add(man.me);
+//	   ts.scene.add(mirrorMan.me);
+//	   ts.scene.add(man.moji);
+//	   ts.scene.add(mirrorMan.moji);
+//	   ts.scene.add(kabe);
+//	   ts.scene.add(kabe2);
+	   ts.scene.add(plot3d);
+	   ts.scene.add(xyz.xjiku);
+	   ts.scene.add(xyz.yjiku);
+	   ts.scene.add(xyz.zjiku);
+
+
+//	   ts.scene.add(yuka);
+//	   ts.scene.add(kagami);
+	   ts.setAnotherLight(0xFFFFFF,100,-100,100);
+	   graphWrite();
+	 });
+	 function makeHuman(flg) {
+	   var py;
+	   if( flg ) {
+		 py=0.3;
+	   } else {
+		 py=-0.3;
+	   }
+	   var human=new Object();
+	   human.man=new THREE.Geometry();
+	   var mojip=new THREE.Geometry();
+	   mojip.vertices.push(new THREE.Vector3(0.1,py*0.666,0.6));
+	   mojip.vertices.push(new THREE.Vector3(0.1,py*0.666,0.8));
+	   mojip.vertices.push(new THREE.Vector3(-0.1,py*0.666,0.8));
+	   mojip.vertices.push(new THREE.Vector3(-0.12,py*0.666,0.78));
+	   mojip.vertices.push(new THREE.Vector3(-0.12,py*0.666,0.72));
+	   mojip.vertices.push(new THREE.Vector3(-0.1,py*0.666,0.7));
+	   mojip.vertices.push(new THREE.Vector3(0.1,py*0.666,0.7));
+	   human.moji=new THREE.Line(mojip,new THREE.LineBasicMaterial({color:0xFF0000,linewidth:10}));
+
+	   human.head=new THREE.Mesh(new THREE.SphereGeometry(0.1,8,5));
+	   human.head.position.set(0,py,1);
+	   human.body=new THREE.Mesh(new THREE.CubeGeometry(0.4,0.2,0.6));
+	   human.body.position.set(0,py,0.6);
+	   human.handL=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.5,6,1,false));
+	   human.handL.position.set(0.3,py,0.85);
+	   human.handL.rotation.set(0.5*Math.PI,0,0.7*Math.PI);
+	   human.handR=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.5,6,1,false));
+	   human.handR.position.set(-0.3,py,0.55);
+	   human.handR.rotation.set(0.5*Math.PI,0,-0.2*Math.PI);
+	   human.footL=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.09,0.5,6,1,false));
+	   human.footL.position.set(-0.1,py,0.25);
+	   human.footL.rotation.set(0.5*Math.PI,0,0);
+	   human.footR=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.09,0.5,6,1,false));
+	   human.footR.position.set(0.1,py,0.25);
+	   human.footR.rotation.set(0.5*Math.PI,0,0);
+
+	   human.eyeL=new THREE.Mesh(new THREE.SphereGeometry(0.03,8,5));
+	   human.eyeL.position.set(0.05,py*0.7,1.05);
+	   human.eyeR=new THREE.Mesh(new THREE.SphereGeometry(0.03,8,5));
+	   human.eyeR.position.set(-0.05,py*0.7,1.05);
+	   human.nose=new THREE.Mesh(new THREE.CylinderGeometry(0.01,0.01,0.045,6,1,false));
+	   human.nose.position.set(0,py*0.7,1);
+	   human.mouse=new THREE.Mesh(new THREE.CylinderGeometry(0.01,0.01,0.045,6,1,false));
+	   human.mouse.rotation.set(0,0,0.5*Math.PI);
+	   human.mouse.position.set(0,py*0.7,0.97);
+
+	   THREE.GeometryUtils.merge(human.man,human.head);
+	   THREE.GeometryUtils.merge(human.man,human.body);
+	   THREE.GeometryUtils.merge(human.man,human.footL);
+	   THREE.GeometryUtils.merge(human.man,human.handL);
+	   THREE.GeometryUtils.merge(human.man,human.handR);
+	   THREE.GeometryUtils.merge(human.man,human.footR);
+	   THREE.GeometryUtils.merge(human.man,human.eyeL);
+	   THREE.GeometryUtils.merge(human.man,human.eyeR);
+	   THREE.GeometryUtils.merge(human.man,human.nose);
+	   THREE.GeometryUtils.merge(human.man,human.mouse);
+	   human.me=new THREE.Mesh(human.man,yellow);
+	   return human;
+
+	 }
+
+	 var t=0;
+	 var nowMoving=false;
+	 function graphWrite() {	
+							requestAnimationFrame(graphWrite);
+							ts.controlsUpdate();
+							ts.draw();
+							}
+	 var mode=2;
+	 function resetMirrorMan() {
+	   mirrorMan.me.position.set(0,0,0);
+	   mirrorMan.me.rotation.set(0,0,0);
+	   mirrorMan.moji.position.set(0,0,0);
+	   mirrorMan.moji.rotation.set(0,0,0);
+	 }
+	 
+	 function graphWrite2() {	
+							 requestAnimationFrame(graphWrite2);
+							 ts2.controlsUpdate();
+							 
+							 
+							 var i;
+							 var x;
+							 for(i=0; i<ballN/ 2 ; i++ ) {
+		 x=(2*i/ ballN -0.1*t);
+		 x=x-Math.floor(x);
+		 ball[i].position.set(x*2-1,1,0.8);
+	   }
+							 for(i=ballN/ 2; i<ballN ; i++ ) {
+		 x=(2*i/ ballN-0.1*t);
+		 x=x-Math.floor(x);
+		 ball[i].position.set(x*2-1,-1,0.8);
+	   }
+							 
+							 var theta;
+							 if( t<0.2*Math.PI ) {
+		 theta=t; 
+	   } else {
+		 theta=0.2*Math.PI;
+	   }
+
+							 var costheta=Math.cos(theta);
+							 var sintheta=Math.sin(theta);
+							 jishaku.N.rotation.set(0,0,0.5*Math.PI+theta);
+							 jishaku.N.position.set(-0.25*costheta,-1-0.25*sintheta,0.5);
+							 jishaku.S.rotation.set(0,0,0.5*Math.PI+theta);
+							 jishaku.S.position.set(0.25*costheta,-1+0.25*sintheta,0.5);
+							 jishakuM.N.rotation.set(0,0,0.5*Math.PI-theta);
+							 jishakuM.N.position.set(-0.25*costheta,1+0.25*sintheta,0.5);
+							 jishakuM.S.rotation.set(0,0,0.5*Math.PI-theta);
+							 jishakuM.S.position.set(0.25*costheta,1-0.25*sintheta,0.5);
+
+							 var cosphi=Math.cos(t);
+							 var sinphi=Math.sin(t);
+							 ball2[0].position.set(0.1*sintheta*cosphi,-1-0.1*costheta*cosphi,0.5+0.1*sinphi);
+							 ball2[1].position.set(0.1*sintheta*sinphi,-1-0.1*costheta*sinphi,0.5-0.1*cosphi);
+							 ball2[2].position.set(-0.1*sintheta*cosphi,-1+0.1*costheta*cosphi,0.5-0.1*sinphi);
+							 ball2[3].position.set(-0.1*sintheta*sinphi,-1+0.1*costheta*sinphi,0.5+0.1*cosphi);
+							 ball2[4].position.set(0.1*sintheta*cosphi,1+0.1*costheta*cosphi,0.5+0.1*sinphi);
+							 ball2[5].position.set(0.1*sintheta*sinphi,1+0.1*costheta*sinphi,0.5-0.1*cosphi);
+							 ball2[6].position.set(-0.1*sintheta*cosphi,1-0.1*costheta*cosphi,0.5-0.1*sinphi);
+							 ball2[7].position.set(-0.1*sintheta*sinphi,1-0.1*costheta*sinphi,0.5+0.1*cosphi);
+							 t+= 0.02;
+							 ts2.draw();
+							 }
+	 function jmOn() {
+	   var i;
+	   for(i=0; i<8 ; i++ ) {
+		 ts2.scene.add(ball2[i]);
+	   }
+	 }
+	 function jmOff() {
+	   var i;
+	   for(i=0; i<8 ; i++ ) {
+		 ts2.scene.remove(ball2[i]);
+	   }
+	 }
+
+	 function checkJM() {
+       if ($('#jmcb').is(':checked')) {
+         jmOn();
+       } else {
+         jmOff();
+       }
+	 }
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>鏡は左右を反転する？</h1>
+	  </div>
+	  <div data-role="content">
+		<img src="mirrorhand.png" width="30%">
+
+		<p align="center"><strong>鏡は左右を反転するのに、どうして上下は反転しないの？</strong></p>
+
+		<p>というのは、よく聞く疑問です。右の図は、右手をあげた人が鏡に写っているところを描いたものです。鏡の中（図の右。「琉球大学」という字が鏡文字になっているところ）には、左手をあげた人が存在してい（るように見え）ますね。では、どうして鏡は左右をひっくり返すのでしょう？？</p>
+
+		<p>「人間の目は左右についているからだ」という人もいますが、これはもちろんおかしい。片目をつぶって見たって、やっぱり左右反転しているように見えますからね。</p>
+
+		<img src="mirrorten.png" width="25%" class="floatright">
+		<p>　実は上下が反転する場合だってちゃんとあります。たとえば右の図のように、床が鏡になっている場合です。鏡の中（下？）の人は、上下が逆さまになっています。</p>
+
+		<p>　ただ、この図をよくみると、やっぱり鏡の中の人は右手じゃなくて左手をあげています！！（鏡の中では「さげています！！」）どうも不思議です。最初の図は左右しか反転しなかったのに、天井に鏡がある場合には左右と上下が両方反転している（ような気がする）。鏡の反転能力は置場所によって変わるんでしょうか？</p>
+
+		<p>　そこでもう一度、この２枚の図をよぉく見てください。すると、実は我々が「反転」という言葉をいいかげんに使ったためにごまかされてしまっていることがわかるはずです。どういうことかというと、実は最初の図では左右は「反転」していないのです。</p>
+		<div class="A">と、ここまで説明したところで、動く図で鏡の世界をみてみましょう。</div>
+		<div class="fukidasi">　↓の図は、マウスを使って視点の移動／拡大縮小などができます。</div>
+		<p><canvas id="tcanvas" width=200 height=200></canvas></p>
+		<div>
+		  <button data-inline="true" onClick="nowMoving=true; resetMirrorMan(); mode=3;t=0;">鏡に入る（正面から）</button>
+		  <button data-inline="true" onClick="nowMoving=true; resetMirrorMan(); mode=1;t=0;">鏡に入る（右から）</button>
+		  <button data-inline="true" onClick="nowMoving=true; resetMirrorMan(); mode=2;t=0;">鏡に入る（下から）</button>
+		  <button data-inline="true" onClick="nowMoving=false; resetMirrorMan(); mode=0;">元の位置へ</button>
+		</div>
+		<p>　混乱するといけないのでここで「反転」という言葉の意味をしっかりと考えましょう。</p>
+		<p>　反転というのはもちろん、「前後、上下、左右などの位置関係がひっくり変えること」です。では今の２枚の図の場合、位置関係がひっくり返っているのはそれぞれ、何でしょう。ここで示した図の場合、実は左右は反転していません。右にある右手は鏡の中にでも右にあります！</p>
+		<p><img src="mirror4.png" width="60%" class="floatnone"></p>
+
+		<p>　よく考えてみると、これらの図に描かれた鏡はどちらも、実は左右を反転していないことがわかります。鏡が反転しているのは、常に鏡に対して垂直な方向なのです。それなのになぜ我々は左右が反転している、と思うのでしょうか。それは無意識のうちに我々が「鏡の裏側に回ったら」ということを仮定しているからです。</p>
+		<p><img src="mirror2.png" width="50%" class="floatnone"></p>
+		<div class="setsumei">　上のプログラムで<span class="fukidasi">鏡に入る（右から）</span>というボタンを押すと、動く図で鏡に回りこむ様子が見えます。</div>
+		<p>　つまり、「鏡の裏に回った自分」を思い浮かべ、それと鏡像を比べた結果「あ、左右が反転している」と判断しているのです。当然のことながら、自分が鏡の向こう側に回るとき、違う回り方をすれば上下が反転しているように見えるはずです。</p>
+		<p><img src="mirror3.png" width="50%" class="floatnone"></p>
+		<div class="setsumei">　上のプログラムで<span class="fukidasi">鏡に入る（下から）</span>というボタンを押すと、動く図で鏡に回りこむ様子が見えます。</div>
+		<div class="A">　すいません、テキストの説明とプログラムの動きは逆ですが、動きを見ると下の方がわかりやすかったので。</div>
+
+		<p>　「鏡は左右を反転するが上下を反転しない」というのは、我々が鏡の裏側に回る時の回り方を決めてしまっているからです。鏡は常に自分と垂直な方向<strong>だけ</strong>を反転します。</p>
+		<p>　実際に「鏡の裏に移動する」という操作（運動）をすると、実は二つの方向が入れ替わります。</p>
+
+		<p>　Aの回り込み方の場合、左右と前後が反転してます。</p>
+
+		<p>　Bの回り込み方の場合、上下と前後が反転しています。</p>
+
+
+		
+		<p>一方、鏡は前後を反転します。そのため、人はAの場合「鏡が左右を入れ替えた」と考えることになります。</p>
+		<p>「反転」を２回すると、形としては元と同じになります。鏡の中の像をもう一回鏡に映すと元にもどるのと同じことです。２回反転 は「１８０度回転」と全く同じものになります。</p>
+		<div class="A">　２回反転すると元と同じ、というのは２枚の鏡を使うとわかります。</div>
+		<p><img src="mirror180.png" width="30%" class="floatnone"></p>
+		<p>上の図のように、２枚の鏡を９０度の角度をつけて合わせると、「左右の反転しない鏡」を作ることができます。</p>
+		<div class="A">　授業では実際にこの90度の角度をつけて貼り合わせた２枚の鏡を持って行って見せました。下のが、その写真です。向こう側に見える像では、左右が反転してません。</div>
+		<p><img src="mirror180A.jpg" width="60%" class="floatnone"></p>
+		<p><strong>Question:</strong>では、この鏡を横倒しにすると、いったいどうなるでしょう？</p>
+		<div class="A">　ちなみに答は「上下反転画像が見える」です。</div>
+
+		<p>　上下・左右・前後をいっせいに、またはどれか一つを反転することを「パリティ変換」という名前で呼びます（二つ反転すると、「180度回転」と同じになってしまうので、「パリティ変換」とは別です）。パリティ変換をした時、元と同じになる量を、「パリティが偶」と言います。これに対し、パリティ変換すると元と符号が変るものを「パリティが奇」と言います。物理量で言うと、温度や圧力はパリティが偶です。力や速度はパリティが奇です。</p>
+
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page1" data-icon="arrow-r">講義後半のページへ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page1">
+	  <div data-role="header">
+		<h1>鏡の中の物理法則</h1>
+	  </div>
+	  <div data-role="content">
+		<h3>反転世界での運動---宇宙人に「左」を教えるには？</h3>
+		<p>　鏡の話が片付いたところで、次のような問題を考えてみましょう。</p>
+		<p align="center">左右反転した映像を見せられたとして、我々はそれが鏡像だということに気付くことができるか？</p>
+
+		<p>　もちろん字が書いてあったらわかるにきまっているので、そういうのはなしとしましょう。たとえば箸を左手に持っていたらわかる？？---でも、その人は左利きかもしれませんよね。</p>
+
+		<p>　どのような運動を考えてみても、それを反転した運動というのも同じように起こると思われます。実は物理法則というのはほとんどが左右対称にできています。物理法則がそうなっているということは、物理現象の説明をしている限り、「右」と「左」を区別する必要はない---どころか、区別できない---ということを表しています。</p>
+		<img src="mirrormagnetB.png" width="25%">
+		<p>　「宇宙人と音声で通信している時、右と左を教える方法はあるか？」という問題があります。相手は宇宙人ですから「箸を持つ方が右」ではだめだし、「心臓が左」でもだめです（そもそも宇宙人に心臓があるのか？）。</p>
+
+		<p>　アンペアという電流の単位にその名前を残す物理学者アンペールは、電流が磁界を作る時の法則を発見した人でもあります。彼は同時に、電磁気における左右対称についても悩んだ人でした。彼を悩ませたのは、電流によって生じる磁界です。電流があると、それに対して右ねじの方向に磁界ができる、というのが右ねじの法則です。これを鏡に映すと、左ねじの方向に磁界ができているように見えてしまいます。たとえば図のように磁石と電流を置いておくと磁石は反時計まわりの方向に力を受けます。</p>
+
+		<p>　このことを使うと、「磁石の上に電流を流した時、N極の針が振れる方向が左だ」と教えてやれば宇宙人に左と右が伝えられる---でしょうか？---でも「NとS」をどう伝えるか？？</p>
+		
+
+		<div class="fukidasi">　では、動画で磁石の動きを見てみましょう。<br>　↓の図は、マウスを使って視点の移動／拡大縮小などができます。</div>
+		<p><canvas id="tcanvas1" width=200 height=200></canvas></p>
+		<div><button data-inline="true" onClick="t=0;">元の位置へ</button></div>
+		<div><label><input type="checkbox" id="jmcb" onclick="checkJM();">磁石内部の電流を見る（ON/OFF）</label>
+		</div>
+		<div class="A">　この図も「琉球大学」が読めるのが我々の世界で、読めないのが鏡の中の世界です。電流が流れると「右ネジの法則」に従って磁界ができて、磁石が（方位磁石のように）傾きます。鏡に映すと、磁石の傾く向きが逆になります（ということは、鏡の中では「左ネジの法則」が成り立っている？？</div>
+		<p>　これを鏡に写すと、この力が逆向きに働いているように見えてしまいます。実は鏡の中ではNとSが入れ替わらなければ左右対称は保てません。鏡に移ったN極は、実はS極なのです！</p>
+
+		<img src="mirrormagnet2B.png" width="30%">
+		<p>　これは一見変に思えると思います。しかし、この磁石がもし電磁石であったなら、全く不思議ではありません。電磁石は電流の流れる方向にしたがってN極、S極が決まります。そして、左右反転すると電流の流れもひっくりかえるので、NSが引っくり返るのはある意味で当然なのです。永久磁石の場合、磁力は磁石を作っている一個一個の原子核が磁石であることから来ています。そして、原子核が磁石である理由は、それがスピンという一種の回転を持っているためです。鏡に映せば、スピン（すなわち回転）も反転するので、永久磁石のNSが反転することも、実は理にかなっていると言えるのです。</p>
+
+		<div class="setumei">上にある、<span class="fukidasi">磁石内部の電流を見る(ON/OFF)</span>というところにチェックを入れると、磁石の中を流れる電流の様子が見えます。鏡の中の世界では電流の流れが「逆回り」になっていること（つまり鏡の中ではNSが逆転する）ことがわかりますか？？</div>
+
+		<h3>左右非対称はどこにある？</h3>
+		<h3>鏡の国のミルクはまずい？</h3>
+
+		<p>人間も含め、生物の体を作っているのは主に炭素、酸素、水素の化合物である有機物質です。そして、有機物質の中には左右対称でない（鏡像を作ると元と同じでない）ものがあります。我々の体を作るタンパク質の元であるアミノ酸は、正四面体の４つの角にいろんな物質がくっついた形をしているため、くっつき方が二通り（互いが互いの鏡像）あります。化学の用語ではこれを「旋光性」とよび、左旋光性の物質とこれを左右反転した右旋光性物質と、二種類の物質があることになります。では我々の体を作っている物質はどっちかというと、実は我々に限らず、地球上のすべての生物が、ほんのわずかな例外を除いて左旋光性ばかりなのです。つまり、生物の世界では左右対称性は破れています（このことを発見したのはパストゥールです）。
+
+		左旋光性の物質と右旋光性の物質は、物理的・化学的にはなんの違いもありません。ではなぜ生物は左旋光性を持った物質ばかりを選ぶのでしょうか。確実に言えることは、もし右旋光性の有機物質でできた生命が地球にいたとしても、その生物は他の生物の作った栄養（左旋光性の物質でできている）を摂取することができない、ということです。
+
+		隕石などの中からアミノ酸が発見されることがあります。そして、隕石の中のアミノ酸には左右の旋光性が均等に含まれています。初期地球で生命が誕生した時の最初の生命が左旋光性だったので、その子孫である今の生物たちもそうなっているというだけなのかもしれません。
+
+		<h3>パリティの破れ---物理の左右非対称</h3>
+		<p>　では、ほんとにすべての物理現象は左右対称性を守っているのでしょうか。</p>
+
+		<img src="spins.png" width="25%">
+		<p>　ベータ崩壊という反応を見るとパリティ不変性が破れていることがわかるということがわかりました。コバルトという原子からベータ線という一種の放射線が出てくる時、コバルト原子核のスピンの南極側から出てくる確率の方が北極側から出てくる確率よりも大きいということを発見したのです。これを鏡に映して反転した現象を考えてみると、回転方向は逆になるのに出ていくベータ線の方向は変りません。つまり、左右反転した現象は起こらないことになります。原子核の中で起こる現象とはいえ、宇宙人に左右を教える方法が一つは存在しているわけです。ではいったいこの左右非対称はどこからやってきたのか、それはまだ未解決の問題です。</p>
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page0" data-icon="arrow-l">講義前半のページへ</a>
+		<a href="#pageqa" data-icon="arrow-r">問題の解答と感想・コメントへ</a>
+	  </div>
+	</div>
+  </body>
+</html>

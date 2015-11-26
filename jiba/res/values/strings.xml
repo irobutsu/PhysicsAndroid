@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, DenbaActivity!</string>
+    <string name="app_name">磁場（磁界）</string>
+    <string name="q1_equal">M1=</string>
+    <string name="q2_equal">M2=</string>
+
+</resources>

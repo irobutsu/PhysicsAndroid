@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/rot0" android:title="@string/angle_add_0" android:visible="true"></item>
+    <item android:id="@+id/rot90" android:title="@string/angle_add_90" android:visible="true"></item>
+    <item android:id="@+id/rot180" android:title="@string/angle_add_180" android:visible="true"></item>
+    <item android:id="@+id/rot270" android:title="@string/angle_add_270" android:visible="true"></item>
+
+    
+
+</menu>

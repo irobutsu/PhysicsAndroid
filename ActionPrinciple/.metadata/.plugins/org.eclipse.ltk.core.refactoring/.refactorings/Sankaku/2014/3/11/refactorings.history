@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 3 elements to &apos;www&apos;&#x0A;- Original project: &apos;Sankaku&apos;&#x0A;- Destination element: &apos;www&apos;&#x0A;- Original elements:&#x0A;     jquery.mobile-1.1.0.min.js&#x0A;     jquery-1.7.2.min&#x0A;     jquery.mobile-1.1.0.min.css" description="Copy files" element1="assets/www/jquery.mobile-1.1.0.min.js" element2="assets/www/jquery-1.7.2.min" element3="assets/www/jquery.mobile-1.1.0.min.css" files="3" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1394331227071" target="/Vgvp/assets/www" units="0" version="1.0"/>
+</session>

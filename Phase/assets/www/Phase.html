@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+	<!-- , width=device-width, height=device-height, target-densitydpi=device-dpi" /> -->
+    <!-- <link rel="stylesheet" type="text/css" href="css/index.css" /> -->
+    <title>波の反射／透過</title>
+	<script src="jquery.js" type="text/javascript"></script>
+	<link href="jquery.mobile-1.3.1.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.mobile-1.3.1.min.js" type="text/javascript"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="graphscreen.js" type="text/javascript"></script>
+
+	<style type="text/css">
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<title>波の位相とはなにか？</title>
+	<script type="text/javascript">
+	 var theta2npi;
+	 var theta2npione;
+	 var theta2npitwo;
+	 var theta2npithree;
+	 $(document).delegate('#page1','pageinit',function(e) {
+	   theta2npi=new Image();
+	   theta2npi.src="./2npi.png";
+	   theta2npione=new Image();
+	   theta2npione.src="./2npione.png";
+	   theta2npitwo=new Image();
+	   theta2npitwo.src="./2npitwo.png";
+	   theta2npithree=new Image();
+	   theta2npithree.src="./2npithree.png";
+       gs1=new GraphScreen("canvas1",10,2.6,0.9);
+       gs1.setLeft(-1);
+       gs1.setBottom(-1.5);
+       gs1.gobackOriginalSize();
+       gs1.writeContents=function() {
+		 graphWrite_sub(gs1);
+       }; 
+	   nowgs=gs1;
+	 });
+	 $(document).delegate('#page1','pageshow',function(e) {
+	   nowgs=gs1;
+	   setT();
+	   setLambda();
+	   setSliders($("#slider_1"),$("#slider2_1"),null,null);
+	   if( !nowAnimeFlg ) {
+		 graphWrite(gs1);
+	   }
+	 });
+	 function setSliders(sl,sl2) {
+	   if( sl != null  ) {
+		 sl.prop('value',lambda);
+		 sl.slider('refresh');
+	   }
+	   if( sl2 != null  ) {
+		 sl2.prop('value',T);
+		 sl2.slider('refresh');
+	   }
+	 }
+	 var nowAnimeFlg=false;
+	 function graphWrite(gs) {
+	   graphWrite_sub(gs);
+	   if( !nowAnimeFlg ) {
+		 nowAnimeFlg=true;
+	   }
+	   t += 0.1;
+	   if( !stopFlg ) {
+		 setTimeout("graphWrite(nowgs);",100);
+	   }
+	 }
+	 function graphWrite_sub(gs) {
+	   var x;
+	   var ct=gs.ctx;
+	   gs.setScale();
+       gs.clearALL();
+	   ct.fillStyle="rgb(235,255,255)";
+	   ct.beginPath();
+	   ct.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+	   
+	   gs.writeCoordinate();
+	   ct.beginPath();
+	   ct.strokeStyle="rgba(255,0,0,0.6)";
+	   ct.moveTo(gs.leftwx,wave1(gs.leftwx,t));
+	   for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.01 ) {
+		 ct.lineTo(x,wave1(x,t));
+	   }
+	   ct.stroke();
+	   ct.fillStyle="rgba(0,155,0,0.7)";
+	   ct.strokeStyle="rgb(255,255,255)";
+	   for(x=gs.leftwx+0.125; x< gs.rightwx ; x+=0.25 ) {
+		 ct.beginPath();
+		 ct.arc(x,-1.3,0.125,0,2*Math.PI,false);
+		 ct.fill();
+		 ct.beginPath();
+		 ct.moveTo(x,-1.3);
+		 var theta=phase(x,t);
+		 ct.lineTo(x+0.125*Math.cos(theta),-1.3+0.125*Math.sin(theta));
+		 ct.stroke();
+	   }
+	   if( yamaFlg ) {
+		 var xx;
+		 ct.strokeStyle="rgba(255,0,255,0.5)";
+		 for( xx=Math.ceil(gs.leftwx/lambda-t/T)-0.75; (xx+t/T)*lambda < gs.rightwx ; xx+=1 ) {
+		   ct.beginPath();
+		   var xxx=(xx+t/T)*lambda;
+		   ct.moveTo(xxx,-1.5);
+		   ct.lineTo(xxx,1.1);
+		   ct.stroke();
+		   ct.drawImage(theta2npione,xxx,1,1.353,-0.393);
+		 }
+	   }
+	   if( taniFlg ) {
+		 var xx;
+		 ct.strokeStyle="rgba(0,255,0,0.5)";
+		 for( xx=Math.ceil(gs.leftwx/lambda-t/T)-0.25; (xx+t/T)*lambda < gs.rightwx ; xx+=1 ) {
+		   ct.beginPath();
+		   var xxx=(xx+t/T)*lambda;
+		   ct.moveTo(xxx,-1.5);
+		   ct.lineTo(xxx,1.1);
+		   ct.stroke();
+		   ct.drawImage(theta2npithree,xxx,-1,1.401,0.381);
+		 }
+	   }
+	   if( uraFlg ) {
+		 var xx;
+		 ct.strokeStyle="rgba(0,0,255,0.5)";
+		 for( xx=Math.ceil(gs.leftwx/lambda-t/T)-0.5; (xx+t/T)*lambda < gs.rightwx ; xx+=1 ) {
+		   ct.beginPath();
+		   var xxx=(xx+t/T)*lambda;
+		   ct.moveTo(xxx,-1.5);
+		   ct.lineTo(xxx,1.1);
+		   ct.stroke();
+		   ct.drawImage(theta2npitwo,xxx,0,1.341,0.318);
+		 }
+	   }
+	   if( hajimeFlg ) {
+		 var xx;
+		 ct.strokeStyle="rgba(255,255,0,0.5)";
+		 for( xx=Math.ceil(gs.leftwx/lambda-t/T); (xx+t/T)*lambda < gs.rightwx ; xx+=1 ) {
+		   ct.beginPath();
+		   var xxx=(xx+t/T)*lambda
+		   ct.moveTo(xxx,-1.5);
+		   ct.lineTo(xxx,1.1);
+		   ct.stroke();
+		   ct.drawImage(theta2npi,xxx,0,0.924,-0.351);
+		 }
+	   }
+	 }
+	 function phase(x,t) {
+	   return k1*x-omega1*t;
+	 }
+	 function wave1(x,t) {
+	   return Math.sin(k1*x-omega1*t);
+	 }
+	 var gs1,nowgs;
+	 var t=0;
+	 var k1;
+	 var omega1;
+	 var lambda=5;
+	 var T=3;
+	 function setCheckBoxes() {
+	   $(".checkboxOne").prop("checked",flg1).checkboxradio('refresh');
+	   $(".checkboxTwo").prop("checked",flg2).checkboxradio('refresh');
+	   $(".checkboxG").attr("checked",flgG).checkboxradio('refresh');
+	   $(".checkboxThree").prop("checked",flg3).checkboxradio('refresh');
+	   $(".checkboxFour").prop("checked",flg4).checkboxradio('refresh');
+	 }
+	 function setLambda() {
+	   k1=2*Math.PI/lambda;
+	   $(".k").html("波数k="+marume4(k1)+"rad/m");
+       $(".vp").html("速度v="+marume4(omega1/k1)+"m/s");
+     }
+
+	 function setT() {
+       omega1=2*Math.PI/T;
+	   $(".nu").html("振動数ν="+marume4(1/T)+"Hz");
+	   $(".omega").html("角振動数ω="+marume4(2*Math.PI/T)+"rad/s");
+       $(".vp").html("速度v="+marume4(omega1/k1)+"m/s");
+     }
+	 function marume4(x) {
+	   var xx=x*10000;
+	   xx=Math.round(xx);
+	   xx/=10000;
+       if( x- xx == 0 ) {
+         return xx;
+       } else {
+         return xx+"…";
+       }
+	 }
+	 var hajimeFlg=false;
+	 var uraFlg=false;
+	 var taniFlg=false;
+	 var yamaFlg=false;
+	 var stopFlg=false;
+	 function stopButton() {
+	   if( stopFlg ) {
+		 stopFlg=false;
+		 $("#stopB").siblings('.ui-btn-inner').children('.ui-btn-text').text("一時停止");
+		 graphWrite(nowgs);
+	   } else {
+		 stopFlg=true;
+		 $("#stopB").siblings('.ui-btn-inner').children('.ui-btn-text').text("運動再開");
+	   }
+	 }
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page1">
+	  <div data-role="header">
+		<h1>波の位相とはなにか？</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　これは、波の「位相」を理解するためのアニメーションである。説明はプログラムの下の方にある。</p>
+		<canvas id="canvas1" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <label for="slider_1">波長 λ:</label>
+			  <input type="range" class="slider" id="slider_1" value="5" min="0.1" max="20" step="0.1" onChange="lambda=Number($('#slider_1').val()); setLambda();" />
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <label for="slider2_1">周期 T:</label>
+			  <input type="range" class="slider2" id="slider2_1" value="3" min="0.25" max="10" step="0.05" onChange="T=Number($('#slider2_1').val()); setT();"/>
+			</div>
+		  </div>
+		</div>
+		<p><span class="nu">振動数ν=</span>　<span class="omega">角振動数ω=</span>　<span class="k">波数k=</span>　<span class="vp">速度v=</span></p>
+		<fieldset data-role="controlgroup" data-type="horizontal">
+		  <legend>
+			<input type="checkbox" name="checkboxOne" id="checkbox1_1" class="checkboxOne" value="" onChange="hajimeFlg=$('#checkbox1_1').prop('checked');"/>
+			<label for="checkbox1_1" class="yellow">θ=2nπの点をマーク</label>
+			<input type="checkbox" name="checkbox1" id="checkbox2_1" class="checkboxTwo" value="" onChange="yamaFlg=$('#checkbox2_1').prop('checked');""/>
+			<label for="checkbox2_1" class="magenta">θ=(π/2)+2nπの点（山）をマーク</label>
+			<input type="checkbox" name="checkbox2" id="checkboxG_1" class="checkboxG" value="" onChange="uraFlg=$('#checkboxG_1').prop('checked');"/>
+			<label for="checkboxG_1" class="blue">θ=π+2nπの点をマーク</label>
+			<input type="checkbox" id="checkbox4_1" class="checkboxFour" value="" onchange="taniFlg=$('#checkbox4_1').prop('checked');"/>
+			<label for="checkbox4_1" class="green">θ=(3π/2)+2nπの点（谷）をマーク</label>
+		  </legend>
+		</fieldset>
+		<p><button data-inline="true" id="stopB" onClick="stopButton();">一時停止</button></p>
+		<hr>
+		<p>
+		  <img class="floatleft" src="maru2.png">　グラフの下に並んでいる<img src="maru1.png">の白い棒がその場所、その時刻で位相を表現している。<br>
+		  　位相の式を見ると、位相は「位置座標xが増加すると増え、時間tが増加すると減る」ようになっている。実際に上のアニメーションがそのようになっていること、つまり「右に行くほど位相（図のθ）が増え、時間が経つほど位相が減る」という変化をしていることを確認しよう。<br>
+		  　回転を表現する時、反時計回りを「プラスの回転」と取るので、位相が増えると反時計回りに回るようになっている。今の場合、時間が経つと位相が減るので、各々の<img src="maru1.png">は時計回りに回っている。</p>
+		  <p>
+			　プログラムでは波長と周期を変化させることができるようになっているので、それぞれを変化させながら波の運動の様子を見よう。
+		  </p>
+		  <p>　波が「山」になっているところは、位相が(π/2)または、(π/2)+2π,(π/2)+4π,…のように、「θ=(π/2)+2nπ」という形で表されるところである。</p>
+		  <p>　上にある<span class="magenta">θ=(π/2)+2nπの点（山）をマーク</span>というボックスをチェックすると、「山」である「θ=(π/2)+2nπの点」にマークが現れる（もう一回押すとマークは消える）。</p>
+		  <p>「波が<span class="magenta">山</span>になっている」ということと、「波の位相が<span class="magenta">(π/2)+2nπ</span>になっている」というのは同じ意味である。しかし「山」とか「谷」に比べて、「位相」という言葉を使うと、</p>
+		  <h4>「位相が(3π/8)になっている」</h4>
+		  <p>のような中途半端な状態（この状態は、もう少しで位相が(4π/8)=π/2になるから、「もう少しで山」という状態である）も表現できる。</p>
+		  <p>　同様にいろんな位相の点のマークをON/OFFできるので、やってみよう。</p>
+	  </div>
+	</div>
+  </body>
+</html>
+

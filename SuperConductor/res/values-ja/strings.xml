@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">超伝導磁気浮上</string>
+    <string name="q1_equal">Q1=</string>
+    <string name="q2_equal">Q2=</string>
+    <string name="resetScreen">画面初期化</string>
+  <string name="E_Line_off">（電気力線）</string>
+    <string name="E_Line_on">【電気力線】</string>
+      <string name="V_Line_off">（等電位線）</string>
+    <string name="V_Line_on">【等電位線】</string>
+      <string name="mode_0">等高面は描かない</string>
+    <string name="mode_1">面で描く</string>
+    <string name="mode_2">線で描く</string>
+      <string name="add_Plus">正電荷を加える</string>
+    <string name="add_Minus">負電荷を加える</string>
+    <string name="rm_Charge">電荷を消す</string>
+    <string name="allErase">全電荷消去</string>
+</resources>

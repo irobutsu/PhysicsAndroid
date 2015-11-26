@@ -1,0 +1,131 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical" >
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="23dp" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ToggleButton
+                    android:id="@+id/tbWave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="ToggleButton"
+                    android:textOff="波動描画OFF"
+                    android:textOn="波動描画ON" />
+
+                <CheckBox
+                    android:id="@+id/Cb1s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="1s" />
+
+                <CheckBox
+                    android:id="@+id/Cb2s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2s" />
+
+                <CheckBox
+                    android:id="@+id/Cb3s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3s" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ToggleButton
+                    android:id="@+id/tbParticle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="ToggleButton"
+                    android:textOff="粒子描画OFF"
+                    android:textOn="粒子描画ON" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/Cb2p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2p" />
+
+                <CheckBox
+                    android:id="@+id/Cb3p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3p" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ToggleButton
+                    android:id="@+id/ToggleButton02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="ToggleButton"
+                    android:textOff="アニメ停止"
+                    android:textOn="アニメ" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/Cb3d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3d" />
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

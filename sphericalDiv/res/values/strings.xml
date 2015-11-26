@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">極座標のdiv</string>
+    <string name="reso_0">低解像度</string>
+    <string name="reso_1">中解像度</string>
+    <string name="reso_2">高解像度</string>
+</resources>

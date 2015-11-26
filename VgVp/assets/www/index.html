@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+	<!-- , width=device-width, height=device-height, target-densitydpi=device-dpi" /> -->
+    <!-- <link rel="stylesheet" type="text/css" href="css/index.css" /> -->
+    <title>位相速度と群速度</title>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="graphscreen.js" type="text/javascript"></script>
+	<style type="text/css">
+	  h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	  }
+	  .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	  }
+	  .setsumei{
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	  }
+	  .wave1{
+	   color: #D00;
+	  }
+	  .wave2{
+	  color: #00D;
+	  }
+	  .wave3{
+	  color: #0DD;
+	  }
+	  .wave4{
+	  color: #DD0;
+	  }
+	 .waveG{
+	   color: #A0A;
+	 }
+	</style>
+	<title>位相速度と群速度</title>
+	<script type="text/javascript">
+	 function init() {
+       gs0=new GraphScreen("canvas0",12,4.2,0.9);
+       gs0.setLeft(-1);
+       gs0.setBottom(-2.1);
+       gs0.gobackOriginalSize();
+       gs0.writeContents=function() {
+		 graphWrite_sub(gs0);
+       }; 
+	   nowgs=gs0;
+	   flg1=true;
+	   flg2=true;
+	   flg3=false;
+	   flg4=false;
+	   flgG=true;
+	   nowgs=gs0;
+	   if( !nowAnimeFlg ) {
+		 graphWrite(gs0);
+	   }
+	 }
+	 var nowAnimeFlg=false;
+	 function graphWrite(gs) {
+	   graphWrite_sub(gs);
+	   if( !nowAnimeFlg ) {
+		 nowAnimeFlg=true;
+	   }
+	   setTimeout("graphWrite(nowgs);",100);
+	 }
+	 function graphWrite_sub(gs) {
+	   var x;
+	   var ct=gs.ctx;
+	   gs.setScale();
+       gs.clearALL();
+	   ct.fillStyle="rgb(235,255,255)";
+	   ct.beginPath();
+	   ct.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+	   
+	   gs.writeCoordinate();
+	   ct.lineWidth=gs.stdStrokeWidth*0.5;
+	   if( flg1 ) {
+		 ct.beginPath();
+		 ct.strokeStyle="rgba(255,0,0,0.6)";
+		 ct.moveTo(gs.leftwx,wave1(gs.leftwx,t));
+		 for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.002 ) {
+		   ct.lineTo(x,wave1(x,t));
+		 }
+		 ct.stroke();
+	   }
+	   if( flg2 ) {
+		 ct.beginPath();
+		 ct.strokeStyle="rgba(0,0,200,0.6)";
+		 ct.moveTo(gs.leftwx,wave2(gs.leftwx,t));
+		 for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.002 ) {
+		   ct.lineTo(x,wave2(x,t));
+		 }
+		 ct.stroke();
+	   }
+	   if( flg3 ) {
+		 ct.beginPath();
+		 ct.strokeStyle="rgba(0,200,200,0.6)";
+		 ct.moveTo(gs.leftwx,wave3(gs.leftwx,t));
+		 for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.002 ) {
+		   ct.lineTo(x,wave3(x,t));
+		 }
+		 ct.stroke();
+	   }
+	   if( flg4 ) {
+		 ct.beginPath();
+		 ct.strokeStyle="rgba(200,200,0,0.6)";
+		 ct.moveTo(gs.leftwx,wave4(gs.leftwx,t));
+		 for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.002 ) {
+		   ct.lineTo(x,wave4(x,t));
+		 }
+		 ct.stroke();
+	   }
+
+	   ct.lineWidth=gs.stdStrokeWidth;
+	   if( flgG ) {
+		 ct.beginPath();
+		 ct.strokeStyle="rgba(100,0,100,0.6)";
+		 ct.moveTo(gs.leftwx,wave1(gs.leftwx,t)+wave2(gs.leftwx,t));
+		 for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.002 ) {
+		   ct.lineTo(x,wave1(x,t)+wave2(x,t));
+		 }
+		 ct.stroke();
+	   }
+	   t += 0.1;
+	 }
+	 function wave1(x,t) {
+	   return Math.sin(k1*x-omega1*t);
+	 }
+	 function wave2(x,t) {
+	   return Math.sin(k2*x-omega2*t);
+	 }
+	 function wave3(x,t) {
+	   return Math.sin(((k1+k2)*x-(omega1+omega2)*t)*0.5);
+	 }
+	 function wave4(x,t) {
+	   return 2*Math.cos(0.5*(deltak*x-deltaomega*t));
+	 }
+	 var gs0,gs1,gs2,gs3,gs4,nowgs;
+	 var flg1=true;
+	 var flg2=true;
+	 var flgG=true;
+	 var flg3=false;
+	 var flg4=false;
+	 var t=0;
+	 var k1=15;
+	 var omega1=3;
+	 var k2=16;
+	 var omega2=3.3;
+	 var deltak=1;
+	 var deltaomega=0.3;
+	</script>
+  </head>
+  <body onload="init();">
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>位相速度と群速度</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　これは、「位相速度」と「群速度」を理解するためのアニメーションである。図でわかってもらうためのものなので、数学的な説明については少しだけなので、詳細は教科書等を参照すること。</p>
+		<p><canvas id="canvas0" width=200 height=200 style="-ms-touch-action: none;"></canvas></p>
+		<hr>
+		<h3>　<a href="VgVp.html#page1">次のページ</a>から順に読んでいこう。</h3>
+		<hr>
+		<h4>目次</h4>
+		<ul>
+		<li><a href="VgVp.html#page1">その１：波数kと角振動数ωの意味を知る。</a></li>
+		<li><a href="VgVp.html#page2">その２：二つの波を重ねてみよう。</a></li>
+		<li><a href="VgVp.html#page3">その３：合成波を見よう。</a></li>
+		<li><a href="VgVp.html#page4">その４：最後に</a></li>
+		</ul>
+	  </div>
+	</div>
+  </body>
+</html>
+

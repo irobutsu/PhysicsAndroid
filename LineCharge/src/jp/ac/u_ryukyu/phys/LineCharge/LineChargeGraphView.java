@@ -1,0 +1,312 @@
+package jp.ac.u_ryukyu.phys.LineCharge;
+
+
+import jp.ac.u_ryukyu.phys.lib.Vec3;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Paint.Style;
+import android.os.Handler;
+import android.os.Message;
+import android.util.FloatMath;
+import android.view.View;
+import android.widget.LinearLayout;
+
+public class LineChargeGraphView extends View {
+	float wx,hy;
+	boolean circleMode=false;
+	LineChargeSurfaceView view3d;
+	private float z=0f;
+	private float x=0f;
+	float  R=1f;
+	float factorB; // このfactorBは電場をグラフに書く時に何倍するかの因子。
+	
+	
+	public void setCircleMode(boolean t) {
+		circleMode=t;
+		view3d.setCircleMode(t);
+	}
+	
+	@Override
+	protected void onDraw(Canvas canvas) {
+		// TODO Auto-generated method stub
+		super.onDraw(canvas);
+		Paint p=new Paint();
+		p.setColor(Color.WHITE);
+		canvas.drawRect(0, 0, this.getWidth(),this.getHeight(),p);
+
+		float h1=hy/3f;
+		float h2=2f*h1;
+		
+		float basex=h1/2f;
+		float basey=(h1+h2)/2f;
+		float basez=(h2+hy)/2f;
+		
+		factorB=0.4f*hy;
+		
+		p.setColor(Color.BLACK);
+		canvas.drawLine(0, basex, wx,basex, p);
+		canvas.drawLine(0, basey, wx,basey, p);
+		canvas.drawLine(0, basez, wx,basez, p);
+
+		float ww=(wx-0.2f*hy)/80f;
+		
+		canvas.drawLine(20f, 0, 20f, hy, p);
+		
+		Path xp=new Path();
+		Path yp=new Path();
+		Path zp=new Path();
+		
+
+
+		Vec3 vecR;
+		float omegat;
+		float sin;
+		float cos;
+		float zz;
+		
+		omegat=((float)((0.5f)*Math.PI/40.0));
+		sin=FloatMath.sin(omegat);
+		cos=FloatMath.cos(omegat);
+		zz=(0.5f)*R/40-R;
+		if( circleMode ) {
+			vecR=new Vec3(x-R*cos,-R*sin,z);
+		} else {
+			vecR=new Vec3(x,0f,z-zz);
+		}	if( circleMode ) {
+			vecR=new Vec3(x-R,0f,z);
+		} else {
+			vecR=new Vec3(x,0f,z+R);
+		}
+			
+		float rr=vecR.NormSquare();
+		float rrsq=FloatMath.sqrt(rr);
+		Vec3 vecB1=vecR;
+	
+		vecB1.div(rr*rrsq);
+		
+		float Bx=vecB1.X();
+		float By=vecB1.Y();
+		float Bz=vecB1.Z();
+
+		float stx=basex-Bx*factorB;
+		float sty=basey-By*factorB;
+		float stz=basez-Bz*factorB;
+		xp.moveTo(20f, stx);
+		yp.moveTo(20f, sty);
+		zp.moveTo(20f, stz);
+		int i;
+	
+
+		int startN=1;
+		int endN;
+		if(circleMode ) {
+			endN=80;
+		} else {
+			endN=80;
+		}
+		for( i=startN ; i<endN ; i++ ) {
+			omegat=((float)((i+0.5f)*Math.PI/40.0));
+			sin=FloatMath.sin(omegat);
+			cos=FloatMath.cos(omegat);
+			zz=(i+0.5f)*R/40-R;
+			if( circleMode ) {
+				vecR=new Vec3(x-R*cos,-R*sin,z);
+			} else {
+				vecR=new Vec3(x,0f,z-zz);
+			}
+			
+			rr=vecR.NormSquare();
+			rrsq=FloatMath.sqrt(rr);
+
+			vecB1=vecR;
+		
+			vecB1.div(rr*rrsq);
+			
+			float deltaBx =vecB1.X();
+			float deltaBy =vecB1.Y();
+			float deltaBz =vecB1.Z();
+			Bx += deltaBx;
+			By += deltaBy;
+			Bz += deltaBz;
+			xp.lineTo(i*ww+20f, basex-deltaBx*factorB);
+			yp.lineTo(i*ww+20f, basey-deltaBy*factorB);
+			zp.lineTo(i*ww+20f, basez-deltaBz*factorB);
+		}
+		
+		if( circleMode ) {
+			xp.lineTo(80*ww+20f, stx);
+			yp.lineTo(80*ww+20f, sty);
+			zp.lineTo(80*ww+20f, stz);
+		}
+		view3d.setTotalB(Bx,By,Bz); // view3dには、和を送る。
+		Bx /=80;
+		By /=80;
+		Bz /=80;
+		
+		p.setStyle(Style.STROKE);
+		p.setStrokeWidth(3f);
+		
+		p.setColor(Color.rgb(200, 200, 0));
+		canvas.drawPath(xp, p);
+		p.setColor(Color.rgb(200, 0,200));
+		canvas.drawPath(yp, p);
+		p.setColor(Color.rgb(0, 200, 200));
+		canvas.drawPath(zp, p);
+
+		
+		ww=(wx-0.2f*hy)/N;
+		
+		for( i=startN ; i<N ; i++ ) {
+			omegat=((float)(2*i*Math.PI/N));
+			sin=FloatMath.sin(omegat);
+			cos=FloatMath.cos(omegat);
+			zz=(2*i+1)*R/N-R;
+			if( circleMode ) {
+				vecR=new Vec3(x-R*cos,-R*sin,z);
+			} else {
+				vecR=new Vec3(x,0f,z-zz);
+			}
+			
+			rr=vecR.NormSquare();
+			rrsq=FloatMath.sqrt(rr);
+
+			vecB1=vecR;
+		
+			vecB1.div(rr*rrsq);
+			
+			float deltaBx =vecB1.X();
+			float deltaBy =vecB1.Y();
+			float deltaBz =vecB1.Z();
+			if( i== t) {
+				p.setStyle(Style.FILL);
+			} else {
+				p.setStyle(Style.STROKE);
+			}
+			p.setStrokeWidth(1f);
+			float top=basex-deltaBx*factorB;
+			if( top > hy ) { top=hy;}
+			p.setColor(Color.rgb(200, 200, 0));
+			canvas.drawRect(i*ww+20f, top,(i+1)*ww+20f,basex, p);
+			top=basey-deltaBy*factorB;
+			if( top > hy ) { top=hy;}
+			p.setColor(Color.rgb(200, 0,200));
+			canvas.drawRect(i*ww+20f, top,(i+1)*ww+20f,basey, p);
+			top=basez-deltaBz*factorB;
+			if( top > hy ) { top=hy;}
+			p.setColor(Color.rgb(0, 200, 200));
+			canvas.drawRect(i*ww+20f, top,(i+1)*ww+20f,basez, p);
+		}
+
+		p.setTextSize(24f);
+		p.setColor(Color.rgb(200, 200, 0));
+		p.setStyle(Style.STROKE);
+		canvas.drawLine(20f,basex-Bx*factorB,5f,basex-Bx*factorB-10f,p);
+		canvas.drawLine(20f,basex-Bx*factorB,5f,basex-Bx*factorB+10f,p);
+		canvas.drawLine(5f,basex-Bx*factorB-10f,5f,basex-Bx*factorB+10f,p);
+	//	canvas.drawLine(i*ww+20f, basex-factorB*vecB1.X(), i*ww+20f, basex, p);
+		p.setStyle(Style.FILL);
+		canvas.drawText("ｘ成分", N*ww+20f, basex, p);
+		p.setStyle(Style.STROKE);
+		p.setColor(Color.rgb(200, 0,200));
+		canvas.drawLine(20f,basey-By*factorB,5f,basey-By*factorB-10f,p);
+		canvas.drawLine(20f,basey-By*factorB,5f,basey-By*factorB+10f,p);
+		canvas.drawLine(5f,basey-By*factorB-10f,5f,basey-By*factorB+10f,p);
+	//	canvas.drawLine(i*ww+20f, basey-factorB*vecB1.Y(), i*ww+20f, basey, p);
+		p.setStyle(Style.FILL);
+		canvas.drawText("ｙ成分", N*ww+20f, basey, p);
+		p.setStyle(Style.STROKE);
+		p.setColor(Color.rgb(0, 200, 200));
+		canvas.drawLine(20f,basez-Bz*factorB,5f,basez-Bz*factorB-10f,p);
+		canvas.drawLine(20f,basez-Bz*factorB,5f,basez-Bz*factorB+10f,p);
+		canvas.drawLine(5f,basez-Bz*factorB-10f,5f,basez-Bz*factorB+10f,p);
+	//	canvas.drawLine(i*ww+20f, basez-factorB*vecB1.Z(), i*ww+20f, basez, p);
+		p.setStyle(Style.FILL);
+		canvas.drawText("ｚ成分", N*ww+20f, basez, p);
+
+	}
+
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		// TODO Auto-generated method stub
+		super.onSizeChanged(w, h, oldw, oldh);
+		wx=w; hy=h;
+		int ww=((View)getParent()).getWidth();
+		int hh=((View)getParent()).getHeight();
+		if( ww-hh != w ) {
+			this.setLayoutParams(new LinearLayout.LayoutParams(ww-hh, hh));
+			view3d.setLayoutParams(new LinearLayout.LayoutParams(hh, hh));
+		}
+	}
+
+	public LineChargeGraphView(Context context,LineChargeSurfaceView view3) {
+		super(context);
+		// TODO Auto-generated constructor stub
+		view3d=view3;
+	}
+
+	int N=10;
+	int t=0;
+	
+	int delay=50;
+	protected boolean isAttached;
+	protected boolean nowGo;
+	
+
+	public void setN(int n) {
+		N=n;
+		view3d.setN(n);
+		t=0;
+	}
+	public void setR(float n) {
+		R=n;
+		view3d.setR(n);
+		t=0;
+	}
+	
+	public void stop() { nowGo=false; }
+	public void start() { nowGo=true; handler_start();}
+	protected void handler_start() {
+		Handler handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if (isAttached) {
+					if( nowGo ) {
+						t++;
+						if( t>=N ) {
+							t=0;
+						}
+						invalidate();
+						view3d.setT(t);
+						view3d.invalidate();
+						sendEmptyMessageDelayed(0, delay);
+					}
+				}
+			}
+		};
+		isAttached = true;
+		handler.sendEmptyMessageDelayed(0, delay);
+	}
+	@Override
+	protected void onAttachedToWindow() {
+		start();
+		super.onAttachedToWindow();
+	}
+	@Override
+	protected void onDetachedFromWindow() {
+		isAttached = false;
+		super.onDetachedFromWindow();
+	}
+
+	public void setZ(float f) {
+		z=f;
+		view3d.setZ(z);
+	}
+
+	public void setX(float f) {
+		x=f;
+		view3d.setX(x);
+	}
+}

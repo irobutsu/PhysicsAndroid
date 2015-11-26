@@ -1,0 +1,159 @@
+<!Doctype html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>ルジャンドル変換</title>
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+		<link rel="stylesheet" href="jquery.mobile-1.1.0.min.css" />
+		<script src="jquery-1.7.2.min"></script>
+		<script src="jquery.mobile-1.1.0.min.js"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="draggablescreen.js" type="text/javascript"></script>
+		<script src="graphscreen.js" type="text/javascript"></script>
+		<script src="LegendreTR.js" type="application/javascript"></script>
+		<link rel="STYLESHEET" href="ss.css" type="text/css">
+	</head> 
+	<body>
+		<div data-role="page" id="page1">
+			<div data-role="header">
+				<h1>ルジャンドル変換</h1>
+			</div>
+			<div data-role="content">
+				<h3>ルジャンドル変換</h3>
+					<p>　ルジャンドル変換の一般論を述べよう。物理では、</p>
+					<div class="fukidasi">ある関数F(x)の独立変数をxから（∂ F／ ∂ x）に変えたい。</div>
+					<p>という状況がよくあるのだが、この変数の変換をうっかりとやると、その関数から得られる情報が失われてしまったり、変える前と変えた後で方程式の形が（意図せぬ形に）変化してしまったりする。そうならないように関数の形を調整しつつ独立変数を変える方法を「ルジャンドル変換(Legendre transfomation)」と言う。</p>
+					<h3>必要性―もしルジャンドル変換をしなかったら</h3>
+					<div class="setsumei">「なぜこんなことをする必要があるんですか？」という質問がよく出る（こういう疑問を持つのは悪いことではない。むしろ「何のために必要か」ということを考えもせずに「本に書いてあるから自分もやろう」とやってしまう人の方が<strong>危険</strong>である）ので、ここで「失敗例」を書いておく。</div>
+					<h4>1変数の例：情報が消える</h4>
+					<p>　aを定数として</p>
+					<p>f(x)=(x-a)<sup>2</sup></p>
+					<p>という関数を考えよう。今はx→fという関数になっているわけだが、新しい変数としてfのxによる微分</p>
+					<p>p<sub>x</sub>=（∂ f／ ∂ x）=2(x-a)</p>
+					<p>を取りたいとする。逆に、x-a=（p<sub>x</sub>／ 2）である。p<sub>x</sub>を変数としてfを表現すると、</p>
+					<p>f=（(p<sub>x</sub>)<sup>2</sup>／ 4）</p>
+					<p>となる。結果はaによらない式になったが、ここで「簡単な式になった」と喜んではいけない。「aという情報を失ってしまった」と嘆くべき状況である。x→fという対応関係の中にはaの情報があるが、p<sub>x</sub>→fという対応関係の中にはaがどこにも入っていない。つまり、「p<sub>x</sub>→fという対応関係だけを知っている人」は「x→fという対応関係だけを知っている人」より情報が少ない（たとえばp<sub>x</sub>=2(x-a)という式を出せるのは、後者のみ）。</p>
+					<p>　なぜ情報が消えてしまったかを考えよう。以下に、x,fのグラフとp<sub>x</sub>,fのグラフを描く。</p>
+					<div><canvas id="canvas1" width=200 height=200></canvas>　<canvas id="canvas2" width=200 height=200></canvas></div>
+					<div data-role="fieldcontain">
+						<label for="slider">a:</label>
+						<input type="range" name="slider" id="slider" value="0" min="-2" max="2" step="0.1" onChange="a=Number($('#slider').val());if( animCount<0 ) {graphWrite();}" />
+					</div>
+					<div data-role="fieldcontain">
+						<fieldset data-role="controlgroup" data-type="horizontal">
+							<legend>表示</legend>
+							<input type="checkbox" name="checkboxpxzero" id="checkboxpxzero_0" class="custom" value="" onChange="onpx0change();"/>
+							<label for="checkboxpxzero_0">p<sub>x</sub>=0の点</label>
+							<input type="checkbox" name="checkboxpxone" id="checkboxpxone_0" class="custom" value="" onChange="onpx1change();"/>
+							<label for="checkboxpxone_0">p<sub>x</sub>=1の点</label>
+						</fieldset>
+					</div>
+					
+					<p>　上の左側のグラフはaを変化させた時のf=(x-a)<sup>2</sup>を描いたものだ。この時表示されている接線の傾きがp<sub>x</sub>である。</p>
+					<p>　右側のグラフはp<sub>x</sub>とfの関係で、式で表現すればf=（(p<sub>x</sub>)<sup>2</sup>／ 4）である。その対応関係は、aをずらしても（グラフを平行移動しても変わりがない（スライダーでaの値を変えることができるので、変えてみても右のグラフが変わらないことを実感せよ）。</p>
+					<p>　たとえば、</p>
+					<div class="setsumei">p<sub>x</sub>=0ならf=0、p<sub>x</sub>=1ならf=（1／4）</div>
+					<p>という関係（グラフの下のボタンを押すとグラフ上に表示できる）は、aをどう変えても同じである。ゆえに「x→fという関数関係」は「p<sub>x</sub>→fという関数関係」に移行させることができない。必ず情報が失われる。そこでfではない新しい関数<img src="tildf0.png" width="10pt" class="floatnone">を作って、情報が正しく移行されるようにしなくてはいけない。</p>
+					<p>　ではどんな<img src="tildf0.png" width="10pt" class="floatnone">を持ってくれば「x→fという関数関係」の持っている情報を全て「p<sub>x</sub>\to<img src="tildf0.png" width="10pt" class="floatnone">という関数関係」に移行させることができるのか？---その答えがルジャンドル変換である。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<a href="#page3" data-icon="arrow-r">ルジャンドル変換のグラフによる表現</a>
+			</div>
+		</div>
+		<div data-role="page" id="page3">
+			<div data-role="header">
+				<h1>ルジャンドル変換のグラフによる表現</h1>
+			</div>
+			<div data-role="content">
+				<p>この二つの問題に対する対応策を述べよう。</p>
+				
+				<img src="tildf0.png" width="10pt" class="floatnone"> (p<sub>x</sub>)=f(x)-xp<sub>x</sub>
+				
+				<p>で新しい関数を定義する。f=(x-a)<sup>2</sup>の場合の<img src="tildf0.png" width="10pt" class="floatnone">の意味をグラフで表現したのが次の図である。</p>
+				<br>
+				<div><canvas id="canvas3" width=200 height=200></canvas>　<canvas id="canvas4" width=200 height=200></canvas></div>
+				<div data-role="fieldcontain">
+					<label for="slider_a">a:</label>
+					<input type="range" name="slider_a" id="slider_a" value="0" min="-2" max="2" step="0.1" onChange="a=Number($('#slider_a').val());graphWrite3();" />
+				</div>
+				<div data-role="fieldcontain">
+					<label for="slider_x">x:</label>
+					<input type="range" name="slider_x" id="slider_x" value="1" min="-3" max="3" step="0.1" onChange="x=Number($('#slider_x').val());graphWrite3();" />
+				</div>
+				<p>　p<sub>x</sub>はグラフの接線の傾きであり、-xp<sub>x</sub>という量はすなわち、接線をf軸まで伸ばしていった時のf座標の変化である。スライダでa,xを変えてみて欲しい。aの違いが<img src="tildf0.png" width="10pt" class="floatnone">の違いに反映することがわかるだろう。</p>
+				<div class="setsumei">この図は自動では動かないので、自分で動かしてみること。</div>		
+				
+				<p>　前節の例について実際に計算してみると、</p>
+				
+				<p>
+				<img src="tildf0.png" width="10pt" class="floatnone"> = (x-a)<sup>2</sup>- xp<sub>x</sub>=（(p<sub>x</sub>)<sup>2</sup>／ 4）- (（(p<sub>x</sub>)／ 2）+a)p<sub>x</sub>
+				= -（(p<sub>x</sub>)<sup>2</sup>／ 4）-ap<sub>x</sub>
+				</p>
+				<p>となる。情報を失っていない変換なので「元に戻す」こともできる。</p>
+				
+				x=- （∂ <img src="tildf0.png" width="10pt" class="floatnone">／ ∂ p<sub>x</sub>）=（p<sub>x</sub>／ 2）+a
+				
+				<p>でxを定義してf=<img src="tildf0.png" width="10pt" class="floatnone"> + xp<sub>x</sub>というのが逆変換である。</p>
+				<p>　まとめると、以下のとおりとなる。</p>
+				<div class="setsumei">ルジャンドル変換
+					<p>　関数f(x)、すなわちx→fという対応関係の入力変数をxではなくp<sub>x</sub>=（∂ f／ ∂ x）に変えたい時は</p>
+					
+					<img src="tildf0.png" width="10pt" class="floatnone">(p<sub>x</sub>)=f(x)-xp<sub>x</sub>
+					
+					<p>と定義すると、元の対応関係が持っていた情報を失うことなく新しい対応関係p<sub>x</sub>→<img src="tildf0.png" width="10pt" class="floatnone">を作ることができる。</p>
+				</div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page1" data-icon="arrow-l">ルジャンドル変換の必要性</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<a href="#UtoF" data-icon="arrow-r">ルジャンドル変換U→Fの物理的意味</a>
+			</div>
+		</div>
+		<div data-role="page" id="UtoF">
+			<div data-role="header">
+			  <h1>ルジャンドル変換U→Fの物理的意味</h1>
+			</div>
+			<div data-role="content">
+			  <p>　U→Fのルジャンドル変換のグラフを見よう。</p>
+			  </p>
+			  <hr>
+			  <div><canvas id="canvasUF" width=200 height=200></canvas>　<canvas id="canvasUF2" width=200 height=200></canvas></div>
+			  <div data-role="fieldcontain">
+				<label for="slider">T:</label>
+				<input type="range" id="slider_T" value="1" min="0" max="3" step="0.01" onChange="t0=Number($('#slider_T').val()); graphUFWrite();" />
+			  </div>
+			  <div data-role="fieldcontain">
+				<label for="slider">V:</label>
+				<input type="range" id="slider_V" value="1" min="0.01" max="3" step="0.01" onChange="v0=Number($('#slider_V').val()); graphUFWrite();" />
+			  </div>
+			  <p>理想気体の内部エネルギーのS,V,Nを独立変数とした表現は</p>
+			  
+			  U[S,V,N]=cNR×（T<sup>*</sup>(v<sup>*</sup>N)<sup>（1／ c）</sup>／ V<sup>（1／ c）</sup>）exp(（S／ cNR）-1)+Nu
+			  
+			  <p>だった。一方ヘルムホルツ自由エネルギーFのT,V,Nを独立変数とした表現は</p>
+			  
+			  F[T;V,N]=-NRT ×log（T^cV／ (T<sup>*</sup>)^c v<sup>*</sup>N）)+Nu
+			  
+			  <div class="setsumei">上ではcR=1,N=1,T<sup>*</sup>=1,v<sup>*</sup>=1,u=0とグラフがシンプルになるような値を使っている。</div>
+			  <p>（∂ U／ ∂ S）=T,（∂ F／∂ T）=-Sが成立していることに注意。</p>
+			  <div class="box">なお、UをT,V,Nで書くと</p>
+			  
+			  U(T;V,N)=cNRT
+			  
+			  <p>であり、FをS,V,Nで書くと</p>
+			  
+			  F(S,V,N)=NR（T<sup>*</sup>(v<sup>*</sup>N)<sup>（1／ c）</sup>／ V<sup>（1／ c）</sup>）(1-（S／ cNR）)exp(（S／ cNR）-1)+Nu
+			  
+			  <p>となる</p>
+			  <p>（以上二つのグラフは薄い線で表現している）。</p>
+			  </div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page3" data-icon="arrow-l">ルジャンドル変換のグラフによる表現</a>
+				<a href="./index.html" data-icon="back">「はじめに」に戻る</a>
+			</div>
+		</div>
+	</body>
+</html>

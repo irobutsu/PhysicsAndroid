@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/mode0" android:title="@string/mode_0" android:visible="true"></item>
+    <item android:id="@+id/mode1" android:title="@string/mode_1" android:visible="true"></item>
+    <item android:id="@+id/mode2" android:title="@string/mode_2" android:visible="true"></item>
+    <item android:id="@+id/mode3" android:title="@string/mode_3" android:visible="true"></item>
+
+    
+
+</menu><!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/VectorPotential/res/menu/menu.xml -->

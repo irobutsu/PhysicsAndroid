@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ElectricField3D</string>
+    <string name="q1_equal">Q1=</string>
+    <string name="q2_equal">Q2=</string>
+    <string name="resetScreen">reset View</string>
+    <string name="E_Line_off">(E-line)</string>
+    <string name="E_Line_on">[E-line]</string>
+    <string name="V_Line_off">(V-line)</string>
+    <string name="V_Line_on">[V-line]</string>
+    <string name="Force_off">(Force)</string>
+    <string name="Force_on">[Force]</string>
+    <string name="totalE_off">(total E)</string>
+    <string name="totalE_on">[total E]</string>
+    <string name="directionOnly">direction Only</string>
+    <string name="withStrength">with Srength</string>
+    <string name="E2_off">(E2)</string>
+    <string name="E2_on">[E2]</string>
+    <string name="E1_on">[E1]</string>
+    <string name="E1_off">(E1)</string>
+    <string name="mode_0">do not write level surfaces</string>
+    <string name="mode_1">by surface</string>
+    <string name="mode_2">by Line</string>
+</resources>

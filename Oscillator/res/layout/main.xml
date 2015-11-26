@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/setting"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <ToggleButton
+                        android:id="@+id/cbV"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#0000FF"
+                        android:checked="true"
+                        android:text="　速度　"
+                        android:textOff="（速度）"
+                        android:textOn="【速度】"
+                        android:textSize="10sp" />
+
+                    <ToggleButton
+                        android:id="@+id/cbA"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#FF0000"
+                        android:checked="true"
+                        android:text="　加速度　"
+                        android:textOff="（加速度）"
+                        android:textOn="【加速度】"
+                        android:textSize="10sp" />
+
+                    <ToggleButton
+                        android:id="@+id/cbF"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#888800"
+                        android:checked="true"
+                        android:text="力　"
+                        android:textOff="（力）"
+                        android:textOn="【力】"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <ToggleButton
+                        android:id="@+id/tbStop"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="ToggleButton"
+                        android:textOff="中断中"
+                        android:textOn="実行中"
+                        android:textSize="10sp" />
+
+                    <Button
+                        android:id="@+id/tzero"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="t=0"
+                        android:textSize="10sp" />
+
+                    <Button
+                        android:id="@+id/sol"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="解1/解2"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/LinearLayout01"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/MDown"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0.8"
+                        android:text="＜"
+                        android:textSize="8dp" />
+
+                    <TextView
+                        android:id="@+id/TextViewM"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="質量=1"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="12dp" />
+
+                    <SeekBar
+                        android:id="@+id/sbM"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="5"
+                        android:max="199"
+                        android:progress="9" />
+
+                    <Button
+                        android:id="@+id/Mup"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0.8"
+                        android:text="＞"
+                        android:textSize="8dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/KappaDown"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0.8"
+                        android:text="＜"
+                        android:textSize="8dp" />
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#FF00FF"
+                        android:text="空気抵抗=0"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="12dp" />
+
+                    <SeekBar
+                        android:id="@+id/sbKappa"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="5"
+                        android:max="800" />
+
+                    <Button
+                        android:id="@+id/KappaUp"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0.8"
+                        android:text="＞"
+                        android:textSize="8dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/KDown"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0.8"
+                        android:text="＜"
+                        android:textSize="8dp" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#AAAA00"
+                        android:text="ばね定数=1"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="12dp" />
+
+                    <SeekBar
+                        android:id="@+id/sbK"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="5"
+                        android:max="199"
+                        android:progress="9" />
+
+                    <Button
+                        android:id="@+id/KUp"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0.8"
+                        android:text="＞"
+                        android:textSize="8dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

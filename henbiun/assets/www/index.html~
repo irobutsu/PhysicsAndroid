@@ -1,0 +1,1039 @@
+<!Doctype html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>自然科学のための数学2014年度第25講</title>
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css" />
+	<script src="jquery-1.11.1.min.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="dragmanscreen.js" type="text/javascript"></script>
+	<script src="draggablepoint.js" type="text/javascript"></script>
+		<link rel="STYLESHEET" href="ss.css" type="text/css">
+	<script type="text/javascript">
+	 var PointX=function(xx,yy,rr,c,x0,x1) {
+	   this.y=0;
+	   DraggablePoint.call(this,xx,yy,rr,c); // 親クラスのコンストラクタを呼ぶ。DraggablePointはプロトタイプを使わなかったのでこれでいい。
+	   this.setRange=function(xx0,xx1) {
+		 this.rangex0=xx0;
+		 this.rangex1=xx1;
+	   };
+	   this.setRange(x0,x1);
+	   this.setXY=function(xx,yy) {
+		 // y座標を動かす必要はないので上書き。
+		 if( xx < this.rangex0 ) {
+		   this.x =this.rangex0;
+		 } else if( xx > this.rangex1 ) {
+		   this.x = this.rangex1;
+		 } else {
+		   this.x=xx;
+		 }
+	   };
+	   this.write=function(ct) {
+		 ct.fillStyle=this.col;
+		 ct.beginPath();
+		 ct.moveTo(this.x,this.y+this.r);
+		 ct.lineTo(this.x+0.3*this.r,this.y);
+		 ct.lineTo(this.x,this.y-this.r);
+		 ct.lineTo(this.x-0.3*this.r,this.y);
+		 ct.closePath();
+		 ct.fill();
+	   };
+	 }
+	 // 親クラスタのプロトタイプを継承する。
+	 PointX.prototype=Object.create(DraggablePoint.prototype);
+	 PointX.prototype.constructor=PointX;
+
+
+	 var ct_func;
+	 var sc_func;
+	 var ct_power;
+	 var sc_power;
+	 var ct_niji;
+	 var sc_niji;
+	 var ct_sanji;
+	 var sc_sanji;
+	 var pointx;
+	 $(document).delegate('#page_func','pageinit',function(e) {
+       sc_func=new DragmanScreen("canvas_func",4.4,4.4,0.9);
+	   sc_func.setLeft(-2.2);
+	   sc_func.setBottom(-2.2);
+	   sc_func.gobackOriginalSize();
+	   ct_func=sc_func.canvas.getContext("2d");
+	   sc_func.writeContents=function() {
+		 write_func();
+	   }
+	   pointx=new PointX(1,0,0.3,"rgba(255,0,0,0.5)",sc_func.leftwx,sc_func.rightwx);
+	   sc_func.pushDragObjList(pointx);
+	 });
+	 $(document).delegate('#page_func','pageshow',function() {
+	   gs=ct_func;
+	   write_func();
+	 });
+	 function write_func() {
+	   var ct=sc_func.ctx;
+	   sc_func.clearALL();
+	   sc_func.writeCoordinate();
+	   var i;
+	   ct.strokeStyle="rgb(128,0,128)";
+	   ct.beginPath();
+	   if( funcNo==1 ) {
+		 ct.moveTo(-a,0);
+		 for(i=-a+0.03; i< a ; i+=0.03 ) {
+		   ct.lineTo(i,Math.sqrt(a*a-i*i));
+		 }
+		 ct.lineTo(a,0);
+		 ct.moveTo(-a,0);
+		 for(i=-a+0.03; i< a ; i+=0.03 ) {
+		   ct.lineTo(i,-Math.sqrt(a*a-i*i));
+		 }
+		 ct.lineTo(a,0);
+	   } else if( funcNo==2 ) {
+		 ct.moveTo(sc_func.leftwx,Func(sc_func.leftwx));
+		 for(i=sc_func.leftwx+0.03; i< -0.001 ; i+=0.03 ) {
+		   ct.lineTo(i,Func(i));
+		 }
+		 ct.stroke();
+		 ct.beginPath();
+		 ct.moveTo(0.0001,Func(0.0001));
+		 for(i=0.05; i<= sc_func.rightwx ; i+=0.05 ) {
+		   ct.lineTo(i,Func(i));
+		 }
+	   } else if( funcNo==3 ) {
+		 ct.moveTo(sc_func.leftwx,Func(sc_func.leftwx));
+		 for(i=sc_func.leftwx+0.03; i<= sc_func.rightwx ; i+=0.03 ) {
+		   ct.lineTo(i,Func(i));
+		 }
+		 ct.moveTo(sc_func.leftwx,-Func(sc_func.leftwx));
+		 for(i=sc_func.leftwx+0.03; i<= sc_func.rightwx ; i+=0.03 ) {
+		   ct.lineTo(i,-Func(i));
+		 }
+	   } else if( funcNo==4 ) { 
+		 if( a>=0 ) {
+		   pointx.setRange(0,sc_func.rightwx);
+		   if( pointx.x < 0 ) { pointx.x=-pointx.x;}
+		   ct.moveTo(0,0);
+		   for(i=0.03; i<= sc_func.rightwx ; i+=0.03 ) {
+			 ct.lineTo(i,Func(i));
+		   }
+		 } else {
+		   pointx.setRange(sc_func.leftwx,0);
+		   if( pointx.x > 0 ) { pointx.x=-pointx.x;}
+		   ct.moveTo(0,0);
+		   for(i=-0.03; i>= sc_func.leftwx ; i-=0.03 ) {
+			 ct.lineTo(i,Func(i));
+		   }
+		 }
+	   } else {
+		 ct.moveTo(pointx.rangex0,Func(pointx.rangex0));
+		 for( i=pointx.rangex0+0.02 ; i<= sc_func.rightwx ; i+=0.02 ) {
+		   ct.lineTo(i,Func(i));
+		 }
+	   }
+	   ct.stroke();
+
+	   pointx.write(ct);
+	   ct.fillStyle="rgba(0,200,200,0.3)";
+	   ct.beginPath();
+	   var x=pointx.x;
+	   var y=Func(x);
+	   ct.moveTo(x,0);
+	   ct.lineTo(x,y);
+	   ct.lineTo(0,0);
+	   ct.moveTo(x,y);
+	   ct.lineTo(x+0.1,y);
+	   if( funcNo==1 ) {
+		 ct.lineTo(x+0.1,y-0.1*x/ y);
+	   } else if( funcNo == 2 ) {
+		 ct.lineTo(x+0.1,y-0.1*y/ x);
+	   } else if( funcNo == 3 ) {
+		 ct.lineTo(x+0.1,y+0.1*x/ y);
+	   }
+	   ct.fill();
+	 }
+	 function checkpointx() {
+	   if( funcNo==1 ) {
+		 pointx.rangex0=-a;
+		 pointx.rangex1=a;
+		 if( pointx.x < -a ) {
+		   pointx.x = -a;
+		 }
+		 if( pointx.x > a ) {
+		   pointx.x=a;
+		 }
+	   } else {
+		 pointx.rangex0=sc_func.leftwx;
+		 pointx.rangex1=sc_func.rightwx;
+	   }
+	 }
+	 function changefunc(selector_str) {
+	   funcNo=Number($(selector_str).val());
+	   checkpointx();
+	   write_func();
+	 }
+	 var funcNo=1;
+	 function Func(x) {
+	   switch( funcNo ) {
+		 case 1:
+		   return Math.sqrt(a*a-x*x);
+		   break;
+		 case 2:
+		   return a/ x;
+		   break;
+		 case 3:
+		   return Math.sqrt(a*a+x*x);
+		   break;
+		 case 4:
+		   return Math.sqrt(Math.abs(x/ a));
+		   break;
+		 case 5:
+		   return a*x*x*x;
+		   break;
+		 case 6:
+		   return Math.sin(a*x);
+		   break;
+		 case 7:
+		   return Math.exp(a*x);
+		   break;
+		 case 8:
+		   return Math.log(Math.abs(x))/ a;
+		   break;
+	   }
+	 }
+	 var a=1;
+
+	 function upA() {
+	   a +=0.1;
+	   if( a>5 ) { a=5; }
+	   changeA();
+	 }
+	 function downA() {
+	   a-=0.1;
+	   if( a<0.1 ) { a=0.1;}
+	   changeA();
+	 }
+
+	 function changeA() {
+	   var elements = document.getElementsByName('a_value');
+	   a *=10;
+	   a=Math.round(a);
+	   a = a/ 10;
+	   var i;
+	   for(i=0; i< elements.length ; i++ ) {
+		 elements.item(i).innerHTML=a;
+	   }
+	   checkpointx();
+	   write_func();
+	 }
+	  </script>
+  </head> 
+  <body>
+	<div data-role="page" id="zenbibuntoha">
+	  <div data-role="header">
+		<h2>全微分</h2>
+	  </div>
+	  <div data-role="content">
+		<p>解ける形の微分方程式として「全微分形である場合」があるので、その場合の解き方と、全微分形でない場合に全微分形に直していく方法について考えよう。ついでにこの後でも使う「偏微分」の記号に慣れておこう。</p>
+
+		<h3>全微分形</h3>
+
+		<p>そもそも微分方程式を解くとは、なんらかの意味で積分を行うことであった。微分を含むある式</p>
+\begin{equation}
+ P({x},{y})\mathrm dx + Q({x},{y})\mathrm dy =0\label{kanzenkeikana}
+\end{equation}
+		<p>をなんらかの計算を行った結果として、</p>
+\begin{equation}
+\mathrm d \left( \fbox{なんとか}\right)=0
+\end{equation}
+		<p>という形にまとめ直すことができれば、<span class="fukidasi">なんとか</span>=定数と積分ができる。たとえば、</p>
+\begin{equation}
+ ({x}^3+2{x}{y})\mathrm dx + ({x}^2-{y})\mathrm dy=0
+\end{equation}
+		<p>という式は、</p>
+\begin{equation}
+ \mathrm d  \left({1\over 3}{x}^3 + {x}^2{y}-{1\over 2}{y}^2\right)=0
+\end{equation}
+		<p>とまとめられる（と書いたが、実際にはまとめ方をさっと思いつくのは難しい）ので、</p>
+\begin{equation}
+ {1\over 3}{x}^3 + {x}^2{y}-{1\over 2}{y}^2=C（一定）
+\end{equation}
+		<p>が解である。</p>
+
+		<div class="box">
+		  以下の微分方程式を解いてみよう。<br>
+(1)　 $2{x}\mathrm e^{{x}^2+{y}}\mathrm dx + \mathrm e^{{x}^2+{y}}\mathrm dy=0$<br>
+(2)　 ${{y}\over {x}}\mathrm dx + (\log{x})\mathrm dy=0$<br>
+(3)　 ${y}\sin{x} \mathrm dx -\cos{x}\mathrm dy=0$<br>
+		</div>
+
+		<p>このような手順も一つの微分方程式の解き方である。</p>
+
+		<p>この$\mathrm d \left( \fbox{なんとか} \right)$という形の式を<span class="fukidasi">なんとか</span>の「全微分(exact differential)」（あるいは「完全微分」）と呼ぶ。そして、こういう形の式は「全微分形(exact)」（あるいは「完全微分形」）<span class="footnote">英語の形容詞は「exact」だが日本語では「微分」を補って使う場合が多い。</span>になっていると言う。この定義から、全微分形ならその微分方程式が解けるのは言わば当たり前である。</p>
+
+		<p>${\mathrm dy\over \mathrm dx}=f({x},{y})$を例として考える。右辺の$f({x},{y})$は、${x}$と${y}$の両方を含む式である。微分方程式が「解ける」ということは、これから、（いくらかの計算の後に）\begin{equation} U({x},{y})=C（定数）\end{equation}という式（${x}$と${y}$の関係式）を導けたということである。逆に、この式を微分することで（あるいは、微分した後少々計算することで）上の\式{kanzenkeikana}に戻るだろう。</p>
+
+		<p>これまでに解いてきた微分方程式の場合で、一定となる量$U({x},{y})$を列挙する（どうやって解いたかは思い出してもいいし、変数分離できる例なのでもう一度解くのも簡単なはず）。</p>
+
+		<table>
+		  <tr>
+			<td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td><td>(5)</td>
+		  </tr>
+		  <tr>
+			<td>微分方程式 </td><td>変数分離した形 </td><td>解 </td><td>一定となる量$U$ </td><td>$U$の全微分</td>
+		  </tr>
+		  <tr>
+			<td>${\mathrm dy\over \mathrm dx}=-{{x}\over {y}}$</td><td>${x}\mathrm dx+{y}\mathrm dy=0$ </td><td>${x}^2+{y}^2=R^2$ </td><td>${x}^2+{y}^2$</td><td> $2{x}\mathrm dx+2{y}\mathrm dy$</td>
+		  </tr>
+		  <tr>
+			<td>${\mathrm dy\over \mathrm dx}=-{{y}\over {x}}$</td><td>${1\over {x}}\mathrm dx+{1\over {y}}\mathrm dy =0$</td><td> ${y}={C\over {x}}$</td><td>${{x}{y}}$ </td><td> $ {y}\mathrm dx+ {x}\mathrm dy$</td>
+		  </tr>
+		  <tr>
+			<td>${\mathrm dy\over \mathrm dx}={{y}\over {x}}$</td><td>$- {1\over {x}}\mathrm dx+{1\over {y}}\mathrm dy =0$</td><td> ${y}=C{x}$</td><td>${{y}\over {x}}$ </td><td>$-{{y}\over {x}^2}\mathrm dx+ {\mathrm dy\over {x}}$</td>
+		  </tr>
+		  <tr>
+			<td> ${\mathrm dy\over \mathrm dx}={y}$ </td><td> $-\mathrm dx+{1\over {y}}\mathrm dy=0$</td><td> ${y}=C\mathrm e^{{x}}$</td><td>${y}\mathrm e^{-{x}}$</td><td>$ - {y}\mathrm e^{-{x}}\mathrm dx + \mathrm e^{-{x}}\mathrm dy$</td>
+		  </tr>
+		</table>
+
+
+		<div class="box">
+		  $\overbrace{微分方程式}^{(1)}$を$\overbrace{変数分離して}^{(2)}$、積分することで$\overbrace{解を求め、}^{(3)}$これから$\overbrace{一定になる量}^{(4)}$がわかる。</div>
+		<p>というのが変数分離を使って解く微分方程式の解法だが、</p>
+		<div class="box">
+		  $\overbrace{微分方程式}^{(1)}$を$\overbrace{何かの全微分の形}^{(5)}$になおして、それから$\overbrace{一定になる量}^{(4)}$を導く。</div>
+
+		<p>という微分方程式の解法も有り得る<span class="footnote">この場合、変数分離不可能でも解ける可能性が出てくる。</span>。</p>
+
+		<p>この「全微分形に直す」という解法を考えるために、上の例それぞれの場合で(2)と(5)の違いを見てみよう。</p>
+
+		<p><span class="box">${\mathrm dy\over \mathrm dx}=-{{x}\over {y}}$の場合</span>　(2)と(5)は定数倍（2倍）違うが、同じ結果だと言える。</p>
+
+		<p><span class="box">${\mathrm dy\over \mathrm dx}=-{{y}\over {x}}$の場合</span>　(2)と(5)は${{x}{y}}$倍違う。</p>
+
+		<p><span class="box">${\mathrm dy\over \mathrm dx}={{y}\over {x}}$の場合</span>　(2)と(5)は${{y}\over {x}}$倍違う。</p>
+
+		  <p><span class="box">${\mathrm dy\over \mathrm dx}={y}$の場合</span>　(2)と(5)は ${1\over {y}\mathrm e^{-{x}}}$倍違う。</p>
+
+		<p>以上の例から、解ける微分方程式であっても、単に$P\mathrm dx+Q\mathrm dy=0$の形にしただけでは全微分形にはなっていないこともあることがわかる。しかし、適当に何かの数もしくは関数を掛けてやることで全微分形に直していくことができる場合もある<span class="footnote">常にできるとは限らないが、これができるならこのやり方で解ける微分方程式だったということ。</span>。</p>
+
+		<p>したがって微分方程式を「全微分形にする」という方針で解こうとするのであれば、方程式に適切な関数を掛けるという操作が必要になりそうである。</p>
+
+		<p> 一つの可能性として、$U={x}^m {y}^n$という特別な場合を考えてみよう。$U$を微分すると、</p>
+		\begin{equation} {x}^m{y}^n=C~~~を微分して~~~~ m{x}^{m-1}{y}^n\mathrm dx + n{x}^m{y}^{n-1}\mathrm dy =0\label{Uxy} \end{equation}
+		<p>となる。この逆に</p>
+		\begin{equation} m{x}^{m-1}{y}^n\mathrm dx + n{x}^m{y}^{n-1}\mathrm dy =0 ~~~を積分して~~~~ {x}^m{y}^n=C \end{equation}
+		<p>であることを思いつければ微分方程式が解ける。すなわち、</p>
+		\begin{equation} \underbrace{m{x}^{m-1}{y}^n}_{{x}^m{y}^nを{x}で\atop 微分したもの}\mathrm dx + \underbrace{n{x}^m{y}^{n-1}}_{{x}^m{y}^nを{y}で\atop 微分したもの}\mathrm dy =0\label{mxny} \end{equation}
+		<p>のように思いつけばよい。以上を頭に入れておくと、たとえば</p>
+		\begin{equation} {y}\mathrm dx -{x}\mathrm dy=0\label{monenminusone} \end{equation}
+		<p>という微分方程式が出てきた時、「これは\式{mxny}で$m=1,n=-1$という状況では？」と予想することができる<span class="footnote">こういう予想が成立する為には、二つの項が${x},{y}$について同次（今の場合はどっちも2次）である必要がある。</span>。\式{mxny}と\式{monenminusone}を見比べるとこのままでは一致しないが、\式{monenminusone}の両辺を${y}^2$で割ると、\begin{equation} {1\over {y}}\mathrm dx -{{x}\over {y}^2}\mathrm dy=0 \end{equation}となり、これが${{x}\over {y}}=(定数)$という式の全微分であることがわかる。微分方程式に出てくる項の${x},\mathrm dx$の次数と${y},\mathrm dy$の次数が一致しているような場合（ここで解いた\式{monenminusone}の場合、${x},\mathrm dx$の1次、${y},\mathrm dy$の1次だった）、適当な$m,n$見つけて全微分に直すことができる。</p>
+
+		<p>もっと一般的な形として、\begin{equation} f'({x}){y}\mathrm dx+f({x})\mathrm dy=0 \end{equation}のような微分方程式があったならば、\begin{equation} \mathrm d \left(f({x}){{y}}\right)=0 \end{equation}という形にまとめていくことで解いていくことができそうだ。</p>
+
+		<div class="box">【問い8-1】<br>以下の微分方程式を適切な関数を両辺に掛けて全微分に直し、解け。<br>
+
+		  (1)~${y}\mathrm dx + 2{x}\mathrm dy=0$~~~(2)~$\mathrm dx+{1\over 2{y}}{x}\mathrm dy=0$~~~(3)~${y}\mathrm dx+\tan{{x}}\mathrm dy=0$~~~(4)~${{y}\over {x}}\mathrm dx+\log {x}\mathrm dy=0$ </div>
+
+		<p>ここで、注意しなくてはいけないのは、\式{mxny}でおこなった、$\underbrace{m{x}^{m-1}{y}^n}_{{x}^m{y}^nを{x}で\atop 微分したもの}$、すなわち</p>
+
+		<p><span class="fukidasi">${x}^m{y}^n$を${x}$で微分して答は$m{x}^{m-1}{y}^n$になった</span></p>
+		<p>という時の「微分」は単なる微分とは違っていることである。というのは、この計算をやっている時、あたかも${y}$は定数であるかのごとく扱っている。実際のところ${x}$と${y}$は連動して変化する（たとえば$m=n=1$の例では${x}{y}$が一定だから、${x}$が増えれば${y}$は減る）のに、あえて変化しないと考えている。</p>
+
+
+		<p><img src="xyhenka.png" width="50%" class="floatnone"></p>
+		<p>このように、上の計算では、「実際は{変数}であるものを定数であるかのごとく扱って微分する」ということを行っている。</p>
+
+		<p>ここで、「変数を勝手に定数にしてはいけないのでは？」と悩む人が多いので注意しておこう。ここでやっていることは、${x}{y}$を一定にしつつ${x},{y}$を変化させているのだから、${x}$と${y}$は同時に連動して変化する。図示すれば右の図のような変化であり、同時に起きた二つの変化を「$y$の変化による部分(${x}\mathrm dy$)」と「$x$の変化による部分(${y}\mathrm dx$)」に分けて計算している。</p>
+
+		<p><span class="fukidasi">${y}$を定数にした</span>のではなく、${y}$の変化による部分は第2項で計算しているから、第1項では省いているだけのことである。変化するはずの${y}$は、ちゃんと変化させていて、その分は第2項で計算しているので、心配無用である。</p>
+
+		<p>次の節で、この新しい形式の微分に名前と定義を与えよう。</p>
+
+		<div class="box">
+新しい記号が出て来ると「ああ、難しい話が始まった」とその記号を使うことに心理的拒否反応を示す人が時々いるのだが、上で書いたような「ちょっと違う微分」はこれまでも無意識に使っていたはずである。以下は、それに新しい名前をつけようというだけのことであるから、難しく考え過ぎないように。
+		</div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#partial" data-icon="arrow-r">偏微分の定義と記号</a>
+		<p align="center">←<a href="lec24.html">第24講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+	<div data-role="page" id="partial">
+	  <div data-role="header">
+		<h3>偏微分の定義と記号</h3>
+	  </div>
+	  <div data-role="content">
+		<p>前節の最後で必要となった微分の方法、すなわち「実際は変数であるものを定数であるかのごとく扱って微分する」という微分を「偏微分(partial differentiation)」という。「偏微分」は名前の通り<span class="footnote">「肉と野菜を出されたのに、偏食して、肉しか食べない」という時の「偏」である。</span>「偏りのある微分」（英語ではpartialで「一部だけを微分する」という意味を表している）である。つまりは変数が二つ（ときには、三つ以上）あるのに、その変数のうち一個だけに着目して微分を行う。</p>
+
+		<p>偏微分という具体的計算を式で定義しておこう。${x}$と${y}$に依存するある式$f({x},{y})$があるとする。<span class="fukidasi">${y}$を一定として${x}$で偏微分する</span>という計算を</p>
+\begin{equation}
+\lim_{{\Delta x}\to0}{
+f({x}+{\Delta x},{y})-f({x},{y})
+\over {\Delta x}
+}\label{delfdelx}
+\end{equation}
+		<p>で定義する。これまでの微分（区別をつけるために「常微分」と呼ぶ）が</p>
+\begin{equation}
+{\mathrm d\over \mathrm dx} f({x})=
+\lim_{{\Delta x}\to0}{
+f({x}+{\Delta x})-f({x})
+\over {\Delta x}
+}\label{dfx}
+\end{equation}
+		<p>だったことを思うと、もう一つの変数${y}$がついている（しかし定数として扱っている）以外は同じ計算である。偏微分は常微分とは違う記号を使うことにして、</p>
+\begin{equation}
+\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}=
+\lim_{{\Delta x}\to0}{
+f({x}+{\Delta x},{y})-f({x},{y})
+\over {\Delta x}
+}
+\end{equation}
+		<p>と書く。$\mathrm d $ではなく$\partial$という記号を使い、かつ「（本当は変数なんだけど）定数として扱っている文字」を$\left(~~\right)_{\!\!{y}}$のように括弧の後につけて表現する。</p>
+
+		<p>もちろん逆に<span class="fukidasi">${x}$を一定として${y}$で偏微分する</span>という計算は</p>
+\begin{equation}
+\left(
+ {\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}
+=\lim_{{\Delta x}\to0}{
+f({x},{y}+{\Delta y})-f({x},{y})
+\over {\Delta y}
+}\label{delfdely}
+\end{equation}
+		<p>である。どちらも、一方で微分する時はもう一方をあたかも定数であるかのように扱っている。ここまでの話として、常微分が偏微分に変わったことで特に難しいところはないはずだ。</p>
+
+		  <div class="box">
+ 記号$\partial$はいろんな読み方がある。「丸いd」という意味で「ラウンドディー」と読む場合、それを省略して単に「ラウンド」と読む場合、偏微分（partial differentiation）から「パーシャル」と読む場合、微分を意味する「デル」と読む場合がある。微分${\mathrm dy\over \dx}$を「でぃーわいでぃーえっくす」と読んだのと同様に、${\partial f\over \partial x}$は「でるえふでるえっくす」（あるいは「らうんどえふらうんどえっくす」）のように上から順に読む。
+		  </div>
+
+
+		  <p><img src="partialdel.png" width="75%" class="floatnone"></p>
+
+
+		  <p>例をいくつか上げておく。</p>
+\begin{equation}
+\begin{array}{lcll}
+ f({x},{y})= {x}^2{y}&：&\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}= 2{x}{y},&\left(
+{\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}= {x}^2\\[6mm]
+  f({x},{y})= \sin ({x}+{y}^2)&:&\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}= \cos({x}+{y}^2),&\left({\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}=2{y}\cos({x}+{y}^2)
+\end{array}
+\end{equation}
+
+		  <p>微分の表現として、$f({x}+\mathrm dx)=f({x})+f'({x})\mathrm dx$もしくは、$\df=f'({x})\mathrm dx$という書き方（具体例で示せば、$\cos ({x}+\mathrm dx)=\cos {x}-\sin{x}\mathrm dx$もしくは$\mathrm d  (\cos{x})=-\sin{x}\mathrm dx$など）があったが、それの偏微分のバージョンは</p>
+\begin{equation}
+\begin{array}{c}
+  f({x}+\mathrm dx,{y}+\mathrm dy)
+ =f({x},{y})+ \left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}\mathrm dx
+ +\left({\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}\mathrm dy\\[6mm]
+ もしくは\\[3mm]
+ \df({x},{y})=\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}\mathrm dx
+ +\left({\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}\mathrm dy
+\end{array}\label{zenbibun}
+\end{equation}
+		  <p>となる。これを示すには、</p>
+\begin{equation}
+ f({x}+\mathrm dx,{y}+\mathrm dy)-f({x},{y})
+= f({x}+\mathrm dx,{y}+\mathrm dy)\underbrace{
+-f({x}+\mathrm dx,{y})
+ +f({x}+\mathrm dx,{y})}_{0}-f({x},{y})
+\end{equation}
+		  <p>のようにしてから前の2項が</p>
+\begin{equation}
+f({x}+\mathrm dx,{y}+\mathrm dy)-f({x}+\mathrm dx,{y}) =\left({\partial f({x}+\mathrm dx,{y})\over \partial y}\right)_{\!\!{x}}\mathrm dy
+\end{equation}
+に<span class="footnote">
+		  \mathrm dx,\mathrm dy の1次の項までを考えるならば、$\left({\partial f({x}+\mathrm dx,{y})\over \partial y}\right)_{\!\!{x}}\mathrm dy=\left({\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}\mathrm dy$である。</span>、後の2項が
+\begin{equation}
+f({x}+\mathrm dx,{y})-f({x},{y})=\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}\mathrm dx
+\end{equation}
+になると考えればよい。この式は\式{delfdelx}と同じ意味を持つ式である。上の例に則して書けば、
+\begin{equation}
+\begin{array}{rll}
+ \mathrm d  \overbrace{({x}^2{y})}^{f({x},{y})}=&\overbrace{2{x}{y}}^{\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}}\mathrm dx&+\overbrace{{x}^2}^{\left({\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}} \mathrm dy\\[4mm]
+ \mathrm d \underbrace{ (\sin({x}+{y}^2))}_{f({x},{y})}=&\underbrace{\cos({x}+{y}^2)}_{\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}}\mathrm dx &+ \underbrace{2{y}\cos({x}+{y}^2)}_{\left({\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}}\mathrm dy
+\end{array}
+\end{equation}
+となる。新しい記号を使ってはいるが、この計算は別に目新しいものではないし、ここまでの段階では偏微分は単に「本当は定数である文字を定数とみなして微分する」というだけで難しいことは特に無い（偏微分ならではの難しさがあるのだが、それは現段階ではまだ出てきていない。後で登場する）。
+
+偏微分も常微分同様、二階微分、三階微分があり、その記号も
+\begin{equation}
+\left(
+ {\partial\over \partial x}
+\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}
+\right)_{\!\!{y}}
+=\left(
+{\partial^2 f({x},{y})\over \partial x^2}\right)_{\!\!{y}}
+,~~
+\left(
+ {\partial\over \partial y}
+\left({\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}
+\right)_{\!\!{x}}
+=\left(
+{\partial^2 f({x},{y})\over \partial y^2}\right)_{\!\!{x}}
+\end{equation}
+のように常微分の場合に似た書き方にする。偏微分の場合は、
+\begin{equation}
+ \left(
+ {\partial\over \partial x}
+\left({\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}
+\right)_{\!\!{y}}={\partial^2 f({x},{y})\over \partial x \partial y}
+\end{equation}
+		  のように「最初に${y}$で微分、次に${x}$で微分」のような計算も出てくる（上の式の右辺は固定する変数を省略する書き方を使った）。分母の書き方が常微分と決定的に違うところなので注意しよう<span class="footnote">ここで、${\partial^2 f({x},{y})\over \partial x\partial y}$と${\partial ^2 f({x},{y})\over \partial y\partial x}$は違うのか？---という疑問を持った人もいるだろう。その答はすぐ後で。</span>。
+
+
+
+		  <div class="box">
+		  偏微分の記号には省略形がいくらかある<span class="footnote">$f({x},{y})$の引数を省略して単に$f$と書き、${\partial f\over \partial x}$のように書くという省略もよく行われる。</span>。たとえば「変数が${x},{y}$の二つであることはわかっているから、${x}$で偏微分するなら${y}$が一定なのは書かなくてもわかるだろう」と判断できる場合は、$\bigg)_{\!\!{y}}$を省略して、${\partial f({x},{y})\over \partial x}$と書く場合がある。また、$\left({\partial\over \partial x}？\right)_{\!\!{y}}$を$D_x ？$のように短縮形で書く場合もあり、
+ \begin{equation}
+ D_x f={\partial f\over \partial x},~~D_y f={\partial f\over \partial y},~~D_xD_x f={\partial^2 f\over \partial x^2},~~D_xD_y f={\partial\over \partial x}\left({\partial f\over \partial y}\right)={\partial^2f\over \partial x\partial y},\cdots
+ \end{equation}
+ のように表現する。あるいは、微分記号も書かずに、
+ \begin{equation}
+ f_x={\partial f\over \partial x},~~f_y={\partial f\over \partial y},~~f_{xx}={\partial^2 f\over \partial x^2},~~f_{xy}={\partial\over \partial x}\left({\partial f\over \partial y}\right)={\partial^2 f\over \partial x\partial y},\cdots
+ \end{equation}
+ のように微分を下付き添字をつけることで微分を表現する場合もある（ここでは$f$の後の$\left({x},{y}\right)$を省略した）。
+		  </div>
+
+
+記号方はどうあれ、
+\begin{itembox}{全微分}
+\begin{equation}
+ \df({x},{y})=\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}\mathrm dx+\left({\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}\mathrm dy\label{koregazenbibun}
+\end{equation}
+\end{itembox}
+を「$f({x},{y})$の全微分」と呼ぶ。
+
+上の式は
+\begin{screen}
+$f({x},{y})$が一般的に変化する時は、${x}$も${y}$も、両方変化するのだが、変化のうち${x}$が変化したことによって起こる変化が$\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}\mathrm dx$と書け、${y}$が変化したことによって起こる変化が$+\left({\partial f({x},{y})\over \partial y}\right)_{\!\!{x}}\mathrm dy$と書ける。
+\end{screen}
+というふうに「読む」べきである。
+
+全微分のうち、「$\mathrm dx$の係数である$\left({\partial f({x},{y})\over \partial x}\right)_{\!\!{y}}$」を取り出したものが「偏微分」である。
+
+偏微分という計算が威力を発揮するのは、独立変数が1つでなく複数個ある場合であるが、そのような場合については後の章に回す。偏微分には、常微分と違っている点として注意すべきポイントがいくつかあるのだが、このポイントについてもそこで述べることにする。
+
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page_func" data-icon="arrow-r">関数のグラフで考える偏微分</a>
+		<p align="center">←<a href="lec24.html">第24講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+	<div data-role="page" id="page_func">
+	  <div data-role="header">
+		<h3>関数のグラフで考える偏微分</h3>
+	  </div>
+	  <div data-role="content">
+
+たとえば、$f({x},{y})=\sqrt{{x}^2+{y}^2}$（原点から点$({x},{y})$までの距離を表す関数）の全微分は
+\begin{equation}
+ \mathrm d  \left(\sqrt{{x}^2+{y}^2}\right)=
+{{x}\over\sqrt{{x}^2+{y}^2} }\mathrm dx
++{{y}\over\sqrt{{x}^2+{y}^2} }\mathrm dy
+\end{equation}
+である。下の図に、${x}$だけが変化した場合（左図）と${y}$だけが変化した場合（右図）の距離$\sqrt{{x}^2+{y}^2}$の変化が確かに上の式の第1項と第2項で表されることを示した。
+
+	<p><canvas width="400" height="400" id="canvas_func" style="-ms-touch-action: none;"></canvas></p>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <select name="selectmenu" id="selectmenu" data-inline="true" onChange="changefunc('#selectmenu');">
+				<option value="1">x^2+y^2=a^2</option>
+				<option value="2">xy=a</option>
+				<option value="3">-x^2+y^2=a^2</option>
+			  </select>
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <p> <a href="#btd3" data-role="button" data-inline="true" onClick="downA();">＜</a>a=<span name="a_value" class="a_value">1.0</span><a href="#btu3" data-role="button" data-inline="true" onClick="upA(); ">＞</a></p>	
+			</div>
+		  </div>
+		</div>
+		<hr>
+		<div class="setsumei">
+		  ↑のリストをクリックして関数を変えることができる。aの値も変化させられるのでいろいろ試してみること。
+		</div>
+
+\vspace{-5mm}一般的な、$(\aka{x},\ao{y})$が$(\aka{x}+\akadx,\ao{y}+\aody)$と変化したときの原点からの距離の変化は\fukidasi{$\aka{x}$の変化による部分}と\fukidasi{$\ao{y}$の変化による部分}の足算として計算できる（もちろん、微小な範囲でのことである）。
+
+
+
+
+		  
+\begin{mawarikomi}<2>[](1zw,0.5zh){25zw}{\includegraphics[width=23zw]{diffkyorixy.eps}}
+ここで、$\aka{x}$と$\ao{y}$は独立ではないので、$\akadx$と$\aody$も独立な方向は取れない。たとえば$\sqrt{\aka{x}^2+\ao{y}^2}=R(一定)$（グラフ上では、原点を中心とする半径$R$の円の上に乗っていることに対応する）の場合が右の図である。
+
+この場合、$\akadx$と$\aody$の間には
+ \begin{equation}
+  {\aka{x}\over\sqrt{\aka{x}^2+\ao{y}^2 }}\akadx
++  {\ao{y}\over\sqrt{\aka{x}^2+\ao{y}^2 }}\aody=0
+ \end{equation}
+ という関係がある（図からも読み取れる）。
+
+ なお、「円の上」を表す式は$\aka{x}^2+\ao{y}^2=R^2$でもよいが、これの全微分は
+\begin{equation}
+  2\aka{x}\akadx+2\ao{y}\aody=0
+\end{equation}
+ という式になり、本質的には上と同じ式である（両辺に${1\over 2\sqrt{\aka{x}^2+\ao{y}^2 }}$を掛ければ上に戻る）。
+\end{mawarikomi}
+
+\begin{Hosoku}
+ ここで、$P(\aka{x},\ao{y})\akadx + Q(\aka{x},\ao{y})\aody=0$という式は、
+\begin{equation}
+ \left(P(\aka{x},\ao{y}),Q(\aka{x},\ao{y})\right)\cdot \left(\akadx,\aody\right)=0
+\end{equation}
+のようにベクトルの内積が0であるという式だと解釈できる。上の場合であれば、$\left(\akadx,\aody\right)$というベクトルは$\left(\aka{x},\ao{y}\right)$と垂直である。これは「円の接線」の性質に合致している。
+\end{Hosoku}
+
+\begin{QBox}
+\begin{Question}{alphajou}
+ 一般に、$f(\aka{x},\ao{y})=一定$という式から作られる全微分の式と、$\left(f(\aka{x},\ao{y})\right)^\alpha=一定$（$\alpha$は0ではない定数）という式から作られる全微分の式は同じ意味を持つことを示せ。
+\end{Question} 
+\end{QBox}
+
+\begin{mawarikomi}<0>[](1zw,0){25zw}{\includegraphics[width=23zw]{diffhanpireixy.eps}}
+もう一つの例をやっておこう。 $\aka{x}\ao{y}=一定$、つまり反比例の場合の全微分
+\begin{equation}
+ \ao{y}\akadx + \aka{x}\aody=0
+\end{equation}
+ をグラフで表現したのが右の図である（グラフは$\aka{x}\ao{y}=1$一本だけにした）。グラフ上に表現したように、$\akadx:\aody=-\aka{x}:\ao{y}$となっている（これは全微分の式と同じこと）。
+
+ $\ao{y}\akadx + \aka{x}\aody=0$から$\aka{x}\ao{y}=一定$を求めるのは、各点における接線の傾きからこの双曲線を導き出す、という計算であり、逆に「全微分を求める」というのは接線から傾きの比を求める計算だったと思ってもよい。
+\end{mawarikomi}
+
+
+
+\pagebreak[3]
+\section{全微分である条件}\label{zenbibunjouken}
+
+記号の整理ができたところで、\節{zenbibuntoha}で考えた問題を、この新しい記号を使って書き直そう。
+
+\節{partialdef}で考えた記号を使うと、
+\begin{equation}
+ U(\aka{x},\ao{y})=一定~~~を微分して~~~
+\underbrace{ \left({\partial U(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}}_{P(\aka{x},\ao{y})}\akadx 
++\underbrace{ \left({\partial U(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}}_{Q(\aka{x},\ao{y})}\aody=0
+\end{equation}
+と書くことができる。つまり、
+\begin{equation}
+\left({\partial U(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}=P(\aka{x},\ao{y}),~~~
+\left({\partial U(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}=Q(\aka{x},\ao{y})
+\end{equation}
+ということになる。ここで「この条件を満たす$U(\aka{x},\ao{y})$は見つかるか？」ということが問題となる。たとえば$P(\aka{x},\ao{y})=\ao{y},Q(\aka{x},\ao{y})=\aka{x}$ならば\footnote{$P(\aka{x},\ao{y})=\ao{y}$という式は左辺には$\aka{x},\ao{y}$の関数のように書かれているのに右辺は$\ao{y}$しか含んでないが、$P(\aka{x},\ao{y})$は「一般的な式」で、今の特殊な状況ではそれが$\ao{y}$だった、と解釈して欲しい。}、$U(\aka{x},\ao{y})=\aka{x}\ao{y}$という解があったが、$P(\aka{x},\ao{y}),Q(\aka{x},\ao{y})$の形によっては解は見つからない。
+
+そこで、$U(\aka{x},\ao{y})$が見つかるための必要条件を一つ指摘したい。そのために、$\aka{x},\ao{y}$の任意の微分が可能な関数$f(\aka{x},\ao{y})$の偏微分が持つべき性質を確認しておこう。
+\begin{itembox}{偏微分の交換可能性}
+ \begin{equation}\begin{array}{c}
+ {\partial \over \partial x}\left(\left(
+ {\partial f(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}
+ \right)_{\!\!\ao{y}}
+ = {\partial \over \partial y}\left(\left(
+ {\partial f(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}
+ \right)_{\!\!\aka{x}}
+ \\[8mm]
+ または\\[4mm]
+ {\partial^2 f(\aka{x},\ao{y})\over \partial x \partial y}
+ ={\partial^2 f(\aka{x},\ao{y})\over \partial y \partial x}~~~\leftarrow {\scriptstyle 一定にする変数を省略した書き方}
+ \end{array}\label{henbibunkoukan}
+ \end{equation}
+\end{itembox}
+であること（つまり、「$\aka{x}$で偏微分してから$\ao{y}$で偏微分」と、この順番を変えたものが同じ結果になること）は定義からわかる\footnote{ただし、これが成立するためには関数が微分可能でなくてはいけないことはもちろんである。}。
+
+上の式、すなわち偏微分が交換可能であることを確認する。\式{delfdelx}を$\ao{y}$で偏微分するということは
+\begin{equation}
+\begin{array}{rl}
+\left({\partial \over \partial y}\left(
+{\partial f(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}
+\right)_{\!\!\aka{x}}
+=& \lim_{\ao{\Delta y}\to0}
+{\left(
+{\partial f(\aka{x},\ao{y}+\ao{\Delta y})\over \partial x}\right)_{\!\!\ao{y}}
+-\left(
+{\partial f(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}
+\over \ao{\Delta y}}
+\end{array}\end{equation}
+という計算だが、この式の分子にさらに偏微分の定義を代入することで
+\begin{equation}
+\begin{array}{rl}
+=& \lim_{\aka{\Delta x}\to0\atop\ao{\Delta y}\to0}
+{{
+f(\aka{x}+\aka{\Delta x},\ao{y}+\ao{\Delta y})
+-f(\aka{x},\ao{y}+\ao{\Delta y})\over \aka{\Delta x}}
+-{f(\aka{x}+\aka{\Delta x},\ao{y})
+-f(\aka{x},\ao{y})\over \aka{\Delta x}}
+\over \ao{\Delta y}}\\[5mm]
+=& \lim_{\aka{\Delta x}\to0\atop\ao{\Delta y}\to0}
+{
+f(\aka{x}+\aka{\Delta x},\ao{y}+\ao{\Delta y})
+-f(\aka{x},\ao{y}+\ao{\Delta y})
+-f(\aka{x}+\aka{\Delta x},\ao{y})
++f(\aka{x},\ao{y})
+\over \aka{\Delta x}\ao{\Delta y}}
+\end{array}\label{DxDyf}
+\end{equation}
+を得る。次に\式{delfdely}を$\aka{x}$で偏微分すると、結果は$\aka{x}$と$\ao{y}$の微分の順番を変えただけなので、
+\begin{equation}
+\left( {\partial \over \partial x}\left(
+{\partial f(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}\right)_{\!\!\ao{y}}
+=\lim_{\aka{\Delta x}\to0\atop\ao{\Delta y}\to0}
+{
+f(\aka{x}+\aka{\Delta x},\ao{y}+\ao{\Delta y})
+-f(\aka{x}+\aka{\Delta x},\ao{y})
+-f(\aka{x},\ao{y}+\ao{\Delta y})
++f(\aka{x},\ao{y})
+\over \aka{\Delta x}\ao{\Delta y}}\label{DyDxf}
+\end{equation}
+を得る。注意深く見れば、\式{DyDxf}が\式{DxDyf}と（引き算の順番が入れ替わっているが）同じ式なのがわかる。
+
+図で表現しておこう。省略形で${\partial\over \partial y}\left({\partial f\over \partial x}\right)$になる微分を図で表現したのが次の図である。
+
+\epsfcenter{0.8}{partialdelxy}
+
+一方、$\aka{x}$と$\ao{y}$の立場を取り替えた${\partial \over \partial x}\left({\partial f\over \partial y}\right)$は次の図のように書ける。
+
+\epsfcenter{0.8}{partialdelyx}
+
+最終的に足したり引いたりしているものは、\raisebox{-2.5zh}{\includegraphics[height=5zh]{partialpartial.eps}}~~~と、同じ量になっているので、二つの微分は同じになる。別の言い方をすると、偏微分$\left({\partial\over \partial x}\fbox{？}\right)_{\!\!\ao{y}}$をする操作と偏微分$\left({\partial\over \partial y}\fbox{？}\right)_{\!\!\aka{x}}$をする操作は交換する。\式{henbibunkoukan}から、
+\begin{equation}
+Uが存在する。\Rightarrow \biggl({\partial \over \partial x}\underbrace{\left({\partial f(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}}_{Q(\aka{x,\ao{y}})}\biggr)_{\!\!\ao{y}}= \biggl({\partial \over \partial y}\underbrace{\left({\partial f(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}}_{P(\aka{x},\ao{y})}\biggr)_{\!\!\aka{x}}
+\end{equation}
+ということがわかる。よってこの対偶\footnote{「$P\Rightarrow Q$」に対して「$Qでない\Rightarrow Pでない$」をその対偶と呼ぶ。ある命題が正しければその対偶も正しい。}を取れば、
+\begin{screen}
+ \begin{equation}\left(
+ {\partial P(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}=\left(
+ {\partial Q(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}~~~または~~~
+ \left(
+ {\partial Q(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}- \left(
+ {\partial P(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}=0\label{sekibunkanou}
+ \end{equation}
+が成立していなかったら、$\diff\left(U(\aka{x},\ao{y})\right)=P(\aka{x},\ao{y})\akadx+Q(\aka{x},\ao{y})\aody$となる$U$は存在しない、\end{screen}
+ということがわかる。\式{sekibunkanou}は「\newwordE{せきぶんかのうじょうけん}{積分可能条件}{integrability condition}」と呼ばれる。
+
+\begin{Hosoku}
+ \式{sekibunkanou}の二つ目、$\sitatukkae{-1.5}{2.5}\left({\partial Q(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}- \left({\partial P(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}=0$の、「$\ao{y}$に関係する量である$Q$を$\aka{x}$で微分したものと、$\aka{x}$に関係する量である$P$を$\ao{y}$で微分したものを引き算する」という計算は、ベクトル解析で「rot」という名前で登場するもの（$\ao{y}$成分を$\aka{x}$で微分したもの引く$\aka{x}$成分を$\ao{y}$で微分したものを含んでいる）と似た形をしている。また複素解析でも同様の形の式が出て来る。
+
+今後、これと同様の式が出てきて、それが0になった時は「積分可能になった（つまり、$U$が求められる！）」とピンと来て欲しい。
+\end{Hosoku}
+
+\begin{QBox}
+\begin{Question}{checkic}
+前に【問い\ref{zenbibunex}】で考えた例は積分可能条件を満たしていること、および【問い\ref{mn}】で考えた例は積分可能条件を満たしていないことを確認せよ。
+\end{Question}
+\end{QBox}
+
+ここで示したのは、「$U$が存在$\Rightarrow$積分可能条件が満たされる」である。この逆「積分可能条件が満たされる$\Rightarrow U$が存在する」も成り立つ。これは、実際に$U$を作ってみれば確かめられる。ここで、
+\begin{itembox}{よくある間違い}
+\begin{equation}
+ U_誤(\aka{x},\ao{y})
+=\int_{x_0}^{\aka{x}}\murasakidt P(\murasaki{t},\ao{y}) +\int_{y_0}^{\ao{y}} \murasakidt Q(\aka{x},\murasaki{t})\label{Umachigai}
+\end{equation}
+\end{itembox}
+をしないよう気をつけよう\footnote{$\int_{x_0}^{\aka{x}}\murasakidt P(\murasaki{t},\ao{y})$という式を見て、$\aka{x}$が入るべきところに$\murasaki{t}$が入っている！」とパニックになってしまう人がたまにいるのだが、別にびっくりするようなことではなく、単に$\murasaki{t}$が（通常$\aka{x}$が入っている場所に）代入されているだけのことである。そして、その$\murasaki{t}$という変数が$\murasaki{t}=x_0$から$\murasaki{t}=\aka{x}$まで積分されている。積分する間に変化する積分定数$\murasaki{t}$と、積分の上端$\aka{x}$は違う量なのだから違う文字を使う。ここで「$\aka{x}$に$\murasaki{t}$を代入するのなんて嫌だ」とばかりに$\int_{x_0}^{\aka{x}}\akadx P(\aka{x},\ao{y})$などと書いたら混乱が生じてしまう。}。
+
+\begin{Caution}
+「そんな間違いしないよ」と思うかもしれないが、結構ここでひっかかる人はいる。
+
+たとえば、$\aka{x}\akadx+\ao{y}\aody=0$という式から「$\sitatukkae{-1}{2}P={\partial U\over \partial x}=\aka{x},Q={\partial U\over \partial y}=\ao{y}$」を読み取る。ここで「$\aka{x}$で微分して$\aka{x}$ということは${1\over 2}\aka{x}^2$、$\ao{y}$で微分して$\ao{y}$ということは${1\over 2}\ao{y}^2$。この二つを足して$\sitatukkae{-1.3}{2.3}U={1\over 2}\aka{x}^2+{1\over 2}\ao{y}^2$」と考えるのは間違いではない。
+
+しかし、だからと言って、$\ao{y}\akadx+\aka{x}\aody=0$という式から「$\sitatukkae{-1.5}{2.5}P={\partial U\over \partial x}=\ao{y},Q={\partial U\over \partial y}=\aka{x}$」を読み取り、「$\aka{x}$で微分して$\ao{y}$ということは$\aka{x}\ao{y}$、$\ao{y}$で微分して$\aka{x}$ということは$\aka{x}\ao{y}$。この二つを足して$U=2\aka{x}\ao{y}$」と、同じパターンを繰り返すと間違いなのである。
+
+{\bf ↑が納得できないという人は検算してみること！}
+\end{Caution}
+
+
+
+
+一見「微分は積分の逆だから\式{Umachigai}でOK」と思ってしまいがちだが、この$U_誤$を微分すると、
+\begin{equation}\left(
+{\partial U_誤(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}=P(\aka{x},\ao{y}) +\int \murasakidt \left({\partial Q(\aka{x},\murasaki{t})\over \partial x}\right)_{\!\!\ao{y}}
+\end{equation}
+となってしまって${\partial U\over \partial x}=P(\aka{x},\ao{y})$にならない\footnote{${\partial\over \partial x}\int_{y_0}^{\ao{y}} \murasakidt Q(\aka{x},\murasaki{t})=\int \murasakidt {\partial Q(\aka{x},\murasaki{t})\over \partial x}$に注意。$\aka{x}$による偏微分${\partial\over \partial x}$は（$\ao{y}$を一定としての微分）であるから、$\int_{y_0}^{\ao{y}}\murasakidt$という積分とは無関係であり、順番を交換してもよい。}。${\partial U\over \partial x}=P(\aka{x},\ao{y})$とするのに$U$に必要なのは第1項の$\int_{x_0}^{\aka{x}}\murasakidt P(\murasaki{t},\ao{y}) $だけであって、これ以外に$\aka{x}$の関数を付け加えては答があわなくなってしまう。付け加えてもよいのは$\ao{y}$の関数のみである。
+
+というわけで、$Q(\aka{x},\ao{y})$を含む項を入れるのをやめて、
+\begin{equation}
+ U_試(\aka{x},\ao{y})=\int_{x_0}^{\aka{x}}\murasakidt P(\murasaki{t},\ao{y})+f(\ao{y})
+\end{equation}
+という関数を試しに作ってみる。この関数は
+\begin{equation}
+\left( {\partial U_試(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}=P(\aka{x},\ao{y})
+\end{equation}
+を満たす（第2項の$f(\ao{y})$は$\aka{x}$で偏微分すると消える）。次に$\ao{y}$で微分してみよう。
+\begin{equation}
+\left( {\partial U(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}=\int_{x_0}^{\aka{x}}\murasakidt
+\left({\partial P(\murasaki{t},\ao{y})\over \partial y}\right)_{\!\!\murasaki{t}}
+  +{\df\over \dy}(\ao{y})
+\end{equation}
+となる（$f(\ao{y})$の微分は偏微分にする必要はないことに注意）。
+
+この結果は$Q(\aka{x},\ao{y})$にならなくてはいけない。積分可能条件$\left({\partial P(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}=\left({\partial Q(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}$を（$\aka{x}$のところに$\murasaki{t}$を代入し$\left({\partial P(\murasaki{t},\ao{y})\over \partial y}\right)_{\!\!\murasaki{t}}=\left({\partial Q(\murasaki{t},\ao{y})\over \partial t}\right)_{\!\!\ao{y}}$に変えてから）使うと、
+\begin{equation}
+\left( {\partial U_試(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}=\int_{x_0}^{\aka{x}}\murasakidt\left({\partial Q(\murasaki{t},\ao{y})\over \partial t}\right)_{\!\!\ao{y}}+{\df\over \dy}(\ao{y})
+\end{equation}
+となる。ここで、${\partial \over \partial t}$という計算は「$\ao{y}$を一定として」という前提のもとでの計算だから、$\ao{y}$は定数とみなしてよい。よって、$\int_{x_0}^{\aka{x}}\murasakidt {\df\over \dt}(\murasaki{t})=f(\aka{x})-f(x_0)$という、定積分と原始関数の関係が偏微分に対しても同様に成り立って、
+\begin{equation}
+ \int_{x_0}^{\aka{x}}\murasakidt\left({\partial Q(\murasaki{t},\ao{y})\over \partial t}\right)_{\!\!\ao{y}}=Q(\aka{x},\ao{y})-Q(x_0,\ao{y})
+\end{equation}
+とすることができる（$\murasaki{t}$で微分してから$\murasaki{t}$で定積分した、ということ）。これを使えば
+\begin{equation}
+\left( {\partial U_試(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}=\int_{x_0}^{\aka{x}}\murasakidt\left({\partial Q(\murasaki{t},\ao{y})\over \partial t}\right)_{\!\!\ao{y}}+{\df\over \dy}(\ao{y})=Q(\aka{x},\ao{y})-Q(x_0,\ao{y})+{\df\over \dy}(\ao{y})\label{Utamesite}
+\end{equation}
+を得る。\式{Utamesite}の最後の$-Q(x_0,\ao{y})+{\df\over \dy}(\ao{y})$の分だけ目論見とずれる。そこで、$f(\ao{y})$として、「微分すると$Q(x_0,\ao{y})$になる関数」を選べば、ずれがちょうど解消される。そのような関数として$\int_{y_0}^{\ao{y}} \murasakidt Q(x_0,\murasaki{t})$を選べば、
+\begin{equation}
+ U(\aka{x},\ao{y})=\int_{x_0}^{\aka{x}}\murasakidt P(\murasaki{t},\ao{y})
+  +\int_{y_0}^{\ao{y}} \murasakidt Q(x_0,\murasaki{t})\label{Uintone}
+\end{equation}
+である。この$U(\aka{x},\ao{y})$は$\left({\partial U(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}=Q(\aka{x},\ao{y})$を満たす。$\ao{y}$のみの関数を付け加えたのだから、$\left({\partial U(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}=P(\aka{x},\ao{y})$の方もそのまま成り立っている。
+
+なお、ここでやった計算で$\aka{x}$と$\ao{y}$の役割を逆転させれば、
+\begin{equation}
+ U(\aka{x},\ao{y})=\int_{x_0}^{\aka{x}}\murasakidt P(\murasaki{t},y_0)
+  +\int_{y_0}^{\ao{y}} \murasakidt Q(\aka{x},\murasaki{t})\label{Uinttwo}
+\end{equation}
+という式が作られる。これも正しい$U(\aka{x},\ao{y})$である。微分してみると、
+\begin{equation}
+\begin{array}{rl}\left(
+ {\partial U(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\aka{x}}
+  =&P(\aka{x},y_0)+\int_{y_0}^{\ao{y}}\murasakidt \left({\partial Q(\aka{x},\murasaki{t})\over \partial x}\right)_{\!\!\murasaki{t}}\\[4mm]
+=&P(\aka{x},y_0)+\int_{y_0}^{\ao{y}}\murasakidt \left({\partial P(\aka{x},\murasaki{t})\over \partial t}\right)_{\!\!\aka{x}}\\[4mm]
+=&P(\aka{x},y_0)+P(\aka{x},\ao{y})-P(\aka{x},y_0)=P(\aka{x},\ao{y})
+\end{array}
+\end{equation}
+となって、ちゃんと$U(\aka{x},\ao{y})$の満たすべき条件を満たしている。
+
+\begin{mawarikomi}<0>[7](1zw,0){20zw}{\includegraphics[width=18zw]{UxyUyx.eps}}
+\式{Uintone}と\式{Uinttwo}の二つの積分が「どの場所の何を積分しているか」を図で表したものが右のグラフである。場所$(\aka{x},\ao{y})$における$U$を求めるために、一方はまず右へ$\to(\aka{x},y_0)$進んでから上へ$\to(\aka{x},\ao{y})$と進む。もう一方はまず上へ$\to(x_0,\ao{y})$へ進んでから右へ$\to(\aka{x},\ao{y})$進んでいる。この二つの積分結果が同じになることが積分可能条件そのものなのである。「微分の逆が積分」ということは何度か述べているが、常微分で成立した$\int_a^b {\df\over \dx}(\aka{x}) \akadx=f(b)-f(a)$という式を偏微分の時に使おうとすると、「積分ってどの積分？（$\aka{x}$方向？、$\ao{y}$方向？、斜め？…曲線でもいいし）」という問題が生じてくる。積分可能条件が成立してればそこは気にしなくてよい。
+\end{mawarikomi}
+
+\begin{QBox}
+\begin{Question}{Uxx}
+二つの積分の積分範囲が短いとして$\sitatukkae{-1.5}{2}\int_a^b \dx f(x)\simeq f(a)(b-a)\simeq f(b)(b-a)$のような近似を行うと、二つの積分が等しいという式から積分可能条件を導ける。やってみよう。
+\end{Question}
+\end{QBox}
+
+\begin{Hosoku}
+ 以上からわかるように、ある微小量があったとき、それが全微分であるかどうかというのは非常に大事である。ある量が\sitatukkae{-1}{2}\fukidasi{微小量で、かつ全微分である量}であったとすれば、そのある量を$\dX$と書いて、「微分される前の量」である$X$を定義することができる。そうやって定義された$X$は、「変化のさせ方にはよらず、変化後の状態だけで決まる量（状態量）」になり、便利である。
+
+
+ いったん「状態量」であることが証明された量は、「これまでどんな変化をしてきたか」という経歴を一切考慮することなく「今どうなっているか」だけを見て計算し表現することができる。たとえばエネルギーなどがこれにあたる（例えば「この物体が昨日どこにいたかを知らないとこの物体の位置エネルギーは計算できない」と言われたらどれだけ面倒くさいことになるか、と想像してみればよい。エネルギーが状態量であることの有難味がわかる）。ある微小量が全微分となり、対応する状態量が定義できる（逆にいえば、これを微分すれば最初考えていた「ある微小量」が出て来る）という状況は、たいへん有り難い状況なのである。
+
+ 一方、\sitatukkae{-1}{2}\fukidasi{微小量ではあるが全微分ではない量}（もちろんこういう量も存在する！）についてはこれができないから、対応する状態量を定義できない\footnotemark 。そういう量は$\diff 'X$のように${}'$をつけて「全微分じゃないよ」ということを表すこともある。
+\end{Hosoku}
+
+
+\footnotetext{例としては「熱」がある。気体をある状態から微小に違う別の状態に変化させる時に、微小な熱が移動することになるが、一般的には変化のさせ方で移動する熱量は変わる。だから、「微分すると熱になる量」は特別な場合を除けば定義できない。}
+
+\section{積分因子}
+
+積分可能条件が満たされてなかったら全微分形ではない。しかし、ここで$P\akadx+Q\aody=0$の右辺が0なので、両辺にある関数$\lambda(\aka{x},\ao{y})$を掛けて
+\begin{equation}
+\lambda(\aka{x},\ao{y}) P(\aka{x},\ao{y})\akadx
++\lambda(\aka{x},\ao{y}) Q(\aka{x},\ao{y})\aody=0
+\end{equation}
+として、
+\begin{equation}
+ \left({\partial U(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}=\lambda(\aka{x},\ao{y}) P(\aka{x},\ao{y}),~~~\left(
+ {\partial U(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}=\lambda(\aka{x},\ao{y}) Q(\aka{x},\ao{y})
+\end{equation}
+を満たすことができれば全微分形ではなかった微分方程式を全微分形に直せたということになる。この掛算した$\lambda(\aka{x},\ao{y})$のことを「\newwordE{せきぶんいんし}{積分因子}{integrating factor}」と呼ぶ。積分因子は
+\begin{equation}
+\begin{array}{rl}\left(
+ {\partial\left(
+\lambda(\aka{x},\ao{y}) Q(\aka{x},\ao{y})
+\right)\over \partial x}\right)_{\!\!\ao{y}}-\left(
+{\partial\left(
+\lambda(\aka{x},\ao{y}) P(\aka{x},\ao{y})
+\right)\over \partial y}\right)_{\!\!\aka{x}}=&0\\
+\left(
+{\partial\lambda(\aka{x},\ao{y}) 
+\over \partial x}\right)_{\!\!\ao{y}}
+Q(\aka{x},\ao{y})
+-\left(
+{\partial\lambda(\aka{x},\ao{y}) 
+\over \partial y}\right)_{\!\!\aka{x}}
+P(\aka{x},\ao{y})
+=&
+-\lambda(\aka{x},\ao{y}) \left(\left(
+{\partial Q(\aka{x},\ao{y})\over \partial x}\right)_{\!\!\ao{y}}-\left(
+ {\partial P(\aka{x},\ao{y})\over \partial y}\right)_{\!\!\aka{x}}
+\right)
+\\
+\end{array}\label{lambdakettei}
+\end{equation}
+という方程式を満たせばよい。しかし、この式から$\lambda(\aka{x},\ao{y})$の形を求めるのは一般には簡単ではない（また、この方程式の解$\lambda(\aka{x},\ao{y})$は一意ではない）。たまたま、$\lambda$が$\aka{x}$のみの関数になるような場合はこの式が
+\begin{equation}
+ {\diff \lambda(\aka{x}) 
+\over \diff x}
+Q(\aka{x},\ao{y})
+=
+-\lambda(\aka{x},\ao{y}) \left(
+{\partial Q(\aka{x},\ao{y})\over \partial x}- {\partial P(\aka{x},\ao{y})\over \partial y}
+\right)\label{lambdaketteij}
+\end{equation}
+という形になるので、少し解きやすくなる。
+
+\begin{FAQ}{なぜ偏微分$\partial$が常微分$\diff $に変わった？？}
+上の式\式{lambdakettei}では${\partial\lambda(\aka{x},\ao{y}) \over \partial x}$だったのに、下の式\式{lambdaketteij}では$ {\diff \lambda(\aka{x}) \over \diff x}$になっていることを不思議に思う人もいるかもしれないが、そもそも偏微分の常微分との違いは「変数がたくさんあるが、そのうち一つだけが変化していると仮定する」というところであったということを今一度思い出そう。ところが今は$\lambda$が$\ao{y}$に最初っから依存していないという場合を考えているのだから、「変数である$\ao{y}$が変化しないとして」ということを考える必要はない。というわけで$\ao{y}$依存性がなくなった時点で偏微分と常微分の区別はない（というよりこれを「偏微分」と呼ぶ意味がなくなった）のである。
+ 
+\end{FAQ}
+
+
+実際に解くときには、いろいろな場合を想定して試行錯誤を行う。
+
+\section{章末演習問題}
+\begin{selectfontkakikomi}
+ 
+
+\begin{QQuestion}{intfactor}
+以下の微分方程式を全微分形にして解け。
+
+(1)~~$(\aka{x}-\ao{y}^2)\akadx+2\aka{x}\ao{y}\aody=0$~~(2)~~$(2\aka{x}+\tan \ao{y})\akadx+(\aka{x}-\aka{x}^2\tan \ao{y})\aody=0$
+\end{QQuestion}
+
+\begin{QQuestion}{energy}
+$g(f)$は既知の関数で、その原始関数が$G(f)$であることはわかっているとして、
+\begin{equation}
+\left(
+ {\ddx}
+\right)^2 f(\aka{x})+g(f(\aka{x}))=0
+\end{equation}
+という微分方程式を考える。これを解くための技法として、両辺に${\ddx}f(\aka{x})$を掛けて積分するという方法がある\footnote{この章でやった計算とは少し違うが、積分因子が${\ddx}f(\aka{x})$になっているとも言える。}。実際にそれを実行して、この式を
+\begin{equation}
+ \ddx\left(？\right)=0
+\end{equation}
+ の形に書き直して一定となる量を見つけよ。
+
+この計算はこの章で行った計算とは少し違うが「因子を掛けることで全微分の形に直す」という精神は同じである。
+\end{QQuestion}
+\end{selectfontkakikomi}
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#kensui" data-icon="arrow-l">懸垂線</a>
+		<a href="#qa" data-icon="arrow-r">受講者の感想・コメント</a>
+		<p align="center">←<a href="lec24.html">第24講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+	<div data-role="page" id="qa">
+	  <div data-role="header">
+		<h1>受講者の感想・コメント</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+
+		<div class="Q">懸垂線のグラフと弱肉強食のグラフ、どちらも面白かった。数学でこんなものまでも解けるのかと思った。</div>
+		<div class="A">解けるんです（まぁ、現実よりもかなり簡単化したものではあるのですが）。</div>
+		<p></p>
+		<div class="Q">たまに、うっかりと微分と積分を逆にしてしまいます。今日はなぜか左を積分、右を微分してました。</div>
+		<div class="A">それはなかなかすごい計算になってますね。次数や次元を勘定するとか、計算チェックの方法を考えてみてください。</div>
+		<p></p>
+		<div class="Q">和製ゴジラが製作されているようです。先生は好きですか？</div>
+		<div class="A">基本ゴジラは好きなんですが、「もうそろそろリメイクものはいいんじゃないの」という気分もちょっとあります。</div>
+		<p></p>
+		<div class="Q">自然の流れが微分で表されるのが面白いと思った。</div>
+		<div class="A">だから微分を勉強する意味があるわけです。</div>
+		<p></p>
+		<div class="Q">チェーンの懸垂線の実演は、たいへん興味深く面白かったです。肉食・草食の食物連鎖も興味深かったです（微分方程式の有効性！！）</div>
+		<div class="A">「数学がちゃんと役に立つ」というのは面白いところですね。</div>
+		<p></p>
+		<div class="Q">懸垂線について実際に見ることができたので、イメージしやすくてよかったです。弱肉強食について数式で表すことがわかった。</div>
+		<div class="A">いろんなものが微分方程式で表せます。</div>
+		<p></p>
+		<div class="Q">最初は放物線かと思いましたが、計算結果がcoshになって面白いなと思いました。</div>
+		<div class="A">計算してみると「お！」と思う結果が出てきて楽しいですね。</div>
+		<p></p>
+		<div class="Q">少しややこしかったけどとくのが面白かった。</div>
+		<div class="A">一度自力で解いてみましょう。</div>
+		<p></p>
+		<div class="Q">放物線にみえるのに式を求めると別のもので面白いと思った。</div>
+		<div class="A">最下部付近だけ見ると、まぁ放物線なんですけどね。上の方を見ると違いが見えます。</div>
+		<p></p>
+		<div class="Q">懸垂線のところは少し難しかったけど、こまかく力を分解とかしていくと理解できたので良かったです。自然現象を式にしてグラフにするのはおもしろかったです。式やグラフにできそうもないと考えていたから、すごいと思いました。</div>
+		<div class="A">こうやっていろんな現象を微分方程式の力を借りて計算できていけるというのはすごいことですね。</div>
+		<p></p>
+		<div class="Q">予習をやる。</div>
+		<div class="A"><big><big><big>やろう！！</big></big></big></div>
+		<p></p>
+		<div class="Q">微小量の範囲を考えるときにどこまでを考慮するのかという判断の付け方が気になった。</div>
+		<div class="A">微小量に関してオーダーを考えて、1次までなら2次以上は無視、2次までなら3次以上は無視というふうに考えていきます。</div>
+		<p></p>
+		<div class="Q">懸垂線、少し難しかったです。sinh,coshまだ慣れないです。</div>
+		<div class="A">まぁ何度もお目にかかると、そのうち慣れます。</div>
+		<p></p>
+		<div class="Q">ロトカ・ヴォルテラの方程式って名前めっちゃかっこいいなと思ってました。</div>
+		<div class="A">確かにかっこいいね。</div>
+		<p></p>
+		<div class="Q">兎と狐のXとYの積に比例するというのがよくわからなかった。</div>
+		<div class="A">そのときに質問しなきゃ。これは「狐が兎を食う」という事件（イベント）がどれくらいの確率で起こるかというところから来てます。</div>
+		<p></p>
+		<div class="Q">生物の世界の微分方程式を解いて出た結果が現実でもそうなっているというのがすごいと感じた。</div>
+		<div class="A">現実はもちろんもっと複雑（微分方程式もそれに応じて複雑にする）ではあるのですが、基本的なところは今日の話の通りです。</div>
+		<p></p>
+		<div class="Q">色々なやりかたがあり、すごいと思いました。</div>
+		<div class="A">いやいや、まだまだ色々あります。</div>
+		<p></p>
+		<div class="Q">直観的にわかることを計算して、本当にそうなるか確かめることができてよかった。</div>
+		<div class="A">直観と数式がつながると面白いですね。</div>
+		<p></p>
+		<div class="Q">うさぎときつねのやつ面白かった。生態系の問題を数式で考えるのは楽しいですね。</div>
+		<div class="A">いろんなことが数式で表せるから、数学は楽しい。</div>
+		<p></p>
+		<div class="Q">連立微分方程式が例がわかりやすかったので理解しやすかったです。</div>
+		<div class="A">計算とその中身と、じっくり理解しておいてください。</div>
+		<p></p>
+		<div class="Q">微分方程式は難しくなってきたけど、自然現象を考えることができるようになってきて、楽しい。</div>
+		<div class="A">微分方程式を勉強したおかげで考えることができる現象が増えます。</div>
+		<p></p>
+		<div class="Q">微分方程式は生物の増減にも使えることを知った。本当に広く使うことができてすごいと思った。</div>
+		<div class="A">もちろん！　いろんな方面に使えます。</div>
+		<p></p>
+		<div class="Q">連立微分方程式はややこしいのでよく勉強しようと思いました。</div>
+		<div class="A">じっくりと解いてみればそれほどたいへんでもないですよ（線形近似せずに解こうとすると大変ですが）。</div>
+		<p></p>
+		<div class="Q">例えが面白くてイメージしやすかったです。</div>
+		<div class="A">そうですか、そりゃよかった。</div>
+		<p></p>
+		<div class="Q">今回は、肉食動物と草食動物の連立微分方程式がおもしろかった。</div>
+		<div class="A">それはよかった。</div>
+		<p></p>
+		<div class="Q">始めは物理でとっつきにくかったのですが、生物の方は少し良かったです。復習します。</div>
+		<div class="A">復習宜しく。</div>
+		<p></p>
+		<div class="Q">生物の弱肉強食がグラフで表すことができると知って驚いた。</div>
+		<div class="A">そりゃ、いろんなものがグラフで表せますよ。</div>
+		<p></p>
+		<div class="Q">狐と兎の食う食われるの関係を微分方程式で解くことができたのでよかったです。</div>
+		<div class="A">計算をじっくりやってみてください。</div>
+		<p></p>
+		<div class="Q">動物の増減の様子が微分方程式で表せるのを知って、関心を持った。</div>
+		<div class="A">いろんな現象を表せるものですよ、微分方程式は。</div>
+		<p></p>
+		<div class="Q">うさぎときつねの連立微分方程式がおもしろかった。でも自分で解けと言われると解ける気がしない。</div>
+		<div class="A">そこは一回自分で解いてみましょうよ。</div>
+		<p></p>
+		<div class="Q">けっこう面白く感じました、内容が。</div>
+		<div class="A">面白いでしょ。</div>
+		<p></p>
+		<div class="Q">${\mathrm d^2x\over \mathrm dt^2}=-ACx~~\to~~x=x_0\cos(\sqrt{AC}t+\alpha)$、こんな感じで逆算して方程式を作るのが難しいと思いました。</div>
+		<div class="A">このあたりは、「何度も出てきたおなじみの奴」という感じで処理したいところです。</div>
+		<p></p>
+		<div class="Q">うさぎときつねで説明をしていたのでとてもわかりやすかった。</div>
+		<div class="A">「人間とゾンビ」で説明している本もあるそうです。</div>
+		<p></p>
+		<div class="Q">うさぎときつねの関係のグラフが楽しかった。</div>
+		<div class="A">あのグラフの形と時間変化の様子はなかなか楽しいですね。</div>
+		<p></p>
+		<div class="Q">今日の講義はとても理解することができたと思います。ですが、来週まで理解できているか不安ですが、忘れないようにしっかりと復習したいと思います。</div>
+		<div class="A">一個一個の計算をもう一度追いかけてみてください。</div>
+		<p></p>
+		<p></p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#lw" data-icon="arrow-l">肉食動物と草食動物の連立微分方程式</a>
+		<p align="center"> <a href="lec24.html">第24講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+  </body>
+</html>

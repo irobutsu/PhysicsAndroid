@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, DivrotActivity!</string>
+    <string name="app_name">Divergence</string>
+    <string name="div_plus">div源＋</string>
+    <string name="div_minus">div源ー</string>
+    <string name="move_frame">枠移動</string>
+    <string name="rot_left">rot源左</string>
+    <string name="rot_right">rot源右</string>
+    <string name="_down">▼</string>
+    <string name="_up">▲</string>
+    <string name="x_plus">x+</string>
+    <string name="_zero">0</string>
+    <string name="_e_y_eq">"  E_y="</string>
+    <string name="y">y</string>
+    <string name="_div_e_0">（源の場所以外の）div E=0</string>
+    <string name="_vanish">源を消去</string>
+    <string name="e_x_">E_x=</string>
+    <string name="_plus">+</string>
+
+</resources>

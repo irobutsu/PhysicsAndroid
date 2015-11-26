@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/denba"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+       android:id="@+id/ll"
+       	android:layout_width="fill_parent"
+       android:layout_height="fill_parent"
+       android:orientation="vertical" >
+		<LinearLayout android:orientation="horizontal" 
+       		android:layout_height="wrap_content"
+          	android:layout_width="fill_parent">
+
+		    
+    		<LinearLayout
+    	    	android:layout_width="wrap_content"
+    	    	android:layout_height="fill_parent"
+    	    	android:baselineAligned="true"
+    	    	android:orientation="vertical" >
+       			<LinearLayout
+            		android:layout_width="fill_parent"
+            		android:layout_height="wrap_content" android:orientation="horizontal">
+
+	              	<ToggleButton
+	              	    android:id="@+id/tbE"
+	              	    android:layout_width="wrap_content"
+	              	    android:layout_height="wrap_content"
+	              	    android:checked="false"
+	              	    android:textOff="@string/E_Line_off"
+	              	    android:textOn="@string/E_Line_on"
+	              	    android:textSize="12sp" />
+
+	              	<ToggleButton
+	              	    android:id="@+id/tbY1"
+	              	    android:layout_width="wrap_content"
+	              	    android:layout_height="wrap_content"
+	              	    android:checked="false"
+	              	    android:textOff="@string/E1_off"
+	              	    android:textOn="@string/E1_on"
+	              	    android:textSize="14sp" />
+
+	              	<ToggleButton
+	              	    android:id="@+id/tbY2"
+	              	    android:layout_width="wrap_content"
+	              	    android:layout_height="wrap_content"
+	              	    android:checked="false"
+	              	    android:textOff="@string/E2_off"
+	              	    android:textOn="@string/E2_on"
+	              	    android:textSize="14sp" />
+
+	     		</LinearLayout>
+
+     			<LinearLayout
+     		    	android:layout_width="fill_parent"
+     		    	android:layout_height="wrap_content"
+     		    	android:orientation="horizontal" >
+
+     				<ToggleButton
+     				    android:id="@+id/tbF"
+     				    android:layout_width="wrap_content"
+     				    android:layout_height="wrap_content"
+     				    android:checked="true"
+     				    android:textOff="@string/Force_off"
+     				    android:textOn="@string/Force_on"
+     				    android:textSize="12sp" />
+
+					<ToggleButton
+					    android:id="@+id/tbY"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:checked="true"
+					    android:textOff="@string/totalE_off"
+					    android:textOn="@string/totalE_on"
+					    android:textSize="12sp" />
+
+					<ToggleButton
+					    android:id="@+id/tbS"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:checked="true"
+					    android:textOff="@string/directionOnly"
+					    android:textOn="@string/withStrength"
+					    android:textSize="12sp" />
+
+	           </LinearLayout>
+ 			</LinearLayout>    
+       		<LinearLayout
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content" android:orientation="vertical" >            
+	    
+            	<LinearLayout
+              		android:id="@+id/tableRow1"
+                	android:layout_width="fill_parent"
+                	android:layout_height="wrap_content"
+                	android:gravity="center_horizontal"
+                	android:orientation="horizontal" >
+
+	              <Button
+	                  android:id="@+id/Q1Down"
+	                  android:layout_width="wrap_content"
+	                  android:layout_height="wrap_content"
+	                  android:text="←"
+	                  android:textSize="16sp" />
+
+	            	<TextView
+	            	    android:id="@+id/Q1Text"
+	            	    android:layout_width="wrap_content"
+	            	    android:layout_height="wrap_content"
+	            	    android:text="Q1=3"
+	            	    android:textAppearance="?android:attr/textAppearanceLarge"
+	            	    android:textSize="14sp" />
+
+                	<Button
+                	    android:id="@+id/Q1Up"
+                	    android:layout_width="wrap_content"
+                	    android:layout_height="wrap_content"
+                	    android:text="→"
+                	    android:textSize="16sp" />
+
+            	</LinearLayout>
+            	<LinearLayout
+              	  	android:gravity="center_horizontal"
+                	android:layout_width="fill_parent"
+                	android:layout_height="wrap_content">
+
+	              <Button
+	                  android:id="@+id/Q2Down"
+	                  android:layout_width="wrap_content"
+	                  android:layout_height="wrap_content"
+	                  android:text="←"
+	                  android:textSize="16sp" />
+
+                	<TextView
+                	    android:id="@+id/Q2Text"
+                	    android:layout_width="wrap_content"
+                	    android:layout_height="wrap_content"
+                	    android:text="Q2=-3"
+                	    android:textAppearance="?android:attr/textAppearanceLarge"
+                	    android:textSize="14sp" />
+
+                	<Button
+                	    android:id="@+id/Q2Up"
+                	    android:layout_width="wrap_content"
+                	    android:layout_height="wrap_content"
+                	    android:text="→"
+                	    android:textSize="16sp" />
+
+	         	</LinearLayout>
+        	</LinearLayout>
+    	</LinearLayout>
+
+	</LinearLayout>
+</LinearLayout>

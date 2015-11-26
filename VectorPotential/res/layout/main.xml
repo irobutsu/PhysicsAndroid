@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btResetScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.1"
+            android:text="@string/resetScreen" />
+
+        <ToggleButton
+            android:id="@+id/tbA"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.18"
+            
+            android:textOff="（A）"
+            android:textOn="【A】" />
+
+        <ToggleButton
+            android:id="@+id/tbrotAx"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.18"
+           
+            android:textOff="（rot A_x）"
+            android:textOn="【rot A_x】" />
+
+        <ToggleButton
+            android:id="@+id/tbrotAy"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.18"
+            
+            android:textOff="（rot A_y）"
+            android:textOn="【rot A_y】" />
+
+        <ToggleButton
+            android:id="@+id/tbrotAz"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.18"
+          
+            android:textOff="（rot A_z）"
+            android:textOn="【rot A_z】" />
+
+        <ToggleButton
+            android:id="@+id/tbB"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.18"
+         
+            android:textOff="（B）"
+            android:textOn="【B】" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainscreen"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+</LinearLayout>

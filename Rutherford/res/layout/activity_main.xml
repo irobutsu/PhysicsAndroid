@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <LinearLayout android:id="@+id/ll" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+    	<LinearLayout
+        android:id="@+id/setting"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:orientation="horizontal">
+
+           <ToggleButton
+               android:id="@+id/cbV"
+               android:layout_width="0dp"
+               android:layout_height="fill_parent"
+               android:layout_weight="1"
+               android:checked="true"
+               android:text="　速度　"
+               android:textOff="（速度）"
+               android:textOn="【速度】"
+               android:textSize="10dp" >
+
+</ToggleButton>
+
+           <ToggleButton
+               android:id="@+id/cbA"
+               android:layout_width="0dp"
+               android:layout_height="fill_parent"
+               android:layout_weight="1"
+               android:checked="true"
+               android:text="　加速度　"
+               android:textOff="（加速度）"
+               android:textOn="【加速度】"
+               android:textSize="10dp" >
+
+           </ToggleButton>
+
+           <ToggleButton
+               android:id="@+id/cbF"
+               android:layout_width="0dp"
+               android:layout_height="fill_parent"
+               android:layout_weight="1"
+               android:checked="true"
+               android:text="力　"
+               android:textOff="（力）"
+               android:textOn="【力】"
+               android:textSize="10dp" >
+
+           </ToggleButton>
+
+           <LinearLayout
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="4"
+               android:orientation="vertical" >
+
+               <LinearLayout
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content" >
+
+                   <Button
+                       android:id="@+id/btGO"
+                       android:layout_width="wrap_content"
+                       android:layout_height="31dp"
+                       android:layout_weight="7"
+                       android:text="発射"
+                       android:textSize="10dp" />
+
+                   <Button
+                       android:id="@+id/clear"
+                       android:layout_width="wrap_content"
+                       android:layout_height="31dp"
+                       android:layout_weight="7"
+                       android:text="軌跡クリア"
+                       android:textSize="10dp" />
+
+               </LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="fill_parent"
+                   android:layout_height="fill_parent" >
+
+                   <TextView
+                       android:id="@+id/textViewV"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center_vertical"
+                       android:layout_margin="3dp"
+                       android:gravity="right"
+                       android:text="V=100"
+                       android:textAppearance="?android:attr/textAppearanceMedium"
+                       android:textSize="12dp" />
+
+                   <SeekBar
+                       android:id="@+id/sbV"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="0.8"
+                       android:max="249"
+                       android:progress="99" />
+
+               </LinearLayout>
+
+           </LinearLayout>
+
+           <LinearLayout
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="4"
+               android:orientation="vertical" >
+
+               <LinearLayout
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content" >
+
+                   <TextView
+                       android:id="@+id/textView2"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center_vertical"
+                       android:layout_margin="3dp"
+                       android:gravity="right"
+                       android:text="Q=100"
+                       android:textAppearance="?android:attr/textAppearanceMedium"
+                       android:textSize="12dp" />
+
+                   <SeekBar
+                       android:id="@+id/sbG"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="12"
+                       android:max="499"
+                       android:progress="99" />
+
+               </LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content" >
+
+                   <TextView
+                       android:id="@+id/textViewR"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center_horizontal|center_vertical"
+                       android:layout_margin="3dp"
+                       android:gravity="right"
+                       android:text="R=100"
+                       android:textAppearance="?android:attr/textAppearanceMedium"
+                       android:textSize="12dp" />
+
+                   <SeekBar
+                       android:id="@+id/sbR"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="12"
+                       android:max="249"
+                       android:progress="99" />
+
+               </LinearLayout>
+
+           </LinearLayout>
+
+        <ToggleButton
+            android:id="@+id/tbStop"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="ToggleButton"
+            android:textOff="中断"
+            android:textOn="実行"
+            android:textSize="10dp" >
+
+</ToggleButton>
+  	    </LinearLayout>
+
+
+
+   	</LinearLayout>
+</LinearLayout>

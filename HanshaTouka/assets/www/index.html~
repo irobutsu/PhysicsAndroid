@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+	<!--     <link rel="stylesheet" type="text/css" href="css/index.css" /> -->
+    <title>波の反射／透過</title>
+	<script src="jquery.js" type="text/javascript"></script>
+	<link href="jquery.mobile-1.3.1.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.mobile-1.3.1.min.js" type="text/javascript"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="graphscreen.js" type="text/javascript"></script>
+	<script type="text/javascript" src="cordova.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript">
+	 app.initialize(); 
+	</script>
+	<style type="text/css">
+	 img {
+	   vertical-align:middle;
+	 }
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .buttonfuu{
+	   padding:5px 5px 5px 5px;
+	   background-color: #CCC;
+	   border: solid #444 thin;
+	   border-radius:20px;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:10px 10px 10px 10px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #AA0;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	 .red{
+	   color:#D00;
+	 }
+	</style>
+  </head>
+  <body>
+	<title>波の反射／透過</title>
+	  <script type="text/javascript">
+	   var theta2npi;
+	   var theta2npione;
+	   var theta2npitwo;
+	   var theta2npithree;
+	   $(document).delegate('#page1','pageinit',function(e) {
+		 gs1=new GraphScreen("canvas1",12,4.2,0.9);
+		 gs1.setLeft(-6);
+		 gs1.setBottom(-2.1);
+		 gs1.gobackOriginalSize();
+		 gs1.writeContents=function() {
+		   graphWrite_sub(gs1);
+		 }; 
+		 nowgs=gs1;
+	   });
+	   $(document).delegate('#page1','pageshow',function(e) {
+		 nowgs=gs1;
+		 setT();
+		 setLambda();
+		 setSliders($("#slider_1"),$("#slider2_1"),null,null);
+		 if( !nowAnimeFlg ) {
+		   graphWrite(gs1);
+		 }
+	   });
+	   function setSliders(sl,sl2) {
+		 if( sl != null  ) {
+		   sl.prop('value',lambda);
+		   sl.slider('refresh');
+		 }
+		 if( sl2 != null  ) {
+		   sl2.prop('value',T);
+		   sl2.slider('refresh');
+		 }
+	   }
+	   var nowAnimeFlg=false;
+	   function graphWrite(gs) {
+		 graphWrite_sub(gs);
+		 if( !nowAnimeFlg ) {
+		   nowAnimeFlg=true;
+		 }
+		 t += 0.1;
+		 if( !stopFlg ) {
+		   setTimeout("graphWrite(nowgs);",100);
+		 }
+	   }
+	   function graphWrite_sub(gs) {
+		 var x;
+		 var ct=gs.ctx;
+		 gs.setScale();
+		 gs.clearALL();
+		 ct.fillStyle="rgb(235,255,255)";
+		 ct.beginPath();
+		 ct.fillRect(gs.leftwx,gs.bottomy,-gs.leftwx,gs.h);
+		 
+		 ct.beginPath();
+		 ct.fillStyle="rgb(235,255,235)";
+		 ct.fillRect(0,gs.bottomy,gs.rightwx,gs.h);
+		 
+		 gs.writeCoordinate();
+
+		 if( iFlg ) {
+		   ct.beginPath();
+		   ct.strokeStyle="rgba(255,0,0,0.6)";
+		   ct.moveTo(gs.leftwx,wave_in(gs.leftwx,t));
+		   for(x=gs.leftwx+0.025; x < 0.025 ; x += 0.025 ) {
+			 ct.lineTo(x,wave_in(x,t));
+			 ct.moveTo(x,wave_in(x,t));
+			 // ↑ほんとうはこれは必要ないのだが、chromeのlineToにバグがあるようなので入れている。
+		   }
+		   for(x=0.025; x < gs.rightwx ; x += 0.05 ) {
+			 ct.moveTo(x,wave_in(x,t));
+			 ct.lineTo(x+0.025,wave_in(x+0.025,t));
+		   }
+		   ct.stroke();
+		 }
+		 var wave_out;
+
+		 if( hanshaFlg == 0 ) {
+		   wave_out=wave_rfix;
+		 } else if( hanshaFlg == 1 ) {
+		   wave_out=wave_rfree;
+		 } else {
+		   wave_out=wave_rn;
+		 }
+		 if( rFlg ) {
+		   ct.strokeStyle="rgba(0,0,255,0.6)";
+		   ct.beginPath();
+		   ct.moveTo(gs.leftwx,wave_out(gs.leftwx,t));
+		   for(x=gs.leftwx+0.025; x < 0.025 ; x += 0.025 ) {
+			 ct.lineTo(x,wave_out(x,t));
+			 ct.moveTo(x,wave_out(x,t));
+			 // ↑ほんとうはこれは必要ないのだが、chromeのlineToにバグがあるようなので入れている。
+		   }
+		   ct.stroke();
+		 }
+		 if( gFlg ) {
+		   ct.strokeStyle="rgba(255,0,255,0.6)";
+		   ct.beginPath();
+		   ct.moveTo(gs.leftwx,wave_out(gs.leftwx,t)+wave_in(gs.leftwx,t));
+		   for(x=gs.leftwx+0.025; x < 0.025 ; x += 0.025 ) {
+			 ct.lineTo(x,wave_out(x,t)+wave_in(x,t));
+			 ct.moveTo(x,wave_out(x,t)+wave_in(x,t));
+			 // ↑ほんとうはこれは必要ないのだが、chromeのlineToにバグがあるようなので入れている。
+		   }
+		   ct.stroke();
+		 }
+		 if( pFlg ) {
+		   if( hanshaFlg == 2 ) {
+			 ct.strokeStyle="rgba(150,150,0,0.6)";
+			 ct.beginPath();
+			 ct.moveTo(0,wave_p(0,t));
+			 for( x=0.025; x< gs.rightwx ; x += 0.025 ) {
+			   ct.lineTo(x,wave_p(x,t));
+			   ct.moveTo(x,wave_p(x,t));
+			   // ↑ほんとうはこれは必要ないのだが、chromeのlineToにバグがあるようなので入れている。
+			 }
+			 ct.stroke();
+		   }
+		 }
+	   }
+	   function phase(x,t) {
+		 return k1*x-omega1*t;
+	   }
+	   function wave_in(x,t) {
+		 return Math.sin(k1*x-omega1*t);
+	   }
+	   function wave_rfree(x,t) {
+		 return Math.sin(-k1*x-omega1*t);
+	   }
+	   function wave_rfix(x,t) {
+		 return -Math.sin(-k1*x-omega1*t);
+	   }
+	   function wave_rn(x,t) {
+		 return (1-n)/(1+n)*Math.sin(-k1*x-omega1*t);
+	   }
+	   function wave_p(x,t) {
+		 return 2/(1+n)*Math.sin(k1*n*x-omega1*t);
+	   }
+	   var n=2;
+	   var gs1,nowgs;
+	   var t=0;
+	   var k1;
+	   var omega1;
+	   var lambda=5;
+	   var T=3;
+
+	   function setT() {
+		 omega1=2*Math.PI/T;
+		 $(".nu").html("振動数ν="+marume4(1/T)+"Hz");
+		 $(".omega").html("角振動数ω="+marume4(2*Math.PI/T)+"rad/s");
+		 $(".vp").html("速度v="+marume4(omega1/k1)+"m/s");
+       }
+	   function marume4(x) {
+		 var xx=x*10000;
+		 xx=Math.round(xx);
+		 xx/=10000;
+		 if( x- xx == 0 ) {
+           return xx;
+		 } else {
+           return xx+"…";
+		 }
+	   }
+	   var stopFlg=false;
+	   function stopButton() {
+		 if( stopFlg ) {
+		   stopFlg=false;
+		   $("#stopB").siblings('.ui-btn-inner').children('.ui-btn-text').text("一時停止");
+		   graphWrite(nowgs);
+		 } else {
+		   stopFlg=true;
+		   $("#stopB").siblings('.ui-btn-inner').children('.ui-btn-text').text("運動再開");
+		 }
+	   }
+	   function visibleButton() {
+		 gFlg=true;
+		 pFlg=true;
+		 iFlg=false;
+		 rFlg=false;
+		 $("#checkboxi").attr("checked",false).checkboxradio("refresh");
+		 $("#checkboxr").attr("checked",false).checkboxradio("refresh");
+		 $("#checkboxg").prop("checked","checked").checkboxradio("refresh");
+		 $("#checkboxp").prop("checked","checked").checkboxradio("refresh");
+	   }
+	   var hanshaFlg=0;
+	   function endBCButton() {
+		 hanshaFlg=$("#endBC").prop("selectedIndex");
+	   }
+	   function setLambda() {
+		 k1=2*Math.PI/lambda;
+		 $(".k").html("波数k="+marume4(k1)+"rad/m");
+		 $(".vp").html("速度v="+marume4(omega1/k1)+"m/s");
+       }
+	   var iFlg=true;
+	   var rFlg=true;
+	   var pFlg=true;
+	   var gFlg=true;
+	  </script>
+	  <div data-role="page" id="page1">
+		<div data-role="header">
+		  <h1>波の反射／透過</h1>
+		</div>
+		<div data-role="content">
+		  <p>　これは、波が１次元的に<span class="red">進行してきた波</span>が<span class="blue">境界面で反射</span>／<span class="yellow">境界面を透過</span>する様子を示すアニメーションである。説明はプログラムの下の方にある。</p>
+		  <canvas id="canvas1" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+		  <div class="ui-grid-a">
+			<div class="ui-block-a">
+			  <div data-role="fieldcontain">
+				<label for="slider_1">波長 λ:</label>
+				<input type="range" class="slider" id="slider_1" value="5" min="0.5" max="20" step="0.1" onChange="lambda=Number($('#slider_1').val()); setLambda();" />
+			  </div>
+			</div>
+			<div class="ui-block-b">
+			  <div data-role="fieldcontain">
+				<label for="slider2_1">周期 T:</label>
+				<input type="range" class="slider2" id="slider2_1" value="3" min="0.3" max="10" step="0.05" onChange="T=Number($('#slider2_1').val()); setT();"/>
+			  </div>
+			</div>
+		  </div>
+		  <p><span class="nu">振動数ν=</span>　<span class="omega">角振動数ω=</span>　<span class="k">波数k=</span>　<span class="vp">速度v=</span></p>
+		  <div class="ui-grid-a">
+	  		<div class="ui-block-a">
+			  <select id="endBC" onChange="endBCButton();"> 
+				<option value="0">固定端反射</option>
+				<option value="1">自由端反射</option>
+				<option value="2">屈折率指定→</option>
+			  </select>
+			</div>
+			<div class="ui-block-b">
+			  <div data-role="fieldcontain">
+				<label for="slider2_1">屈折率 n:</label>
+				<input type="range" class="slider3" id="slider3_1" value="2" min="0.1" max="5" step="0.05" onChange="n=Number($('#slider3_1').val());"/>
+			  </div>
+			</div>
+		  </div>
+		  <div class="ui-grid-a">
+			<div class="ui-block-a">
+			  <fieldset data-role="controlgroup" data-type="horizontal">
+				<legend>
+				  <input type="checkbox" id="checkboxi" class="custom" value="" onchange="iFlg=$('#checkboxi').prop('checked');" checked="checked"/>
+				  <label for="checkboxi" class="red">入射波表示</label>
+				  <input type="checkbox" id="checkboxr" class="custom" value="" onchange="rFlg=$('#checkboxr').prop('checked');" checked="checked"/>
+				  <label for="checkboxr" class="blue">反射波表示</label>
+				  <input type="checkbox" id="checkboxg" class="custom" value="" onchange="gFlg=$('#checkboxg').prop('checked');" checked="checked"/>
+				  <label for="checkboxg" class="magenta">合成波表示</label>
+				  <input type="checkbox" id="checkboxp" class="custom" value="" onchange="pFlg=$('#checkboxp').prop('checked');" checked="checked"/>
+				  <label for="checkboxp" class="yellow">透過波表示</label>
+				</legend>
+			  </fieldset>
+			</div>
+			<div class="ui-block-b">
+			  <button data-inline="true" id="visibleB" onClick="visibleButton();">実際に見える波だけを描く</button>
+			  <button data-inline="true" id="stopB" onClick="stopButton();">一時停止</button>
+			</div>
+		  </div>
+		  <p>　最初は、↑のセレクトボックスに書いてあるように「固定端反射」の場合の動くグラフが出ている。</p>
+		  <h3>固定端反射とは</h3>
+		  <p>　（図では中央にある）反射点(x=0)において<span class="magenta">合成波</span>の変位が0になる（つまり、<span class="magenta">合成波</span>がx=0で固定されている）場合の波の反射である。<span class="magenta">合成波</span>は実際にこの場所で観測される波であり、<span class="red">入射波</span>と<span class="blue">反射波</span>の重ねあわせでできている。数式で表現すると</p>
+		  <p class="red">入射波：y<sub>入</sub>= A sin( kx-ωt )</p>
+		  <p class="blue">反射波：y<sub>反</sub>= -A sin( -kx-ωt ) = A sin( -kx-ωt +π)</p>
+		  <p>となる。ここで、kは波数で（2π÷波長）、ωは角振動数で（2π÷周期）である。このような式になっていると、x=0において<span class="red">y<sub>入</sub></span>+<span class="blue">y<sub>反</sub></span>=0になる。しばしば、「固定端反射では位相がπずれる」と表現されるが、それはx=0における波を、<span class="red">y<sub>入</sub>= A sin( -ωt )</span>と<span class="blue">y<sub>反</sub>= A sin( -ωt +π)</span>のように表現することができるからである。</p>
+		  <div class="setsumei"><span class="buttonfuu">固定端反射</span>と書いてあるところを押して、<span class="buttonfuu">自由端反射</span>を選ぼう。</div>
+		  <h3>自由端反射とは</h3>
+		  <p>　自由端反射とは固定端とは逆に、反射点(x=0)が「自由に」動くことができる場合の波の反射である。自由という名前がついているが<span class="blue">反射波</span>が何でもよいという意味で自由なのではない。</p>
+		  <p class="red">入射波：y<sub>入</sub>= A sin( kx-ωt )</p>
+		  <p class="blue">反射波：y<sub>反</sub>= A sin( -kx-ωt ) </p>
+		  <p>のように、今度は位相がずれない、という形で反射する。こうすることで、x=0において</p>
+		  <table cellpadding="2" cellspacing="0"><tbody><tr><td align="center" nowrap="nowrap">∂<hr noshade="noshade" size="1">∂x</td><td>(<span class="red">y<sub>入</sub></span>+<span class="blue">y<sub>反</sub></span>)=0</td></tr></tbody></table>
+		  <p>という条件が満たされる。この条件の意味するところは<span class="case"> x=0において合成波が平坦（傾き０）になれ </span>ということである。上のアニメーションで実際そうなっていることを確認しよう。</p>
+		  <div class="setsumei">ここで<span class="buttonfuu">自由端反射</span>と書いてあるところを押して、<span class="buttonfuu">屈折率指定→</span>を選ぼう。</div>
+		  <h3>屈折率と反射の仕方はどう関係するのか？</h3>
+		  <p>　<span class="buttonfuu">屈折率指定→</span>となっている時は波は境界（x=0）で跳ね返されるのではなく、内部にも進入し、<span class="yellow">透過波</span>になる。</p>
+		  <p>　まず、「屈折率」という言葉の意味から説明しよう。x&gt;0の領域とx&lt;0の領域で（たとえばその場所での波の媒質が違うなどの理由で）波長（波数）が変化する場合がある。境界（x=0）を超えることで波長が(1/n)場合になる場合（つまり、波数kがn倍になる場合）、「屈折率=n」と表現する。つまり</p>
+		  <table cellpadding="2" cellspacing="0"><tbody><tr><td>屈折率n=</td><td align="center" nowrap="nowrap"><span class="red">入射波</span>の波長<hr noshade="noshade" size="1"><span class="yellow">透過波</span>の波長</td></tr></tbody></table>
+		  <p>である。上にあるスライダーを動かして屈折率を変化させ、状況を確認しよう。ここで大事なことは<span class="red">入射波</span>と<span class="yellow">透過波</span>が境界x=0でつながっているだけではなく、その傾きもちゃんと接続されているということである。</p>
+		  <p>　屈折率を変化させて状況を確認して欲しいが、</p>
+		  <p>屈折率nが大きい時は<img src="largen.png">のように、</p>
+		  <p>屈折率nが小さい時は<img src="smalln.png">のようになる。</p>
+		  <p>　屈折率nが小さい時は「自由端」に近い形になっていることがわかるだろうか？---右側（透過後）では波長が長くなるのだから、左側（透過前）よりも平坦に近い波になり、これと接続されなくてはいけないから、自由端の場合に似た反射になるのである（屈折率nが大きい時はこの逆で、固定端に似た反射になる）。</p>
+		  <div class="setsumei">動くグラフをじっくり見て、この感覚をつかんで欲しい。</div>
+		  <p>　式で表現しておくと、屈折率nの場合の波の式は、</p>	
+		  <div class="red">入射波：y<sub>入</sub>= A sin( kx-ωt )</div>
+		  <div class="blue"><table cellpadding="2" cellspacing="0"><tbody><tr><td>反射波：y<sub>反</sub>=A</td><td>1-n<hr noshade="noshade" size="1">1+n</td><td>sin( -kx-ωt )</td></tr></tbody></table></div>
+		  <div class="yellow"><table cellpadding="2" cellspacing="0"><tbody><tr><td>透過波：y<sub>透</sub>=A</td><td align="center">2<hr noshade="noshade" size="1">1+n</td><td>sin( nkx-ωt )</td></tr></tbody></table></div>
+		  <p>である。ここで<span class="blue">反射波</span>の係数に1-nが含まれているために屈折率nが1より大きいかどうかで反射波の位相がπずれるかずれないかが決まる。</p>
+		</div>
+	  </div>
+  </body>
+</html>

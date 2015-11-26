@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/ActionPrinciple/res/values-ja/strings.xml -->
+    <eat-comment/>
+    <string name="accel_off">（加速度）</string>
+    <string name="accel_on">【加速度】</string>
+    <string name="app_name">運動方程式と変分原理</string>
+    <string name="first_and_end">初期値と終端値</string>
+    <string name="first_and_next">初期値と次の値</string>
+    <string name="g_equal"> g=</string>
+    <string name="int_K">緑:運動エネルギーの積分</string>
+    <string name="int_L">赤:作用</string>
+    <string name="int_U">青:位置エネルギーの積分</string>
+    <string name="manual">全てを手で設定</string>
+    <string name="velocity_off">（速度）</string>
+    <string name="velocity_on">【速度】</string>
+</resources>

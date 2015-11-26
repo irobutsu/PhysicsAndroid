@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="android.widget.CheckBox"/>
+<fullyQualifiedTypeName name="android.view.ViewGroup"/>
+<fullyQualifiedTypeName name="jp.ac.u_ryukyu.phys.tool3D.Line3D"/>
+<fullyQualifiedTypeName name="jp.ac.u_ryukyu.phys.tool3D.MovingObject3D"/>
+<fullyQualifiedTypeName name="jp.ac.u_ryukyu.phys.tool3D.Torus"/>
+<fullyQualifiedTypeName name="jp.ac.u_ryukyu.phys.lib.DraggManager"/>
+<fullyQualifiedTypeName name="android.graphics.Paint"/>
+<fullyQualifiedTypeName name="android.graphics.Rect"/>
+<fullyQualifiedTypeName name="android.graphics.RectF"/>
+<fullyQualifiedTypeName name="jp.ac.u_ryukyu.phys.tool3D.Yajirushi3DFixedR"/>
+<fullyQualifiedTypeName name="jp.ac.u_ryukyu.phys.tool3D.Cone"/>
+<fullyQualifiedTypeName name="android.graphics.Canvas"/>
+<fullyQualifiedTypeName name="android.graphics.Path"/>
+<fullyQualifiedTypeName name="android.graphics.Bitmap"/>
+<fullyQualifiedTypeName name="android.view.View"/>
+<fullyQualifiedTypeName name="android.util.FloatMath"/>
+<fullyQualifiedTypeName name="android.graphics.Color"/>
+<fullyQualifiedTypeName name="android.graphics.Paint.Style"/>
+<fullyQualifiedTypeName name="android.widget.Button"/>
+<fullyQualifiedTypeName name="jp.ac.u_ryukyu.phys.floatingball.R.id"/>
+<fullyQualifiedTypeName name="android.widget.LinearLayout.LayoutParams"/>
+<fullyQualifiedTypeName name="android.app.Activity"/>
+</qualifiedTypeNameHistroy>

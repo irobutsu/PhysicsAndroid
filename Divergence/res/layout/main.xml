@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/e_x_"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/Ex0Up"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:text="@string/_up"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/Ex0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/_zero"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="24sp" />
+
+                <Button
+                    android:id="@+id/Ex0Down"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/_down"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/_plus"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/ExxUp"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/_up"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/Exx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/_zero"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="24sp" />
+
+                <Button
+                    android:id="@+id/ExxDown"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/_down"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewxx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/x_plus"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/ExyUp"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/_up"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/Exy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/_zero"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="24sp" />
+
+                <Button
+                    android:id="@+id/ExyDown"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/_down"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewxy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/y"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top" >
+
+                <TextView
+                    android:id="@+id/textViewEy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/_e_y_eq"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="24sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <Button
+                        android:id="@+id/Ey0Up"
+                         style="?android:attr/buttonStyleSmall"
+                         android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/_up"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/Ey0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_zero"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textSize="24sp" />
+
+                    <Button
+                        android:id="@+id/Ey0Down"
+                         style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/_down"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/_plus"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="24sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <Button
+                        android:id="@+id/EyxUp"
+                           style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/_up"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/Eyx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_zero"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textSize="24sp" />
+
+                    <Button
+                        android:id="@+id/EyxDown"
+                           style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/_down"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewuyx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/x_plus"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="24sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <Button
+                        android:id="@+id/EyyUp"
+                           style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        
+                        android:layout_height="40dp"
+                        android:text="@string/_up"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/Eyy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_zero"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textSize="24sp" />
+
+                    <Button
+                        android:id="@+id/EyyDown"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/_down"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewyy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/y"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="24sp" />
+
+                <SeekBar
+                    android:id="@+id/sbB"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="300"
+                    android:progress="90" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <RadioGroup
+                android:id="@+id/rg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Spinner
+                    android:id="@+id/setMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/btErase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_vanish"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/divE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="@string/_div_e_0"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+</LinearLayout>

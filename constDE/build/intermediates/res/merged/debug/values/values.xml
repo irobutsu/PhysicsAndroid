@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/constDE/res/values/dimens.xml -->
+    <eat-comment/>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/constDE/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="app_name">定数係数線形微分方程式</string>
+</resources>

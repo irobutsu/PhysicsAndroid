@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="../../jquery-mobile/jquery-1.7.2.min" type="text/javascript"></script>
+	<link href="../../jquery-mobile/jquery.mobile-1.1.0.min.css" rel="stylesheet" type="text/css"/>
+	<style type="text/css">
+	 .aka{
+	   color: #D00;
+	 }
+	 .ao{
+	   color: #00D;
+	 }
+	 .ki{
+	   color:#880;
+	 }
+	 .teihen {
+	   color: #D00;
+	 }
+	 .takasa {
+	   color: #00D;
+	 }
+	 .shahen {
+	   color: #880;
+	 }
+	</style>
+	<script src="../../jquery-mobile/jquery.mobile-1.1.0.min.js" type="text/javascript"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="dragmanscreen.js" type="text/javascript"></script>
+	<script src="draggablepoint.js" type="text/javascript"></script>
+	<title>三角関数を図解する</title>
+  </head>
+  <body>
+	<script type="text/javascript">
+	 function marume6(x) {
+	   var xx=x*1000000;
+	   xx=Math.round(xx);
+	   xx/=1000000;
+       if( x- xx == 0 ) {
+         return xx;
+       } else {
+         return xx+"…";
+       }
+	 }
+	 function marume4(x) {
+	   x*=10000;
+	   x=Math.round(x);
+	   x/=10000;
+       return x;
+	 }
+	 var Doukei=function(t,c) {
+	   DraggablePoint.call(this,0,0,1,c); // 親クラスのコンストラクタを呼ぶ。
+	   this.val=t;
+	   this.in=function(xx,yy) {
+		 var t=Math.atan2(yy,xx);
+		 if( Math.abs(t-this.val) < 0.1 ) {
+		   return true;
+		 } else {
+		   return false;
+		 }
+	   }
+	   this.setXY=function(xx,yy) {
+		 // この動径棒の場合はドラッグする場所には意味がないので、shiftを戻す。
+		 xx += this.shiftx;
+		 yy += this.shifty;
+		 this.val=Math.atan2(yy,xx);
+	   }
+	   this.write=function(ct) {
+		 ct.beginPath();
+		 ct.strokeStyle=this.col;
+		 ct.moveTo(0,0);
+		 ct.lineTo(Math.cos(this.val),Math.sin(this.val));
+		 ct.stroke();
+		 ct.fillStyle="rgba(255,100,0,0.5)";
+		 ct.beginPath();
+		 ct.arc(0,0,0.1,0,2*Math.PI,true);
+		 ct.fill();
+
+		 var theta=this.val;
+		 ct.fillStyle="rgba(180,180,255,0.5)";
+		 ct.arc(Math.cos(theta),Math.sin(theta),0.1,0,2*Math.PI,true);
+		 ct.fill();
+	   }
+	 }
+	 var gs1,gs2,nowgs;
+	 var DraggablePR=function(xx,yy,rr,c,A,H) {
+	   DraggablePoint.call(this,xx,yy,rr,c); // 親クラスのコンストラクタを呼ぶ。
+	   this.pA=A;
+	   this.pH=H;
+	   this.in=function(xx,yy) {
+		 if( this.canDrag ) { 
+		   if( (xx-this.x)*(xx-this.pA.x) <0  &&  (yy-this.y)*(yy-this.pH.y) <0 ) {
+			   return true;
+		   } else {
+			 return false;
+		   }
+		 } else {
+		   return false;
+		 }
+	   }
+	   this.setXY=function(xx,yy,x0,x1,y0,y1) {
+		 var shiftx,shifty;
+		 if( xx < x0+this.r ) {
+		   shiftx=x0+this.r-this.x;
+		   this.x=x0+this.r;
+		 } else if( xx > x1-this.r ) {
+		   shiftx=x1-this.r-this.x
+		   this.x=x1-this.r;
+		 } else {
+		   shiftx=xx-this.x;
+		   this.x=xx;
+		 }
+		 if( yy< y0+this.r ) {
+		   shifty=y0+this.r-this.y;
+		   this.y=y0+this.r;
+		 } else if( yy >y1-this.r ) {
+		   shifty=y1-this.r-this.y;
+		   this.y=y1-this.r;
+		 } else {
+		   shifty=yy-this.y;
+		   this.y=yy;
+		 }
+		 // pRは直角三角形の直角頂点なので、他の２点が一緒に動く
+		 this.pH.x=this.x;
+		 this.pH.y += shifty;
+		 this.pA.y=this.y;
+		 this.pA.x += shiftx;
+	   }
+	   this.write=function(ct) {
+		 ct.fillStyle=this.col;
+		 ct.beginPath();
+		 ct.moveTo(this.x,this.y);
+		 ct.lineTo(this.pA.x,this.pA.y);
+		 ct.lineTo(this.pH.x,this.pH.y);
+		 ct.closePath();
+		 ct.fill();
+	   }
+	 }
+	 var DraggablePH=function(xx,yy,rr,c) {
+	   DraggablePoint.call(this,xx,yy,rr,c); // 親クラスのコンストラクタを呼ぶ。
+	   this.setXY=function(xx,yy,x0,x1,y0,y1) {
+		 // pHは直角三角形の上の頂点なので、x座標は動かない。
+		 if( yy< y0+this.r ) {
+		   this.y=y0+this.r;
+		 } else if( yy >y1-this.r ) {
+		   this.y=y1-this.r;
+		 } else {
+		   this.y=yy;
+		 }
+	   }
+	   this.write=function(ct) {
+		 ct.fillStyle=this.col;
+		 ct.beginPath();
+		 ct.arc(this.x,this.y,this.r,0,2*Math.PI,false);
+		 ct.fill();
+		 ct.fillStyle="rgba(255,255,255,0.7)";
+		 ct.beginPath();
+		 ct.moveTo(this.x,this.y-this.r);
+		 ct.lineTo(this.x+0.4*this.r,this.y-this.r*0.6);
+		 ct.lineTo(this.x+0.1*this.r,this.y-this.r*0.6);
+		 ct.lineTo(this.x+0.1*this.r,this.y+this.r*0.6);
+		 ct.lineTo(this.x+0.4*this.r,this.y+this.r*0.6);
+		 ct.lineTo(this.x,this.y+this.r);
+		 ct.lineTo(this.x-0.4*this.r,this.y+this.r*0.6);
+		 ct.lineTo(this.x-0.1*this.r,this.y+this.r*0.6);
+		 ct.lineTo(this.x-0.1*this.r,this.y-this.r*0.6);
+		 ct.lineTo(this.x-0.4*this.r,this.y-this.r*0.6);
+		 
+		 ct.fill();
+	   }
+	 }
+	 var DraggablePA=function(xx,yy,rr,c) {
+	   DraggablePoint.call(this,xx,yy,rr,c); // 親クラスのコンストラクタを呼ぶ。
+	   this.setXY=function(xx,yy,x0,x1,y0,y1) {
+		 // pAは直角三角形の底辺の直角でない方の頂点なので、y座標は動かない。
+		 if( xx < x0+this.r ) {
+		   this.x=x0+this.r;
+		 } else if( xx > x1-this.r ) {
+		   this.x=x1-this.r;
+		 } else {
+		   this.x=xx;
+		 }
+	   }
+	   this.write=function(ct) {
+		 ct.fillStyle=this.col;
+		 ct.beginPath();
+		 ct.arc(this.x,this.y,this.r,0,2*Math.PI,false);
+		 ct.fill();
+		 ct.fillStyle="rgba(200,200,255,0.8)";
+		 ct.beginPath();
+		 ct.moveTo(this.x-this.r,this.y);
+		 ct.lineTo(this.x-this.r*0.6,this.y+0.4*this.r);
+		 ct.lineTo(this.x-this.r*0.6,this.y+0.1*this.r);
+		 ct.lineTo(this.x+this.r*0.6,this.y+0.1*this.r);
+		 ct.lineTo(this.x+this.r*0.6,this.y+0.4*this.r);
+		 ct.lineTo(this.x+this.r,this.y);
+		 ct.lineTo(this.x+this.r*0.6,this.y-0.4*this.r);
+		 ct.lineTo(this.x+this.r*0.6,this.y-0.1*this.r);
+		 ct.lineTo(this.x-this.r*0.6,this.y-0.1*this.r);
+		 ct.lineTo(this.x-this.r*0.6,this.y-0.4*this.r);
+		 
+		 ct.fill();
+	   }
+	 }
+	 // 親クラスタのプロトタイプを継承する。
+	 Doukei.prototype=Object.create(DraggablePoint.prototype);
+	 Doukei.prototype.constructor=Doukei;
+	 DraggablePR.prototype=Object.create(DraggablePoint.prototype);
+	 DraggablePR.prototype.constructor=DraggablePR;
+	 DraggablePA.prototype=Object.create(DraggablePoint.prototype);
+	 DraggablePA.prototype.constructor=DraggablePA;
+	 DraggablePH.prototype=Object.create(DraggablePoint.prototype);
+	 DraggablePH.prototype.constructor=DraggablePH;
+	 var DraggablePH1=function(xx,yy,rr,c) {
+	   DraggablePH.call(this,xx,yy,rr,c); // 親クラスのコンストラクタを呼ぶ。
+	   this.setXY=function(xx,yy,x0,x1,y0,y1) {
+		 // pHは直角三角形の上の頂点なので、x座標は動かない。
+		 var lenlen=1-(yy-nowgs.pA.y)*(yy-nowgs.pA.y);
+		 // このlenlenが負になる領域には動かせない。
+		 if( lenlen < 0 ) {
+		   return;
+		 }
+		 if( yy< y0+this.r ) {
+		   this.y=y0+this.r;
+		 } else if( yy >y1-this.r ) {
+		   this.y=y1-this.r;
+		 } else {
+		   this.y=yy;
+		 }
+		 if( nowgs.pA.x>nowgs.pR.x ) {
+		   nowgs.pA.x=nowgs.pR.x + Math.sqrt(lenlen);
+		 } else {
+		   nowgs.pA.x=nowgs.pR.x - Math.sqrt(lenlen);
+		 }
+	   }
+	 }
+	 DraggablePH1.prototype=Object.create(DraggablePH.prototype);
+	 DraggablePH1.prototype.constructor=DraggablePH1;
+	 var DraggablePA1=function(xx,yy,rr,c) {
+	   DraggablePA.call(this,xx,yy,rr,c); // 親クラスのコンストラクタを呼ぶ。
+	   this.setXY=function(xx,yy,x0,x1,y0,y1) {
+		 // pAは直角三角形の底辺の直角でない方の頂点なので、y座標は動かない。
+		 var lenlen=1-(xx-nowgs.pH.x)*(xx-nowgs.pH.x);
+		 // このlenlenが負になる領域には動かせない。
+		 if( lenlen < 0 ) {
+		   return;
+		 }
+		 if( xx< x0+this.r ) {
+		   this.x=x0+this.r;
+		 } else if( xx >x1-this.r ) {
+		   this.x=x1-this.r;
+		 } else {
+		   this.x=xx;
+		 }
+		 if( nowgs.pH.y>nowgs.pR.y ) {
+		   nowgs.pH.y=nowgs.pR.y + Math.sqrt(lenlen);
+		 } else {
+		   nowgs.pH.y=nowgs.pR.y - Math.sqrt(lenlen);
+		 }
+	   }
+	 }
+	 DraggablePA1.prototype=Object.create(DraggablePA.prototype);
+	 DraggablePA1.prototype.constructor=DraggablePA1;
+
+
+	 function writeSincostan(gs,ct) {
+	   var teihen=(gs.pR.x-gs.pA.x);
+	   var takasa=(gs.pH.y-gs.pR.y);
+	   var shahen=Math.sqrt(teihen*teihen+takasa*takasa);
+	   $(".teihen").html("底辺="+marume6(teihen));
+	   $(".takasa").html("高さ="+marume6(takasa));
+	   $(".shahen").html("斜辺="+marume6(shahen));
+	   $(".sin").html(marume6(takasa/shahen));
+	   $(".cos").html(marume6(teihen/shahen));
+	   $(".tan").html(marume6(takasa/teihen));
+	   var theta=Math.atan2(takasa,teihen);
+	   $(".theta").html("θ="+marume6(theta)+"ラジアン（"+marume6(theta*180/Math.PI)+"度）");
+	   ct.strokeStyle="rgb(0,0,0)";
+	   ct.beginPath();
+	   if(theta >0 ) {
+		 ct.arc(gs.pA.x,gs.pA.y,0.8,0,theta);
+	   } else {
+		 ct.arc(gs.pA.x,gs.pA.y,0.8,theta,0);
+	   }
+	   ct.stroke();
+	 }
+	 $(document).delegate('#page1','pageinit',function(e) {
+       gs1=new DragmanScreen("canvas0",6,6,0.7);
+       gs1.setLeft(-1);
+       gs1.setBottom(-1);
+       gs1.gobackOriginalSize();
+       gs1.writeContents=function() {
+		 graphWrite(gs1);
+       } 
+	   gs1.pH=new DraggablePH(4,3,0.4,"rgba(180,180,255,0.5)");
+	   gs1.pA=new DraggablePA(0,0,0.4,"rgba(255,100,0,0.5)");
+	   gs1.pR=new DraggablePR(4,0,0.4,"rgba(200,200,200,0.5)",gs1.pA,gs1.pH);
+	   gs1.pushDragObjList(gs1.pH);
+	   gs1.pushDragObjList(gs1.pA);
+	   gs1.pushDragObjList(gs1.pR);
+	   nowgs=gs1;
+	 });
+	 $(document).delegate('#page1','pageshow',function(e) {
+	   nowgs=gs1;
+       graphWrite(gs1);
+	 });
+	 $(document).delegate('#page2','pageinit',function(e) {
+       gs2=new DragmanScreen("canvas1",6,6,0.7);
+       gs2.setLeft(-1);
+       gs2.setBottom(-1);
+       gs2.gobackOriginalSize();
+       gs2.writeContents=function() {
+		 graphWrite(gs2);
+       } 
+	   gs2.pH=new DraggablePH(4,3,0.4,"rgba(180,180,255,0.5)");
+	   gs2.pA=new DraggablePA(0,0,0.4,"rgba(255,100,0,0.5)");
+	   gs2.pR=new DraggablePR(4,0,0.4,"rgba(200,200,200,0.5)",gs2.pA,gs2.pH);
+	   gs2.pushDragObjList(gs2.pH);
+	   gs2.pushDragObjList(gs2.pA);
+	   gs2.pushDragObjList(gs2.pR);
+	   nowgs=gs2;
+	 });
+	 $(document).delegate('#page2','pageshow',function(e) {
+	   nowgs=gs2;
+       graphWrite(gs2);
+	 });
+	 var gs2;
+	 $(document).delegate('#page3','pageinit',function(e) {
+	   costhetaimage=new Image();
+	   costhetaimage.src="costheta.png";
+	   sinthetaimage=new Image();
+	   sinthetaimage.src="sintheta.png";
+
+       gs3=new DragmanScreen("canvas3",2,2,0.7);
+       gs3.setLeft(-0.2);
+       gs3.setBottom(-0.2);
+       gs3.gobackOriginalSize();
+       gs3.writeContents=function() {
+		 graphWrite1(gs3);
+       } 
+	   gs3.pH=new DraggablePH1(0.8,0.6,0.1,"rgba(180,180,255,0.5)");
+	   gs3.pA=new DraggablePA1(0,0,0.1,"rgba(255,100,0,0.5)");
+	   gs3.pR=new DraggablePR(0.8,0,0.1,"rgba(200,200,200,0.5)",gs3.pA,gs3.pH);
+	   gs3.pushDragObjList(gs3.pH);
+	   gs3.pushDragObjList(gs3.pA);
+	   gs3.pushDragObjList(gs3.pR);
+	   nowgs=gs3;
+	 });
+	 var gs3;
+	 $(document).delegate('#page3','pageshow',function(e) {
+	   nowgs=gs3;
+       graphWrite1(gs3);
+	 });
+	 var costhetaimage;
+	 var sinthetaimage;
+	 $(document).delegate('#page4','pageinit',function(e) {
+	   costhetaimage=new Image();
+	   costhetaimage.src="costheta.png";
+	   sinthetaimage=new Image();
+	   sinthetaimage.src="sintheta.png";
+       gs4=new DragmanScreen("canvas4",6,6,0.75);
+	   gs4.setLeft(-1.3);
+	   gs4.setBottom(-1.3);
+	   gs4.gobackOriginalSize();
+	   gs4.writeContents=function() {
+		 unitCircleWrite(gs4);
+	   }
+	   gs4.doukei=new Doukei(0.25*Math.PI,"rgb(100,100,0)");
+	   gs4.pushDragObjList(gs4.doukei);
+	   nowgs=gs4;
+	 });
+	 $(document).delegate('#page4','pageshow',function(e) {
+	   nowgs=gs4;
+       unitCircleWrite(gs4);
+	 });
+	 var sinsthetaimage2;
+	 var costhetaimage2;
+	 $(document).delegate('#page5','pageinit',function(e) {
+	   costhetaimage=new Image();
+	   costhetaimage.src="costheta.png";
+	   sinthetaimage=new Image();
+	   sinthetaimage.src="sintheta.png";
+	   costhetaimage2=new Image();
+	   costhetaimage2.src="costheta+pi.png";
+	   sinthetaimage2=new Image();
+	   sinthetaimage2.src="sintheta+pi.png";
+       gs5=new DragmanScreen("canvas5",7.6,7.6,0.75);
+	   gs5.setLeft(-1.3);
+	   gs5.setBottom(-1.3);
+	   gs5.gobackOriginalSize();
+	   gs5.writeContents=function() {
+		 unitCircleWrite2(gs5,Math.PI);
+	   }
+	   gs5.doukei=new Doukei(0.25*Math.PI,"rgb(100,100,0)");
+	   gs5.pushDragObjList(gs5.doukei);
+	   nowgs=gs5;
+	 });
+	 $(document).delegate('#page6','pageinit',function(e) {
+	   costhetaimage=new Image();
+	   costhetaimage.src="costheta.png";
+	   sinthetaimage=new Image();
+	   sinthetaimage.src="sintheta.png";
+	   costhetaimage2=new Image();
+	   costhetaimage2.src="costheta+halfpi.png";
+	   sinthetaimage2=new Image();
+	   sinthetaimage2.src="sintheta+halfpi.png";
+       gs6=new DragmanScreen("canvas6",7.6,7.6,0.75);
+	   gs6.setLeft(-1.3);
+	   gs6.setBottom(-1.3);
+	   gs6.gobackOriginalSize();
+	   gs6.writeContents=function() {
+		 unitCircleWrite2(gs6,0.5*Math.PI);
+	   }
+	   gs6.doukei=new Doukei(0.25*Math.PI,"rgb(100,100,0)");
+	   gs6.pushDragObjList(gs6.doukei);
+	   nowgs=gs6;
+	 });
+	 $(document).delegate('#page5','pageshow',function(e) {
+	   nowgs=gs5;
+       unitCircleWrite2(gs5,Math.PI);
+	 });
+	 $(document).delegate('#page6','pageshow',function(e) {
+	   nowgs=gs6;
+       unitCircleWrite2(gs6,0.5*Math.PI);
+	 });
+	 function unitCircleWrite(gs) {
+	   var ct=gs.ctx;
+	   gs.setScale();
+       gs.clearALL();
+	   ct.fillStyle="rgb(235,255,255)";
+	   ct.beginPath();
+	   ct.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+	   ct.beginPath();
+	   ct.strokeStyle="rgb(200,200,200)";
+	   ct.arc(0,0,1,0,2*Math.PI,false);
+	   ct.stroke();
+	   ct.strokeStyle="rgb(0,0,0)";
+	   ct.fillStyle="rgb(0,0,0)";
+	   writeTatejiku(ct,1.3,-1.3,0);
+	   writeTatejiku(ct,4.6,1.4,0);
+	   writeYokojiku(ct,1.3,-1.3,0);
+	   writeYokojiku(ct,4.6,1.4,0);
+	   ct.strokeStyle="rgb(200,0,0)";
+	   ct.fillStyle="rgb(200,0,0)";
+	   ct.beginPath();
+	   ct.moveTo(-1,3.0-0.5*Math.PI);
+	   var x;
+	   for(x=-Math.PI+Math.PI/50; x<=Math.PI ; x+=Math.PI/50 ) {
+		 ct.lineTo(Math.cos(x),3.0+0.5*x);
+	   }
+	   ct.lineTo(Math.cos(x),3.0+0.5*x);
+	   ct.stroke();
+	   writeYokojiku(ct,1.3,-1.3,3.0);
+	   ct.strokeStyle="rgb(0,0,200)";
+	   ct.fillStyle="rgb(0,0,200)";
+	   writeTatejiku(ct,1.3,-1.3,3.0);
+	   ct.beginPath();
+	   ct.moveTo(3.0-0.5*Math.PI,0);
+	   var x;
+	   for(x=-Math.PI+Math.PI/50; x<=Math.PI ; x+=Math.PI/50 ) {
+		 ct.lineTo(3.0+0.5*x,Math.sin(x));
+	   }
+	   ct.lineTo(3.0+0.5*x,Math.sin(x));
+	   ct.stroke();
+	   var th=gs.doukei.val;
+	   var sinth=Math.sin(th);
+	   var costh=Math.cos(th);
+	   ct.strokeStyle="rgba(0,0,200,0.5)";
+	   ct.beginPath();
+	   ct.moveTo(costh,sinth);
+	   ct.lineTo(3.0+0.5*th,sinth);
+	   ct.stroke();
+	   ct.strokeStyle="rgba(200,0,0,0.5)";
+	   ct.beginPath();
+	   ct.moveTo(costh,sinth);
+	   ct.lineTo(costh,3.0+0.5*th);
+	   ct.stroke();
+	   gs.doukei.write(ct);
+
+	   gs.saveScale();
+	   var x1=gs.fromCxtoMx(0);
+	   var y1=gs.fromCytoMy(3.0+0.5*th-0.2);
+	   var x2=gs.fromCxtoMx(costh);
+	   var y2=gs.fromCytoMy(3.0+0.5*th);
+	   if( x2 > x1 ) {
+		 ct.drawImage(costhetaimage,x1,y2,x2-x1,y1-y2);
+	   } else {
+		 ct.scale(-1,1);
+		 ct.drawImage(costhetaimage,-x1,y2,x1-x2,y1-y2);
+	   }
+	   gs.restoreScale();
+	   gs.saveScale();
+	   x1=gs.fromCxtoMx(3.0+0.5*th-0.1);
+	   y1=gs.fromCytoMy(sinth);
+	   x2=gs.fromCxtoMx(3.0+0.5*th+0.1);
+	   y2=gs.fromCytoMy(0);
+	   if( y2>y1) {
+		 ct.drawImage(sinthetaimage,x1,y1,x2-x1,y2-y1);
+	   } else {
+		 ct.scale(1,-1);
+		 ct.drawImage(sinthetaimage,x1,-y1,x2-x1,y1-y2);
+	   }
+	   gs.restoreScale();
+	 }
+	 function unitCircleWrite2(gs,deltheta) {
+	   var ct=gs.ctx;
+	   gs.setScale();
+       gs.clearALL();
+	   ct.fillStyle="rgb(235,255,255)";
+	   ct.beginPath();
+	   ct.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+	   ct.beginPath();
+	   ct.strokeStyle="rgb(200,200,200)";
+	   ct.arc(0,0,1,0,2*Math.PI,false);
+	   ct.stroke();
+	   ct.strokeStyle="rgb(0,0,0)";
+	   ct.fillStyle="rgb(0,0,0)";
+	   writeTatejiku(ct,1.3,-1.3,0);
+	   writeTatejiku(ct,6.2,1.4,0);
+	   writeYokojiku(ct,1.3,-1.3,0);
+	   writeYokojiku(ct,6.2,1.4,0);
+	   ct.strokeStyle="rgb(200,0,0)";
+	   ct.fillStyle="rgb(200,0,0)";
+	   ct.beginPath();
+	   ct.moveTo(-1,3.0-0.5*Math.PI);
+	   var x;
+	   for(x=-Math.PI+Math.PI/50; x<=2*Math.PI ; x+=Math.PI/50 ) {
+		 ct.lineTo(Math.cos(x),3.0+0.5*x);
+	   }
+	   ct.lineTo(Math.cos(x),3.0+0.5*x);
+	   ct.stroke();
+	   writeYokojiku(ct,1.3,-1.3,3.0);
+	   ct.strokeStyle="rgb(0,0,200)";
+	   ct.fillStyle="rgb(0,0,200)";
+	   writeTatejiku(ct,1.3,-1.3,3.0);
+	   ct.beginPath();
+	   ct.moveTo(3.0-0.5*Math.PI,0);
+	   var x;
+	   for(x=-Math.PI+Math.PI/50; x<=2*Math.PI ; x+=Math.PI/50 ) {
+		 ct.lineTo(3.0+0.5*x,Math.sin(x));
+	   }
+	   ct.lineTo(3.0+0.5*x,Math.sin(x));
+	   ct.stroke();
+	   var th=gs.doukei.val;
+	   var sinth=Math.sin(th);
+	   var costh=Math.cos(th);
+	   ct.strokeStyle="rgba(0,0,200,0.3)";
+	   ct.beginPath();
+	   ct.moveTo(costh,sinth);
+	   ct.lineTo(3.0+0.5*th,sinth);
+	   ct.stroke();
+	   ct.strokeStyle="rgba(200,0,0,0.3)";
+	   ct.beginPath();
+	   ct.moveTo(costh,sinth);
+	   ct.lineTo(costh,3.0+0.5*th);
+	   ct.stroke();
+	   gs.doukei.write(ct);
+
+	   gs.saveScale();
+	   var x1=gs.fromCxtoMx(0);
+	   var y1=gs.fromCytoMy(3.0+0.5*th-0.2);
+	   var x2=gs.fromCxtoMx(costh);
+	   var y2=gs.fromCytoMy(3.0+0.5*th);
+	   if( x2 > x1 ) {
+		 ct.drawImage(costhetaimage,x1,y2,x2-x1,y1-y2);
+	   } else {
+		 ct.scale(-1,1);
+		 ct.drawImage(costhetaimage,-x1,y2,x1-x2,y1-y2);
+	   }
+	   gs.restoreScale();
+
+	   gs.saveScale();
+	   x1=gs.fromCxtoMx(3.0+0.5*th-0.1);
+	   y1=gs.fromCytoMy(sinth);
+	   x2=gs.fromCxtoMx(3.0+0.5*th+0.1);
+	   y2=gs.fromCytoMy(0);
+	   if( y2>y1) {
+		 ct.drawImage(sinthetaimage,x1,y1,x2-x1,y2-y1);
+	   } else {
+		 ct.scale(1,-1);
+		 ct.drawImage(sinthetaimage,x1,-y1,x2-x1,y1-y2);
+	   }
+	   gs.restoreScale();
+
+
+	   th += +deltheta;
+	   var sinth=Math.sin(th);
+	   var costh=Math.cos(th);
+	   ct.strokeStyle="rgba(200,200,0,0.3)";
+	   ct.beginPath();
+	   ct.moveTo(0,0);
+	   ct.lineTo(costh,sinth);
+	   ct.stroke();
+
+	   ct.strokeStyle="rgba(0,0,200,0.5)";
+	   ct.beginPath();
+	   ct.moveTo(costh,sinth);
+	   ct.lineTo(3.0+0.5*th,sinth);
+	   ct.stroke();
+	   ct.strokeStyle="rgba(200,0,0,0.5)";
+	   ct.beginPath();
+	   ct.moveTo(costh,sinth);
+	   ct.lineTo(costh,3.0+0.5*th);
+	   ct.stroke();
+
+	   gs.saveScale();
+	   var x1=gs.fromCxtoMx(0);
+	   var y1=gs.fromCytoMy(3.0+0.5*th-0.2);
+	   var x2=gs.fromCxtoMx(costh);
+	   var y2=gs.fromCytoMy(3.0+0.5*th);
+	   if( x2 > x1 ) {
+		 ct.drawImage(costhetaimage2,x1,y2,x2-x1,y1-y2);
+	   } else {
+		 ct.scale(-1,1);
+		 ct.drawImage(costhetaimage2,-x1,y2,x1-x2,y1-y2);
+	   }
+	   gs.restoreScale();
+	   gs.saveScale();
+	   x1=gs.fromCxtoMx(3.0+0.5*th-0.1);
+	   y1=gs.fromCytoMy(sinth);
+	   x2=gs.fromCxtoMx(3.0+0.5*th+0.1);
+	   y2=gs.fromCytoMy(0);
+	   if( y2>y1) {
+		 ct.drawImage(sinthetaimage2,x1,y1,x2-x1,y2-y1);
+	   } else {
+		 ct.scale(1,-1);
+		 ct.drawImage(sinthetaimage2,x1,-y1,x2-x1,y1-y2);
+	   }
+	   gs.restoreScale();
+	   
+	 }
+
+	 function writeYokojiku(ct,x1,x2,y1) {
+	   ct.beginPath();
+       ct.moveTo(x1,y1);
+       ct.lineTo(x1-0.2,y1+0.1);
+       ct.lineTo(x1-0.2,y1-0.1);
+       ct.closePath();
+       ct.fill();
+	   ct.beginPath();
+	   ct.moveTo(x1-0.1,y1);
+	   ct.lineTo(x2,y1);
+	   ct.stroke();
+	 }
+	 function writeTatejiku(ct,y1,y2,x1) {
+	   ct.beginPath();
+       ct.moveTo(x1,y1);
+       ct.lineTo(x1+0.1,y1-0.2);
+       ct.lineTo(x1-0.1,y1-0.2);
+       ct.closePath();
+       ct.fill();
+	   ct.beginPath();
+	   ct.moveTo(x1,y2,0);
+	   ct.lineTo(x1,y1-0.1);
+	   ct.stroke();
+	 }
+	 function graphWrite(gs) {
+	   var ct=gs.ctx;
+	   gs.setScale();
+       gs.clearALL();
+	   ct.fillStyle="rgb(235,255,255)";
+	   ct.beginPath();
+	   ct.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+	   
+
+	   ct.beginPath();
+	   ct.strokeStyle="rgb(200,0,0)";
+	   ct.moveTo(gs.pR.x,gs.pR.y);
+	   ct.lineTo(gs.pA.x,gs.pA.y);
+	   ct.stroke();
+	   if( gs.pA.x > gs.pH.x ) {
+		 ct.strokeStyle="rgba(200,0,0,0.5)";
+		 ct.moveTo(gs.pR.x,gs.pR.y);
+		 ct.lineTo(gs.w,gs.pR.y);
+		 ct.stroke();
+	   }
+	   ct.beginPath();
+	   ct.strokeStyle="rgb(0,0,200)";
+	   ct.moveTo(gs.pR.x,gs.pR.y);
+	   ct.lineTo(gs.pH.x,gs.pH.y);
+	   ct.stroke();
+	   ct.beginPath();
+	   ct.strokeStyle="rgb(100,100,0)";
+	   ct.moveTo(gs.pH.x,gs.pH.y);
+	   ct.lineTo(gs.pA.x,gs.pA.y);
+	   ct.stroke();
+	   
+
+	   gs.pR.write(ct);
+	   gs.pH.write(ct);
+	   gs.pA.write(ct);
+	   writeSincostan(gs,ct);
+	 }
+	 function graphWrite1(gs) {
+	   var ct=gs.ctx;
+	   gs.setScale();
+       gs.clearALL();
+	   ct.fillStyle="rgb(235,255,255)";
+	   ct.beginPath();
+	   ct.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+
+	   var teihen=(gs.pR.x-gs.pA.x);
+	   var takasa=(gs.pH.y-gs.pR.y);
+	   var theta=Math.atan2(takasa,teihen);
+
+	   $(".sin").html(marume6(takasa));
+	   $(".cos").html(marume6(teihen));
+	   var theta=Math.atan2(takasa,teihen);
+	   $(".theta").html("θ="+marume6(theta)+"ラジアン（"+marume6(theta*180/Math.PI)+"度）");
+	   gs.saveScale();
+	   var x1=gs.fromCxtoMx(gs.pA.x);
+	   var y1=gs.fromCytoMy(gs.pA.y-0.2);
+	   var x2=gs.fromCxtoMx(gs.pR.x);
+	   var y2=gs.fromCytoMy(gs.pR.y);
+	   if( x2 > x1 ) {
+		 ct.drawImage(costhetaimage,x1,y2,x2-x1,y1-y2);
+	   } else {
+		 ct.scale(-1,1);
+		 ct.drawImage(costhetaimage,-x1,y2,x1-x2,y1-y2);
+	   }
+	   gs.restoreScale();
+	   gs.saveScale();
+	   x1=gs.fromCxtoMx(gs.pH.x-0.1);
+	   y1=gs.fromCytoMy(gs.pH.y);
+	   x2=gs.fromCxtoMx(gs.pH.x+0.1);
+	   y2=gs.fromCytoMy(gs.pR.y);
+	   if( y2>y1) {
+		 ct.drawImage(sinthetaimage,x1,y1,x2-x1,y2-y1);
+	   } else {
+		 ct.scale(1,-1);
+		 ct.drawImage(sinthetaimage,x1,-y1,x2-x1,y1-y2);
+	   }
+	   gs.restoreScale();
+	   
+
+	   ct.beginPath();
+	   ct.strokeStyle="rgb(200,0,0)";
+	   ct.moveTo(gs.pR.x,gs.pR.y);
+	   ct.lineTo(gs.pA.x,gs.pA.y);
+	   ct.stroke();
+	   if( gs.pA.x > gs.pH.x ) {
+		 ct.strokeStyle="rgba(200,0,0,0.5)";
+		 ct.moveTo(gs.pR.x,gs.pR.y);
+		 ct.lineTo(gs.w,gs.pR.y);
+		 ct.stroke();
+	   }
+	   ct.beginPath();
+	   ct.strokeStyle="rgb(0,0,200)";
+	   ct.moveTo(gs.pR.x,gs.pR.y);
+	   ct.lineTo(gs.pH.x,gs.pH.y);
+	   ct.stroke();
+	   ct.beginPath();
+	   ct.strokeStyle="rgb(100,100,0)";
+	   ct.moveTo(gs.pH.x,gs.pH.y);
+	   ct.lineTo(gs.pA.x,gs.pA.y);
+	   ct.stroke();
+	   
+	   gs.pR.write(ct);
+	   gs.pH.write(ct);
+	   gs.pA.write(ct);
+	   ct.strokeStyle="rgb(0,0,0)";
+	   ct.beginPath();
+	   if(theta >0 ) {
+		 ct.arc(gs.pA.x,gs.pA.y,0.2,0,theta);
+	   } else {
+		 ct.arc(gs.pA.x,gs.pA.y,0.2,theta,0);
+	   }
+	   ct.stroke();
+	 }
+	</script>
+	<div data-role="page" id="page1">
+	  <div data-role="header">
+		<h1>三角関数を図解する</h1>
+		<h1>その１：三角比としての定義</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　三角関数というのは「直角三角形の角度と辺の比」という関数としてまず定義される。　この時の角度は「度」ではなく「ラジアン」と呼ぶ単位を使うことが多い。角度を表す文字として、ギリシャ文字のθ（シータ）を使おう<small>（こういうのはあくまで慣例であって、別に角度にどんな文字を使ったって構わない）</small>。 </p>
+		<p>　直角三角形の３辺の長さは、<span class="aka">底辺</span>、<span class="ao">高さ</span>、<span class="ki">斜辺</span>の三つである。この三つから作られる比は６種類あるが、特に（下に書いた）三つの比がよく使われる（残り３つはその逆数である）。</p>
+		<div><table cellpadding="2" cellspacing="0"><tbody><tr><td>sinθ=</td><td align="center" nowrap="nowrap"><span class="ao">高さ</span><hr noshade="noshade" size="1"><span class="ki">斜辺</span></td><td>　　　</td><td>cosθ=</td><td align="center" nowrap="nowrap"><span class="aka">底辺</span><hr noshade="noshade" size="1"><span class="ki">斜辺</span></td><td>　　　</td><td>tanθ=</td><td align="center" nowrap="nowrap"><span class="ao">高さ</span><hr noshade="noshade" size="1"><span class="aka">底辺</span></td><td></td></tr></tbody></table></div>
+		<p>　以下の図の直角三角形はドラッグして動かすことができ、直角以外の頂点を動かすことで変形できる（ただし、天辺の頂点は上下にしか動かないし、底辺のうち直角でない方の点は左右にしか動かない）。点を動かしながら、それぞれの辺の比（sin,cos,tan）がどういう量かを実感しよう。</p>
+
+		<div align="center"><canvas id="canvas0" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+		<div>	
+		  <div align="center" class="teihen" id="teihen"></div>
+		  <br>
+		  <div align="center" class="takasa" id="takasa"></div>
+		  <br>
+		  <div align="center" class="shahen" id="shahen"></div>
+		  <br><div align="center" class="theta"></div>
+		</div>
+		<br>
+		<div><table cellpadding="2" cellspacing="0"><tbody><tr><td>sinθ=</td><td align="center" nowrap="nowrap"><span class="takasa"></span><hr noshade="noshade" size="1"><span class="shahen"></span></td><td>=<span class="sin"></span></td></tr></tbody></table></div>
+		<div><table cellpadding="2" cellspacing="0"><tbody><tr><td>cosθ=</td><td align="center" nowrap="nowrap"><span class="teihen"></span><hr noshade="noshade" size="1"><span class="shahen"></span></td><td>=<span class="cos"></span></td></tr></tbody></table></div>
+		<div><table cellpadding="2" cellspacing="0"><tbody><tr><td>tanθ=</td><td align="center" nowrap="nowrap"><span class="takasa"></span><hr noshade="noshade" size="1"><span class="teihen"></span></td><td>=<span class="tan"></span></td></tr></tbody></table></div>
+		<div data-role="footer" align="center">
+		  <a href="#page2">次のページへ</a>
+		</div>
+	  </div>
+	</div>
+	<div data-role="page" id="page2">
+	  <div data-role="header">
+		<h1>三角関数を図解する</h1>
+		<h1>その２：θの範囲について</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　前のページで遊んでみた人は、θという角度が0からπ/2という範囲以外にもなることに気づいただろうか？？？発見できる人には自分で発見して欲しいと思って、あえて説明していなかったが、点は元々の三角形の裏側まで動かすことができるので</p>
+		<p><img src="chokkakugoe.png">のように<big>θが直角より大きく</big>なり「<span class="ao">高さ</span>が負」であったり、<img src="funokakudo.png">のように<big>θが負</big>になり「<span class="aka">底辺</span>が負」になる場合であったりする位置にも移動できる。</p>
+		<p></p>
+		<p>  　前のページで気づいてなかった、という人は、下の図でやってみよう<small>（下の図は前のページのものと機能は同じである）</small>。 </p>
+		<div align="center"><canvas id="canvas1" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+		<div>	
+		  <div align="center" class="teihen" id="teihen"></div>
+		  <br>
+		  <div align="center" class="takasa" id="takasa"></div>
+		  <br>
+		  <div align="center" class="shahen" id="shahen"></div>
+		  <br><div align="center" class="theta"></div>
+		</div>
+		<br>
+		<div><table cellpadding="2" cellspacing="0"><tbody><tr><td>sinθ=</td><td align="center" nowrap="nowrap"><span class="takasa"></span><hr noshade="noshade" size="1"><span class="shahen"></span></td><td>=<span class="sin"></span></td></tr></tbody></table></div>
+		<div><table cellpadding="2" cellspacing="0"><tbody><tr><td>cosθ=</td><td align="center" nowrap="nowrap"><span class="teihen"></span><hr noshade="noshade" size="1"><span class="shahen"></span></td><td>=<span class="cos"></span></td></tr></tbody></table></div>
+		<div><table cellpadding="2" cellspacing="0"><tbody><tr><td>tanθ=</td><td align="center" nowrap="nowrap"><span class="takasa"></span><hr noshade="noshade" size="1"><span class="teihen"></span></td><td>=<span class="tan"></span></td></tr></tbody></table></div>
+		<div data-role="footer" align="center">
+		  <a href="#page1">その１に戻る</a>　<a href="#page3">その３に進む</a>
+		</div>
+	  </div>
+	</div>
+	<div data-role="page" id="page3">
+	  <div data-role="header">
+		<h1>三角関数を図解する</h1>
+		<h1>その３：斜辺を1に固定した直角三角形</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　次に、斜辺を1に固定した直角三角形のsinとcosの値の変化の様子を次の図で実感しよう。</p>
+		<div align="center"><canvas id="canvas3" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+		<div align="center"><span class="theta"></span>,　　<span class="ao">sinθ=<span class="sin"></span></span>,　　<span class="aka">cosθ=<span class="cos"></span></span></div>
+		<p>　この図もドラッグで直角三角形を移動・変形できるが、<span class="ki">斜辺</span>の長さは一定になっている。角度と<span class="aka">cosθ</span>と<span class="ao">sinθ</span>の変化の様子を観察しよう。</p>
+		<p>　この図から容易に、cos<sup>2</sup>θ+sin<sup>2</sup>θ=1となることがわかる（斜辺がつねに長さ1であることに注意せよ）。</p>
+		<p>　sin,cosが正になったり負になったりするが、<img src="akadama.png">から<img src="aodama.png">に向かう方向が「上」「右」の時にsin,cosは正であり、「下」「左」の時にはsin,cosは負である。図ではそれを<img src="sintheta.png">や<img src="costheta.png">が鏡文字になることで表現している。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page2">その２に戻る</a>　<a href="#page4">その４に進む</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page4">
+	  <div data-role="header">
+		<h1>三角関数を図解する</h1>
+		<h1>その４：任意の角度のsin,cos</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　次に、任意の角度でのsinとcosを以下の図のように定義しよう。ここまでで動かしてみてθという角度の意味は<img src="akadama.png">から<img src="aodama.png">に向かう方向を表すものであることがわかったと思うので、ここからは<img src="akadama.png">を固定して、斜辺にあたる角度の変わる部分の長さを1に固定して考える。</p>
+		<div align="center"><canvas id="canvas4" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+		<p>　この図の<img src="tanien.png">は半径１の円（単位円）を描いたもので、中心から円周の一点に向かっている棒<img src="bou.png">の角度に応じて、<span class="aka">cosθ</span>と<span class="ao">sinθ</span>の値が決まる。棒の角度はドラッグによって変えられるので、いろいろ変えて状況を確認して欲しい。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page3">その３に戻る</a>　<a href="#page5">その５に進む</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page5">
+	  <div data-role="header">
+		<h1>三角関数を図解する</h1>
+		<h1>その５：三角関数の間の公式</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　三角関数の「公式」として、</p>
+		<p>sin(θ+π)=-sinθ</p>
+		<p>cos(θ+π)=-cosθ</p>
+		<p>というものがある。この式がなぜ成立するか、は下の図でしばらく遊んでみればわかるのではないかと思う。</p>
+		<div align="center"><canvas id="canvas5" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+		<p>　図の<img src="tukinuke.png">の部分の薄い色になっている<img src="pluspi.png">の方が、θよりπラジアン（180度）大きい角度の場合の「長さ1の棒」になっている。sin,cosがπ足されることでどう変化するかを、図から読み取っていけば、公式が作られる（この公式は式として覚えようとしなくても、意味を考えればすぐにわかる）。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page4">その４に戻る</a>　<a href="#page6">その６に進む</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page6">
+	  <div data-role="header">
+		<h1>三角関数を図解する</h1>
+		<h1>その６：三角関数の間の公式</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　前ページ同様によくでてくる三角関数の公式として、</p>
+		<p><table cellpadding="2" cellspacing="0"><tbody><tr><td>sin<big><big>(</big></big>θ+</td><td align="center" nowrap="nowrap">π<hr noshade="noshade" size="1">2</td><td><big><big>)</big></big>= cosθ</td></tr></tbody></table></p>
+		<p><table cellpadding="2" cellspacing="0"><tbody><tr><td>cos<big><big>(</big></big>θ+</td><td align="center" nowrap="nowrap">π<hr noshade="noshade" size="1">2</td><td><big><big>)</big></big>= -sinθ</td></tr></tbody></table></p>
+		<p>がある。これも下の図で遊びながら理解して欲しい。</p>
+		<div align="center"><canvas id="canvas6" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page5">その５に戻る</a>
+	  </div>
+	</div>
+  </body>
+</html>

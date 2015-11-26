@@ -1,0 +1,1 @@
+include ':app', ':physlib', ':physlib3d'

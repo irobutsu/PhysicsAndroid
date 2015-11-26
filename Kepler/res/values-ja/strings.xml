@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kepler</string>
+    <string name="accel">加速度</string>
+    <string name="brake">ブレーキ</string>
+    <string name="Mverm_equal">M/m=</string>
+    <string name="start_Circle">円運動開始</string>
+    <string name="velocity">速度　</string>
+
+</resources>

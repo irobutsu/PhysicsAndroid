@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">電場の線積分</string>
+    <string name="resetScreen">画面初期化</string>
+    <string name="circleMode">（円環電流）</string><string name="lineMode">【直線電荷】</string><string name="totalE">（全電場）</string><string name="totalEon">【全電場】</string><string name="stop">中断中</string><string name="move">実行中</string><string name="x_off">（x成分）</string><string name="x_on">【x成分】</string><string name="y_off">（y成分）</string><string name="y_on">【y成分】</string><string name="z_off">（z成分）</string><string name="z_on">【z成分】</string>
+</resources>

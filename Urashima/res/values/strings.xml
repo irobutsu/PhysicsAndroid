@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">ウラシマ効果</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">ウラシマ効果</string>
+    <string name="earthspeedis">地球の速度は光速の0％</string>
+
+</resources>

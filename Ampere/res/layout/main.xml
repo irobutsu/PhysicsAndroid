@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/setting"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="fill_horizontal|right"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/TextView02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="磁極"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btQdown"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:background="@drawable/left" />
+
+        <TextView
+            android:id="@+id/tCharge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/btQup"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:background="@drawable/right" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="電流"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btIdown"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:background="@drawable/left" />
+
+        <TextView
+            android:id="@+id/tCurrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/btIup"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:background="@drawable/right" />
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="｜"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <Button
+            android:id="@+id/btSikaku"
+            android:layout_width="40dip"
+            android:layout_height="40dp"
+            android:background="@drawable/sikaku"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/btEn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/maru"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/btSankaku"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/sankaku"
+            android:textSize="9sp" />
+
+        <Button
+            android:id="@+id/btOugi"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ougi"
+            android:paddingRight="@android:dimen/app_icon_size"
+            android:textSize="8sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right" >
+
+            <Button
+                android:id="@+id/btStop"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Free" />
+
+            <Button
+                android:id="@+id/btCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="電流を中央に"
+                android:textSize="8sp" />
+
+            <ToggleButton
+                android:id="@+id/tbStop"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:checked="true"
+                android:text="ToggleButton"
+                android:textOff="中断"
+                android:textOn="実行"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="right"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Xva</string>
+    <string name="e_equal">e=</string>
+    <string name="angle_add_0">Angle +0</string>
+    <string name="angle_add_90">Angle +90</string>
+    <string name="angle_add_180">Angle +180</string>
+    <string name="angle_add_270">Angle +270</string>
+    <string name="g_equal">g=</string>
+    <string name="stop">Stop</string>
+    <string name="go">GO</string>
+    <string name="von">[Velocity]</string>
+    <string name="voff">(Velocity)</string>
+    <string name="aon">[Accel.]</string>
+    <string name="aoff">(Accel.)</string>
+    <string name="fon">[Force]</string>
+    <string name="foff">(Force)</string>
+    <string name="g_sensor">g-sensor</string>
+    <string name="cautiong">Caution about g-sensor</string>
+    <string name="cautiongcheck">check g-direction</string>
+    <string name="alertg">Some type of g-sensor reports wrong direction. In such cases, you can adjust the direction by menus.</string>
+    <string name="alertgcheck">Now check g-direction. wait for an arrow on screen show [down].</string>
+</resources>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btResetScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/resetScreen"
+            android:textSize="9sp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textZ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Z=1.0"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="14dp" />
+
+                <SeekBar
+                    android:id="@+id/sbZ"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.85"
+                    android:max="100"
+                    android:progress="10" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout5"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textX"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="X=0.0"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="14dp" />
+
+                <SeekBar
+                    android:id="@+id/sbX"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ToggleButton
+            android:id="@+id/tba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="ToggleButton"
+            android:textOff="（全磁場）"
+            android:textOn="【全磁場】"
+            android:textSize="10sp" />
+
+        <ToggleButton
+            android:id="@+id/tbx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="ToggleButton"
+            android:textOff="（x成分）"
+            android:textOn="【x成分】"
+            android:textSize="10sp" />
+
+        <ToggleButton
+            android:id="@+id/tby"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton"
+            android:textOff="（y成分）"
+            android:textOn="【y成分】"
+            android:textSize="10sp" />
+
+        <ToggleButton
+            android:id="@+id/tbz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton"
+            android:textOff="（z成分）"
+            android:textOn="【z成分】"
+            android:textSize="10sp" />
+
+        <ToggleButton
+            android:id="@+id/tbStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="ToggleButton"
+            android:textOff="中断中"
+            android:textOn="実行中"
+            android:textSize="11dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainscreen"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="fill"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+</LinearLayout><!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/res/layout/main.xml -->

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Magnets/res/values-ja/strings.xml -->
+    <eat-comment/>
+    <string name="E_Line_off">（磁力線）</string>
+    <string name="E_Line_on">【磁力線】</string>
+    <string name="add_Plus">磁石を加える/動かす</string>
+    <string name="allErase">全磁石消去</string>
+    <string name="app_name">磁石たくさん</string>
+    <string name="rm_Charge">磁石を消す</string>
+</resources>

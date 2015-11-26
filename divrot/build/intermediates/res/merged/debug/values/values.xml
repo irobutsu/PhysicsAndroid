@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/divrot/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="app_name">Divrot</string>
+    <string name="div_minus">div源ー</string>
+    <string name="div_plus">div源＋</string>
+    <string name="hello">Hello World, DivrotActivity!</string>
+    <string name="move_frame">枠移動</string>
+    <string name="rot_left">rot源左</string>
+    <string name="rot_right">rot源右</string>
+</resources>

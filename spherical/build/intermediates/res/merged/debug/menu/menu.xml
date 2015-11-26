@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/res0" android:title="@string/reso_0" android:visible="true"></item>
+    <item android:id="@+id/res1" android:title="@string/reso_1" android:visible="true"></item>
+    <item android:id="@+id/res2" android:title="@string/reso_2" android:visible="true"></item>
+</menu><!-- From: file:/Users/maeno/Dropbox/gitHub/android_phys_COPY/spherical/res/menu/menu.xml -->

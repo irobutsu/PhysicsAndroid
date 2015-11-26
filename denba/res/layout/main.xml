@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/denba"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ToggleButton
+            android:id="@+id/tbE"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:checked="true"
+            android:textOff="（電気力線）"
+            android:textOn="【電気力線】"
+            android:textSize="12sp" />
+
+        <ToggleButton
+            android:id="@+id/tbV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:textOff="（等電位線）"
+            android:textOn="【等電位線】"
+            android:textSize="12sp" />
+
+        <ToggleButton
+            android:id="@+id/tbY1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="ToggleButton"
+            android:textOff="（E1）"
+            android:textOn="【E1】" />
+
+        <Button
+            android:id="@+id/Q1Down"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="←" />
+
+        <TextView
+            android:id="@+id/Q1Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center_horizontal"
+            android:text="Q1=3"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <Button
+            android:id="@+id/Q1Up"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="→" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ToggleButton
+            android:id="@+id/tbF"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:checked="true"
+            android:textOff="（力）"
+            android:textOn="【力】"
+            android:textSize="12sp" />
+
+        <ToggleButton
+            android:id="@+id/tbY"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:checked="false"
+            android:textOff="（合成E）"
+            android:textOn="【合成E】"
+            android:textSize="12sp" />
+
+        <ToggleButton
+            android:id="@+id/tbS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:checked="true"
+            android:textOff="向きのみ"
+            android:textOn="大きさも"
+            android:textSize="12sp" />
+
+        <ToggleButton
+            android:id="@+id/tbY2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:checked="false"
+            android:text="ToggleButton"
+            android:textOff="（E2）"
+            android:textOn="【E2】" />
+
+        <Button
+            android:id="@+id/Q2Down"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="←"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/Q2Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center_horizontal"
+            android:text="Q2=-2"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <Button
+            android:id="@+id/Q2Up"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="→" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BiotSavart</string>
+<string name="resetScreen">reset View</string>
+<string name="z_">Z=</string>
+<string name="x_">X=</string>
+<string name="x_comp">x.comp</string>
+<string name="y_comp">y.comp</string>
+<string name="z_comp">z.comp</string>
+</resources>

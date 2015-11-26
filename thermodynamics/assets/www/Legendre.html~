@@ -1,0 +1,504 @@
+<!Doctype html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>熱力学2015年度第12講</title>
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link rel="stylesheet" href="jquery.mobile-1.1.0.min.css" />
+		<script src="jquery-1.7.2.min"></script>
+		<script src="jquery.mobile-1.1.0.min.js"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="draggablescreen.js" type="text/javascript"></script>
+		<script src="graphscreen.js" type="text/javascript"></script>
+		<script src="LegendreTR.js" type="application/javascript"></script>
+		<link rel="STYLESHEET" href="ss.css" type="text/css">
+	</head> 
+	<body>
+		<div data-role="page" id="delF">
+			<div data-role="header">
+				<h1>ヘルムホルツ自由エネルギーと変分原理（続き）</h1>
+			</div>
+			<div data-role="content">
+				<h3>前回のおさらいと、微分形式で書いたまとめ</h3>
+				<p>　$U$と$F$は$F=U-TS$という関係でつながった「別の関数」だった。そして、$F$は$T;V,N$という変数で記述すると完全な熱力学関数になり、$U$は$S,V,N$という変数で記述すると、完全な熱力学関数になる。こうなる理由は、$F$は等温準静操作（$T$を一定に保つ操作）における仕事で定義され、$U$は断熱準静操作（$S$を一定に保つ操作）における仕事で定義されているということを思えば納得が行く。</p>
+
+				<p>　それぞれを違う方法（一方は$T,N$を固定して、もう一方は$S,N$を固定して）で$V$で微分した結果が同じになっていた（同様に$N$で微分しても同じになる）。</p>
+				<p>　先週は、理想気体の例で具体的に</p>
+				$$
+				{\partial F[T;V,N]\over \partial V}={\partial U[S,V,N]\over\partial V}
+				$$
+				<p>ということを示した。具体的には示してないが、</p>
+				$$
+				{\partial F[T;V,N]\over \partial N}={\partial U[S,V,N]\over\partial N}
+				$$
+				<p>もほぼ同様に示せる。</p>
+				<p>　これは二つの関数が「ルジャンドル変換」でつながっていることで「保証」されている。</p>
+				<div class="setsumei">　ルジャンドル変換の一般論の話は後にまわして、まずこの微分の関係を少しコンパクトに書く方法について説明しておく。</div>
+
+				<p>　ついでながら、残る変数での微分は、</p>
+				$$
+				\begin{array}{rl}
+				{\partial F[T;V,N]\over \partial T}=&S(T;V,N)\\
+				-{\partial U[S,V,N]\over \partial S}=&T(S,V,N)
+				\end{array}
+				$$
+				<p>という関係になっていた（今度は等しいのではなく、互いに変数が移り変わるようになっている）。</p>
+				<p>　これを微分形式という書き方でまとめておこう。一般に多変数関数$f(x,y,\cdots)$の独立変数が変化したときの変化は、</p>
+				$$
+				f(x+\mathrm dx,y+\mathrm dy,\cdots)=f(x,y,\cdots)+{\partial f(x,y,\cdots)\over\partial x}\mathrm dx+{\partial f(x,y,\cdots)\over\partial y}\mathrm dy+\cdots
+				$$
+				<p>のように書ける。</p>
+				<p>　前回やった計算では、ヘルムホルツの自由エネルギー$F[T;V,N]$の微小変化は</p>
+				$$
+				F[T+\mathrm dT;V+\mathrm dV,N]=F[T;V,N]-\underbrace{\left(-{\partial F[T;V,N]\over \partial T}\right)}_{S(T;V,N)}\mathrm dT-\underbrace{\left(-{\partial F[T;V,N]\over \partial V}\right)}_{P(T;V,N)}\mathrm dV
+				$$
+				<p>となる。こうなると${\partial F[T;V;N]\over\partial N}$の項も付け加えたくなるから、</p>
+				$$
+				F[T+\mathrm dT;V+\mathrm dV,N+\mathrm dN]=F[T;V,N]-\underbrace{\left(-{\partial F[T;V,N]\over \partial T}\right)}_{S(T;V,N)}\mathrm dT-\underbrace{\left(-{\partial F[T;V,N]\over \partial V}\right)}_{P(T;V,N)}\mathrm dV+\underbrace{\left({\partial F[T;V,N]\over \partial N}\right)}_{\mu(T;V,N)}\mathrm dN
+				$$
+				<p>としよう（$\mu$は<span class="fukidasi">化学ポテンシャル</span>と呼ばれる量で、物質量を増やした時の$F$の増加率になる。これを縮めて、</p>
+				$$
+				\mathrm dF[T;V;N]=-S(T;V,N)\mathrm dT-P(T;V,N)\mathrm dV+\mu(T;V,N)\mathrm dN
+				$$
+				<p>さらに縮めて、</p>
+				$$
+				\mathrm dF=-S\mathrm dT-P\mathrm dV+\mu\mathrm dN
+				$$
+				<p>と書く（最後だけ符号がプラスだが、それぞれの偏微分係数の物理的意味に合わせているのでこうなってもしかたない。</p>
+				<p>　同様に$U[S,V,N]=F[T(S,V,N);V,N]+T(S,V,N)S$の方の微分を考えると（まず略記で計算する）、</p>
+				$$
+				\mathrm dU=\underbrace{-S\mathrm dT-P\mathrm dV+\mu\mathrm dN}_{\mathrm dF}+\mathrm dT S+T\mathrm dS=T\mathrm dS-P\mathrm dV+\mu\mathrm dN
+				$$
+				<p>となる。ちゃんと関数の引数も含めて書くと、</p>
+				$$
+				\mathrm dU[S,V,N]=T(S,V,N)\mathrm dS-P(S,N,N)\mathrm dV+\mu(S,V,N)\mathrm dN
+				$$				
+				<p>という関係を作ることができる。$\mathrm dF[T;V;N]=-S\mathrm dT-P\mathrm dV+\mu\mathrm dN$にせよ$\mathrm dU[S,V,N]=T\mathrm dS-P\mathrm dV+\mu\mathrm dN$にせよ、<span class="fukidasi">それぞれの独立変数が微小変化した時に従属変数（$F$と$U$）がそれに応答してどのように変化するか</span>を余すことなく記述していることになる。</p>
+				<p>　たとえば、$\mathrm dF[T;V,N]=-S\mathrm dT-P\mathrm dV+\mu\mathrm dN$という式は、</p>
+				<div class="box">
+				  <ul>
+					<li>温度を$\mathrm dT$変化させると、$F$は$\mathrm dT$にエントロピー$S$を掛けた分だけ減る。</li>
+					<li>体積を$\mathrm dV$変化させると、$F$は$\mathrm dV$に圧力$P$を掛けた分だけ減る。</li>
+					<li>物質量を$\mathrm dN$変化させると、$F$は$\mathrm dN$に化学ポテンシャル$\mu$を掛けた分だけ増える。</li>
+				  </ul>
+				</div>
+				<p>と「読み取る」ことができる。</p>
+
+				<h3>Eulerの関係式</h3>
+				<p>　新しく化学ポテンシャルが導入されたので、化学ポテンシャルを含む式を１つ導出しておく。</p>
+				<p>　$F[T;V,N]$の３つの引数のうち、$V,N$は示量変数だから、系全体を$\lambda$倍すると、</p>
+				$$
+				\lambda F[T;V,N]=F[T;\lambda V,\lambda N]
+				$$
+				<p>という式ができる。これを$\lambda$で微分すると、</p>
+				$$
+				F[T;V,N]={\partial F[T;\lambda V,\lambda N]\over \partial (\lambda V)}{\partial(\lambda V)\over\partial \lambda}+{\partial F[T;\lambda V,\lambda N]\over \partial (\lambda N)}{\partial(\lambda N)\over\partial \lambda}
+				$$
+				<p>となり、この後$\lambda=1$と置くことで、</p>
+				$$
+				F[T;V,N]={\partial F[T;V,N]\over \partial V}V+{\partial F[T;V,N]\over \partial N}N
+				$$
+				<p>という式を得る（これをEulerの関係式と言う）。理想気体の場合で確認すると、</p>
+				$$
+				{\partial F[T;V,N]\over \partial V}V=-NRT\times {1\over V}\times V=-NRT
+				$$
+				<p>および</p>
+				$$
+				{\partial F[T;V,N]\over \partial N}N=\left( -RT\log\left({T^cV\over (T^*)^c v^*N}\right)-NRT\times\left(-{1\over N}\right)\right)\times N= -NRT\log\left({T^cV\over (T^*)^c v^*N}\right)+NRT
+				$$
+				<p>となってこの例では確かに成立している。</p>
+				<p>　圧力$P$と化学ポテンシャル$\mu$の式を考えると、この式は</p>
+				$$
+				F=-PV+\mu N
+				$$
+				<p>ということになる。つまり$F,P,V,N$がわかれば$\mu$は計算できる量になる。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+				<a href="#page1" data-icon="arrow-r">ルジャンドル変換の必要性</a>
+			</div>
+		</div>
+		<div data-role="page" id="page1">
+			<div data-role="header">
+				<h1>ルジャンドル変換</h1>
+			</div>
+			<div data-role="content">
+				<h3>ルジャンドル変換</h3>
+				<p>　上で$U$と$F$の場合で具体例を見たように、関数の表示の仕方を失敗すると情報が消えるということが起こる。よって変数を変えるときには情報を損なわないように注意が必要である。</p>
+				<p>　このように「独立な変数を取り替えるけど、その結果として情報が失われないようにする」変換がルジャンドル変換である。ルジャンドル変換のやり方を一般的に書いておこう。$f(x,y_1,y_2,\cdots)$という関数の$x$という変数を$p={\partial f(x,y_1,y_2,\cdots)\over\partial x}$に取り替える場合は、
+					$$
+					g(p(x,y_1,y_2,\cdots),y_1,y_2,\cdots)=f(x,y_1,y_2,\cdots)-\underbrace{\partial f(x,y_1,y_2,\cdots)\over\partial x}_{p(x,y_1,y_2,\cdots)} x~~~~~~~(g=f-px ~~ただし、p=f'(x))
+					$$
+					<p>のようにする。</p>
+					$$
+					F[T(S,V,N);V,N]=U[S,V,N]-\underbrace{{\partial U[S,V,N]\over \partial S}}_{T(S,V,N)}\times S~~~~~~(F=U-TS ~~ただし、T={\partial U\over\partial S})
+					$$
+					<p>および</p>
+					$$
+					U[S(T;V,N);V,N]=F[T;V,N]-\underbrace{{\partial F[T;V,N]\over \partial T}}_{-S(T;V,N)}\times T~~~~~~(U=F-(-S)T ~~ただし、-S={\partial F\over \partial T})
+					$$
+					<p>と見比べると$U[S,V,N]\to F[T;V,N]$と$U[S,V,N]\to F[T;V,N]$という二つのルジャンドル変換（互いに逆変換）を上でやっていたことになる。</p>
+					<p>　ルジャンドル変換の一般論を述べよう。物理では、</p>
+					<div class="fukidasi">ある関数$F(x)$の独立変数を$x$から${\partial F\over \partial x}$に変えたい。</div>
+					<p>という状況がよくあるのだが、この変数の変換をうっかりとやると、その関数から得られる情報が失われてしまったり、変える前と変えた後で方程式の形が（意図せぬ形に）変化してしまったりする。そうならないように関数の形を調整しつつ独立変数を変える方法を「ルジャンドル変換(Legendre transfomation)」と言う。</p>
+					<p>　以下では、このルジャンドル変換について説明する。</p>
+					<h3>必要性―もしルジャンドル変換をしなかったら</h3>
+					<div class="setsumei">「なぜこんなことをする必要があるんですか？」という質問がよく出る（こういう疑問を持つのは悪いことではない。むしろ「何のために必要か」ということを考えもせずに「本に書いてあるから自分もやろう」とやってしまう人の方が<strong>危険</strong>である）ので、ここで「失敗例」を書いておく。</div>
+					<h4>1変数の例：情報が消える</h4>
+					<p>　$a$を定数として
+						\begin{equation} f(x)=(x-a)^2\label{fxa} \hskip{200pt}(1)\end{equation}
+						という関数を考えよう。今は$x\to f$という関数になっているわけだが、新しい変数として$f$の$x$による微分
+						\begin{equation} p_x={\partial f\over \partial x}=2(x-a) \end{equation}
+						を取りたいとする。逆に、$x-a={p_x\over 2}$である。$p_x$を変数として$f$を表現すると、
+						\begin{equation} f={(p_x)^2\over 4}\label{fpfour} \end{equation}
+						となる。結果は$a$によらない式になったが、ここで「簡単な式になった」と喜んではいけない。「$a$という情報を失ってしまった」と嘆くべき状況である。$x\to f$という対応関係の中には$a$の情報があるが、$p_x\to f$という対応関係の中には$a$がどこにも入っていない。つまり、「$p_x\to f$という対応関係だけを知っている人」は「$x\to f$という対応関係だけを知っている人」より情報が少ない（たとえば$p_x=2(x-a)$という式を出せるのは、後者のみ）。</p>
+					<p>　なぜ情報が消えてしまったかを考えよう。以下に、$x,f$のグラフと$p_x,f$のグラフを描く。</p>
+					<div><canvas id="canvas1" width=200 height=200></canvas>　<canvas id="canvas2" width=200 height=200></canvas></div>
+					<div data-role="fieldcontain">
+						<label for="slider">a:</label>
+						<input type="range" name="slider" id="slider" value="0" min="-2" max="2" step="0.1" onChange="a=Number($('#slider').val());if( animCount<0 ) {graphWrite();}" />
+					</div>
+					<div data-role="fieldcontain">
+						<fieldset data-role="controlgroup" data-type="horizontal">
+							<legend>表示</legend>
+							<input type="checkbox" name="checkboxpxzero" id="checkboxpxzero_0" class="custom" value="" onChange="onpx0change();"/>
+							<label for="checkboxpxzero_0">$p_x=0$の点</label>
+							<input type="checkbox" name="checkboxpxone" id="checkboxpxone_0" class="custom" value="" onChange="onpx1change();"/>
+							<label for="checkboxpxone_0">$p_x=1$の点</label>
+						</fieldset>
+					</div>
+					
+					<p>　上の左側のグラフはaを変化させた時の$f=(x-a)^2$を描いたものだ。この時表示されている接線の傾きが$p_x$である。</p>
+					<p>　右側のグラフは$p_x$と$f$の関係で、式で表現すれば$f={(p_x)^2\over 4}$である。その対応関係は、$a$をずらしても（グラフを平行移動しても変わりがない（スライダーでaの値を変えることができるので、変えてみても右のグラフが変わらないことを実感せよ）。</p>
+					<p>　たとえば、</p>
+					<div class="setsumei">$p_x=0$なら$f=0$、$p_x=1$なら$f={1\over4}$</div>
+					<p>という関係（グラフの下のボタンを押すとグラフ上に表示できる）は、$a$をどう変えても同じである。ゆえに「$x\to f$という関数関係」は「$p_x\to f$という関数関係」に移行させることができない。必ず情報が失われる。そこで$f$ではない新しい関数$\tilde f$を作って、情報が正しく移行されるようにしなくてはいけない。</p>
+					<p>　ではどんな$\tilde f$を持ってくれば「$x\to f$という関数関係」の持っている情報を全て「$p_x\to\tilde f$という関数関係」に移行させることができるのか？---その答えがルジャンドル変換である。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#delF" data-icon="arrow-l">ヘルムホルツ自由エネルギーの性質</a>
+				<a href="#page0" data-icon="back">「はじめに」に戻る</a>
+				<a href="#page3" data-icon="arrow-r">ルジャンドル変換のグラフによる表現</a>
+			</div>
+		</div>
+		<div data-role="page" id="page3">
+			<div data-role="header">
+				<h1>ルジャンドル変換のグラフによる表現</h1>
+			</div>
+			<div data-role="content">
+				<p>この二つの問題に対する対応策を述べよう。</p>
+				\begin{equation}
+				\tilde f (p_x)=f(x)-xp_x
+				\end{equation}
+				<p>で新しい関数を定義する。$f=(x-a)^2$の場合の$\tilde f$の意味をグラフで表現したのが次の図である。</p>
+				<br>
+				<div><canvas id="canvas3" width=200 height=200></canvas>　<canvas id="canvas4" width=200 height=200></canvas></div>
+				<div data-role="fieldcontain">
+					<label for="slider_a">a:</label>
+					<input type="range" name="slider_a" id="slider_a" value="0" min="-2" max="2" step="0.1" onChange="a=Number($('#slider_a').val());graphWrite3();" />
+				</div>
+				<div data-role="fieldcontain">
+					<label for="slider_x">x:</label>
+					<input type="range" name="slider_x" id="slider_x" value="1" min="-3" max="3" step="0.1" onChange="x=Number($('#slider_x').val());graphWrite3();" />
+				</div>
+				<p>　$p_x$はグラフの接線の傾きであり、$-xp_x$という量はすなわち、接線を$f$軸まで伸ばしていった時の$f$座標の変化である。スライダで$a,x$を変えてみて欲しい。$a$の違いが$\tilde f$の違いに反映することがわかるだろう。</p>
+				<div class="setsumei">この図は自動では動かないので、自分で動かしてみること。</div>		
+				
+				<p>　前節の例について実際に計算してみると、</p>
+				\begin{equation}
+				\begin{array}{rl}
+				\tilde f = (x-a)^2- xp_x=&{(p_x)^2\over 4}- \left({(p_x)\over 2}+a\right)p_x
+				= -{(p_x)^2\over 4}-ap_x
+				\end{array}
+				\end{equation}
+				<p>となる。情報を失っていない変換なので「元に戻す」こともできる。</p>
+				\begin{equation}
+				x=- {\partial \tilde f\over \partial p_x}={p_x\over 2}+a
+				\end{equation}
+				<p>で$x$を定義して$f=\tilde f + xp_x$というのが逆変換である。</p>
+				<p>　ここで$x$の定義と符号が逆になっているように見えるが、微分の形で書くと</p>
+				\begin{equation}
+				\underbrace{\tilde f(p_x)=f(x)-x{\partial f\over \partial x}~~\left(p_x={\partial f\over \partial x}\right)}_{ルジャンドル変換}
+				,~~~~~\underbrace{ f(x)=\tilde f(p_x) - p_x {\partial \tilde f\over \partial p_x} ~~\left(x=-{\partial \tilde f\over \partial p_x}\right)}_{逆ルジャンドル変換}
+				\end{equation}
+				<p>と同じ形（$x\leftrightarrow p_x,f\leftrightarrow \tilde f$と取り替えた形）になっている。すなわち、同じ形の変換を2回やると元に戻る。例の場合は</p>
+				\begin{equation}
+				f=-{(p_x)^2\over 4}-ap_x +x p_x
+				=-(x-a)^2+(x-a)\times 2(x-a)=(x-a)^2
+				\end{equation}
+				<p>で元に戻る。まとめると、以下のとおりとなる。</p>
+				<div class="setsumei">ルジャンドル変換
+					<p>　関数$f(x)$、すなわち$x\to f$という対応関係の入力変数を$x$ではなく$p_x={\partial f\over \partial x}$に変えたい時は</p>
+					\begin{equation}
+					\tilde f(p_x)=f(x)-xp_x\label{seiLegendre}
+					\end{equation}
+					<p>と定義すると、元の対応関係が持っていた情報を失うことなく新しい対応関係$p_x\to \tilde f$を作ることができる。</p>
+				</div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page1" data-icon="arrow-l">ルジャンドル変換の必要性</a>
+				<a href="#page0" data-icon="back">「はじめに」に戻る</a>
+				<a href="#UtoF" data-icon="arrow-r">ルジャンドル変換$U\to F$の物理的意味</a>
+			</div>
+		</div>
+		<div data-role="page" id="UtoF">
+			<div data-role="header">
+			  <h1>ルジャンドル変換$U\to F$の物理的意味</h1>
+			</div>
+			<div data-role="content">
+			  <p>　まず、$U\to F$のルジャンドル変換のグラフを見よう。</p>
+			  </p>
+			  <hr>
+			  <div><canvas id="canvasUF" width=200 height=200></canvas>　<canvas id="canvasUF2" width=200 height=200></canvas></div>
+			  <div data-role="fieldcontain">
+				<label for="slider">T:</label>
+				<input type="range" id="slider_T" value="1" min="0" max="3" step="0.01" onChange="t0=Number($('#slider_T').val()); graphUFWrite();" />
+			  </div>
+			  <div data-role="fieldcontain">
+				<label for="slider">V:</label>
+				<input type="range" id="slider_V" value="1" min="0.01" max="3" step="0.01" onChange="v0=Number($('#slider_V').val()); graphUFWrite();" />
+			  </div>
+			  <p>理想気体の内部エネルギーの$S,V,N$を独立変数とした表現は</p>
+			  $$
+			  U[S,V,N]=cNR\times{T^*(v^*N)^{1\over c}\over V^{1\over c}}\exp\left({S\over cNR}-1\right)+Nu
+			  $$
+			  <p>だった。一方ヘルムホルツ自由エネルギー$F$の$T,V,N$を独立変数とした表現は</p>
+			  $$
+			  F[T;V,N]=-NRT\log\left({T^cV\over (T^*)^c v^*N}\right)+Nu
+			  $$
+			  <div class="setsumei">上では$cR=1,N=1,T^*=1,v^*=1,u=0$とグラフがシンプルになるような値を使っている。</div>
+			  <p>${\partial U\over \partial S}=T,{\partial F\over\partial T}=-S$が成立していることに注意。</p>
+			  <div class="box">なお、$U$を$T,V,N$で書くと</p>
+			  $$
+			  U(T;V,N)=cNRT
+			  $$
+			  <p>であり、$F$を$S,V,N$で書くと</p>
+			  $$
+			  F(S,V,N)=NR{T^*(v^*N)^{1\over c}\over V^{1\over c}}\left(1-{S\over cNR}\right)\exp\left({S\over cNR}-1\right)+Nu
+			  $$
+			  <p>となる</p>
+			  <p>（以上二つのグラフは薄い線で表現している）。</p>
+			  </div>
+			  <p>　この「$TS$を引く」ということの物理的意味を述べておこう。$U$と$F$の違いは「断熱されているかどうか」あるいは「周囲から熱という形でエネルギーの補給を受けることができるかどうか」であった。その理屈からするとなんとなく「周囲から熱による補給を受けられる$F$の方が多いはず」と考えて<span class="fukidasi">じゃあなんで引くの？</span>と思ってしまう人もいるかもしれない。</p>
+			  <p>　ここで、<span class="fukidasi">エネルギー（内部エネルギーだろうがヘルムホルツ自由エネルギーだろうが）は絶対値が大事なのではなく『差』が大事</span>という点に注意して欲しい。</p>
+			  <p>　仕事をするには「仕事をするもの」が自分のエネルギーを下げなくてはいけない。等温環境においては、$F=U-TS$を下げることによってその分仕事ができる。断熱操作では「$U$を下げる」ことでしか仕事ができないが、等温操作では「$U$を下げる」ことと「$TS$を増やす（←等温操作なのだからこれは「エントロピー$S$を増やす」ことと同じ）でも仕事ができる、ということになる。</p>
+
+			  <p>　こう考えてもよい。今等温準静操作を考えているから、トータルのエントロピーは増大しない。そこで、環境と系の持つエントロピーの和を$S_全$とする。系は$S$の、環境は$S_全-S$のエントロピーを持っていることになる。</p>
+			  <p>　環境から熱の形で（$T\Delta S$という形で）エネルギーが補給されるとすると、<span class="fukidasi">環境は後$T(S_全-S)$だけエネルギーを補給できる用意がある</span>と考えることもできる。つまり「環境＋系」という全系には「隠れたエネルギー」$T(S_全-S)$がある。このうち$TS_全$の部分は「どうせ定数だし」と忘れることにすれば、$U-TS$が「等温環境の中での系の持つエネルギー」と解釈できることになる。</p>
+			  <div class="A">　例によってお金で説明する。断熱状態、つまり他から熱が入ってこない（お金が補給されない）状況では、サイフの中にある金額だけが「払える金額」である。一方ATMが近くにあるならば、「貯金の残高」も「払える金額」に算入する。
+			  <br>　この「貯金の残高」が$T(S_全-S)$である。もともと$TS_全$が貯金されていて、$TS$は「すでに引き出したお金」だと思えばよい。</div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page3" data-icon="arrow-l">ルジャンドル変換のグラフによる表現</a>
+				<a href="#page0" data-icon="back">「はじめに」に戻る</a>
+				<a href="#Maxwell" data-icon="arrow-r">Maxwellの関係式</a>
+			</div>
+		</div>
+		<div data-role="page" id="Maxwell">
+			<div data-role="header">
+			  <h1>Maxwellの関係式</h1>
+			</div>
+			<div data-role="content">
+			  <p>　もう一度大事な式を書いておくと、</p>
+			  $$
+			  \begin{array}{rrrr}
+			  \mathrm dF[T;V,N]=&-S(T;V,N)\mathrm dT&-P(T;V,N)\mathrm dV&+\mu(T;V,N)\mathrm dN\\
+			  \mathrm dU[S,V,N]=&T(S,V,N)\mathrm dS&-P(S,V,N)\mathrm dV&+\mu(S,V,N)\mathrm dN
+			  \end{array}
+			  $$
+			  <p>である。この二つは$F=U-TS$という式でつながる。上の段は$T;V,N$の関数として、下の段は$S,V,N$の関数として表現されている。$P,\mu$に関しては表現が違うだけで同じ関数である。</p>
+			  <p>　上の$\mathrm dF$や$\mathrm dU$を「$F$の全微分」「$U$の全微分」と呼ぶ（気持ちは「<big>全</big>ての変数に関する<big>微分</big>を全部並べた」というところ）。</p>
+			  <p>　全微分が全微分であるためには条件があった。その条件の一つの表し方は「二つの偏微分が交換すること」である。たとえば</p>
+			  $$
+			  \begin{array}{rl}
+			  {\partial \over\partial T}\left({\partial \over \partial V} F[T;V,N]\right)=&{\partial \over\partial V}\left({\partial \over \partial T} F[T;V,N]\right)\\
+			  {\partial \over\partial T}\left(-P(T;V,N)\right)=&{\partial \over\partial V}\left(-S(T;V,N)\right)\\
+			  {\partial P(T;V,N)\over\partial T}=&{\partial S(T;V,N)\over\partial V}
+			  \end{array}
+			  $$
+			  <p>である。</p>
+			  <p>　同様に、$\mathrm dF=-S\mathrm dT-P\mathrm dV+\mu\mathrm dN$という式の二つの項の微分を考えると、</p>
+			  $$
+			  -{\partial P(T;V,N)\over\partial N}={\partial \mu(T;V,N)\over\partial V}
+			  $$
+			  $$
+			  -{\partial S(T;V,N)\over\partial N}={\partial \mu(T;V,N)\over\partial T}
+			  $$
+			  <p>のような式を作ることができる（$\mathrm dU$に関しても同様に３セットの式を作ることができる）。これらを<span class="fukidasi">Maxwellの関係式</span>と呼ぶ。</p>
+			  <div class="box">
+				  　これは電磁気での静電場での${\rm rot}~\vec E=0$と同じ式である。まず、静電場で成り立つ$\vec E=-{\rm grad}~V$という式を<br>
+				$$
+				\mathrm dV = -E_x\mathrm dx-E_y\mathrm dy-E_z\mathrm dz
+				$$
+				<br>のように表す（この書き方は$E_x=-{\partial V\over \partial x},E_y=-{\partial V\over \partial y},E_z=-{\partial V\over \partial z}$と三つの式を書くのと同じ）。<br>
+				<br>　このように書ける条件は、たとえば${\partial E_y\over\partial x}={\partial E_x\over\partial y}$（およびこれのサイクリック置換）であった。
+			  </div>
+			  <p>ところで、$U$を$T,V,N$で表現するとすれば、$S(T;V,N)$という関数の微分を考えて、</p>
+			  $$
+			  \mathrm dS(T;V,N)={\partial S(T;V,N)\over \partial T}\mathrm dT+{\partial S(T;V,N)\over \partial V}\mathrm dV+{\partial S(T;V,N)\over \partial N}\mathrm dN
+			  $$
+			  <p>となる。</p><p>　これを代入すれば、</p>
+			  $$
+			  \mathrm dU(T;V,N)=T{\partial S(T;V,N)\over \partial T}\mathrm dT+\left(T{\partial S(T;V,N)\over \partial V}-P\right)\mathrm dV+\left(T{\partial S(T;V,N)\over \partial N}+\mu\right)\mathrm dN
+			  $$
+			  <p>のように$\mathrm dU(T;V,N)$を表すことができる。Maxwellの関係式があるから、</p>
+			  $$
+			  \mathrm dU(T;V,N)=T{\partial S(T;V,N)\over \partial T}\mathrm dT+\left(T{\partial P(T;V,N)\over \partial T}-P\right)\mathrm dV+\left(-T{\partial \mu(T;V,N)\over \partial T}+\mu\right)\mathrm dN
+			  $$
+			  <p>となり、これから${\partial U(T;V,N)\over \partial T}=T{\partial S(T;V,N)\over\partial T},{\partial U(T;V,N)\over \partial V}=T{\partial P(T;V,N)\over\partial T}-P,{\partial U(T;V,N)\over \partial N}=-T{\partial \mu(T;V,N)\over\partial T}+\mu$を読み取ることができる。</p>
+			  <p>　理想気体では$P={NRT\over V}$だから${\partial U(T;V,N)\over \partial V}=T{\partial P(T;V,N)\over\partial T}-P=0$になる。</p>
+			  <P>　つまり理想気体の状態方程式からただちに$U(T;V,N)$が$V$に依らないことがわかる。</P>
+			  <h3>電磁場のエネルギーと温度</h3>
+			  <p>　電磁場のエネルギー密度は圧力に比例するという関係式がある。これは$PV={U\over 3}$とまとめられる。これから${\partial U\over \partial V}=T{\partial P\over \partial T}-{U\over 3V}$という微分方程式ができる。</p>
+			  $$
+			  \begin{array}{rl}
+			  {\partial U\over \partial V}=&T{\partial \left({U\over 3V}\right)\over \partial T}-{U\over 3V}\\
+			  3V{\partial U\over \partial V}=&T{\partial U\over \partial T}-U
+			  \end{array}
+			  $$
+			  <p>となって、これの解は$U=\alpha VT^4$（$\alpha$は定数）。</p>
+			  
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page1" data-icon="arrow-l">ルジャンドル変換の必要性</a>
+				<a href="#page0" data-icon="back">「はじめに」に戻る</a>
+				<a href="#var" data-icon="arrow-r">変分原理と変化の向き</a>
+			</div>
+		</div>
+		<div data-role="page" id="var">
+			<div data-role="header">
+				<h1>変分原理と変化の向き</h1>
+			</div>
+			<div data-role="content">
+			  <h3>変分原理</h3>
+			  <p>　「変分原理」とは「何か基本的な量の変化を考えることで法則を導く原理」ということで、多くの場合<span class="fukidasi">ある量の変化量が0になるところを求めるとそれが求めたい状態である</span>という形に定式化される。</p>
+			  <p>　ヘルムホルツ自由エネルギーに対しての変分原理は</p>
+
+			  <h3>ヘルムホルツの自由エネルギーの凸性</h3>
+			  <p>　実際、$F=-NRT\log V+$（$V$によらない部分）となっているが、$-NRT\log V$のグラフは下に凸である。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#Maxwell" data-icon="arrow-l">Maxwellの関係式</a>
+				<a href="#page0" data-icon="back">「はじめに」に戻る</a>
+				<a href="#totsu" data-icon="arrow-r">熱力学関数の凸性</a>
+			</div>
+		</div>
+		<div data-role="page" id="qa">
+			<div data-role="header">
+				<h1>受講者の感想・コメント</h1>
+			</div>
+			<div data-role="content">
+				<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+				<div class="Q">。</div>
+				<div class="A">。</div>
+				<p></p>
+			</div>
+		  	<div data-role="footer" align="center">
+				<a href="#S" data-icon="arrow-l">エントロピーの性質</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+			</div>
+
+		</div>
+	</body>
+</html>

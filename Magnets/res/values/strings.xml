@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Magnets</string>
+  <string name="E_Line_off">(H-line)</string>
+    <string name="E_Line_on">[H-line]</string>
+      <string name="V_Line_off">(V-line)</string>
+    <string name="add_Plus">add/move a magnet</string>
+    <string name="rm_Charge">remove a magnet </string>
+    <string name="allErase">erase All Magnet</string>
+</resources>

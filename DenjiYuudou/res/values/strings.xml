@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VectorPotential</string>
+    <string name="mode_1">Parallel Currents</string>
+    <string name="mode_0">A Current</string>
+    <string name="mode_2">Anti Parallel Currents</string>
+    <string name="mode_3">A Circlular Currents</string>
+    <string name="resetScreen">reset View</string>
+</resources>

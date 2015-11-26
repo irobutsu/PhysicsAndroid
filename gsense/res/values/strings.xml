@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">加速度センサ</string>
+<string name="resetScreen">reset View</string>
+<string name="x_comp">←x成分</string>
+<string name="y_comp">↓y成分</string>
+<string name="z_comp">z成分</string>
+<string name="g">重力加速度</string>
+</resources>

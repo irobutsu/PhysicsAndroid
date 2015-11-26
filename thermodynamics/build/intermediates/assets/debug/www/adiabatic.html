@@ -1,0 +1,267 @@
+<!Doctype html> 
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>断熱操作と等温操作の差</title>
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+    <script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+    <link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css" />
+    <script src="jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+    <script src="vector.js" type="text/javascript"></script>
+    <script src="yajirushi.js" type="text/javascript"></script>
+    <script src="rescalescreen.js" type="text/javascript"></script>
+    <script src="dragmanscreen.js" type="text/javascript"></script>
+    <script src="draggablepoint.js" type="text/javascript"></script>
+    <link rel="STYLESHEET" href="ss.css" type="text/css">
+	<style>
+	  .mintemp {
+	   color: #0FF;
+	 }
+	 .maxtemp {
+	   color: #F30;
+	 }
+	</style>
+    <script type="text/javascript">
+     $(document).delegate('#adiabatic','pageinit',function(e) {
+       sc=new DragmanScreen("carnotcanvas",11.5,10,0.46);
+       scpa=new RescaleScreen("pistonacanvas",12.5,3,0.5);
+       scpi=new RescaleScreen("pistonicanvas",12.5,3,0.5);
+	   sct=new RescaleScreen("tempcanvas",10,1,0.35);
+	   sc.setBottom(-0.5);
+	   sc.setLeft(-0.5);
+	   scpa.setBottom(-0.5);
+	   scpa.setLeft(-0.5);
+	   scpi.setBottom(-0.5);
+	   scpi.setLeft(-0.5);
+	   sct.setBottom(0);
+	   sct.setLeft(0);
+       sc.gobackOriginalSize();
+       scpa.gobackOriginalSize();
+       scpi.gobackOriginalSize();
+       sct.gobackOriginalSize();
+       ct=sc.canvas.getContext("2d");
+       ctpa=scpa.canvas.getContext("2d");
+       ctpi=scpi.canvas.getContext("2d");
+       ctt=sct.canvas.getContext("2d");
+       sc.writeContents=function() {
+         write_func();
+       }
+	   write_temp0();
+       point1=new DraggablePoint(2,9,0.4,"rgba(255,0,0,0.5)");
+	   sc.pushDragObjList(point1);
+	   point1.y0=0.01;
+	   point1.x0=0.01;
+       go();
+     });  
+	 var N=50;
+     function write_func() {
+       sc.clearALL();
+       sc.writeCoordinate();
+       point1.write(ct);
+	   //等温線
+       ct.strokeStyle="rgba(100,100,0,0.3)";
+	   var j;
+	   for( j=1; j<sc.rightwx; j+=1 ) {
+		 ct.beginPath();
+		 ct.moveTo(0.2,(j*j)/0.1);
+		 for( i=0.4; i<sc.rightwx; i+= 0.2 ) {
+		   ct.lineTo(i,(j*j)/i);
+		 }
+		 ct.stroke();
+	   }
+	   var gamma=5.0/3.0;
+	   var gammamone=2.0/3.0;
+
+	   //断熱線
+       ct.strokeStyle="rgba(0,100,100,0.3)";
+	   var j;
+	   for( j=1; j<sc.rightwx; j+=1 ) {
+		 ct.beginPath();
+		 ct.moveTo(0.2,j*Math.pow(j/0.1,gamma));
+		 for( i=0.4; i<sc.rightwx; i+= 0.2 ) {
+		   ct.lineTo(i,j*Math.pow(j/i,gamma));
+		 }
+		 ct.stroke();
+	   }
+
+
+
+	   var V1=point1.x;
+	   var P1=point1.y;
+	   var T1=P1*V1;
+
+	   var stepV=(sc.rightwx-V1)/N;
+
+	   //point1→端までの等温操作(P2,V2)
+       ct.strokeStyle="rgba(100,100,0,0.9)";
+       ct.beginPath();
+	   ct.moveTo(V1,P1);
+	   for(i=1; i<=N ; i++ ) {
+         ct.lineTo(V1+stepV*i,P1*V1/(V1+stepV*i));
+       }
+       ct.stroke();
+	   var V2=sc.rightwx;
+	   var P2=P1*V1/V2;
+
+	   //point1→端までの断熱操作(P3,V3)
+       ct.strokeStyle="rgba(0,100,100,0.9)";
+       ct.beginPath();
+	   ct.moveTo(V1,P1);
+	   for(i=1; i<=N ; i++ ) {
+         ct.lineTo(V1+stepV*i,P1*Math.pow(V1/(V1+stepV*i),gamma));
+       }
+       ct.stroke();
+	   var V3=sc.rightwx;
+	   var P3=P1*Math.pow(V1/V3,gamma);
+
+
+	   if( t>=2*N ) {
+		 t=0;
+	   }
+	   var v;
+	   if( t<N ) {
+		 v=V1+stepV*t;
+	   } else {
+		 v=V1+stepV*(2*N-t);
+	   }
+	   var pi=P1*V1/v;
+	   var pa=P1*Math.pow(V1/v,gamma);
+	   ct.fillStyle="rgb(0,0,0)";
+	   ct.beginPath();
+	   ct.arc(v,pi,0.1,0,2*Math.PI,false);
+	   ct.fill();
+	   ct.beginPath();
+	   ct.arc(v,pa,0.1,0,2*Math.PI,false);
+	   ct.fill();
+	   write_piston(v,pi,pa,pi*v,P1*V1,P3*V3);
+     }
+	 function write_piston(v,pi,pa,T,tmax,tmin) {
+	   var tdiff=tmax-tmin;
+	   if( tdiff <0 ) {
+		 tdiff = -tdiff;
+		 tmin=tmax;
+	   }
+	   write_piston_sub(v,ctpi,pi,pi*v,tmin,tdiff,scpi,false);
+	   write_piston_sub(v,ctpa,pa,pa*v,tmin,tdiff,scpa,true);
+	   write_temp(pa*v,tmin,tdiff);
+	 }
+
+	 function write_piston_sub(v,ctp,p,T,tmin,tdiff,scp,adFlg) {
+	   ctp.fillStyle="rgb(255,255,255)";
+	   ctp.fillRect(scp.leftwx,scp.bottomy,scp.w,scp.h);
+	   ctp.fillStyle="rgb(0,0,0)";
+	   ctp.fillRect(0,0,scp.w,2);
+	   ctp.fillStyle="rgb(255,255,255)";
+	   ctp.fillRect(0.1,0.1,scp.w,1.8);
+	   ctp.fillStyle="rgb(50,50,50)";
+	   ctp.fillRect(v,0.1,0.3,1.8);
+	  
+	   var ya=new Yajirushi("rgba(200,200,100,0.9)");
+	   var i;
+	   for(i=0; i<4; i++ ) {
+		 ya.setXY(v+0.04,0.5*i+0.25,p*0.5);
+		 ya.setTheta(-0.5*Math.PI);
+		 ya.setL(p*0.25);
+		 ya.draw(ctp);
+	   }
+	   ctp.fillStyle=rgb_temp(T,tmin,tdiff);
+	   ctp.fillRect(0.1,0.1,v-0.1,1.8);
+	   if( !adFlg ) {
+		 var ofset=0;
+		 ctp.beginPath();
+		 ctp.moveTo(scp.leftwx,scp.topy);
+		 ctp.lineTo(scp.rightwx,scp.topy);
+		 ctp.lineTo(scp.rightwx,scp.topy-0.5+ofset);
+		 ctp.lineTo(-ofset,scp.topy-0.5+ofset);
+		 ctp.lineTo(-ofset,scp.bottomy+0.5-ofset);
+		 ctp.lineTo(scp.rightwx,scp.bottomy+0.5-ofset);
+		 ctp.lineTo(scp.rightwx,scp.bottomy);
+		 ctp.lineTo(scp.leftwx,scp.bottomy);
+		 ctp.closePath();
+		 ctp.fill();
+	   }
+	 }
+	 function rgb_temp(T,tmin,tdiff) {
+	   var r=Math.ceil((T-tmin)/tdiff*255);
+	   var b=255-r;
+	   var g=Math.ceil(b*0.8+50);
+	   return "rgb("+r+","+g+","+b+")";
+	 }
+	 function write_temp0() {
+	   var i;
+	   var step=sct.w/N;
+	   for(i=0; i<N; i++ ) {
+		 ctt.fillStyle=rgb_temp(i,0,N);
+		 ctt.beginPath();
+		 ctt.moveTo(i*step,1);
+		 ctt.lineTo(i*step,0.5);
+		 ctt.lineTo((i+1.1)*step,0.5);
+		 ctt.lineTo((i+1.1)*step,1);
+		 ctt.closePath();
+		 ctt.fill();
+	   }
+	 }
+	 function write_temp(T,tmin,tdiff) {
+	   ctt.fillStyle="rgb(200,200,200)";
+	   ctt.fillRect(0,0,sct.w,0.5);
+	   var x;
+	   x=((T-tmin)/tdiff);
+	   ctt.fillStyle="rgb(0,0,0)";
+	   ctt.beginPath();
+	   ctt.moveTo(x*sct.w,0.5);
+	   ctt.lineTo(x*sct.w+0.3,0);
+	   ctt.lineTo(x*sct.w-0.3,0);
+	   ctt.closePath();
+	   ctt.fill();
+	 }
+     function go() {
+       if( stopFlg ) {
+         return;
+       } else {
+         write_func();
+         t++;
+         setTimeout("go();",200);
+       }
+     }
+	 var t=0;
+	 var stopFlg=false;
+     function startstop() {
+       if( stopFlg ) {
+         stopFlg=false;
+         go();
+       } else {
+         stopFlg=true;
+       }
+     }
+    </script>
+  </head> 
+  <body>
+    <div data-role="page" id="adiabatic">
+      <div data-role="header">
+        <h2>断熱操作と等温操作</h2>
+      </div>
+      <div data-role="content">
+        <p><canvas id="carnotcanvas"></canvas></p>
+		<p><span id="now"></span></p>
+		<p>等温変化</p>
+		<p><canvas id="pistonicanvas"></canvas></p>
+		<p>断熱変化</p>
+		<p><canvas id="pistonacanvas"></canvas></p>
+		<p>温度計→（低温）<canvas id="tempcanvas"></canvas>（高温）</p>
+        <p><button id="start" onclick="t=0;" data-inline="true">最初からやり直し</button><button id="stop" data-inline="true" onclick="startstop();">停止／再開</button></p>
+		<hr>
+		<p>　これは等温操作と断熱操作（どちらも準静的）で膨張の様子はどのように違うかを説明する動画である。</p>
+
+		
+		<p>　温度変化は、図の一番下にもあるように温度を表現する（サイクルの中の最低温度が<span class="mintemp">水色</span>、最高温度が<span class="maxtemp">柿色</span>で表現され、段階的に変化するようになっている）。
+      </div>
+      <div data-role="footer" align="center">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+      <input type="button" value="戻る" data-icon="back" onclick="history.back();">
+      </div>
+    </div>
+  </body>
+</html>

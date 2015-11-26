@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <LinearLayout android:id="@+id/ll" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+    	<LinearLayout
+        android:id="@+id/setting"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:orientation="horizontal">
+       	
+            <CheckBox android:layout_height="wrap_content" android:text="@string/g_sensor" android:id="@+id/cbU" android:layout_width="wrap_content" android:checked="false" android:enabled="false"></CheckBox>
+          		<ToggleButton android:id="@+id/cbV" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:textOn="@string/von" android:textOff="@string/voff"></ToggleButton>
+           	<ToggleButton android:id="@+id/cbA" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:textOn="@string/aon" android:textOff="@string/aoff"></ToggleButton>
+           	<ToggleButton android:id="@+id/cbF" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:textOn="@string/fon" android:textOff="@string/foff"></ToggleButton>
+      		
+                <TextView android:id="@+id/textView3" android:layout_height="wrap_content" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium" android:text="e=0.50"></TextView>
+                <SeekBar android:id="@+id/sbE" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:max="100" android:progress="50"></SeekBar>
+            
+                <TextView android:id="@+id/textView2" android:layout_height="wrap_content" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium" android:text="g=10"></TextView>
+                <SeekBar android:id="@+id/sbG" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:max="40" android:progress="30"></SeekBar>
+                   
+   			<ToggleButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ToggleButton" android:textOff="@string/stop" android:id="@+id/tbStop" android:checked="true" android:textOn="@string/go"></ToggleButton>
+    	</LinearLayout>
+   	</LinearLayout>
+</LinearLayout>

@@ -1,0 +1,973 @@
+<!Doctype html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>自然科学のための数学2014年度第20講</title>
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css" />
+	<script src="jquery-1.11.1.min.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="vector.js"></script>
+	<script type="text/javascript" src="yajirushi.js"></script>
+	<script type="text/javascript" src="rescalecanvas.js"></script>
+	<script type="text/javascript" src="graphcanvas.js"></script>
+	<script type="text/javascript" src="phystem.js"></script>
+	<script type="text/javascript" src="phystemwithtygraph.js"></script>
+	<script type="text/javascript" src="connector.js"></script>
+	<script type="text/javascript" src="bane.js"></script>
+	<link rel="STYLESHEET" href="ss.css" type="text/css">
+	<script type="text/javascript">
+	</script>
+  </head> 
+  <body>
+	<div data-role="page" id="super">
+	  <div data-role="header">
+		<h3>重ねあわせの原理（続き）</h3>
+	  </div>
+	  <div data-role="content">
+		<p>先週は</p>
+		<div class="box">
+		  <span class="fukidasi">非斉次方程式の解</span>$+$<span class="fukidasi">斉次方程式の解</span>$=$<span class="fukidasi">非斉次方程式の解</span>
+		  <br><br>非斉次方程式<br>
+\begin{equation}
+ \left( A_n({x})\left({\mathrm d\over\mathrm dx}\right)^n +A_{n-1}({x})\left({\mathrm d\over\mathrm dx}\right)^{n-1} +\cdots +A_{1}({x}){\mathrm d\over\mathrm dx} +A_0({x}) \right){y}=C({x})\label{hiseijirei}
+\end{equation}
+		  <br>と、上の式で$C({x})=0$とした斉次方程式<br>
+\begin{equation}
+ \left( A_n({x})\left({\mathrm d\over\mathrm dx}\right)^n +A_{n-1}({x})\left({\mathrm d\over\mathrm dx}\right)^{n-1} +\cdots +A_{1}({x}){\mathrm d\over\mathrm dx} +A_0({x}) \right){y} =0
+\end{equation}
+		  <br>を考える。非斉次方程式の解として$y_1({x})$を１つ、斉次方程式の解をとして$y_0({x})$を１つ、それぞれ見つけたとする。${y_0}({x})+y_1({x})$もまた、非斉次方程式の解である。
+		</div>
+		<p>というところまでやったので、今週はまず、これの簡単な例をやってみよう。</p>
+\begin{equation}
+ {\mathrm d\over \mathrm dx} {y}= {x}+{y}
+\end{equation}
+		<p>という非斉次線型微分方程式を解きたい。これは「変数分離できる形」にはなってない。</p>
+
+		<p>まずは試行錯誤で解を探す。たとえば${y}=a{x}+b$が解になるだろうか、ということを考えてみる。代入してみると、</p>
+\begin{equation}
+\begin{array}{rl}
+ \underbrace{a}_{\tiny {\mathrm d\over \mathrm dx} {y}}=& {x}+\underbrace{a{x}+b}_{{y}}
+\\
+0=&(1+a){x}+b-a
+\end{array}
+\end{equation}
+		<p>となるから、$a=-1,b=-1$が解となる。これで${y}=-{x}-1$という解が見つかったわけである。ここで「バンザイ、解が見つかった」と終わってはいけない。なぜならこの解は「特別なある１つの解」であって、全ての解を求めていないのである。</p>
+		<p align="center"><img src="dydxx+y0.png" width="30%" class="floatnone"></p>
+		<p>関数${y}=-{x}-1$は上のグラフであり、この線の上という（全$x$-$y$平面から見たらほんとに狭い）範囲の上での「解」を求めたに過ぎない。前に述べたように、このような解を「特解」と呼ぶ。我々が求めたいのは全$x$-$y$平面を埋め尽くす、「一般解」である。</p>
+
+
+		<p>非斉次になっているのは${x}$という項のせいだから、これを消して</p>
+\begin{equation}
+ {\mathrm d\over \mathrm dx} {y}= {y}
+\end{equation}
+		<p>という斉次方程式を作ってみると、この解は</p>
+\begin{equation}
+ {y}=C {\mathrm e}^{{x}}
+\end{equation}
+		<p>である。非斉次方程式の解は特解にこの「斉次方程式の一般解」を足せば作ることができる。すなわち、</p>
+\begin{equation}
+ {y}=-{x}-1 + C{\mathrm e}^{{x}}
+\end{equation}
+		<p>が「一般解」なのである。</p>
+		<p align="center"><img src="dydxx+y.png" width="50%" class="floatnone"></p>
+		<p>グラフを上の図に示した。グラフは$C$を$0.5$ずつ変えた線を示しているが、もちろん線と線の隙間にもちゃんと線があり、全平面を埋め尽くしている。どのような初期値$(x_0,y_0)$から出発しても、この微分方程式に従うその後の変化がわかることになる。</p>
+
+		<p>重ねあわせの原理のおかげで</p>
+		<div class="box">
+		  （斉次方程式の一般解）+（非斉次方程式の特解）=（斉次方程式の一般解）
+		</div>
+		<p>という関係が成立するおかげで、このような計算ができる。</p>
+		
+		<p>ここでやったことは以下のように考えてもよい。まず特解${y}=-{x}-1$を見つけたから、「実際の解は特解に近い形をしているだろう」と推測し、「とりあえず特解に未知の関数${Y}$を足したものが解だろう」とあたりをつけて、${y}=-{x}-1+{Y}$と置いてみる。これを元の微分方程式に代入すれば、</p>
+\begin{equation}
+\begin{array}{rl}
+  {\mathrm d\over \mathrm dx} \left(
+ -{x}-1+{Y}
+ \right)=&{x}\underbrace{-{x}-1+{Y}}_{{y}}\\
+ {-1} + {\mathrm d\over \mathrm dx} {Y}=& {-1} + {Y}
+\end{array}
+\end{equation}
+		<p>となるから、後は${\mathrm d\over \mathrm dx} {Y}={Y}$という微分方程式を解けばよい。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#teisuukeisuu" data-icon="arrow-r">定数係数の斉次線型微分方程式</a>
+		<p align="center">←<a href="lec19.html">第19講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+	<div data-role="page" id="teisuukeisuu">
+	  <div data-role="header">
+		<h2>定数係数の斉次線型微分方程式</h2>
+	  </div>
+	  <div data-role="content">
+		<p>一般的な線型微分方程式の解き方を考える前に、まずは簡単な例を考えよう。</p>
+		<p>というわけでここでは線型斉次で、かつ係数$A_i({x})$が定数$A_i$である場合、すなわち</p>
+\begin{equation}
+ \left(
+A_n\left({\mathrm d\over \mathrm dx}\right)^n
++A_{n-1}\left({\mathrm d\over \mathrm dx}\right)^{n-1}
++\cdots
++A_{1}{{\mathrm d\over \mathrm dx}}
++A_0
+\right){y} =0\label{teisuusenkeiseiji}
+\end{equation}
+		<p>を解く一般的な方法を示そう。</p>
+
+		<h3>特性方程式</h3>
+		<p>まず、この微分方程式には、${\mathrm e}^{\lambda {x}}$という形で表せる解がある（$\lambda$はこの後決める定数である）。これが解になるかどうかを確認するために代入してみると、</p>
+\begin{equation}
+{{\mathrm d\over \mathrm dx} }{\mathrm e}^{\lambda{x}}=\lambda{\mathrm e}^{{x}},~~
+\left({{\mathrm d\over \mathrm dx} }\right)^2{\mathrm e}^{\lambda{x}}=\lambda^2{\mathrm e}^{{x}},\cdots,
+\left({{\mathrm d\over \mathrm dx} }\right)^2{\mathrm e}^{\lambda{x}}=\lambda^n{\mathrm e}^{{x}}
+\end{equation}
+		<p>となることを使うと、微分方程式は</p>
+\begin{equation}
+ \left(
+A_n\lambda^n +A_{n-1}\lambda^{n-1}
++\cdots A_1 \lambda + A_0
+\right){\mathrm e}^{\lambda{x}}=0
+\end{equation}
+		<p>という式に変わる。よって、</p>
+\begin{equation}
+ A_n\lambda^n +A_{n-1}\lambda^{n-1}+\cdots A_1 \lambda + A_0=0\label{tokusei}
+\end{equation}
+		<p>となるような$\lambda$が存在していれば、その$\lambda$を代入した${\mathrm e}^{\lambda {x}}$が解である。$\lambda$が満たすべき方程式と「特性方程式」と呼ぶ。</p>
+
+		<p>簡単な例として、特性方程式が二次になる場合をやってみよう。</p>
+\begin{equation}
+\left(
+ \left({\mathrm d\over \mathrm dx}\right)^2
+-{\mathrm d\over \mathrm dx} -2
+\right)f({x})=0\label{nijiex}
+\end{equation}
+		<p>という微分方程式の解が${\mathrm e}^{\lambda{x}}$だと仮定し代入すると、${\mathrm d\over \mathrm dx}{\mathrm e}^{\lambda{x}}=\lambda{\mathrm e}^{\lambda{x}},\left({\mathrm d\over \mathrm dx}\right)^2{\mathrm e}^{\lambda{x}}=\lambda^2{\mathrm e}^{\lambda{x}}$を使って、</p>
+\begin{equation}
+\begin{array}{rcccccl}
+\biggl(&
+\left({\mathrm d\over \mathrm dx}\right)^2
+&
+-&{\mathrm d\over \mathrm dx}&-2&
+\biggr){\mathrm e}^{\lambda{x}}=0
+\\
+ & ↓ & &↓ & & \\
+\biggl(&
+\lambda^2&
+-&\lambda&-2&
+\biggr){\mathrm e}^{\lambda{x}}=0
+\end{array}
+\end{equation}
+		<p>という式が導かれ、特性方程式$\lambda^2-\lambda-2=0$が満たされれば${\mathrm e}^{\lambda{x}}$が解になることがわかる。特性方程式は$(\lambda-2)(\lambda+1)=0$と因数分解できるので、$\lambda=2,\lambda=-1$の二つの解があり、${\mathrm e}^{2{x}}$と${\mathrm e}^{-{x}}$が解となる。一般解は</p>
+\begin{equation}
+ f({x})=C{\mathrm e}^{2{x}}+D{\mathrm e}^{-{x}}
+\end{equation}
+		<p>ということになる。二階微分方程式は二つの未定パラメータを持つ筈なので、これで解は求まっていると考えていいだろう。</p>
+
+
+		<p>もう少し詳細に解がこれで全て求まったということを確認しておこう。二階微分方程式を解いているから、ある点${x}=x_0$での関数の値$f(x_0)$と一階微分の値$f'(x_0)$が求まれば、その後のこの関数の値はすべて求まることになる。簡単のために${x}=0$での場合を考えると、$f(0)=C+D,f'(0)=2C-D$である。$f(0),f'(0)$がどのような値でもそれに応じて$C,D$を決めてやれば、その後の関数の形は全て決まる。よってこれで一般解が求められたことになる。 </p>
+
+
+		<p>ここでは特性方程式を出してから因数分解を行って$\lambda$を求めたが、もともとの微分方程式を、</p>
+\begin{equation}
+ \left(
+{\mathrm d\over \mathrm dx} -2
+\right)
+ \left(
+{\mathrm d\over \mathrm dx} +1
+\right)
+f({x})=0\label{factorDE}
+\end{equation}
+		<p>と書き換えてもよい（いわば`微分演算子の因数分解'）<span class="footnote">この逆に$ \left({\mathrm d\over \mathrm dx} -2\right) \left({\mathrm d\over \mathrm dx} +1\right)f(x)=0$が元の式に戻ることを確認するのは容易である。</span>。この式の左辺が0になるためには、</p>
+\begin{equation}
+  \left(
+{\mathrm d\over \mathrm dx} -2
+\right)f({x})=0~~~または~~~
+ \left(
+{\mathrm d\over \mathrm dx} +1
+\right)
+f({x})=0
+\end{equation}
+		<p>のどちらかが成り立てばよい、と考えても<span class="footnote">ただし、こう考えてもよいのは$ \left({\mathrm d\over \mathrm dx} -2\right) \left({\mathrm d\over \mathrm dx} +1\right)$を掛けることと、$\left({\mathrm d\over \mathrm dx} +1\right) \left({\mathrm d\over \mathrm dx} -2\right)$を掛けることが同じ効果を産む場合、つまりこの二つの微分演算子が「交換する」場合である。定数係数の場合ならもちろん大丈夫だが、一般にそうとは限らない。</span>、$C{\mathrm e}^{2{x}}+D{\mathrm e}^{-{x}}$という解が出てくる。</p>
+
+		<p>さて、これで二つの解が求められた、と安心してよいかというと、一般の特性方程式$A_2\lambda^2+A_1\lambda+A_0=0$が二つの実数解を持つとは限らないので、</p>
+		<ol>
+		  <li>$A_2\lambda^2+A_1\lambda+A_0=0$が重解を持つ場合</li>
+		  <li>$A_2\lambda^2+A_1\lambda+A_0=0$が複素数解を保つ場合</li>
+		</ol>
+		<p>にどうするかを考えていかなくてはいけない（特性方程式が3次以上になる場合も同様である）。</p>
+
+		<h3>特性方程式が重解を持つ場合</h3>
+		<p>(2)の複素数解を持つ場合については次の\節{fukusokai}で扱うことにして、ここでは重解の場合を考えよう。</p>
+		
+		<p>一般論を考える手がかりとして、もっとも単純な「重解になる二次方程式」である$\lambda^2=0$（解は$\lambda=0$しかない）を考えてみよう。特性方程式が$\lambda^2=0$になるような微分方程式は</p>
+\begin{equation}
+ \left({\mathrm d\over \mathrm dx}\right)^2 f({x})=0
+\end{equation}
+		<p>である。特性方程式の解は$\lambda=0$しかないから、前節の手順の通りに計算すると解として$C{\mathrm e}^0=C$という「定数解」だけが出て来る。</p>
+
+		<p>しかし、前節でやったことを忘れて素直に$ \left({\mathrm d\over \mathrm dx}\right)^2 f({x})=0$という式を見れば、解が</p>
+\begin{equation}
+ f({x})= D{x}+C
+\end{equation}
+		<p>なのはすぐにわかる（実際代入してみれば確かに二階微分すると0になる）。これは二つのパラメータを含んでいるから、立派な一般解である。</p>
+
+		<p>次に一般的に特性方程式が重解になる微分方程式として、</p>
+\begin{equation}
+\left(
+\left({\mathrm d\over \mathrm dx}\right)^2 -2A{\mathrm d\over \mathrm dx} +A^2
+\right)f({x})=0~~~すなわち~~~
+ \left(
+{\mathrm d\over \mathrm dx} - A
+\right)^2 f({x})=0
+\end{equation}
+		<p>を考えてみよう。これを見て、<span class="fukidasi">{$ \left({\mathrm d\over \mathrm dx} - A\right) f({x})=0$}になる関数を求めればよい</span>と考えると、$f({x})=C{\mathrm e}^{A{x}}$という解があることはすぐにわかる。しかし、解はこれで終わりではない。なぜなら我々が求めたいのは<span class="fukidasi">$ \left({\mathrm d\over \mathrm dx} - A\right)$を二回掛けると0になる関数</span>なのである。よって、<span class="fukidasi">$ \left({\mathrm d\over \mathrm dx} - A\right)$を掛けると$(定数)\times{\mathrm e}^{A{x}}$になる関数</span>があればそれも解なのである。</p>
+
+		<p>実はそうなる関数はすぐに見つかり、${x}{\mathrm e}^{A{x}}$である。確認しよう。</p>
+\begin{equation}
+  \left({\mathrm d\over \mathrm dx} - A\right)\left(
+{x}{\mathrm e}^{A{x}}
+\right)={\mathrm d\over \mathrm dx}\left({x}{\mathrm e}^{A{x}}
+\right)-A{x}{\mathrm e}^{A{x}}
+={\mathrm e}^{A{x}}+\underbrace{
+A{x}{\mathrm e}^{A{x}}-A{x}{\mathrm e}^{A{x}}
+}_{相殺}
+\end{equation}
+		<p>こうして、重解である場合はもう一つの解$D{x}{\mathrm e}^{A{x}}$が出ることがわかったので、</p>
+		
+		<div class="box">
+		  <center>二階線型微分方程式の特性方程式が重解を持つ場合の解</center><br>
+\begin{equation}
+\left({\mathrm d\over \mathrm dx} - A\right)^2 f({x})=0~~~の解は~~~
+\left(D{x}+C\right){\mathrm e}^{A{x}}
+\end{equation}
+		</div>
+		<p>がわかる。</p>
+
+		<p>この答えを出す方法として、</p>
+		<div class="box">
+		  任意の関数$F({x})$に対し、<br>
+\begin{equation}
+\left({\mathrm d\over \mathrm dx}-A\right)\left(
+{\mathrm e}^{A{x}}F({x})\right)
+= {\mathrm e}^{A{x}}{\mathrm d\over \mathrm dx} F({x})\label{ddxA}
+\end{equation}
+		  <br>
+		  が成り立つ。</div>
+		  <p>ということを先に証明しておくというのも良い方法である（後で応用が効く）。</p>
+
+		  <p>つまり、${\mathrm d\over \mathrm dx}-A$という微分演算子の後にあった${\mathrm e}^{A{x}}$という数を微分演算子より前に出すと、${\mathrm d\over \mathrm dx}-A$の$-A$が消えて${\mathrm d\over \mathrm dx}$になる。</p>
+\begin{equation}
+\left({\mathrm d\over \mathrm dx}-A\right)\left({\mathrm e}^{A{x}}\fbox{なんとか}\right)\to {\mathrm e}^{A{x}}{\mathrm d\over \mathrm dx}\fbox{なんとか}
+\end{equation}
+		  <p>という置き換えができるのである<span class="footnote">省略形として$\left({\mathrm d\over \mathrm dx}-A\right){\mathrm e}^{A{x}}={\mathrm e}^{A{x}}{\mathrm d\over \mathrm dx}$などと書く場合もあるが、この式はそれだけでは（後に微分される関数がいなくては）意味が無い。こういう式はあくまで「記号」としての式であることに注意しよう。</span>。この置き換えを使うと、</p>
+\begin{equation}
+0= \left(
+{\mathrm d\over \mathrm dx} - A
+\right)^2 \left({\mathrm e}^{A{x}}F({x})\right)={\mathrm e}^{A{x}}\left({\mathrm d\over \mathrm dx}\right)^2 F({x})
+\end{equation}
+		  <p>となるから、後は$\left({\mathrm d\over \mathrm dx}\right)^2 F({x})=0$という解き易い微分方程式を解けばよい（この答えが$D{x}+C$であることはもう知っている）。</p>
+			
+
+		  <p>微分の階数が高くなっても同様に</p>
+\begin{equation}
+ \left(
+{\mathrm d\over \mathrm dx} - A
+\right)^k f({x})=0~~~の解は~~~
+\left(
+C_{k-1}{x}^{k-1}+
+C_{k-2}{x}^{k-2}+
+\cdots+C_1{x}+C_0\right){\mathrm e}^{A{x}}
+\end{equation}
+		  <p>となる（これを証明するには、実際に代入してもよいし、上で考えた置き換えを使って考えてもよい）。</p>
+
+		  <p>以上の結果をまとめておこう。</p>
+
+		  <div class="box">定数係数の線型同次微分方程式
+$$
+ \left(
+A_n\left({\mathrm d\over \mathrm dx}\right)^n
++A_{n-1}\left({\mathrm d\over \mathrm dx}\right)^{n-1}
++\cdots
++A_{1}{{\mathrm d\over \mathrm dx}}
++A_0
+\right){y} =0
+$$
+を解くには、微分演算子$\left({\mathrm d\over \mathrm dx}\right)^n$を$\lambda^n$という数に置き換えて、
+$$
+A_n\lambda^n
++A_{n-1}\lambda^{n-1}
++\cdots
++A_{1}\lambda
++A_0
+=0
+$$
+という特性方程式を作る。この方程式が$n$個の相異なる解$\lambda_1,\lambda_2,\cdots,\lambda_n$を持っていたならば、
+\begin{equation}
+ C_1{\mathrm e}^{\lambda_1{x}}
++ C_2{\mathrm e}^{\lambda_2{x}}
++ C_3{\mathrm e}^{\lambda_3{x}}
++\cdots
++ C_n{\mathrm e}^{\lambda_n{x}}
+\end{equation}
+が解である。解が$m$重解を含んでいた場合、重解である$\lambda_k$に対しては上の式の$C_k{\mathrm e}^{\lambda_k{x}}$を
+\begin{equation}
+ \left(
+C_{k,m-1}{x}^{m-1}
++C_{k,m-2}{x}^{m-2}
++\cdots
++C_{k,1}{x}
++C_{k,0}
+\right){\mathrm e}^{\lambda_k{x}}
+\end{equation}
+		  と置き換える。
+		  </div>
+		  <p>ここで「$\lambda$が複素数解を持っていた場合はどうするのか？」という点が気になる人もいるかもしれない。それについては次の節で考えよう。
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#super" data-icon="arrow-l">重ねあわせの原理（続き）</a>
+		<a href="#fukusosuu" data-icon="arrow-r">複素数を使って解く微分方程式</a>
+		<p align="center">←<a href="lec19.html">第19講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+	<div data-role="page" id="fukusosuu">
+	  <div data-role="header">
+		<h3>複素数を使って解く微分方程式</h3>
+	  </div>
+	  <div data-role="content">
+		<p>ここでは、複素数を使うことで微分方程式がどのように解きやすくなるのかを解説しよう<span class="footnote">微積における複素数の使い途という意味では「複素積分」という非常に有効なテクニックがあるのだが、本書ではその部分は解説しない。</span>。</p>
+
+		<p>複素数を使うことで微分方程式が解ける例として非常によく出てくる、</p>
+\begin{equation}\left(
+ {\mathrm d\over \mathrm dx} \right)^2{y}= -{y}
+\end{equation}
+		<p>という方程式を考えよう。</p>
+
+
+		<p>「こうなる関数を探す」という方法でこの微分方程式を解いておこう。要は「二階微分したら元の関数の$-1$倍になる関数」である。我々はそういう関数を二つ知っている。$\sin {x}{\to }\cos {x}{\to}-\sin {x}$と$\cos {x}{\to }-\sin {x}{\to}-\cos {x}$である。よって、解は${y}=A\cos{x}+B\sin{x}$である。</p>
+
+
+		<p>ここまでやってきた定数係数の線形微分方程式の一般論からすると、${y}={{\mathrm e}^{\lambda x}}$としたくなるところだが、代入すると</p>
+\begin{equation}
+\lambda^2{{\mathrm e}^{\lambda {x}}}= -{{\mathrm e}^{\lambda {x}}}
+\end{equation}
+		<p>となり、$\lambda^2=-1$という「{\bf 実数の範囲で考えれば解なし}」の方程式が出てくる。虚数を知らない人は、ここで</p>
+
+		<p><center><span class="fukidasi">ああ、この微分方程式はこの方法では解けない。</span></center></p>
+
+		<p>と諦めてしまうことになる。しかしすでに虚数を知っている我々は、$\lambda=\pm{\mathrm i}$という「とりあえずの答え」を出して、</p>
+		<div class="box">
+$\lambda^2{{\mathrm e}^{\lambda {x}}}= -{{\mathrm e}^{\lambda {x}}}$の解は、${\mathrm e}^{{\mathrm i} {x}}$と${\mathrm e}^{-{\mathrm i} {x}}$である。
+		</div>
+		<p>と考えて先に進むことができる。</p>
+
+		<p>ここで出てきた二つの解${\mathrm e}^{{\mathrm i} {x}}$と${\mathrm e}^{-{\mathrm i} {x}}$が互いに複素共役であることに注意。実数の係数の方程式の解が複素数になる時は、その複素共役も解のペアとして必ず現れる。その理由は、$$\left(実数係数のみを持つ微分演算子\right)f({x})=0~~~例：\left({\mathrm d\over \mathrm dx}\right)^2{y}=-{y}$$という方程式の複素共役をとれば$$\left(実数係数のみを持つ微分演算子\right)f^*({x})=0~~~例：\left({\mathrm d\over \mathrm dx}\right)^2{y^*}=-{y^*}$$となる、ということを考えればわかる。</p>
+		<div class="box">
+		  <span class="fukidasi">FAQ:答えが実数じゃなくていいんですか？</span><br>
+		  <br>それが上で「とりあえずの答え」と書いた理由である。実数ではなくてはならないのは最終的に求められる解であって、計算の途中で現れる量は複素数でもよい。最後に実数であるべきものが実数であるように、以下で調節する。
+		</div>
+
+		<p>先に進んでみよう。一般解は</p>
+\begin{equation}
+ {y}=A{\mathrm e}^{{\mathrm i} {x}}+ B{\mathrm e}^{-{\mathrm i} {x}}\label{Csindou}
+\end{equation}
+		<p>となる。$A$と$B$は今から選ぶ定数（しかも、複素数の定数）である。</p>
+		<div class="box">
+		  <center><span class="fukidasi">方針</span></center><br>
+		  この答えは一見複素数に見えるが、実際に欲しいのは実数解である。そこで、以下の二つの考え方のどちらかで実数解を得ることができる。
+		  <ol>
+			<li>この解が実数になるように任意パラメータの$A,B$を調整する。</li>
+			<li>この解のうち実数部分を取り出せばそれが欲しい解である。</li>
+		  </ol>
+		</div>
+
+		<p>まず(1)の方法で考えよう。この解が実数になれということは、複素共役である</p>
+\begin{equation}
+ {y}^*=
+A^* {\mathrm e}^{-{\mathrm i} {x}}
++B^* {\mathrm e}^{{\mathrm i} {x}}\label{Csindoustar}
+\end{equation}
+		<p>が元の${y}$と同じであれ、ということである。そうなるためには、$A^*=B$であればよい。こうすると自動的に$B^*=A$であることになり、二つの式が同じ式になる。こうして$A$と$B$に関係がついたから、以後は$B$を$A^*$と書くことにして、</p>
+\begin{equation}
+ {y}=A {\mathrm e}^{{\mathrm i} {x}}
++A^* {\mathrm e}^{-{\mathrm i} {x}}
+\end{equation}
+		<p>を解とすればよい。ここで、複素数である$A$を極表示して$A=|A|{\mathrm e}^{{\mathrm i}\alpha}$とする（$\alpha$は実数）<span class="footnote">複素数を$R{\mathrm e}^{{\mathrm i}\theta}$のように表示するのを「極表示」と言う。</span>。すると、</p>
+\begin{equation}
+{y}=
+|A|\left(
+{\mathrm e}^{{\mathrm i}({x}+\alpha)}
++{\mathrm e}^{-{\mathrm i}({x}+\alpha)}\right)
+\end{equation}
+		<p>と答えをまとめることができる（この形の方が実数であることが明白である）。さらに${{\mathrm e}^{{\mathrm i}\theta}+{\mathrm e}^{-{\mathrm i}\theta}\over 2}=\cos\theta$を使うと、</p>
+\begin{equation}
+ {y}=2|A|\cos({x}+\alpha)
+\end{equation}
+		<p>となる。</p>
+
+		<p>同じ考え方なのだが、以下のようにしてもよい。</p>
+
+		<p>${\mathrm e}^{{\mathrm i} {x}}$と${\mathrm e}^{-{\mathrm i} {x}}$を使って実数となる組み合わせを作ると、${\mathrm e}^{{\mathrm i} {x}}+{\mathrm e}^{-{\mathrm i} {x}}$か$I({\mathrm e}^{{\mathrm i} {x}}-{\mathrm e}^{-{\mathrm i} {x}})$か、どちらか（もしくはこの二つの線型結合）である。つまり、上の式を</p>
+\begin{equation}
+ {y}=C\underbrace{\left({\mathrm e}^{{\mathrm i} {x}}+{\mathrm e}^{-{\mathrm i} {x}}\right)}_{2\cos {x}}+{\mathrm i} D\underbrace{\left({\mathrm e}^{{\mathrm i} {x}}-{\mathrm e}^{-{\mathrm i} {x}}\right)}_{2{\mathrm i} \sin {x}}
+=2C \cos {x} -2D \sin {x}
+\end{equation}
+		<p>と書きなおしてもよい（$A=C+{\mathrm i} D,B=C-{\mathrm i} D$）。</p>
+
+
+		<p>(2)の方法を取る時は、まず$A=|A|{\mathrm e}^{{\mathrm i}\alpha},B=|B|{\mathrm e}^{{\mathrm i}\beta}$と極表示して、</p>
+\begin{equation}
+ {y}=
+|A|{\mathrm e}^{{\mathrm i}({x}+\alpha)}
++|B|{\mathrm e}^{-{\mathrm i}({x}-\beta)}
+\end{equation}
+		<p>となり、この実数部分を取り出せば、</p>
+\begin{equation}
+ {y}=|A|\cos ({x}+\alpha)
++|B|\cos ({x}-\beta)
+\end{equation}
+		<p>となる。ここで、実数を取った結果であるこの式を見ると、実は第1項だけで十分であったことがわかる（実際この解だけで2個の未定パラメータを含んだ解になっている）。</p>
+
+		<p>よって、(2)の方法を取るとき、つまり「後で実数部分だけを取り出すことにしよう」と計算するときは、</p>
+\begin{equation}
+ {y}=|A|\cos ({x}+\alpha)
+\end{equation}
+		<p>を解として考えれば十分なのである。</p>
+		<p>ここでは生真面目に${\mathrm e}^{{\mathrm i} {x}}$と${\mathrm e}^{-{\mathrm i} {x}}$の二つを解としたのだが、よく考えてみると、元々の方程式は実数係数のものであったから、${\mathrm e}^{{\mathrm i} {x}}$が解であったなら、その複素共役である${\mathrm e}^{-{\mathrm i} {x}}$が解であることは「計算するまでもなくあたりまえ」である。よって「微分方程式に現れる数が全て実数である場合」には、複素共役の両方を解にする必要はなく、どちらか一方のみを解として考えればよい（もちろん「これの複素共役も解だぞ」ということを覚えておく）。もちろん、元々の微分方程式が${\mathrm i}$を含んでいる場合はこうはいかない。</p>
+		<h3>複素数導入の意義</h3>
+		<p>こんなふうに複素数を導入したことによって微分方程式が解けるようになる理由---あるいは逆に言えば複素数がなかったら解けない方程式がある理由は、複素数がなかったら（虚数がなかったら）、<span class="fukidasi">$-1$を掛ける</span>という操作の「微小変化」が作れないからである。たとえば<span class="fukidasi">2倍する</span>という操作は微小変化として、<span class="fukidasi">$1.000001$倍する</span>を考えてこれを約693148回行えばよい（$1.000001^{693148}\fallingdotseq 2$）。ところが$-1$倍についてはこれができない。</p>
+
+
+		<p>微分とは「微小な変化を考える」という計算であり、積分はその逆に「微小な変化を積み重ねる」という計算であった。しかし「$-1$倍する」という計算は（複素数の助けが無ければ）「微小変化を考える」のには不向きなのである。</p>
+
+		<p>ところが、複素数の範囲で考えるならば「微小な回転」を考えられる。たとえば、「${\mathrm e}^{0.0001{\mathrm i}\pi}$を掛ける」という計算を10000回行えば</p>
+\begin{equation}
+ \left({\mathrm e}^{0.0001{\mathrm i}\pi}\right)^{10000}={\mathrm e}^{{\mathrm i}\pi}=-1
+\end{equation}
+		<p>となるのである。</p>
+<div class="A">プリントでは10000が1000になってました。訂正して下さい。</div>
+		<p align="center"><img src="compleshanten.png" width="40%" class="floatnone"></p>
+
+
+		<p>これをもう少し細かく見ておこう。複素平面において${\mathrm i}$を掛けるというのは、実は「90度（${\pi\over 2}$）回転させる」のと同じ計算である。$(a,b)$というベクトルは複素平面上では複素数$a+b{\mathrm i}$で表現されるが、これに${\mathrm i}$を掛けた結果は${\mathrm i} a -b$であり、ベクトルで表現すると$(-b,a)$となり、これはまさに直角回転なのである。</p>
+		<p align="center"><img src="x+iy.png" width="50%" class="floatnone"></p>
+
+		<p>ということは、$1+{\mathrm i}{\mathrm d\theta}$を掛けるという計算は、図に示したように、元のベクトル（$1$を掛けた部分）に元のベクトルを${\pi\over 2}$倒して長さを${\mathrm d\theta}$倍したベクトル（${\mathrm i}{\mathrm d\theta}$を掛けた部分）を足せ、という計算となる。これはつまり「微小角度の回転」なのである。この微小回転を何回も（どころか、無限回）繰り返すことで有限角度の回転ができる。たとえば角度$\theta$の回転を行いたいならば、まず${\theta\over N}$という微小な角度の回転を行なって、次にそれを$N$回行えばよい。</p>
+		<p align="center"><img src="x+iyitheta.png" width="50%" class="floatnone"></p>
+		<p>それを表現する式は</p>
+\begin{equation}
+ \left(1+{\mathrm i}{\theta\over N}\right)^N
+\end{equation}
+		<p>である。これを$N\to\infty$極限を取れば正しい有限角度の回転が出る。ここで指数関数の定義の一つである、</p>
+\begin{equation}
+\lim_{N\to\infty} \left(1+{x\over N}\right)^N = \exp x
+\end{equation}
+		<p>を思い出せば、</p>
+\begin{equation}
+\lim_{N\to\infty} \left(1+{\mathrm i}{\theta\over N}\right)^N=\exp\left({\mathrm i}\theta\right)
+\end{equation}
+		<p>となる。つまり複素数を使うことで「回転」を表現できる。</p>
+
+		<div class="box">
+		  <span class="fukidasi">回転するからには、元の方向の成分は短くならなくてはいけないのでは？</span><br><br>
+		  微小角度の回転を考えるときは、${\cal O}({\mathrm d\theta})$の話をしている（つまり、${\cal O}({\mathrm d\theta}^2)$は無視している）ので元の方向の成分が短くならないように見える。たとえば微小回転を2回して${\cal O}({\mathrm d\theta}^2)$を考えれば、<br>
+\begin{equation}
+ \left(1+{\mathrm i}{\mathrm d\theta}\right)^2=1+2{\mathrm i}{\mathrm d\theta} -{\mathrm d\theta}^2
+\end{equation}
+		  <br>となってちゃんと元の方向の成分は$1-{\mathrm d\theta}^2$倍に短くなっている。
+		</div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#teisuukeisuu" data-icon="arrow-l">定数係数の斉次線型微分方程式</a>
+		<a href="#example" data-icon="arrow-r">定数係数の二階線型方程式の例<</a>
+		<p align="center">←<a href="lec19.html">第19講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+	<div data-role="page" id="example">
+	  <div data-role="header">
+		  <h2>定数係数の二階線型方程式の例：空気抵抗を受ける質点</h2>
+	  </div>
+	  <script type="application/javascript">
+	   var ps,ps2;
+	   var m1,m2;
+	   var air;
+	   var v0=4;
+	   var v02=4;
+	   var t=0;
+	   var gy0=0;
+	   $(document).delegate('#example','pageinit',function(e) {
+		 ps=new Phystem("canvas1",12,1.5,0.8,-2,-0.75);
+		 ps.drawFFlg=true;
+		 ps.hasNoEdge=true;
+		 ps.writeX=true;
+		 m1=new DynamicalObject(ps,0,0,v0,0,1,"rgba(255,255,0,0.5)");
+		 air=new NonDynamicalObject(ps);
+		 air.interactionForce=function(to) {
+		   return new Vector(-to.v.x,-to.v.y);
+		 }
+		 air.draw=function() {};
+		 ps.start();
+		 ps2=new Phystem("canvas2",2,12,0.1,-1,-2); 
+		 graph=new RescaleCanvas("canvas3",12,12,0.6,-1,-2);
+		 graph.writeBackGround();
+		 ps2.drawFFlg=true;
+		 ps2.hasNoEdge=true;
+		 ps2.writeY=true;
+		 t=0;
+		 ps2.writeContents=function() {
+		   Phystem.prototype.writeContents.call(this);
+		   graph.writeLine(t,gy0,t+0.04,m2.p.y,"rgb(255,0,0)");
+		   t+=0.04;
+		   gy0=m2.p.y;
+	   };
+	   m2=new DynamicalObject(ps2,0,0,0,v02,1,"rgba(255,255,0,0.5)");
+	   air2=new NonDynamicalObject(ps2);
+	   air2.interactionForce=function(to) {
+		 return new Vector(-to.v.x,-to.v.y);
+	   }
+	   air2.draw=function() {};
+	   ps2.start();
+	   });
+	   function start() {
+		 m1.p.setXY(0,0);
+		 m1.v.setXY(v0,0); 
+	   }
+	   function clearStart2() {
+		 graph.clearALL();
+		 graph.writeBackGround();
+		 start2();
+	   }
+	   function start2() {
+		 t=0;
+		 gy0=0;
+		 m2.p.setXY(0,0);
+		 m2.v.setXY(0,v02); 
+	   }
+	  </script>
+	  <div data-role="content">
+		<p>物体が$F$という力を受けるとき、運動方程式$m\left({\mathrm d\over \mathrm dt}\right)^2 {x}= F$が成り立つことが力学で知られている。この$F$が$-K{\mathrm d\over \mathrm dt}{x}$のように${x}$の時間微分に比例する場合（実際、速度が遅い場合の空気抵抗はだいたいこの式であっている）、すなわち、</p>
+\begin{equation}
+ m\left({\mathrm d\over \mathrm dt}\right)^2 {x}= -K{\mathrm d\over \mathrm dt}{x}\label{FKv}
+\end{equation}
+				  <p>という微分方程式<span class="footnote">この式は実は<の式とほぼ同じである。結果を比べてみよ。ここではこのまま解いたが、${\mathrm d\over \mathrm dt} {x}={v}$と置いて${v}$の式にしてから解くという方法でもすぐ解ける。</span>が成り立つ場合を考えよう。
+				  </p>
+				  <div class="setsumei">運動は、下のように起こる。初速度を変えて「再スタート」させてみよう（初期位置は固定されている）</div>
+				  <p><canvas id="canvas1"></canvas></p>
+				  <p>初速度=<input type="range" value="4" min="0" max="10" step="0.1" onchange="v0=this.valueAsNumber;"></p>	
+				  <p><button onClick="start();">再スタート</button></p>
+
+				  <hr>
+				  <div class="setsumei">では、微分方程式を解いてみよう。</div>
+				  <p>この方程式に${x}={\mathrm e}^{\lambda{t}}$を代入すると、
+\begin{equation}
+ m\lambda^2 {\mathrm e}^{\lambda{t}} = -K\lambda {\mathrm e}^{\lambda{t}}
+\end{equation}
+				  <p>となり、特性方程式は$m\lambda^2=-K\lambda$となる。
+
+					<p>特性方程式の解は$\lambda=0,-{K\over m}$なので、
+\begin{equation}
+ {x}({t})= C_1 + C_2 {\mathrm e}^{-{K\over m}{t}}
+\end{equation}
+					  <p>が解である。グラフは右に描いたようになり、積分定数の意味は、$C_1$が${t}\to\infty$での${x}$の値、$C_1+C_2$が${t}=0$での${x}$の値である。
+
+					<p>この微分方程式の解は、ボールなどを床に転がした時<span class="footnote">この状況であればボールは水平に動くので、重力は運動とは関係ない。</span>にどのようにボールが運動するかを表している。最初に${x}=0$にあるとして、いろいろな初速度を与えた場合の運動の様子が次のグラフである。
+
+					  <p><canvas id="canvas2"></canvas><canvas id="canvas3"></canvas></p>
+				  <p>初速度=<input type="range" value="4" min="0" max="10" step="0.1" onchange="v02=this.valueAsNumber;"></p>	
+				  <p><button onClick="start2();" data-inline="true">再スタート</button>
+					<button onClick="clearStart2();" data-inline="true">クリアして再スタート</button>
+				  </p>
+グラフでは、$C_1=v_0{m\over K},C_2=-v_0{m\over K}$と選んである。
+\begin{equation}
+ {\mathrm d\over \mathrm dt}{x}({t})= -{K\over m}C_2{\mathrm e}^{-{K\over m}{t}}
+\end{equation}
+であるから、これで${x}(0)=0,{{\mathrm d\over \mathrm dt}}{x}(0)=v_0$になる。初速度に比例した距離だけ移動できることがわかる（ただし、「止まるまでの時間」は$\infty$である！）。
+
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#teisuukeisuu" data-icon="arrow-l">定数係数の斉次線型微分方程式</a>
+		<a href="#airfall" data-icon="arrow-r">定数係数の二階線型方程式の例：空気抵抗を受けて落下する質点</a>
+		<p align="center">←<a href="lec19.html">第19講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+	<div data-role="page" id="airfall">
+	  <div data-role="header">
+		<h2>定数係数の二階線型方程式の例：空気抵抗を受けて落下する質点</h2>
+	  </div>
+	  <script type="application/javascript">
+	   var p3;
+	   var m3;
+	   var air3;
+	   var v03=0;
+	   var t3=0;
+	   var gy03=0;
+	   var graph2;
+	   var p4;
+	   var m4;
+	   var air4;
+	   var v04=0;
+	   var t4=0;
+	   var gy04=0;
+	   var graph4;
+	   $(document).delegate('#airfall','pageinit',function(e) {
+		 ps3=new Phystem("canvas4",2,12,0.1,-1,-10); 
+		 graph2=new RescaleCanvas("canvas5",12,12,0.6,-1,-10);
+		 graph2.writeBackGround();
+		 ps3.drawFFlg=true;
+		 ps3.hasNoEdge=true;
+		 ps3.writeY=true;
+		 t3=0;
+		 ps3.writeContents=function() {
+		   Phystem.prototype.writeContents.call(this);
+		   graph2.writeLine(t3,gy03,t3+0.04,m3.p.y,"rgb(255,0,0)");
+		   t3+=0.04;
+		   gy03=m3.p.y;
+		 };
+		 m3=new DynamicalObject(ps3,0,0,0,v03,1,"rgba(255,255,0,0.5)");
+		 air3=new NonDynamicalObject(ps3);
+		 air3.interactionForce=function(to) {
+		   return new Vector(-to.v.x,-to.v.y);
+		 }
+		 air3.draw=function() {};
+		 earth=new NonDynamicalObject(ps3);
+		 earth.interactionForce=function(to) {
+		   return new Vector(0,-to.mass);
+		 }
+		 earth.draw=function() {};
+		 ps3.start();
+		 ps4=new Phystem("canvas6",2,12,0.1,-1,-6); 
+		 graph4=new RescaleCanvas("canvas7",12,12,0.6,-1,-6);
+		 graph4.writeBackGround();
+		 ps4.drawFFlg=true;
+		 ps4.hasNoEdge=true;
+		 ps4.writeY=true;
+		 t4=0;
+		 ps4.writeContents=function() {
+		   Phystem.prototype.writeContents.call(this);
+		   graph4.writeLine(t4,gy04,t4+0.04,m4.p.y,"rgb(255,0,0)");
+		   t4+=0.04;
+		   gy04=m4.p.y;
+		 };
+		 m4=new DynamicalObject(ps4,0,gy04,0,v04,1,"rgba(255,255,0,0.5)");
+		 air4=new NonDynamicalObject(ps4);
+		 air4.interactionForce=function(to) {
+		   return new Vector(-to.v.x,-to.v.y);
+		 }
+		 air4.draw=function() {};
+		 earth=new NonDynamicalObject(ps4);
+		 earth.interactionForce=function(to) {
+		   return new Vector(0,-to.mass);
+		 }
+		 earth.draw=function() {};
+		 ps4.start();
+	   });
+	   function clearStart3() {
+		 graph2.clearALL();
+		 graph2.writeBackGround();
+		 start3();
+	   }
+	   function start3() {
+		 t3=0;
+		 gy03=0;
+		 m3.p.setXY(0,0);
+		 m3.v.setXY(0,v03); 
+	   }
+	   function clearStart4() {
+		 graph4.clearALL();
+		 graph4.writeBackGround();
+		 start4();
+	   }
+	   function start4() {
+		 t4=0;
+		 gy04=-v04;
+		 m4.p.setXY(0,gy04);
+		 m4.v.setXY(0,v04); 
+	   }
+	  </script>
+	  <div data-role="content">
+		<p>運動方程式に重力$F=-mg$を加えてみよう<span class="footnote">$-mg$とマイナス符号をつけるのは、図に書いたように上向きに$x$軸を取ったから。</span>。</p>
+\begin{equation}
+m\left({\mathrm d\over \mathrm dt}\right)^2 {x}= -K{\mathrm d\over \mathrm dt}{x}-mg\label{Fkvmg}
+\end{equation}
+		<p>となるが、これは線型で非斉次な方程式の例になっている。方程式を非斉次にしている$-mg$を消せばさっきの斉次方程式になる。そして、その解はすでにわかっている。つまり斉次方程式の一般解は既に知っている。</p>
+
+		<p>よって、非斉次方程式の特解を一つ見つけて、先の一般解に足せばよい。</p>
+
+		<p>特解を見つける方法はいろいろあるが、ここでは簡単な関数を代入して合うかどうかをやってみるという方法をとってみよう。まず${x}=定数$はダメである（定数だと${\mathrm d\over \mathrm dt}{x}$も$\left({\mathrm d\over \mathrm dt}\right)^2{x}$も0になってしまうから、$0=0-mg$となって成立しない）。そこで次に簡単な、${x}=v{t}$としてみる。これを代入すると、</p>
+\begin{equation}
+ 0= -Kv -mg
+\end{equation}
+		<p>となるから$v=-{mg\over K}$とすれば${x}=-{mg\over K}{t}$という特解が得られる<span class="footnote">${x}=-{mg\over K}{t}+C$でも特解になる。しかし斉次方程式の一般解にも未定の積分定数は含まれているので特解の方の$+C$は省略して構わない。</span>。一般解は</p>
+\begin{equation}
+ {x}= \underbrace{C_1 + C_2 {\mathrm e}^{-{K\over m}{t}}}_{斉次方程式の一般解} \underbrace{- {mg\over K}{t}}_{非斉次方程式の特解}
+\end{equation}
+		<p>という式になる。</p>
+
+
+		<p>下のグラフは$C_1+C_2$（すなわち、${t}=0$での値）を固定して$C_2$を変化させた時のグラフである。</p>
+		<p>$C_1+C_2$を一定にするということは${t}=0$での位置を同じにするということになる（グラフからもそれが読み取れる）。</p>
+		<div class="setsumei">$C_2$を変化させるということは初速度を変化させるということなので、スライダで初速度を変えることができるようにしてある。いろいろな初速度の場合の運動を確認しよう。</div>
+		<p><canvas id="canvas4"></canvas><canvas id="canvas5"></canvas></p>
+		<p>初速度=<input type="range" value="0" min="-4" max="4" step="0.1" onchange="v03=this.valueAsNumber;"></p>	
+		<p><button onClick="start3();" data-inline="true">再スタート</button>
+		  <button onClick="clearStart3();" data-inline="true">クリアして再スタート</button>
+		</p>
+		<p>下のグラフは、$C_1$を固定して$C_2$を変化させた時のグラフである。</p>
+		<p>$C_2$は${t}=\infty$において消える項の係数なので、他を変えずに$C_2$だけを変えると、最終的状態は同じになる（グラフからもそれが読み取れる）。</p>
+		<p><canvas id="canvas6"></canvas><canvas id="canvas7"></canvas></p>
+		<p>$C_2$=<input type="range" value="-1" min="-4" max="4" step="0.1" onchange="v04=-1-this.valueAsNumber;"></p>	
+		<p><button onClick="start4();" data-inline="true">再スタート</button>
+		  <button onClick="clearStart4();" data-inline="true">クリアして再スタート</button>
+		</p>
+		<p>今解いているのは二階微分方程式だから、未定のパラメータは二つあってちょうどよい。そのため、${x}$-${t}$のグラフで一点を指定してもその後の曲線は全て決まらない。一点と、「その点での傾き（微係数）」を指定すると、曲線が一つ決まる。</p>
+
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#example" data-icon="arrow-l">複素数を使って解く微分方程式</a>
+		<a href="#teikousindou" data-icon="arrow-r">空気抵抗を受ける振動子</a>
+		<p align="center">←<a href="lec19.html">第19講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+	<div data-role="page" id="teikousindou">
+	  <div data-role="header">
+		<h2>空気抵抗を受ける振動子</h2>
+	  </div>
+	  <div data-role="content">
+		<script type="application/javascript">
+		 var g1,g2,g3;
+		 $(document).delegate('#teikousindou','pageinit',function(e) {
+		   g1=new GraphCanvas("graph1",10,7,0.8,-1,-2);
+		   writeGraph1();
+		 });
+		 function writeGraph1() {
+		   $('#K1').html(K1);
+		   $('#k1').html(k1);
+		   g1.clearALL();
+		   g1.writeBackGround();
+		   if( 4*k1>K1*K1 ) {
+			 $('#C1_1').html("A="+C1_1);
+			 $('#C1_2').html("B="+C1_2);
+			 g1.setFunction(f1_1);
+			 g1.writeFunction("rgba(255,0,0,0.5)",500);
+			 g1.setFunction(cf1_1);
+			 g1.writeFunction("rgb(255,0,0)",500);
+			 g1.setFunction(f1_2);
+			 g1.writeFunction("rgba(0,0,255,0.5)",500);
+			 g1.setFunction(cf1_2);
+			 g1.writeFunction("rgb(0,0,255)",500);
+			 g1.setFunction(f1);
+			 g1.writeFunction("rgb(0,0,0)",500);
+		   } else if( 4*k1 == K1*K1 ) {
+			 $('#C1_1').html("C<sub>0</sub>="+C1_1);
+			 $('#C1_2').html("C<sub>1</sub>="+C1_2);
+			 g1.setFunction(f2_1);
+			   g1.writeFunction("rgba(255,0,0,0.5)");
+			   g1.setFunction(cf2_1);
+			   g1.writeFunction("rgb(255,0,0)");
+			   g1.setFunction(f2_2);
+			   g1.writeFunction("rgba(0,0,255,0.5)");
+			   g1.setFunction(cf2_2);
+			   g1.writeFunction("rgb(0,0,255)");
+			   g1.setFunction(f2);
+			   g1.writeFunction("rgb(0,0,0)");
+		   } else {
+			 $('#C1_1').html("C<sub>+</sub>="+C1_1);
+			 $('#C1_2').html("C<sub>-</sub>="+C1_2);	 
+			   g1.setFunction(f3_1);
+			   g1.writeFunction("rgba(255,0,0,0.5)");
+			   g1.setFunction(cf3_1);
+			   g1.writeFunction("rgb(255,0,0)");
+			   g1.setFunction(f3_2);
+			   g1.writeFunction("rgba(255,0,0,0.5)");
+			   g1.setFunction(cf3_2);
+			   g1.writeFunction("rgb(0,0,255)");
+			   g1.setFunction(f3);
+			   g1.writeFunction("rgb(0,0,0)");
+		   }
+		 }
+		 var C1_1=1;
+		 var C1_2=1;
+		 var K1=1;
+		 var k1=1;
+		 
+		 function f1_1(x) { return Math.exp(-(K1/2)*x)*Math.cos(Math.sqrt(4*k1-K1*K1)/2*x);}
+		 function cf1_1(x) { return C1_1*f1_1(x);}
+		 function f1_2(x) { return Math.exp(-(K1/2)*x)*Math.sin(Math.sqrt(4*k1-K1*K1)/2*x);}
+		 function cf1_2(x) { return C1_2*f1_2(x);}
+		 function f2_1(x) { return Math.exp(-(K1/2)*x);}
+		 function cf2_1(x) { return C1_1*f2_1(x);}
+		 function f2_2(x) { return x*Math.exp(-(K1/2)*x);}
+		 function cf2_2(x) { return C1_2*f1_2(x);}
+		 function f3_1(x) { return Math.exp((-K1-Math.sqrt(K1*K1-4*k1))/2*x);}
+		 function cf3_1(x) { return C1_1*f3_1(x);}
+		 function f3_2(x) { return Math.exp((-K1+Math.sqrt(K1*K1-4*k1))/2*x);}
+		 function cf3_2(x) { return C1_2*f3_2(x);}
+		 function f1(x) { return f1_1(x)*C1_1+f1_2(x)*C1_2; }
+		 function f2(x) { return f2_1(x)*C1_1+f2_2(x)*C1_2; }
+		 function f3(x) { return f3_1(x)*C1_1+f3_2(x)*C1_2; }
+		</script>
+		<p>次に、運動方程式に復元力$F=-k{x}$（${x}=0$に向けて戻そうとする力<span class="footnote">${x}>0$なら負の向きの力、${x}<0$なら正の向きの力が加わる。つまりどっちにしても、${x}=0$に向かうような力である。よってこれを「復元力」と呼ぶ。</span>）を加えた、</p>
+\begin{equation}
+ m\left({\mathrm d\over \mathrm dt}\right)^2 {x}= -K{\mathrm d\over \mathrm dt}{x}-k{x}\label{Fkvkx}
+\end{equation}
+		<p>を解いてみよう（重力は考えないことにする）。例によって特性方程式を作ると、</p>
+\begin{equation}
+ m\lambda^2 +K\lambda +k=0
+\end{equation}
+		<p>となる。これの解は（二次方程式の解の公式を用いて）</p>
+\begin{equation}
+ \lambda_\pm={-K\pm\sqrt{K^2-4mk}\over 2m}=-{K\over 2m}\mp{{\sqrt{K^2-4mk}}\over 2m}
+\end{equation}
+		<p>となる。ここから、$K^2-4mk$が負の場合、0の場合、正の場合の三つに分けて考える。</p>
+ 
+		<h4>$K^2-4mk<0$の場合</h4>
+
+		<p>この場合は$\lambda$は複素数になる。、$\omega={\sqrt{4mk-K^2}\over 2m}$という定数（$\omega$は実数である）を定義して、$\lambda=-{K\over 2m}\mp{\mathrm i}\omega$と書くことにすると解は</p>
+\begin{equation}
+ {x}=
+C_+ {\mathrm e}^{-{K\over 2m}{t}+{\mathrm i}\omega{t}}
++C_- {\mathrm e}^{-{K\over 2m}{t}-{\mathrm i}\omega{t}}\label{gensuisindou}
+\end{equation}
+		<p>ということになる。</p>
+
+		<p>この解は一見複素数である。一方求めたい${x}$は実数である。ここでは係数を操作して、$C_+=C,C_-=C^*$とすることで全体を実数にしよう。すると、</p>
+\begin{equation}
+ {x}=
+{\mathrm e}^{-{K\over 2m}{t}}\left(
+C{\mathrm e}^{{\mathrm i}\omega{t}}
++C^* {\mathrm e}^{-{\mathrm i}\omega{t}}\right)
+\end{equation}
+		<p>が実数解だということになる。三角関数を使って表現するなら、</p>
+\begin{equation}
+ {x}=
+{\mathrm e}^{-{K\over 2m}{t}}\left(
+A\cos \omega{t}
++B\sin\omega{t}\right)
+=
+A{\mathrm e}^{-{K\over 2m}{t}}
+\cos \left(
+\omega{t}+\alpha\right)
+\end{equation}
+		<p>である（$A,B,\alpha$は実数の定数）。</p>
+		<h4>$K^2-4mk=0$の場合</h4>
+
+		<p>この場合、$\lambda_+=\lambda_-$となる。よって添字は取って、$\lambda=-{K\over 2m}$と書こう。重解が出る場合であるから、解は</p>
+\begin{equation}
+ {x}=\left(C_1{t}+C_0\right){\mathrm e}^{\lambda{t}}
+\end{equation}
+		<p>となる。この解は「臨界振動」と呼ばれ、$K^2-4mk<0$と$K^2-4mk>0$のちょうど境目にあたる。</p>
+
+
+
+		<h4>$K^2-4mk>0$の場合</h4>
+		<p>この場合は単純に、</p>
+\begin{equation}
+ {x}=
+C_+ {\mathrm e}^{\lambda_+{t}}
++C_- {\mathrm e}^{\lambda_-{t}}
+\end{equation}
+		<p>が解である。$\lambda_\pm$はどちらも負の数になるから、この二つの解のどちらも「指数関数的に減衰する解」である。右の図には、$\lambda_\pm=-(2\pm\sqrt{2})$となる場合（たとえば、$m={1\over 2},K=1,k=1$）の場合で、二つの解${\mathrm e}^{\lambda_+{t}},{\mathrm e}^{\lambda_-{t}}$と、二つの解の和${\mathrm e}^{\lambda_+{t}}+{\mathrm e}^{\lambda_-{t}}$と差$-{\mathrm e}^{\lambda_+{t}}+{\mathrm e}^{\lambda_-{t}}$のグラフを描いた。</p>
+		 </div>
+		 <div class="setsumei">以下に
+		   $${x}={\mathrm e}^{-{K\over 2m}{t}}\left(A\cos\omega{t}+B\sin\omega{t}\right)$$
+		   <br>と
+		   $${x}=\left(C_1{t}+C_0\right){\mathrm e}^{\lambda{t}}$$
+		   <br>と
+		   $$ {x}=C_+ {\mathrm e}^{\lambda_+{t}}+C_- {\mathrm e}^{\lambda_-{t}}$$
+		   <br>のグラフを示す（$k,K$の値により変化する）（$m$は1で固定）。<br>
+		   前についた係数も変化させることができるので、いろいろ変化させてみて実際の解がどうなるかをみよう。
+		 </div>
+	<p align="center"><canvas id="graph1"></canvas></p>
+	<p><span id="C1_1">A=1</span><input id="c1sl" type="range" value="1" min="-3" max="3" step="0.1" onchange="C1_1=this.value; writeGraph1();"></p>
+	<p><span id="C1_2">B=1</span><input id="c2sl" type="range" value="1" min="-3" max="3" step="0.1" onchange="C1_2=this.value; writeGraph1();"></p>
+	<p>K=<span id="K1">1</span><input id="Ksl" type="range" value="1" min="0" max="6" step="0.1" onchange="K1=this.value; writeGraph1();"></p>
+	<p>k=<span id="k1">1</span><input id="ksl" type="range" value="1" min="0" max="6" step="0.1" onchange="k1=this.value; writeGraph1();"></p>
+	
+	  <div data-role="footer" align="center">
+		<a href="#fukusosuu" data-icon="arrow-l">複素数を使って解く微分方程式</a>
+		<a href="#gensuimove" data-icon="arrow-r">運動の様子</a>
+		<p align="center">←<a href="lec19.html">第19講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+	<div data-role="page" id="gensuimove">
+	  <div data-role="header">
+		<h1>運動の様子</h1>
+	  </div>
+	  <div data-role="content">
+		<script>
+		 var gs;
+		 var omori;
+		 var k5=4;
+		 var bane;
+		 var M;
+		 var v05=4;
+		 var x05=0;
+		 $(document).delegate('#gensuimove','pageinit',function(e) {
+		   gs=new PhystemWithTYGraph("canvas8","gcanvas",0.5,10,6,0.7);
+		   M=new NonDynamicalObject(gs,0,-3,"rgb(0,0,0)");
+		   M.r=0.1;
+		   omori=new DynamicalObject(gs,0,x05,0,v05,1,"rgba(255,0,0,0.5)");
+		   omori.r=0.1;
+		   bane=new Bane(gs,M,omori,k5,3,"rgba(0,100,0,0.5)");
+		   gs.makeAir();
+		   gs.start();
+		 });
+		 function changey0() {
+		   x05=Number(document.getElementById('slx05').value);
+		   document.getElementById('y0').innerHTML=x05;
+		 }
+		 function changevy0() {
+		   v05=Number(document.getElementById('slv05').value);
+		   document.getElementById('vy0').innerHTML=v05;
+		 }
+		 function changek() {
+		   bane.k=Number(document.getElementById('slk').value);
+		   document.getElementById('k5').innerHTML=bane.k;
+		 }
+		 function changeK() {
+		   gs.airResist=Number(document.getElementById('slK').value);
+		   document.getElementById('K').innerHTML=gs.airResist;
+		 }
+		</script>
+
+		<div class="setsumei">下の図はさまざまな初速度と位置に対応する運動の様子である。</div>
+		<div align="center">
+	  <canvas id="canvas8" style="-ms-touch-action:none;"></canvas>
+	  <canvas id="gcanvas" style="-ms-touch-action:none;"></canvas>
+	</div>
+	<p>
+	  初期位置:y<sub>0</sub>=<span id="y0">0</span>　<input id="slx05" type="range" value="0" step="0.1" min="-3" max="3" onchange="changey0();"></p>
+	<p>
+	  初速度:v<sub>y0</sub>=<span id="vy0">4</span>　<input id="slv05" type="range" value="4" step="0.1" min="-8" max="8" onchange="changevy0();"><button onClick="gs.graphRestart(x05,v05);">再スタート</button></p>
+	<hr>
+	<p>
+	  バネ定数:k=<span id="k5">4</span>　<input id="slk" type="range" value="4" step="0.1" min="0.1" max="10" onchange="changek();"></p>
+	  空気抵抗:K=<span id="K">1</span>　<input id="slK" type="range" value="1" step="0.1" min="0" max="10" onchange="changeK();"></p>
+
+	<hr>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#fukusosuu" data-icon="arrow-l">複素数を使って解く微分方程式</a>
+		<a href="#qa" data-icon="arrow-r">受講者の感想・コメント</a>
+		<p align="center">←<a href="lec19.html">第19講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+	<div data-role="page" id="qa">
+	  <div data-role="header">
+		<h1>受講者の感想・コメント</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+
+		<div class="Q">。</div>
+		<div class="A">。</div>
+		<p></p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#example" data-icon="arrow-l">定数係数の二階線型微分方程式の例</a>
+		<p align="center"> <a href="lec19.html">第19講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>
+	  </div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Kepler/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="Mverm_equal">M/m=</string>
+    <string name="accel">Accel. </string>
+    <string name="app_name">Kepler</string>
+    <string name="brake">brake</string>
+    <string name="start_Circle">start circuar motion</string>
+    <string name="velocity">velocity </string>
+</resources>

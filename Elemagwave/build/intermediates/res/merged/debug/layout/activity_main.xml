@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btResetScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0.1"
+            android:text="画面初期化" />
+
+            <CheckBox
+                android:id="@+id/cbE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="rot E" />
+
+            <CheckBox
+                android:id="@+id/cbB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="rot B" />
+
+            <ToggleButton
+                android:id="@+id/tbStop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.1"
+                android:checked="true"
+                android:textOff="静止"
+                android:textOn="運動" />
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainscreen"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+    </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout><!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Elemagwave/res/layout/activity_main.xml -->

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="LOCAL" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.4" />
+        <option name="gradleJvm" value="1.8" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/.." />
+            <option value="$PROJECT_DIR$/../ActionPrinciple" />
+            <option value="$PROJECT_DIR$/../Ampere" />
+            <option value="$PROJECT_DIR$/../BHthru" />
+            <option value="$PROJECT_DIR$/../BiotSavart" />
+            <option value="$PROJECT_DIR$/../Bohr" />
+            <option value="$PROJECT_DIR$/../Charges" />
+            <option value="$PROJECT_DIR$/../Charges3D" />
+            <option value="$PROJECT_DIR$/../Currents" />
+            <option value="$PROJECT_DIR$/../DenjiYuudou" />
+            <option value="$PROJECT_DIR$/../DiffGraph" />
+            <option value="$PROJECT_DIR$/../DiffLimit" />
+            <option value="$PROJECT_DIR$/../Divergence" />
+            <option value="$PROJECT_DIR$/../ElectricField" />
+            <option value="$PROJECT_DIR$/../ElectricField3D" />
+            <option value="$PROJECT_DIR$/../Elemagwave" />
+            <option value="$PROJECT_DIR$/../ExpLog" />
+            <option value="$PROJECT_DIR$/../Flux" />
+            <option value="$PROJECT_DIR$/../FuncComposite" />
+            <option value="$PROJECT_DIR$/../FuncPoly" />
+            <option value="$PROJECT_DIR$/../GMm" />
+            <option value="$PROJECT_DIR$/../HanshaTouka" />
+            <option value="$PROJECT_DIR$/../Jiba2" />
+            <option value="$PROJECT_DIR$/../Kepler" />
+            <option value="$PROJECT_DIR$/../Lec18" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/../LineCharge" />
+            <option value="$PROJECT_DIR$/../MagneticField" />
+            <option value="$PROJECT_DIR$/../Magnets" />
+            <option value="$PROJECT_DIR$/../MichelsonMorley" />
+            <option value="$PROJECT_DIR$/../Nihensuu" />
+            <option value="$PROJECT_DIR$/../OneDwave" />
+            <option value="$PROJECT_DIR$/../Oscillator" />
+            <option value="$PROJECT_DIR$/../Rakutai" />
+            <option value="$PROJECT_DIR$/../RelativisticTrain" />
+            <option value="$PROJECT_DIR$/../Rutherford" />
+            <option value="$PROJECT_DIR$/../Sankaku" />
+            <option value="$PROJECT_DIR$/../SankakuBibun" />
+            <option value="$PROJECT_DIR$/../SuperConductor" />
+            <option value="$PROJECT_DIR$/../SurfaceCharge" />
+            <option value="$PROJECT_DIR$/../Taylor" />
+            <option value="$PROJECT_DIR$/../Urashima" />
+            <option value="$PROJECT_DIR$/../VectorPotential" />
+            <option value="$PROJECT_DIR$/../VgVp" />
+            <option value="$PROJECT_DIR$/../denba" />
+            <option value="$PROJECT_DIR$/../denba3D" />
+            <option value="$PROJECT_DIR$/../divrot" />
+            <option value="$PROJECT_DIR$/../gsense" />
+            <option value="$PROJECT_DIR$/../jiba" />
+            <option value="$PROJECT_DIR$/../pde" />
+            <option value="$PROJECT_DIR$/../phys_lib" />
+            <option value="$PROJECT_DIR$/../rotM" />
+            <option value="$PROJECT_DIR$/../spherical" />
+            <option value="$PROJECT_DIR$/../sphericalDiv" />
+            <option value="$PROJECT_DIR$/../thermodynamics" />
+            <option value="$PROJECT_DIR$/../tool3D" />
+            <option value="$PROJECT_DIR$/../xtgraph" />
+            <option value="$PROJECT_DIR$/../xva" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

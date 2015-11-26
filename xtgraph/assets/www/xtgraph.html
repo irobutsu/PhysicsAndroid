@@ -1,0 +1,49 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<style type="text/css">
+	 /* 通常時 */
+	 button {
+	   font-weight:bold;
+	   border:3px solid #999;
+	   border-right-color:#333;
+	   border-bottom-color:#333;
+	   border-radius:10px;
+	   color:#333;
+	   width:auto;
+	   text-decoration:none;
+	   float:left;
+	   margin-right:10px;
+	   background-color: #DDE;
+	 }
+	</style>
+	<title>運動と速度</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+	<link href="ss.css" rel="stylesheet" type="text/css"/>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="dragmanscreen.js" type="text/javascript"></script>
+	<script src="draggablepoint.js" type="text/javascript"></script>
+  </head> 
+  <body onload='init_xtgraph("canvas1");'> 
+	<script src="xtgraph.js" type="application/javascript"></script>
+	<script type="application/javascript">
+
+	</script>
+	<h1>運動と速度</h1>
+	<div class="setsumei">　以下のグラフは、横軸時間で、縦軸が物体の位置および物体の速度である。</div>
+	<div><canvas id="canvas1" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+	<div>
+	  <button style="WIDTH:24%"  onclick="houbutsu();">放物線にする</button>
+	  <button style="WIDTH:24%" onclick="kasoku();">加速運動にする</button>
+	  <button style="WIDTH:24%" onclick="makeLinear();">等速運動にする</button>
+	  <button style="WIDTH:24%" onClick="makeRandom();">ランダムな運動にする</button>
+	</div>
+	<div class="setsumei">
+	  <span class="box"><label><input type="checkbox" id="checkV" value="速度を描く" onclick="checkCB();"/>速度を描く</label></span>←ここをチェックすると、緑の棒グラフで速度が表示される。
+	</div>
+	<div>
+	  <button style="WIDTH:30%; color:#F00" onclick="animeGo();">アニメーション開始</button>
+	</div>
+  </body>
+</html>

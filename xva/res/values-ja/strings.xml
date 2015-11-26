@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Xva</string>
+    <string name="e_equal">e=</string>
+    <string name="angle_add_0">角度修正0</string>
+    <string name="angle_add_90">角度修正90</string>
+    <string name="angle_add_180">角度修正180</string>
+    <string name="angle_add_270">角度修正270</string>
+    <string name="g_equal">g=</string>
+    <string name="stop">中断中</string>
+    <string name="go">実行中</string>
+    <string name="cautiong">gセンサに関する注意</string>
+    <string name="alertg">重力のかかる方向がおかしい場合はメニューで調整してください。</string>
+      <string name="von">【速度】</string> 
+      <string name="voff">（速度）</string>
+    <string name="aon">【加速度】</string>
+    <string name="aoff">（加速度）</string>
+    <string name="fon">【力】</string>
+    <string name="foff">（力）</string>
+    <string name="g_sensor">gセンサ</string>
+      <string name="cautiongcheck">重力方向チェック</string>
+    <string name="alertgcheck">重力をチェックします。画面に出ている矢印が「下」を向くようにしてしばらく待ってください。</string>
+</resources>

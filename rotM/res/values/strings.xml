@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="app_name">rotM</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_rot_m">磁化電流</string>
+
+</resources>

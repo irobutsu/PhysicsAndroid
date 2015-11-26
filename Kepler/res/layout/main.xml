@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <LinearLayout android:id="@+id/ll" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+    	<LinearLayout
+        android:id="@+id/setting"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:orientation="horizontal">
+        		<LinearLayout
+        		    android:id="@+id/linearLayout1"
+        		    android:layout_width="wrap_content"
+        		    android:layout_height="fill_parent"
+        		    android:orientation="vertical" >
+
+        			<Button
+        			    android:id="@+id/button1"
+        			    android:layout_width="90dp"
+        			    android:layout_height="33dp"
+        			    android:autoText="true"
+        			    android:text="@string/start_Circle"
+        			    android:textSize="12dp" />
+
+        			<Button
+        			    android:id="@+id/brake"
+        			    android:layout_width="fill_parent"
+        			    android:layout_height="33dp"
+        			    android:text="@string/brake"
+        			    android:textSize="12dp" />
+
+        		</LinearLayout>
+    	    <LinearLayout
+    	        android:layout_width="fill_parent"
+    	        android:layout_height="wrap_content"
+    	        android:orientation="vertical" >
+
+				<LinearLayout
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+		    		android:layout_gravity="right"
+		    		android:orientation="horizontal" >
+		          	<TextView android:id="@+id/textView2" android:layout_height="wrap_content" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium" android:text="M/m=1" /> 
+           		<SeekBar android:id="@+id/sbG" android:textSize="12dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="0dp" android:max="200" android:progress="0" />
+           		<ToggleButton
+              			android:id="@+id/tbStop"
+               		android:layout_width="55dp"
+               		android:layout_height="wrap_content"
+               		android:checked="true"   
+                		android:paddingBottom="1dp"
+               		android:paddingTop="1dp"
+               		android:paddingLeft="1dp"
+               		android:paddingRight="1dp"
+               		android:text="ToggleButton"
+               		android:textOff="中断中"
+               		android:textOn="実行中"
+               		android:textSize="12dp" />
+        		</LinearLayout>
+
+        		<LinearLayout android:layout_width="wrap_content"
+        			android:layout_height="wrap_content" android:orientation="horizontal">
+    	        	<CheckBox
+               		android:id="@+id/cbV"
+               		android:layout_width="wrap_content"
+               		android:layout_height="32dp"
+               		android:checked="true"
+               		android:text="@string/velocity"
+               		android:textSize="12dp">
+           		</CheckBox>
+
+           		<CheckBox
+           		    android:id="@+id/cbA"
+           		    android:layout_width="wrap_content"
+           		    android:layout_height="32dp"
+           		    android:checked="true"
+           		    android:text="@string/accel"
+           		    android:textSize="12dp" >
+
+           		</CheckBox>
+
+           		<CheckBox
+           		    android:id="@+id/cbF"
+           		    android:layout_width="wrap_content"
+           		    android:layout_height="32dp"
+           		    android:checked="true"
+           		    android:paddingBottom="1dp"
+           		    android:paddingTop="1dp"
+           		    android:shadowDx="5"
+           		    android:text="力"
+           		    android:textOn="【力】"
+           		    android:textSize="12dp" />
+
+           		<CheckBox
+           		    android:id="@+id/tbG"
+           		    android:layout_width="wrap_content"
+           		    android:layout_height="32dp"
+           		    android:checked="false"
+           		    android:paddingBottom="1dp"
+           		    android:paddingTop="1dp"
+           		    android:text="重心"
+           		    android:textOff="（重心）"
+           		    android:textOn="【重心】"
+           		    android:textSize="12dp" />
+
+           		<CheckBox
+           		    android:id="@+id/cbGV"
+           		    android:textSize="12dp"
+           		    android:layout_height="32dp"
+           		    android:checked="false"
+           		    android:layout_width="wrap_content"
+           		    android:text="重心速度" />
+
+           		<Button
+           		    android:id="@+id/stopG"
+           		    android:textSize="12dp"
+           		    android:layout_height="32dp"
+           		    android:layout_width="wrap_content"
+           		    
+           		    android:text="重心を止める" />
+
+				</LinearLayout>
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>
