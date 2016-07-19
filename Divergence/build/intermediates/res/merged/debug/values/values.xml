@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Divergence/res/values/strings.xml -->
-    <eat-comment/>
     <string name="_div_e_0">（源の場所以外の）div E=0</string>
     <string name="_down">▼</string>
     <string name="_e_y_eq">"  E_y="</string>

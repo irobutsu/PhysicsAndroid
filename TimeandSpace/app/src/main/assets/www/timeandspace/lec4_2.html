@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,target-densityDpi=device-dpi,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>第４講　万有引力は世界を回す？（後半）</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery-1.8.2.min.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.2.0.min.js" type="text/javascript"></script>
+	<script src="Vector.js" type="text/javascript"></script>
+	<script src="Yajirushi.js" type="text/javascript"></script>
+	<script src="MovingObject.js" type="text/javascript"></script>
+	<script src="banyuu.js" type="text/javascript"></script>
+	<style type="text/css">
+	 .figure {
+	   margin:0pt auto;
+	 }
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .floatnone{
+	   float:none;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:13px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<title>第４講　静止しているのは誰？</title>
+	<script type="text/javascript">
+	 var ct1,ct2,ct3,ct4,lastct;
+	 var maincanvas;
+	 var earthcanvas;
+	 var canvas;
+	 var firstCall=true;
+	 var firstCall_g=true;
+	 $(document).delegate('#page_b','pageinit',function(e) {
+	   a=0;
+	   t=0;
+	   maincanvas = document.getElementById("maincanvas");
+	   canvas=maincanvas;
+	   init();
+	   if( firstCall ) {
+		 anime();
+		 firstCall=false;
+	   }
+	 });
+	 $(document).delegate('#page_b','pageshow',function(e) {
+	   a=0;
+	   t=0;
+	   canvas=maincanvas;
+	   init();
+	 });
+	 function throwUp() {
+	   t=0;
+	   box.setXY(0,-0.25);
+	   box.setVXY(0,-0.92);
+	 }
+	 function fallFromTop() {
+	   t=0;
+	   box.setXY(1,-3.25);
+	   box.setVXY(0,0);	
+	   ball.setXY(0,-3.25);
+	   ball.setVXY(0,0);	
+	 }
+	 function startstop() {
+	   if( moveFlg ) {
+		 moveFlg=false;
+		 $("#startstop").siblings('.ui-btn-inner').children('.ui-btn-text').text("一時停止解除");
+	   } else {
+		 moveFlg=true;
+		 $("#startstop").siblings('.ui-btn-inner').children('.ui-btn-text').text("一時停止する");
+		 anime();
+	   }		
+	 }
+	 $(function() {
+       $("[name='g']").click(function(){
+        var num = $("[name='g']").index(this);
+        if(num == 1){
+           constGFlg=true;
+        } else {
+		   constGFlg=false;
+         }
+       });
+	 });
+	 function checkTeikou() {
+       if ($('#teikoucb').is(':checked')) {
+         teikouFlg=true;
+       } else {
+         teikouFlg=false;
+       }
+	 }
+	 var v=1;
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>第４講　万有引力は地球を回す（続き）</h1>
+	  </div>
+	  <div data-role="content">
+
+		<h3>4.2 天上の世界と地上の世界---りんごの従う法則と月の従う法則</h3>
+
+		<img src="moon2.png" width="40%" class="floatright">
+		<p>　アリストテレス的考え方では、天上の世界と地上の世界では別の法則が成立します。この二つの世界の大きな違いが「地上での運動はいつか止まるが、天上の世界は永遠に同じ運動を続ける」というものでした。ところが、ガリレオ的考え方からすると、地上の運動は`いつか止まる'というのは摩擦という（アリストテレスが考慮に入れ忘れていた）力による現象であり、本来は地上の運動も`いつまでも同じ運動を続ける'という性質を持っているということになります。</p>
+
+
+		<p>　それならば、天上の世界と地上の世界は、同じ法則に従っているのではないのか？---という考え方が出てくるのは当然のことでしょう。天上の世界と地上の世界では、摩擦や空気抵抗という形の「邪魔」の入り方が違うだけのことです<span class="footnote">天体の運動に関しては、摩擦や空気抵抗がほぼ「ない」と思ってよいわけです。全然ないとは言わないが、数百年レベルで見ている限りはないとみなして支障ない。}。</p>
+
+
+		  <p>　ニュートンはこの考え方にしたがって、月や惑星などの天体が観測されている通りの運動をするにはどのような力が働いているべきかを考え、「万有引力の法則」を見つけました<span class="footnote">逆に言えば、摩擦や空気抵抗のある「地上の世界」の方がニュートンの理論を使って実践的計算を行うには不向きな場所だった、とも言えます。</span>。</p>
+
+		  <p>　ニュートンというと「リンゴが落ちるのを見て万有引力を発見した」ということで有名ですが、実際には「リンゴを落とす力が、天体を円運動させる力と同じ力であることを発見した」と言うべきです。</p>
+
+		  <p>　少し精密に、万有引力の法則を作る前に、ニュートンが知っていた事実を整理しましょう。</p>
+
+		  <p>　ティコ・ブラーエによる惑星の運動を詳細に観測したデータを解析したヨハネス・ケプラーが惑星の運動に関する三つの法則を発見している<span class="footnote">肉眼による観測だけで膨大なデータを積み上げ、このような法則を導き出すというのはたいへんなことである。実は太陽と惑星に限らず、惑星と衛星など、万有引力が働く系では同様の法則が成り立つ。自然は楕円という簡単な図形を運動の法則を通じて選んでいる。</span>。</p>
+
+		  <div class="box">
+ケプラーの法則
+			<ul>
+			  <li>[第一法則] 惑星の軌道は、太陽を一つの焦点とする楕円である。</li>
+			  <li>[第二法則] 惑星と太陽を結ぶ直線が一定時間に通過する面積は一定である。</li>
+			  <li>[第三法則] 惑星の公転周期の2乗は、軌道の長半径の3乗に比例する。</li>
+			</ul>
+		  </div>
+		  <img src="rokudaen.png" width="45%">
+		  <p>　楕円の「焦点」というのは二つあり、その二つの焦点から、楕円の周上の一点に向けて線を引くと、その線分の長さの和が一定になる点である<span class="footnote">太陽がいない側の焦点には、特に何もない。</span>。</p>
+
+		  <p>　この講のタイトルは「万有引力は世界を回す？」としましたが、この「回す」という言葉を「回転の方向に力を加えている」と思ってはいけません。実際にこの場合の万有引力は、運動の方向とは直角な「月から地球へと向かう向き」の力です。それなのになぜ動き続けるのか？？---というのはもちろん慣性の法則のおかげです。万有引力は、「運動の向きを変える」のに使われています。「万有引力は世界を回す」という言葉は「万有引力がなければまっすぐ進んでしまう」という意味に解釈しましょう。これは地球から月に働く力が「運動を起こす」のではなく「運動を変化させる」という作用を持っていて、その力によって月は運動の方向を刻一刻と変えているからです。</p>
+
+
+		<div class="setsumei">　では、次のページで万有引力による運動をアニメーションで見ましょう。</div>
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page_b" data-icon="arrow-r">「万有引力による運動」へ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page_b">
+	  <div data-role="header">
+		<h1>万有引力による運動</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　「もし、月とリンゴが同じ法則に従うのなら、なぜ月は落ちてこないのか」という素朴な疑問に対し、ニュートンは「もしリンゴが最初十分な速さを持っていれば、やはり地球には落ちてこない」と説明しています。その説明に描いた図が右のようなものです。物が落ちるということは物体の軌道が直線ではなく曲線になる、ということです。もしその物体の軌道の曲がり具合が、ちょうど地球の表面の曲がり具合と一致すると、月は全く落ちてくることなく回り続けることになります。</p>
+		<div class="A">
+		  　では、それを動画プログラムで実感しよう。
+		  <br>　下の中央の緑の●は地球で、灰色の小さい●は月または人工衛星など（あるいはリンゴ）だと思って欲しい。青い矢印と赤い矢印は、同様に速度と加速度である。紫の矢印が万有引力であり、地球の中心に向けて引っ張る力になっており、地球に近いほど強い。
+		  <br>　このプログラムも灰色の物体はマウスで動かすことができる。
+		</div> 
+
+		<div class="figure"><canvas id="maincanvas" width="600" height="600" ></canvas></div>
+		<br>
+		<div>	
+		  <button data-inline="true" onClick="tousha();">水平投射</button>
+		  <button data-inline="true" onClick="startstop();" id="startstop">一時停止する</button>
+		</div>
+		<div data-role="fieldcontain">
+		  <label for="slider">投射速度</label>
+		  <input type="range" name="slider" id="slider" value="1" min="0" max="4" step="0.01" onChange="v=Number($('#slider').val()); t=0;" />
+		</div>
+		<div class="setsumei">　↑の投射速度を少しずつ変えて、さらに上の<span class="fukidasi">水平投射</span>と書いたボタンを押すと、いろんな速度で●が水平に投げ出される。</div>
+		<div class="A">速度が遅いと、<img src="ring1.png" class="floatnone" width="15%">（←この例は投射速度=0.3）のように、すぐに地球に落下する。投射速度を0.7にすると、<img src="ring2.png" class="floatnone" width="15%">のあたりまできて落ちる。0.9だと<img src="ring3.png" class="floatnone" width="15%">、0.93だと<img src="ring4.png" class="floatnone" width="15%">のところまでいって地面に「落ちる」（これでだいたい半周した）。
+		  <br>　そして、投射速度がこれより速いと、元の位置に戻ってくるようになるのである。<br>↑ので実際にやってみよう。
+		  <br>
+		  <br>　こうしてやってみると、地球の中心へと引っ張る力があるおかげで月や人工衛星が円運動（正確には楕円運動）を続けられることがわかる。
+		  <br>　ニュートンは実際に運動を計算して、万有引力の法則に従う力が、ケプラーの法則を満たす運動になることを確認したのである。
+		</div>
+		<p>　最後にアリストテレスの弁護をしておきましょう。今日の話の中では彼の間違っている部分だけを強調してきたので、「間違ったことがずっと信じられる原因を作った」という点で、ついアリストテレスをマイナス評価してしまうかもしれません。しかし、彼が今日述べたような結論に達した最大の理由は、当時の観測や実験が不足だったことです。観測や実験の成果が乏しいために、間違った結論が「とりあえず正しいと思えること」として認知されるということは別に珍しいことではありません。</p>
+		
+		<p>　実際、ニュートン力学はこの後200年の間「正しい」と信じられてきましたが、20世紀に入るとアインシュタインの手で修正されます。ニュートンの時代には観測にかからなかったような、ニュートン力学では説明のつかない現象が発見されたからです。そうなったからといって、ニュートン力学が死んでしまったわけではないし、ニュートンの業績が０になったわけでもありません。ニュートンの力学は今でも日常生活のレベルでは十分役に立ちます。同様にアリストテレス的考え方も、全部が否定されたわけではないし、科学的な思考の方法を確立するという点で、アリストテレスは大きな貢献をした、と言うことができるでしょう。アリストテレスが天上の世界と地上の世界は違う物理法則が支配していると考えたことなどは、今の目から見ると妙に思えます。それはいわば「思い込み」に過ぎなかったわけです。しかし、ガリレオやニュートンの考え方の中にも「思い込み」はあります。そして、たぶん今「とりあえず正しいと思えること」の中にも。我々はこれらの過去の教訓から、いかにして自分の思考の中から「思い込み」を排除していくべきかを学ぶべきでしょう。</p>
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page0" data-icon="arrow-l">4.2節の初めへ</a>
+		<a href="#page0" data-icon="back">第４講最初に戻る</a>
+		<a href="#pageqa" data-icon="arrow-r">問題の解答と感想・コメントへ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="pageqa">
+	  <div data-role="header">
+		<h1>問題の解答と感想・コメント</h1>
+	  </div>
+	  <div data-role="content">
+		<img src="tonda0.png" width="30%" class="floatnone">
+		<div class="setsumei">今日の問題
+		  <br>　地球が自転しているところを考えましょう。太陽・月など他の天体は考えません（ですから公転は考えなくてもよいです）。
+		  <br>　そんなことは絶対起こりえないのですが、突然万有引力が消失したとします。地球上にいる人はどうなるでしょう？
+		  <br>
+		  <br>（１）地球の外から見ている場合
+		  <br>（２）地球上から見ている場合
+		  <br>
+		  <br>　それぞれでどのように見えるでしょうか？
+		  <br>　ヒントは「慣性の法則」それから、地球の自転の速度は約1670km/時です。
+		</div>
+		<p></p>
+		<p>　正解は以下の通りです</p>
+		<p>（１）慣性の法則により、人間は等速直線運動を続けます。よって、</p>
+		<img src="tonda1.png" width="40%" class="floatnone">
+		<p>のように一直線に約1670km/時で飛んでいく、ということになります。</p>
+		<p>　ここでよくあった間違いは、</p>
+		<img src="tonda2.png" width="40%" class="floatnone">
+		<p>のように人間が円運動してしまうというもの。慣性の法則によれば、力が働かない物体は<strong>等速直線運動</strong>するのですから、まっすぐ飛んでいかなくては駄目です。</p>
+		<p>　「真上に飛んで行く」「左斜め上に飛んで行く」などの間違いもありました。実際には最初の速度をそのまま保つので、この図の状況なら真左に飛んでいきます。</p>
+		<p>　また、「人はその場にとどまり、地球だけが回転を続ける」という答えもありましたが、最初の段階で人はすでに動いているのですから、万有引力がなくなったら静止する、というのは間違いです。力がないなら「同じ運動を続ける」というのが自然法則です。</p>
+		<p></p>
+		<p>（２）自転を続けている地球からこの人を見るのですから、</p>
+		<p>問題（１）の答えである</p>
+		<p><img src="tonda1.png" width="35%" class="floatnone"></p>
+		<p>が、地球から見ると</p>
+		<p><img src="tonda3.png" width="35%" class="floatnone">のように見えます。</p>
+		<p>　人は直線運動、地球は円運動を続けますが、その速さは同じです。よって、地球から見ると人はまず最初人は前に上がっていきます。その後、円運動の地球と直線運動の人間の動きのずれの分だけ、図の右斜めの方向に進んでいくように見えます。</p>
+		<p>　「万有引力がなくなったからふわふわ浮き上がる」と書いた人は半分正解です。「真上に上がる」と書いた人は70％正解です。</p>
+		<p>　なぜか「地球から見ると地球が○○方向に運動して」という答えがいくつかありませしたが「地球から見ると」なら地球は動かないはずなので、不正解です。</p>
+		<p>　だいたい考えているな、と思われるものはAにしましたが、あまりに書き方がぞんざいで何を書いているのかわからないような図や文章は減点してBとしました。</p>
+		<div class="setsumei">感想・コメントなど</div>
+		<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+		<p></p>
+		<div class="Q">軽いものと重いものを軽いものが下になるようにつないで落とすとひっくり返って重いものが下になると思いますがこれも間違ってますか。</div>
+		<div class="A">空気抵抗がある場合ならたいていそうなります。空気抵抗がないなら、最初の形のままで落ちます。</div>
+		<p></p>
+		<div class="Q">私も重い物の方が速く落ちると思っていた（多数）。</div>
+		<div class="A">結構いましたね。まぁ、こういうことをじっくり考えてみないとなかなか気づかないと思います。</div>
+		<p></p>
+		<div class="Q">ペラペラの紙が空気抵抗がなければまっすぐ落ちる様が全く想像できなかったので、思い込みは本当に強いなと思いました。</div>
+		<div class="A">これからいろんなことを疑っていく癖をつけてください。</div>
+		<p></p>
+		<div class="Q">なぜ地球はじてんしているのだろう？</div>
+		<div class="A">最初から自転していたから、今も回っている（逆にいえば、最初止まっていたら今も止まっていることになりますが、「止まっている」方が「なんでうまく止まってたの？」という疑問が湧くかもしれません）。</div>
+		<p></p>
+		<div class="Q">月が止まったら落ちてくるのか、怖いなと思った。</div>
+		<div class="A">しかし、月は簡単には止まりませんから（慣性の法則、エネルギー保存の法則）。</div>
+		<p></p>
+		<div class="Q">高校物理では無視されがちな空気抵抗でしたが、空気抵抗一つで思い込みが発生してしまうと思うと、無くてわかりやすい部分もあったなと思います。</div>
+		<div class="A">だからとりあえずは無視して教えているわけです。</div>
+		<p></p>
+		<div class="Q">光にも重力って働くんですか。</div>
+		<div class="A">働きます。その話はまた今度。</div>
+		<p></p>
+		<div class="Q">地球が楕円体なのは自転しているからと聞いたことがありますが本当ですか。</div>
+		<div class="A">そうです。赤道部分が回転している分だけ膨らむ。</div>
+		<p></p>
+		<div class="Q">映画やアニメなどで宇宙に行くと動きがにぶくなるのですが、本当ですか？　本当ならなぜですか？</div>
+		<div class="A">にぶくなるかな？？　それは、宇宙の無重力に慣れてない人がそうなる、ってことじゃないでしょうか。きっと慣れたら重力場中よりすいすい動けるはず。</div>
+		<p></p>
+		<div class="Q">万有引力と重力の違いってなんですか。</div>
+		<div class="A">地球が自転しているので、地上では万有引力だけではなく、遠心力も働いています。万有引力と遠心力を足したものを重力と呼びます。</div>
+		<p></p>
+		<div class="Q">月や人工衛星は地球の引力に引っ張られているのに、宇宙飛行士はなぜ無重力になっているのですか。</div>
+		<div class="A">二つの説明があります。
+		  <br>まず、人工衛星の立場にたつと、人工衛星は円運動しているので、内部の人にとっては遠心力が働きます。この遠心力が万有引力を打ち消すので、重力が消えます（←これが説明その１）。
+		  <br>次に、外から人工衛星（と、その中の宇宙飛行士）を見る立場にたちます。すると、人工衛星は万有引力を受けて円運動していますが、中の宇宙飛行士も同じように、同じ形の円運動をします。いわば、人工衛星も宇宙飛行士も「同じ落ち方」をするわけです。すると、宇宙飛行士は（自分と同じ運動している人工衛星の中にいるので）「落ちている」ことを感じられないわけです（←これが説明その２）。実際、宇宙飛行士が地球上で無重力の訓練をする時は、飛行機に乗ってその飛行機を（まるで落ちるかのように）急降下させます。
+		  </div>
+		<p></p>
+		<div class="Q">ニュートンのすごさが理解できた（多数）。</div>
+		<div class="A">ニュートンは確かにすごいです。物理の基礎をほぼ一人で作ってしまってます。</div>
+		<p></p>
+		<div class="Q">リンゴと月を見比べるという発想がすごいと思った。</div>
+		<div class="A">「リンゴだろうが月だろうが特別視しない」というのが科学の発想なのです。</div>
+		<p></p>
+		<div class="Q">万有引力はなくならないんですか？</div>
+		<div class="A">距離の自乗に反比例して弱まるので、遠くへいけば弱くなります（0になることはないですが）。</div>
+		<p></p>
+		<div class="Q">宇宙にいけば、万有引力がない場所あるんでしょうか。</div>
+		<div class="A">他の天体から十分離れれば、弱くなって感知できないほどになります。</div>
+		<p></p>
+		<div class="Q">地球に引力があるように人などにも物がくっつくことはありますか。</div>
+		<div class="A">そういう力が働けば。人の万有引力はとっても小さいので万有引力では無理です。静電気で物がひっつくなんてことはありますね。</div>
+		<p></p>
+		<div class="Q">沖縄で天体観測するにはどこが見やすいですか？</div>
+		<div class="A">やんばるか離島の街の灯がないところ。</div>
+		<p></p>
+		<div class="Q">人間っ関係も科学の力を使って証明することができるんでしょうか？</div>
+		<div class="A">それはかなり難しい話ですね。</div>
+		<p></p>
+		<div class="Q">疑ってかかることは重要なことではありますが、人間が悪くなりそうです。</div>
+		<div class="A">人を信じることと、物理法則や観測結果を信じることはまた別なことなのだと思います。。</div>
+		<p></p>
+		<div class="Q">間違っていることがどれくらい正しいとして認知されているのかと気になった。</div>
+		<div class="A">今ある「正しい」は全て「現時点での知見では」という但し書きつきの「正しい」だと思ってください。</div>
+		<p></p>
+		<hr>
+		<p align="center"><a href="./lec3.html">←第３講に戻る</a>　<a href="./index.html">「時間と空間」講義録に戻る</a></p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#lastpage" data-icon="arrow-l">講義後半に戻る</a>
+		<a href="#page0" data-icon="back">第３講最初に戻る</a>
+	  </div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width; target-densityDpi=device-dpi; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"/>
+		<title>積分ってなあに？（その２）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="../jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="../vg.css" rel="stylesheet" type="text/css"/>
+		<script src="../jquery.js" type="text/javascript"></script>
+		<script src="../jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<style type="text/css">
+		body {
+			background-color: #FFFFFF;
+		}
+		img {
+			vertical-align:middle;
+		}
+		.centering{ text-align:center;}
+		.magenta { color:magenta; }
+		.red { color:red; }
+		.blue { color:blue; }
+		.chuumoku {
+			text-align:center;
+			font-size: x-large;
+			color:red;
+		}
+		</style>
+		<script type="application/javascript" src="sekibuntoha.js"></script>
+		<script type="application/javascript">
+		$(document).delegate('#page2','pageinit',function(e) {
+			init(); c=0; b=0.5; N=200; nuriFlg=0; autoUpFlg=0; f=linear; Intf=Intlinear; animationGO();
+		});
+		</script>
+	</head>
+	<body>
+		<div data-role="page" id="page2">
+			<div data-role="header">
+				<h1>積分ってなあに？（その２）</h1>
+			</div>
+			<div data-role="content">
+				<p>﻿　次に、単位時間に流れ込む水の量が一定でない場合、水槽に溜まる水をどのように計算すればよいかを考える。例えば蛇口を徐々に開いていき、１秒あたりに流れ込む水の量が下のグラフのように時間的に変化したとする。<br>
+			<br><hr>
+			<canvas width=500 height=500 id="maincanvas"></canvas>
+			<hr>
+			　考えてみると、我々が実際に風呂に水を溜める時でも、いっきに蛇口を開いてしまうことなどできないのだから、「徐々に蛇口が開いていって、流れ込む量が増えてくる」という状況の方が“現実的”である。それにしたって「こんなにじっくり時間かけてレバー回さなくてもいいだろう」と思うかもしれないが、ここではそういう状況を考えることにする（レバーがものすご〜〜く固かったのかもしれない、とでも解釈しておいて欲しい）。
+			<br>ここでは、１秒あたりに流れ込む量（これはもちろん、蛇口の開き具合で決まる）を式で表すと
+			<br><br>
+			<span class="centering">$$v(t)=at$$</span><br><br>
+			だったとしよう。<br>
+			　ではこの時浴槽に溜まった水の量はどうやって計算するか。
+			<br>　流量vが一定であり続ける場合は$vt$で溜まった量が計算できるが、vが時間的に変化している時については簡単には、わからない。
+			<br>　積分を知っている人間ならば簡単だが、知らなければ<input type="button" value="その３" data-inline="true" data-icon="arrow-r" onclick="location.href='./sekibuntoha3.html'">で書くように考える。
+			</p>
+		</div>
+		<div data-role="footer" align=center>
+			<input type="button" value="その１" data-icon="arrow-l" onclick="location.href='./sekibuntoha1.html'">
+		  	<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+			<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			<input type="button" value="その３" data-icon="arrow-r" onclick="location.href='./sekibuntoha3.html'">
+		</div>
+	</div>
+	</body>
+</html>
+

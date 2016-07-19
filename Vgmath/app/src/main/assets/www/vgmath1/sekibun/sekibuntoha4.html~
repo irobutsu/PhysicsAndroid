@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width; target-densityDpi=device-dpi; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"/>
+<title>積分ってなあに？（その３）</title>
+<style type="text/css">
+	body {
+		background-color: #FFFFFF;
+	}
+	img {
+	vertical-align:middle;
+	}
+	.centering{ text-align:center;}
+	.magenta { color:magenta; }
+	.red { color:red; }
+	.blue { color:blue; }
+	.cyan { color:cyan; }
+	.chuumoku {
+		text-align:center;
+		font-size: x-large;
+		color:red;
+	}
+</style>
+</head>
+<body onload="init(); c=0; b=0.5; N=5; autoUpFlg=0; nuriFlg=-1; f=linear; Intf=Intlinear; animationGO();">
+<script type="application/javascript" src="sekibuntoha.js"></script>
+<h1>積分ってなあに？（その４）</h1>
+<br>
+<div class=centering><a href="sekibuntoha3.html">その３へ戻る</a></div>
+<br>
+<hr>
+　下の図は、分割数Nを変化させることができる。変化させて、実際の現象への近づき方を見てみよう。
+<br><hr>
+<canvas width=500 height=500 id="maincanvas"></canvas>
+<br><button id="bdown"
+onClick="bdown();document.getElementById('blabel').innerHTML=b;">（←減）
+</button>a=<span id="blabel">0.5</span><button id="bup"
+onClick="bup();document.getElementById('blabel').innerHTML=b;">（増→）
+</button><br>
+<br><button id="Ndown"
+onClick="Ndown();document.getElementById('Nlabel').innerHTML=N;">（←減）
+</button>N=<span id="Nlabel">5</span><button id="Nup"
+onClick="Nup();document.getElementById('Nlabel').innerHTML=N;">（増→）
+</button>
+<hr>
+<p><br>
+  　Nが十分大きくなれば、この現象は「連続的に流水量を増やしていった場合」と変わらない、ということがわかるだろう。N→∞の極限を取ることを考えれば、最終的結果はグラフの下の部分（三角形）の面積となる、ということである。
+  <br>
+  <br>　数式で示しておこう。時刻tが0〜Tまで経過したとして、その時間TをNに分割しているとすると、分割の一個はΔt=T/Nである。ここで計算している水色の長方形一個の面積は
+  <br><br>iaΔt×Δt<br><br>で、iを1からN-1まで足すことになる。
+  <br><br>1+2+3+4+…+N-1=N(N-1)/2<br><br>という公式があるのでこの答えは
+  <br><br>aN(N-1)(Δt)<sup>2</sup>/2=aNΔt×(N-1)Δt/2<br><br>
+  であるが、NΔt=Tで、(N-1)Δtは「T=NΔtよりΔtだけ小さい」（<small>ということは、N→∞でΔt→0となれば差はないも同然</small>）と考えれば、
+  <br><br>aN(N-1)(Δt)<sup>2</sup>/2→aT<sup>2</sup>/2<br><br>
+となる。これは底辺Tで高さがaTの三角形の面積そのものである。 <br>　これを積分記号を使った式でかけば、
+  <br><br><img src="intatdt.png" alt="∫_0^T at dt =at^2/2">
+  <br><br>
+  　ということで、このように「刻一刻と変化していく量との掛算」に対応するのが積分なのである。</p>
+<p>　積分は「単なる定数vとｔの掛け算ではなく、変化するvとtの掛け算である」という意味では<span class="chuumoku">「掛け算の進化系」</span>である。</p>
+<p>　そして、ちょっとずつ変化する量×Δt（<span class="cyan">図の水色長方形</span>）をえんえんと（無限回！）足した結果だと思えば<span class="chuumoku">「足し算の化け物」</span>でもある。</p>
+<p>&nbsp;</p>
+<hr>
+<div class=centering><a href="sekibuntoha5.html">その５へ進む</a></div>
+<div class=centering><a href="index.html">表紙に戻る</a></div>
+</body>
+</html>
+

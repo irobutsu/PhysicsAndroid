@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,target-densityDpi=device-dpi,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>空間反転と自然現象</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script tyype="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+	<script src="three.min.js" type="application/javascript"></script>
+	<script src="TrackballControls.js" type="application/javascript"></script>
+	<script src="threejsscreen.js" type="application/javascript"></script>
+	<style type="text/css">
+	 .figure {
+	   margin:0pt auto;
+	 }
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .floatnone{
+	   float:none;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .box{
+	   padding:5px;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:13px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<script type="text/javascript">
+	 var ts;
+	 var phi=0;
+	 var theta=0;
+	 var psi=0;
+	 var yuka,kagami;
+	 var kabe,kabe2;
+	 var white=new THREE.MeshLambertMaterial({color: 0xEEEEEE,ambient: 0xEEEEEE});
+	 var black=new THREE.MeshLambertMaterial({color: 0x333333,ambient: 0x444444});
+	 var yellow=new THREE.MeshLambertMaterial({color: 0x888800,ambient: 0x888800});
+	 var red=new THREE.MeshLambertMaterial({color: 0xFF0000,ambient:0xFF0000});
+	 var blue=new THREE.MeshLambertMaterial({color: 0x0000FF,ambient:0x0000FF});
+	 var green=new THREE.MeshLambertMaterial({color: 0x00AA00,ambient:0x00AA00});
+	 var texture;
+	 var kabem;
+	 var texture2;
+	 var kabem2;
+	 var yukam;
+	 var kagamim;
+	 var yukag;
+	 var kagamig;
+	 var kabeg;
+	 var densen=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,2,4,1,false),white);
+	 densen.rotation.set(0,0,0.5*Math.PI);
+	 densen.position.set(0,-1,0.8);
+	 var densenM=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,2,4,1,false),white);
+	 densenM.rotation.set(0,0,0.5*Math.PI);
+	 densenM.position.set(0,1,0.8);
+	 var jishaku=new Object();
+	 jishaku.N=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,0.5,6,1,false),red);
+	 jishaku.N.position.set(-0.25,-1,0.5);
+	 jishaku.N.rotation.set(0,0,0.5*Math.PI);
+	 jishaku.S=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,0.5,6,1,false),blue);
+	 jishaku.S.position.set(0.25,-1,0.5);
+	 jishaku.S.rotation.set(0,0,0.5*Math.PI);
+	 var jishakuM=new Object();
+	 jishakuM.N=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,0.5,6,1,false),red);
+	 jishakuM.N.position.set(-0.25,1,0.5);
+	 jishakuM.N.rotation.set(0,0,0.5*Math.PI);
+	 jishakuM.S=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,0.5,6,1,false),blue);
+	 jishakuM.S.position.set(0.25,1,0.5);
+	 jishakuM.S.rotation.set(0,0,0.5*Math.PI);
+	 var ball=new Array();
+	 var ballN=8;
+	 var i;
+	 for( i=0; i<ballN/2 ; i++ ) {
+	   ball[i]=new THREE.Mesh(new THREE.SphereGeometry(0.035,8,5),green);
+	   ball[i].position.set(0.25,1,0.8);
+	 }
+	 for( i=ballN/2; i<ballN ; i++ ) {
+	   ball[i]=new THREE.Mesh(new THREE.SphereGeometry(0.035,8,5),green);
+	   ball[i].position.set(0.25,-1,0.8);
+	 }
+	 var ball2=new Array();
+	 for(i=0; i<8 ; i++ ) {
+	   ball2[i]=new THREE.Mesh(new THREE.SphereGeometry(0.035,8,5),green);
+	 }
+	 function initBackGround() {
+	   texture  = new THREE.ImageUtils.loadTexture('kabe.png');
+	   kabem= new THREE.MeshBasicMaterial({map: texture});
+	   texture2= new THREE.ImageUtils.loadTexture('kabeM.png');
+	   kabem2= new THREE.MeshBasicMaterial({map: texture2});
+	   yukam=new THREE.MeshLambertMaterial({color: 0xFF0000,transparent:true,opacity:0.8,shading: THREE.SmoothShading});
+	   yukag=new THREE.CubeGeometry(2,4,0.01);
+	   kabeg=new THREE.CubeGeometry(0.01,2,2);
+	   kagamim=new THREE.MeshLambertMaterial({color: 0x0000FF,transparent:true,opacity:0.4,shading: THREE.SmoothShading});
+	   kagamig=new THREE.CubeGeometry(2,0.01,2);
+	   kagami = new THREE.Mesh(kagamig,kagamim);
+	   kagami.position.set(0,0,1);
+	   yuka = new THREE.Mesh(yukag,yukam);
+	   kabe=new THREE.Mesh(kabeg,kabem);
+	   kabe.position.set(-1,-1,1);
+	   kabe2=new THREE.Mesh(kabeg,kabem2);
+	   kabe2.position.set(-1,1,1);
+	 }
+	 $(document).delegate('#page0','pageshow',function(e) {
+	   initBackGround();
+	   ts=new ThreejsScreen("tcanvas",0.7,0.8);
+	   man=makeHuman(true);
+	   mirrorMan=makeHuman(false);
+
+	   ts.camera.position.set(2.7,-2.4,3.6);
+	   
+	   ts.scene.add(man.me);
+	   ts.scene.add(mirrorMan.me);
+	   ts.scene.add(man.moji);
+	   ts.scene.add(mirrorMan.moji);
+	   ts.scene.add(kabe);
+	   ts.scene.add(kabe2);
+
+
+	   ts.scene.add(yuka);
+	   ts.scene.add(kagami);
+	   ts.setAnotherLight(0xFFFFFF,100,-100,100);
+	   graphWrite();
+	 });
+	 $(document).delegate('#page1','pageshow',function(e) {
+	   initBackGround();
+	   ts2=new ThreejsScreen("tcanvas1",0.7,0.8);
+
+	   ts2.camera.position.set(2.7,-2.4,3.6);
+	   
+	   ts2.scene.add(kabe);
+	   ts2.scene.add(kabe2);
+
+
+	   ts2.scene.add(yuka);
+	   ts2.scene.add(kagami);
+	   ts2.scene.add(densen);
+	   ts2.scene.add(densenM);
+	   ts2.scene.add(jishaku.N);
+	   ts2.scene.add(jishaku.S);
+	   ts2.scene.add(jishakuM.N);
+	   ts2.scene.add(jishakuM.S);
+	   var i;
+	   for(i=0; i<ballN ; i++ ) {
+		 ts2.scene.add(ball[i]);
+	   }
+
+	   ts2.setAnotherLight(0xFFFFFF,100,-100,100);
+	   graphWrite2();
+	 });
+	 var man,mirrorMan;
+
+	 function makeHuman(flg) {
+	   var py;
+	   if( flg ) {
+		 py=0.3;
+	   } else {
+		 py=-0.3;
+	   }
+	   var human=new Object();
+	   human.man=new THREE.Geometry();
+	   var mojip=new THREE.Geometry();
+	   mojip.vertices.push(new THREE.Vector3(0.1,py*0.666,0.6));
+	   mojip.vertices.push(new THREE.Vector3(0.1,py*0.666,0.8));
+	   mojip.vertices.push(new THREE.Vector3(-0.1,py*0.666,0.8));
+	   mojip.vertices.push(new THREE.Vector3(-0.12,py*0.666,0.78));
+	   mojip.vertices.push(new THREE.Vector3(-0.12,py*0.666,0.72));
+	   mojip.vertices.push(new THREE.Vector3(-0.1,py*0.666,0.7));
+	   mojip.vertices.push(new THREE.Vector3(0.1,py*0.666,0.7));
+	   human.moji=new THREE.Line(mojip,new THREE.LineBasicMaterial({color:0xFF0000,linewidth:10}));
+
+	   human.head=new THREE.Mesh(new THREE.SphereGeometry(0.1,8,5));
+	   human.head.position.set(0,py,1);
+	   human.body=new THREE.Mesh(new THREE.CubeGeometry(0.4,0.2,0.6));
+	   human.body.position.set(0,py,0.6);
+	   human.handL=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.5,6,1,false));
+	   human.handL.position.set(0.3,py,0.85);
+	   human.handL.rotation.set(0.5*Math.PI,0,0.7*Math.PI);
+	   human.handR=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.5,6,1,false));
+	   human.handR.position.set(-0.3,py,0.55);
+	   human.handR.rotation.set(0.5*Math.PI,0,-0.2*Math.PI);
+	   human.footL=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.09,0.5,6,1,false));
+	   human.footL.position.set(-0.1,py,0.25);
+	   human.footL.rotation.set(0.5*Math.PI,0,0);
+	   human.footR=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.09,0.5,6,1,false));
+	   human.footR.position.set(0.1,py,0.25);
+	   human.footR.rotation.set(0.5*Math.PI,0,0);
+
+	   human.eyeL=new THREE.Mesh(new THREE.SphereGeometry(0.03,8,5));
+	   human.eyeL.position.set(0.05,py*0.7,1.05);
+	   human.eyeR=new THREE.Mesh(new THREE.SphereGeometry(0.03,8,5));
+	   human.eyeR.position.set(-0.05,py*0.7,1.05);
+	   human.nose=new THREE.Mesh(new THREE.CylinderGeometry(0.01,0.01,0.045,6,1,false));
+	   human.nose.position.set(0,py*0.7,1);
+	   human.mouse=new THREE.Mesh(new THREE.CylinderGeometry(0.01,0.01,0.045,6,1,false));
+	   human.mouse.rotation.set(0,0,0.5*Math.PI);
+	   human.mouse.position.set(0,py*0.7,0.97);
+
+	   THREE.GeometryUtils.merge(human.man,human.head);
+	   THREE.GeometryUtils.merge(human.man,human.body);
+	   THREE.GeometryUtils.merge(human.man,human.footL);
+	   THREE.GeometryUtils.merge(human.man,human.handL);
+	   THREE.GeometryUtils.merge(human.man,human.handR);
+	   THREE.GeometryUtils.merge(human.man,human.footR);
+	   THREE.GeometryUtils.merge(human.man,human.eyeL);
+	   THREE.GeometryUtils.merge(human.man,human.eyeR);
+	   THREE.GeometryUtils.merge(human.man,human.nose);
+	   THREE.GeometryUtils.merge(human.man,human.mouse);
+	   human.me=new THREE.Mesh(human.man,yellow);
+	   return human;
+
+	 }
+
+	 var t=0;
+	 var nowMoving=false;
+	 function graphWrite() {	
+							requestAnimationFrame(graphWrite);
+							ts.controlsUpdate();
+							if( nowMoving ) {
+		 if( mode==1 ) {
+		   if( t<0.5*Math.PI ) {
+			 mirrorMan.me.position.set(t*0.6,0,0);
+			 mirrorMan.moji.position.set(t*0.6,0,0);
+		   } else if( t<1.5*Math.PI ) {
+			 mirrorMan.me.position.set(Math.PI*0.3,0,0);
+			 mirrorMan.me.rotation.set(0,0,(t-0.5*Math.PI));
+			 mirrorMan.moji.position.set(Math.PI*0.3,0,0);
+			 mirrorMan.moji.rotation.set(0,0,(t-0.5*Math.PI));
+		   } else  {
+			 t=1.5*Math.PI;
+			 mirrorMan.me.position.set(Math.PI*0.3,0,0);
+			 mirrorMan.me.rotation.set(0,0,Math.PI);
+			 mirrorMan.moji.position.set(Math.PI*0.3,0,0);
+			 mirrorMan.moji.rotation.set(0,0,Math.PI);
+		   }
+		   t+=0.05;
+		 } else if( mode == 2 ) {
+		   if( t>Math.PI ) {
+			 t=Math.PI;
+		   }
+		   mirrorMan.me.rotation.set(t,0,0);
+		   mirrorMan.moji.rotation.set(t,0,0);
+		   t+=0.05;
+		 } else if( mode==3 ) {
+		   if( t>0.7 ) {
+			 t=0.7;
+		   }
+		   mirrorMan.me.position.set(0,t,0);
+		   mirrorMan.moji.position.set(0,t,0);
+		   
+		   t+=0.02;
+		 }
+	   } else {
+		 resetMirrorMan();
+	   }
+							ts.draw();
+							}
+	 var mode=2;
+	 function resetMirrorMan() {
+	   mirrorMan.me.position.set(0,0,0);
+	   mirrorMan.me.rotation.set(0,0,0);
+	   mirrorMan.moji.position.set(0,0,0);
+	   mirrorMan.moji.rotation.set(0,0,0);
+	 }
+	 
+	 function graphWrite2() {	
+							 requestAnimationFrame(graphWrite2);
+							 ts2.controlsUpdate();
+							 
+							 
+							 var i;
+							 var x;
+							 for(i=0; i<ballN/ 2 ; i++ ) {
+		 x=(2*i/ ballN -0.1*t);
+		 x=x-Math.floor(x);
+		 ball[i].position.set(x*2-1,1,0.8);
+	   }
+							 for(i=ballN/ 2; i<ballN ; i++ ) {
+		 x=(2*i/ ballN-0.1*t);
+		 x=x-Math.floor(x);
+		 ball[i].position.set(x*2-1,-1,0.8);
+	   }
+							 
+							 var theta;
+							 if( t<0.2*Math.PI ) {
+		 theta=t; 
+	   } else {
+		 theta=0.2*Math.PI;
+	   }
+
+							 var costheta=Math.cos(theta);
+							 var sintheta=Math.sin(theta);
+							 jishaku.N.rotation.set(0,0,0.5*Math.PI+theta);
+							 jishaku.N.position.set(-0.25*costheta,-1-0.25*sintheta,0.5);
+							 jishaku.S.rotation.set(0,0,0.5*Math.PI+theta);
+							 jishaku.S.position.set(0.25*costheta,-1+0.25*sintheta,0.5);
+							 jishakuM.N.rotation.set(0,0,0.5*Math.PI-theta);
+							 jishakuM.N.position.set(-0.25*costheta,1+0.25*sintheta,0.5);
+							 jishakuM.S.rotation.set(0,0,0.5*Math.PI-theta);
+							 jishakuM.S.position.set(0.25*costheta,1-0.25*sintheta,0.5);
+
+							 var cosphi=Math.cos(t);
+							 var sinphi=Math.sin(t);
+							 ball2[0].position.set(0.1*sintheta*cosphi,-1-0.1*costheta*cosphi,0.5+0.1*sinphi);
+							 ball2[1].position.set(0.1*sintheta*sinphi,-1-0.1*costheta*sinphi,0.5-0.1*cosphi);
+							 ball2[2].position.set(-0.1*sintheta*cosphi,-1+0.1*costheta*cosphi,0.5-0.1*sinphi);
+							 ball2[3].position.set(-0.1*sintheta*sinphi,-1+0.1*costheta*sinphi,0.5+0.1*cosphi);
+							 ball2[4].position.set(0.1*sintheta*cosphi,1+0.1*costheta*cosphi,0.5+0.1*sinphi);
+							 ball2[5].position.set(0.1*sintheta*sinphi,1+0.1*costheta*sinphi,0.5-0.1*cosphi);
+							 ball2[6].position.set(-0.1*sintheta*cosphi,1-0.1*costheta*cosphi,0.5-0.1*sinphi);
+							 ball2[7].position.set(-0.1*sintheta*sinphi,1-0.1*costheta*sinphi,0.5+0.1*cosphi);
+							 t+= 0.02;
+							 ts2.draw();
+							 }
+	 function jmOn() {
+	   var i;
+	   for(i=0; i<8 ; i++ ) {
+		 ts2.scene.add(ball2[i]);
+	   }
+	 }
+	 function jmOff() {
+	   var i;
+	   for(i=0; i<8 ; i++ ) {
+		 ts2.scene.remove(ball2[i]);
+	   }
+	 }
+
+	 function checkJM() {
+       if ($('#jmcb').is(':checked')) {
+         jmOn();
+       } else {
+         jmOff();
+       }
+	 }
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>鏡は左右を反転する？</h1>
+	  </div>
+	  <div data-role="content">
+		<div class="setsumei">　動く図で鏡の世界をみてみましょう。</div>
+		<div class="fukidasi">　↓の図は、ドラッグすることで視点の移動／拡大縮小などができます。</div>
+		<p><canvas id="tcanvas" width=200 height=200></canvas></p>
+		<div>
+		  <button data-inline="true" onClick="nowMoving=true; resetMirrorMan(); mode=3;t=0;">鏡に入る（正面から）</button>
+		  <button data-inline="true" onClick="nowMoving=true; resetMirrorMan(); mode=1;t=0;">鏡に入る（右から）</button>
+		  <button data-inline="true" onClick="nowMoving=true; resetMirrorMan(); mode=2;t=0;">鏡に入る（下から）</button>
+		  <button data-inline="true" onClick="nowMoving=false; resetMirrorMan(); mode=0;">元の位置へ</button>
+		</div>
+		<p>　反転というのはもちろん、「前後、上下、左右などの位置関係がひっくり変えること」です。では今の２枚の図の場合、位置関係がひっくり返っているのはそれぞれ、何でしょう。ここで示した図の場合、実は左右は反転していません。右にある右手は鏡の中にでも右にあります！</p>
+		<p><img src="mirror4.png" width="60%" class="floatnone"></p>
+
+		<p>　よく考えてみると、これらの図に描かれた鏡はどちらも、実は左右を反転していないことがわかります。鏡が反転しているのは、常に鏡に対して垂直な方向なのです。それなのになぜ我々は左右が反転している、と思うのでしょうか。それは無意識のうちに我々が「鏡の裏側に回ったら」ということを仮定しているからです。</p>
+		<p><img src="mirror2.png" width="50%" class="floatnone"></p>
+		<div class="setsumei">　上のプログラムで<span class="fukidasi">鏡に入る（右から）</span>というボタンを押すと、動く図で鏡に回りこむ様子が見えます。</div>
+		<p>　つまり、「鏡の裏に回った自分」を思い浮かべ、それと鏡像を比べた結果「あ、左右が反転している」と判断しているのです。当然のことながら、自分が鏡の向こう側に回るとき、違う回り方をすれば上下が反転しているように見えるはずです。</p>
+		<p><img src="mirror3.png" width="50%" class="floatnone"></p>
+		<div class="setsumei">　上のプログラムで<span class="fukidasi">鏡に入る（下から）</span>というボタンを押すと、動く図で鏡に回りこむ様子が見えます。</div>
+		<div class="A">　すいません、テキストの説明とプログラムでは動きは違います。</div>
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page1" data-icon="arrow-r">講義後半のページへ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page1">
+	  <div data-role="header">
+		<h1>鏡の中の物理法則</h1>
+	  </div>
+	  <div data-role="content">
+		<h3>反転世界での運動---宇宙人に「左」を教えるには？</h3>
+		<p>　鏡の話が片付いたところで、次のような問題を考えてみましょう。</p>
+		<p align="center">左右反転した映像を見せられたとして、我々はそれが鏡像だということに気付くことができるか？</p>
+
+		<p>　もちろん字が書いてあったらわかるにきまっているので、そういうのはなしとしましょう。たとえば箸を左手に持っていたらわかる？？---でも、その人は左利きかもしれませんよね。</p>
+
+		<p>　どのような運動を考えてみても、それを反転した運動というのも同じように起こると思われます。実は物理法則というのはほとんどが左右対称にできています。物理法則がそうなっているということは、物理現象の説明をしている限り、「右」と「左」を区別する必要はない---どころか、区別できない---ということを表しています。</p>
+		<img src="mirrormagnetB.png" width="25%">
+		<p>　「宇宙人と音声で通信している時、右と左を教える方法はあるか？」という問題があります。相手は宇宙人ですから「箸を持つ方が右」ではだめだし、「心臓が左」でもだめです（そもそも宇宙人に心臓があるのか？）。</p>
+
+		<p>　アンペアという電流の単位にその名前を残す物理学者アンペールは、電流が磁界を作る時の法則を発見した人でもあります。彼は同時に、電磁気における左右対称についても悩んだ人でした。彼を悩ませたのは、電流によって生じる磁界です。電流があると、それに対して右ねじの方向に磁界ができる、というのが右ねじの法則です。これを鏡に映すと、左ねじの方向に磁界ができているように見えてしまいます。たとえば図のように磁石と電流を置いておくと磁石は反時計まわりの方向に力を受けます。</p>
+
+		<p>　このことを使うと、「磁石の上に電流を流した時、N極の針が振れる方向が左だ」と教えてやれば宇宙人に左と右が伝えられる---でしょうか？---でも「NとS」をどう伝えるか？？</p>
+		
+
+		<div class="fukidasi">　では、動画で磁石の動きを見てみましょう。<br>　↓の図は、マウスを使って視点の移動／拡大縮小などができます。</div>
+		<p><canvas id="tcanvas1" width=200 height=200></canvas></p>
+		<div><button data-inline="true" onClick="t=0;">元の位置へ</button></div>
+		<div><label><input type="checkbox" id="jmcb" onclick="checkJM();">磁石内部の電流を見る（ON/OFF）</label>
+		</div>
+		<div class="A">　この図も「琉球大学」が読めるのが我々の世界で、読めないのが鏡の中の世界です。電流が流れると「右ネジの法則」に従って磁界ができて、磁石が（方位磁石のように）傾きます。鏡に映すと、磁石の傾く向きが逆になります（ということは、鏡の中では「左ネジの法則」が成り立っている？？</div>
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page0" data-icon="arrow-l">講義前半のページへ</a>
+		<a href="#pageqa" data-icon="arrow-r">問題の解答と感想・コメントへ</a>
+	  </div>
+	</div>
+  </body>
+</html>

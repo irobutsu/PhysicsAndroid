@@ -1,0 +1,21 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>テイラー展開</title>
+  </head> 
+
+  <body> 
+	<p>　テイラー展開をグラフで表現する。</p>
+	<p><img src="taylor_sin.png" width="40%"></p>
+	<ul>
+	<li>　<a href="taylor_geo.html">等比級数になるテイラー展開</a></li>
+	<li>　<a href="taylor_exp.html">expのテイラー展開</a></li>
+	<li>　<a href="taylor_sin.html">sinのテイラー展開</a></li>
+	<li>　<a href="taylor_cos.html">cosのテイラー展開</a></li>
+	<li>　<a href="taylor_sqrt.html">√のテイラー展開</a></li>
+	<li>　<a href="taylor_log.html">logのテイラー展開</a></li>
+	</ul>
+  </body>
+</html>

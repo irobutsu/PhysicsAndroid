@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<title>合成関数・逆関数</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+	<script src="../../jquery-mobile/jquery-1.10.2.min.js" type="text/javascript"></script>
+	<script src="../../jquery-mobile/jquery.mobile-1.3.2.min.js" type="text/javascript"></script>
+	<link href="../../jquery-mobile/jquery.mobile-1.3.2.min.css" rel="stylesheet" type="text/css"/>
+	<script src="three.min.js" type="application/javascript"></script>
+	<script src="TrackballControls.js" type="application/javascript"></script>
+	<script src="threejsscreen.js" type="application/javascript"></script>
+	<style>
+	 table { display: inline; }
+	 tr { display: inline-table; }
+	 .yellow{
+	   color:#AA0
+	 }
+	 .cyan{
+	   color:#0EE
+	 }
+	 .warning{
+	   padding:5px;
+	   color:#F00;
+	   background-color: #FF0;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h2{
+	   color:#300;
+	   background-color: #9CC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	  .floatnone{
+	  float:none;
+	  }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #DDF;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .faq{
+	   padding:5px;
+	   color:#400;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .list{
+	   padding:3px;
+	   color:#020;
+	   background-color:#CCC;
+	   boder: solid #CC0 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+  </head> 
+  <body> 
+	<script src="funccomposite.js" type="text/javascript"></script>
+	<script>
+	  
+	</script>
+	<div data-role="page" id="page0">
+	  <div data-role="header"><h1>合成関数・逆関数</h1></div>
+	  <div data-role="content"> 
+		<div class="setsumei">　webGLという3Dのライブラリが動かないブラウザ環境では遅くなる場合があります。できるかぎり、webGLの使える環境で動かしてください。</div>
+		<p>　関数は「数→数」の対応関係であるが、この対応関係を二段階にしたもの「数→数→数」を<span class="fukidasi">合成関数</span>と呼ぶ。<span class="ao">y</span>=<span class="aka">x</span><sup>2</sup>という<span class="aka">x</span>→<span class="ao">y</span>という対応関係があり、さらに<span class="magenta">z</span>=sin<span class="ao">y</span>という<span class="ao">y</span>→<span class="magenta">z</span>の対応関係があれば、この二つをまとめて、<span class="magenta">z</span>=sin<span class="aka">x</span><sup>2</sup>という<span class="aka">x</span>→<span class="magenta">z</span>という「合成関数」を作ることができる。</p>
+
+		<p>　たとえば、ある気体を電気ヒーターで暖めているとしよう。ヒーターの電力を変えれば温度が変わる（電力→温度）。そして、温度が変わればその気体中の音速が変わる（温度→音速）。こうすると「電力を変えれば（温度の変化を通じて）音速が変わる」（電力→温度→音速）という関数関係ができることになる（こういう例を自分でも考えてみよう）。</p>
+
+		<p>　二つの関数を<span class="ao">y</span>=f(<span class="aka">x</span>)（<span class="ao">y</span>が<span class="aka">x</span>の関数である）および$<span class="magenta">z</span>=g(<span class="ao">y</span>)（<span class="magenta">z</span>が<span class="ao">y</span>の関数である）と書けば、合成関数は<span class="magenta">z</span>=g(f(<span class="aka">x</span>))のように書ける（この式の意味は「まずf(<span class="aka">x</span>)を計算して、計算結果をg(<span class="ao">y</span>)の<span class="ao">y</span>に代入すると、<span class="magenta">z</span>が求められる」ということだ）。</p>
+
+		<p>　三つの変数が関与する関数なので、立体的に図を描くと次のようになる。</p>
+		<div class="fukidasi">　↓の図は、マウスを使って視点の移動／拡大縮小などができます。</div>
+		<p><canvas id="tcanvas" width=200 height=200></canvas></p>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a"></div>
+		  <div class="ui-block-b"></div>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">y=
+			  <select name="selectmenu" id="selectmenuxy" data-inline="true" onChange="changefuncxy('#selectmenuxy');">
+				<option value="1">ax</option>
+				<option value="2">a/x</option>
+				<option value="3">ax^2</option>
+				<option value="4">√(|x|/a)</option>
+				<option value="5">sin(ax)</option>
+				<option value="6">arcsin(x)/a</option>
+				<option value="7">exp(ax)</option>
+				<option value="8">(log|x|)/a</option>
+			  </select>
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">z=
+			  <select name="selectmenuyz" id="selectmenuyz" data-inline="true" onChange="changefuncyz('#selectmenuyz');">
+				<option value="1">by</option>
+				<option value="2">b/y</option>
+				<option value="3">by^2</option>
+				<option value="4">√(|y|/b)</option>
+				<option value="5">sin(by)</option>
+				<option value="6">arcsin(y)/b</option>
+				<option value="7">exp(by)</option>
+				<option value="8">(log|y|)/b</option>
+			  </select>
+			</div>
+		  </div>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <p> <a href="#btd3" data-role="button" data-inline="true" onClick="downA();">＜</a>a=<span name="a_value" class="a_value">1.0</span><a href="#btu3" data-role="button" data-inline="true" onClick="upA(); ">＞</a></p>	
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <p> <a href="#btd3" data-role="button" data-inline="true" onClick="downB();">＜</a>b=<span name="b_value" class="b_value">1.0</span><a href="#btu3" data-role="button" data-inline="true" onClick="upB(); ">＞</a></p>	
+			</div>
+		  </div>
+		</div>
+		<p>　ここでは、</p>
+		<p><span class="ao">y</span>=<span id="yfx"><span class="aka">x</span></span>という関数と</p>
+		<p><span class="magenta">z</span>=<span id="zgy"><span class="ao">y</span></span>という関数が合成され、</p>
+		<p><span class="magenta">z</span>=<span id="zgfx">(<span class="aka">x</span>)</span>という関数になっている。</p>
+		<hr>
+	  <p>　<span class="aka">◆</span>や<span class="ao">◆</span>や<span class="magenta">◆</span>のような形が走り回っているが、これは<span class="aka">x</span>,<span class="ao">y</span>,<span class="magenta">z</span>の変化を表したものである。</p>
+		<div class="setsumei">　初期状態では<span class="ao">y</span>=<span class="aka">x</span>と<span class="magenta">z</span>=<span class="ao">y</span>というつまらない状態になっているが、図の下にあるセレクタやボタンで関数の種類やパラメータを変化させることができるので、いろいろと試してみよう。</div>
+		<div class="list">
+		  <ul>
+			<li><span class="ao">y</span>=<span class="aka">x</span><sup>2</sup>と<span class="magenta">z</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr><td align="center" nowrap="nowrap">1<hr noshade="noshade" size="1"><span class="ao">y</span></td></tr></tbody></table>を合成すると、<span class="magenta">z</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr><td align="center" nowrap="nowrap">1<hr noshade="noshade" size="1"><span class="aka">x</span><sup>2</sup></td></tr></tbody></table></li>
+			<li><span class="ao">y</span>=<span class="aka">x</span><sup>2</sup>と<span class="magenta">z</span>=exp(-<span class="ao">y</span>)を合成すると、<span class="magenta">z</span>=exp(-<span class="aka">x</span><sup>2</sup>)</li>
+			<li><span class="ao">y</span>=sin(<span class="aka">x</span>)と<span class="magenta">z</span>=<span class="ao">y</span><sup>2</sup>を合成すると、<span class="magenta">z</span>=sin(<span class="aka">x</span>)<sup>2</sup></li>
+		  </ul>
+		</div>
+		<p>のように関数が合成されるところを確認しよう（もちろん他にももっといろいろなパターンがあるので、試してみよう）。</p>
+		<h3>コンピュータにグラフを描かせる時の注意</h3>
+		<p>たとえば、<span class="ao">y</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr><td align="center" nowrap="nowrap">1<hr noshade="noshade" size="1"><span class="aka">x</span></td></tr></tbody></table>に<span class="magenta">z</span>=sin(3<span class="ao">y</span>)を合成して、<span class="magenta">z</span>=sin(<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr><td align="center" nowrap="nowrap">3<hr noshade="noshade" size="1"><span class="aka">x</span></td></tr></tbody></table>)という関数を作ったとすると、そのグラフは、</p>
+		<p><img src="sin3overx.png" class="floatnone" width="50%"></p>
+		<p>のようになる。この<span class="aka">x</span>=0付近のぐしゃっとなっているところ<img src="sin3overxzerofukin.png"class="floatnone" width="10%">は、実は無限回の振動が隠れている<span class="footnote">なぜ無限回振動するのか、考えてみよう！</span>。しかしコンピュータの画面も内部での計算でも「無限回の振動」を表すようにはできていない。実際には<span class="aka">x</span>を0.01とか0.02とか、小さなステップで増加させては線を引く、というのを繰り返している。そのステップとステップの間に関数が激しく振動してしまうと、描かれたグラフは正確なものにはならないのである。</p>
+		<h3>逆関数のペア</h3>
+		<p>　これらの関数は互いに逆関数になっているペアがある。それらを確認しよう。</p>
+		<p>　上の図では<span class="aka">x</span>→<span class="ao">y</span>→<span class="magenta">z</span>という合成関数を考えているが、２個めの<span class="ao">y</span> <span class="magenta">z</span>が１個めの<span class="aka">x</span> <span class="ao">y</span>の逆関数であるので、<span class="aka">x</span>→<span class="ao">y</span>→<span class="aka">x</span>というつながりで元に戻ってくる。</p>
+		<p>　よって、正しく逆関数になっていれば、<span class="magenta">z</span>=<span class="aka">x</span>になるはずだ。</p>
+		<div class="list">
+		  <ul>
+			<li><span class="ao">y</span>=a<span class="aka">x</span>の逆関数は<span class="aka">x</span>=b<span class="ao">y</span>（ただし、a=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr><td align="center" nowrap="nowrap">1<hr noshade="noshade" size="1">b</td></tr></tbody></table>）。</li>
+			<li><span class="ao">y</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr><td align="center" nowrap="nowrap">a<hr noshade="noshade" size="1">x</td></tr></tbody></table>の逆関数は<span class="aka">x</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr><td align="center" nowrap="nowrap">a<hr noshade="noshade" size="1"><span class="ao">y</span></td></tr></tbody></table>。</li>
+			<li><span class="ao">y</span>=<span class="aka">x</span><sup>2</sup>の逆関数は<span class="aka">x</span>=√(<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr><td align="center" nowrap="nowrap">|<span class="ao">y</span>|<hr noshade="noshade" size="1">a</td></tr></tbody></table>)</li>
+			<li><span class="ao">y</span>=sin(a<span class="aka">x</span>)の逆関数は<span class="aka">x</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr><td align="center" nowrap="nowrap">arcsin(<span class="ao">y</span>)<hr noshade="noshade" size="1">a</td></tr></tbody></table></li>
+			<li><span class="ao">y</span>=exp(a<span class="aka">x</span>)の逆関数は<span class="aka">x</span>=log(<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr><td align="center" nowrap="nowrap">|<span class="ao">y</span>|<hr noshade="noshade" size="1">a</td></tr></tbody></table>)</li>
+		  </ul>
+		</div>
+		<p>　ただし、実際やってみるとわかるように、これらは全てがちゃんとした逆関数にはなっていない。たとえば<span class="ao">y</span>=<span class="aka">x</span><sup>2</sup>という関数は<span class="aka">x</span>が正でも負でも結果の<span class="ao">y</span>は正になる。そして、<span class="aka">x</span>=√|<span class="ao">y</span>|)の結果はどちらにしろ正の数になる。よって、<span class="aka">x</span>＜0である状況では「<span class="aka">x</span>の符号を外す（絶対値を取る）」ということをしてしまって、逆関数にならない<span class="footnote">じゃあどうなるか、は上で確認すべし！</span>。</p>
+		<p>　同じような状況が他の場合でも起こり、上の例が<span class="fukidasi">逆関数</span>になっていると言ってよい<span class="aka">x</span>の範囲は制限されることになる。これも、確認しよう。</p>
+	  </div>
+	  <div data-role="footer">
+		<p><a href="../index.html">動く教科書のページに戻る</a></p>
+		<address>　プログラムについて御質問、御要望、バグ報告などございましたら、<a href="mailto:maeno@sci.u-ryukyu.ac.jp">前野［いろもの物理学者］昌弘へメール</a>くださるか、または、twitterにて<a href="https://twitter.com/irobutsu">irobutsu</a>までメンションしてください。</address>
+	  </div>
+	</div>
+  </body>
+</html>

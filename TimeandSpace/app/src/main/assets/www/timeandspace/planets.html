@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,target-densityDpi=device-dpi,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>第２講　地球中心から太陽中心へ</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+	<script src="plotscreen.js" type="text/javascript"></script>
+	<!-- >	<script type="text/javascript"> -->
+	<!-- app.initialize(); -->
+	<!-- </script> -->
+	<style type="text/css">
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .floatnone{
+	   float:none;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:13px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<title>第２講　地球中心から太陽中心へ</title>
+	<script type="text/javascript">
+	 var angle=0;
+	 var angle2=0;
+	 var angle4=0;
+	 var EarthImage;
+	 var gssub;
+	 $(document).load(function(e) {
+	   loadImages();
+	 });
+	 function loadImages() {
+	   if( EarthImage == undefined ) {
+		 EarthImage=new Image();
+		 EarthImage.src="EarthN.png";
+	   }
+	 }
+	 var gs;
+	 var gssub;
+	 $(document).delegate('#page1','pageinit',function(e) {
+	   loadImages();
+       gs=new PlotScreen("canvas1","turn");
+       gs.writeGraphs=function() {
+		 graphWrite_sub();
+       }
+	   gssub=document.getElementById("canvas1sub");
+	   //gs.canvas.style.position="absolute";
+	   //gssub.style.position="absolute";
+	   gssub.width=gs.canvas.width/4;
+	   gssub.height=gs.canvas.height/9;
+	   //gssub.style.zIndex=1;
+	   // gs.canvas.style.zIndex=0;
+	   //gssub.clientLeft=gs.canvas.getBoundingClientRect().left;
+	   //gssub.clientTop=gs.canvas.getBoundingClientRect().top;
+	   graphWrite();
+	 });
+	 $(document).delegate('#page1','pageshow',function(e) {
+	   gs.setMouseEvent();
+	   moveStop('#stopbtn','graphWrite()');
+	 });
+	 var gs2;
+	 var gs2sub;
+	 $(document).delegate('#page2','pageinit',function(e) {	
+														   loadImages();
+														   gs2=new PlotScreen("canvas2","turn");
+														   gs2.writeGraphs=function() {
+		 graphWrite2_sub();
+       }
+														   gs2sub=document.getElementById("canvas2sub");
+														   //gs.canvas.style.position="absolute";
+														   //gssub.style.position="absolute";
+														   gs2sub.width=gs2.canvas.width/2;
+														   gs2sub.height=gs2.canvas.height/9;
+														   graphWrite2();
+														   });
+	 $(document).delegate('#page2','pageshow',function(e) {
+	   gs2.setMouseEvent();
+	   moveStop('#stopbtn2','graphWrite2()');
+	 });
+	 var gs3;
+	 $(document).delegate('#page3','pageinit',function(e) {	
+														   loadImages();
+														   gs3=new PlotScreen("canvas3","turn");
+														   gs3.writeGraphs=function() {
+		 graphWrite3_sub();
+       }
+														   graphWrite3();
+														   });
+	 $(document).delegate('#page3','pageshow',function(e) {
+	   gs3.setMouseEvent();
+	   moveStop('#stopbtn3','graphWrite3()');
+	 });
+	 function graphWrite_sub() {
+	   gs.clearALL();
+	   gs.ctx.beginPath();
+	   gs.ctx.fillStyle="#8888ff";
+	   gs.ctx.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+	   var x=6*Math.cos(angle);
+	   var y=-6*Math.sin(angle);
+	   var xx=3*Math.cos(angle2);
+	   var yy=-3*Math.sin(angle2);
+	   
+	   writeEarth(gs.ctx,0,0,angle4,-angle);
+	   writeSun(gs.ctx,x,y);
+	   writeMoon(gs.ctx,xx,yy,Math.atan2(x-xx,y-yy));
+	   writeMoonShape(gssub,x,y,xx,yy,0,0);
+	 }
+	 function graphWrite() {
+	   this.graphWrite_sub();
+	   if( moveFlg ) {
+		 if( sunmoveFlg ) {
+		   angle +=0.09;
+		   angle2 += 0.087;
+		 } else {
+		   angle2 -= 0.003;
+		   angle4 +=0.09;
+		 }
+		 setTimeout("graphWrite()",100);
+	   }
+	 }
+	 function writeMoonShape(g,sx,sy,mx,my,ex,ey) {
+	   var ww=g.width;
+	   var hh=g.height;
+	   var ct=g.getContext("2d");
+	   //ct.fillStyle="#FF0000";
+	   //ct.fillRect(ww*0.1,hh*0.1,ww*0.8,hh*0.8);
+	   var smx=sx-mx;
+	   var smy=sy-my;
+	   var emx=ex-mx;
+	   var emy=ey-my;
+	   var anglesm=Math.atan2(smx,smy);
+	   var angleem=Math.atan2(emx,emy);
+
+	   var angle=anglesm - angleem;
+	   
+	   while( angle > Math.PI ) {
+		 angle -= 2*Math.PI;
+	   }
+	   while( angle < -Math.PI ) {
+		 angle += 2*Math.PI;
+	   }
+	   
+	   var rr;
+	   if( ww > hh ) {
+		 rr=hh/3;
+	   } else {
+		 rr=ww/3;
+	   }
+	   ct.fillStyle="#DDDD66";
+	   ct.beginPath();
+	   ct.arc(ww*0.5,hh*0.5,rr,0,2*Math.PI,false);
+	   ct.fill();
+	   ct.fillStyle="rgba(0,0,0,0.7)";
+	   ct.beginPath();
+	   if( angle >0) {
+		 ct.arc(ww*0.5,hh*0.5,rr,-Math.PI*0.5,Math.PI*0.5,false);
+		 var i;
+		 var cos=Math.cos(angle);
+		 var pitch=Math.PI*0.125;
+		 for( i= 1; i<9 ; i++ ) {
+		   var theta=i*pitch;
+		   ct.lineTo(ww*0.5+rr*Math.sin(theta)*cos,hh*0.5+rr*Math.cos(theta));
+		 }
+	   } else{
+		 ct.arc(ww*0.5,hh*0.5,rr,Math.PI*0.5,Math.PI*1.5,false);
+		 var i;
+		 for( i= 1; i<11 ; i++ ) {
+		   var theta=i*Math.PI*0.1;
+		   ct.lineTo(ww*0.5-rr*Math.sin(theta)*Math.cos(angle),hh*0.5-rr*Math.cos(theta));
+		 }
+	   }
+	   ct.fill();
+	 }
+	 function writeMoon(ct,X,Y,A) {		
+								   ct.beginPath();
+								   ct.fillStyle="#DDDD66";
+								   ct.arc(X,Y,0.3,0,2*Math.PI,false);
+								   ct.fill();
+
+								   ct.fillStyle="rgba(0,0,0,0.7)";
+								   ct.beginPath();
+								   ct.arc(X,Y,0.3,-A+Math.PI,-A+2*Math.PI,false);
+								   ct.fill();
+								   }
+
+	 function writeSun(ct,X,Y) {
+	   ct.fillStyle="#ffff00";
+	   ct.beginPath();
+	   ct.arc(X,Y,0.6,0,2*Math.PI,false);
+	   ct.fill();
+	 }
+	 function writeEarth(ct,X,Y,A,B) {
+	   ct.fillStyle="#ffffff";
+	   ct.arc(X,Y,1,0,2*Math.PI,false);
+	   ct.fill();
+	   ct.fillStyle="#ffffdd";
+	   ct.save();
+	   ct.translate(X,Y);
+	   ct.rotate(A);
+	   ct.drawImage(EarthImage,-1,-1,2,2);
+	   ct.restore();
+	   
+	   ct.fillStyle="rgba(0,0,0,0.5)";
+	   ct.beginPath();
+	   ct.arc(X,Y,1,B+0.5*Math.PI,B-0.5*Math.PI,false);
+	   ct.fill();
+	 }
+	 var angle5=0.75*Math.PI;
+	 var angle6=-0.25*Math.PI;
+	 var angle7=0;
+	 function graphWrite2_sub() {
+	   gs2.clearALL();
+	   gs2.ctx.beginPath();
+	   gs2.ctx.fillStyle="#8888ff";
+	   gs2.ctx.fillRect(gs2.leftwx,gs2.bottomy,gs2.w,gs2.h);
+	   
+	   var x=6*Math.cos(-angle5);
+	   var y=-6*Math.sin(-angle5);
+	   var xx=3*Math.cos(angle6);
+	   var yy=-3*Math.sin(angle6);
+	   
+	   writeEarth(gs2.ctx,-x,-y,angle7,angle5);
+	   writeSun(gs2.ctx,0,0);
+	   writeMoon(gs2.ctx,-x+xx,-y+yy,Math.atan2(x-xx,y-yy));
+	   writeMoonShape(gs2sub,0,0,-x+xx,-y+yy,-x,-y);
+	 }
+	 function graphWrite2() {
+	   this.graphWrite2_sub();
+
+	   if( moveFlg ) {
+		 angle7 +=0.09*366.24/365.24;
+		 angle5 +=(0.09/365.24);
+		 angle6 -= (0.09/27.3);
+		 setTimeout("graphWrite2()",100);
+	   }
+	 }
+	 var angleE=0;
+	 var angleM=0;
+	 var angleV=0;
+	 var earthCenterFlg=true;
+	 var orbitWriteFlg=false;
+	 function graphWrite3_sub() {
+	   gs3.clearALL();
+	   gs3.ctx.beginPath();
+	   gs3.ctx.fillStyle="#8888ff";
+	   gs3.ctx.fillRect(gs3.leftwx,gs3.bottomy,gs3.w,gs3.h);
+	   var x=3*Math.cos(angleE);
+	   var y=-3*Math.sin(angleE);
+	   var xx=3*1.52*Math.cos(angleM);
+	   var yy=-3*1.52*Math.sin(angleM);
+	   var xxx=3*0.72*Math.cos(angleV);
+	   var yyy=-3*0.72*Math.sin(angleV);
+	   
+
+	   if( earthCenterFlg ) {
+		 writeSmallEarth(gs3.ctx,0,0,Math.atan2(-x,-y));
+		 
+		 if( enkinFlg ) {
+		   writeSun(gs3.ctx,-x,-y);
+		   writeMars(gs3.ctx,xx-x,yy-y,Math.atan2(-xx,-yy));
+		   writeVenus(gs3.ctx,xxx-x,yyy-y,Math.atan2(-xxx,-yyy));
+		   writeOrbit(gs3.ctx,-x,-y);
+		 } else {
+		   writeSun(gs3.ctx,-2*x,-2*y);
+		   var X=xx-x;
+		   var Y=yy-y;
+		   var L=Math.sqrt(X*X+Y*Y);
+		   X *= 6/L;
+		   Y *= 6/L;
+		   writeMars(gs3.ctx,X,Y,Math.atan2(-xx,-yy));
+		   X=xxx-x;
+		   Y=yyy-y;
+		   var L=Math.sqrt(X*X+Y*Y);
+		   X *= 6/L;
+		   Y *= 6/L;
+		   writeVenus(gs3.ctx,X,Y,Math.atan2(-xxx,-yyy));
+		   gs3.ctx.strokeStyle="#888888";
+		   gs3.ctx.beginPath();
+		   gs3.ctx.arc(0,0,6,0,2*Math.PI,false);	
+		   gs3.ctx.stroke();
+		 }
+	   } else {
+		 writeSmallEarth(gs3.ctx,x,y,Math.atan2(-x,-y));
+		 writeSun(gs3.ctx,0,0);
+		 writeMars(gs3.ctx,xx,yy,Math.atan2(-xx,-yy));
+		 writeVenus(gs3.ctx,xxx,yyy,Math.atan2(-xxx,-yyy));
+		 writeOrbit(gs3.ctx,0,0);
+	   }
+	 }
+	 function graphWrite3() {
+	   graphWrite3_sub();
+	   if( moveFlg ) {
+		 angleE +=0.09;
+		 angleM += 0.09/1.88;
+		 angleV += 0.09/0.62;
+		 
+		 setTimeout("graphWrite3()",100);
+	   }
+	 }
+	 function writeOrbit(ct,X,Y) {
+	   if( orbitWriteFlg ) {
+		 ct.strokeStyle="#888888";
+		 ct.beginPath();
+		 ct.arc(X,Y,3,0,2*Math.PI,false);	
+		 ct.stroke();
+		 ct.beginPath();
+		 ct.arc(X,Y,3*1.52,0,2*Math.PI,false);	
+		 ct.stroke();
+		 ct.beginPath();
+		 ct.arc(X,Y,3*0.72,0,2*Math.PI,false);
+		 ct.stroke();
+	   }			
+	 }
+	 function writeMars(ct,X,Y,A) {
+	   ct.beginPath();
+	   ct.fillStyle="#CC8888";
+	   ct.arc(X,Y,0.3,0,2*Math.PI,false);
+	   ct.fill();
+
+	   ct.fillStyle="rgba(0,0,0,0.5)";
+	   ct.beginPath();
+	   ct.arc(X,Y,0.3,-A+Math.PI,-A+2*Math.PI,false);
+	   ct.fill();
+	 }
+	 function writeVenus(ct,X,Y,A) {
+	   ct.beginPath();
+	   ct.fillStyle="#CCCC88";
+	   ct.arc(X,Y,0.3,0,2*Math.PI,false);
+	   ct.fill();
+
+	   ct.fillStyle="rgba(0,0,0,0.5)";
+	   ct.beginPath();
+	   ct.arc(X,Y,0.3,-A+Math.PI,-A+2*Math.PI,false);
+	   ct.fill();
+	 }
+	 function writeSmallEarth(ct,X,Y,A) {
+	   ct.beginPath();
+	   ct.fillStyle="#88CC88";
+	   ct.arc(X,Y,0.4,0,2*Math.PI,false);
+	   ct.fill();
+
+	   ct.fillStyle="rgba(0,0,0,0.5)";
+	   ct.beginPath();
+	   ct.arc(X,Y,0.4,-A+Math.PI,-A+2*Math.PI,false);
+	   ct.fill();
+	 }
+	 function fullmoon() {
+	   angle2=angle+Math.PI;
+	 }
+	 function newmoon() {
+	   angle2=angle;
+	 }
+	 function changeECFlg() {
+	   if( $('#earthcenter').prop('checked') ) {
+		 earthCenterFlg=true;
+	   } else {
+		 earthCenterFlg=false;
+	   }
+	 }
+	 function changeOWFlg() {
+	   if( $('#orbitwrite').prop('checked') ) {
+		 orbitWriteFlg=true;
+	   } else {
+		 orbitWriteFlg=false;
+	   }
+	 }
+	 var sunmoveFlg=true;
+	 function changeFlg() {
+	   if( $('#sunstop').prop('checked') ) {
+		 sunmoveFlg=false;
+	   } else {
+		 sunmoveFlg=true;
+	   }
+	 }
+	 var moveFlg=true;
+	 function moveStop(btn,prog) {
+	   if( $(btn).prop('checked') ) {
+		 moveFlg=false;
+	   } else {
+		 moveFlg=true;
+		 setTimeout(prog,50);
+	   }
+	 }
+	 var enkinFlg=true;
+	 function changeEKFlg() {
+	   if( earthCenterFlg ) {
+		 if( $('#enkincut').prop('checked') ) {
+		   enkinFlg=false;
+		 } else {
+		   enkinFlg=true;
+		 }
+	   }
+	 }
+	</script>
+  </head>
+  <body>
+  	<div data-role="page" id="page1">
+	  <div data-role="header">
+		<h1>地球中心に見た太陽と月の動き</h1>
+	  </div>
+	  <div data-role="content">
+		  <div class="aka">　以下のアニメーションで地球を中心とした場合の月と太陽の動きを見てみましょう。</div>
+		  <div align="center"><canvas id="canvas1" width="300" height="300"></canvas>
+		  </div>
+		  <div class="ui-grid-c">
+			<div class="ui-block-a"><label><input type="checkbox" onChange="changeFlg();" id="sunstop">太陽が静止<br><small><small>（チェック外すと地球静止）</small></small></label></div>
+			<div class="ui-block-b"><label><input type="checkbox" onChange="moveStop('#stopbtn','graphWrite()');" id="stopbtn">一時停止</label></div>
+			<div class="ui-block-c"><button onClick="fullmoon();" >満月にする</button><button onClick="newmoon();" >新月にする</button></div>
+			<div class="ui-block-d"><canvas id="canvas1sub" width="100",height="100"></canvas></div>
+		  </div>
+		  <div class="setsumei">　地球の位置を固定した時の、太陽と月の「見かけの」運動をアニメーションで表現したものです。中心にあるのが地球、少し薄い黄色の丸（<span class="white">●</span>）が太陽、半分（月にとっての夜の部分）が黒い黄色い丸（<span class="yellow">●</span>）が月です。
+			<br>　一番左にある、「太陽を止める」ボタンを押すと太陽が止まりますが、代わりに地球が自転を始めます。「地球を止める」ボタンを押すと元に戻ります。その隣の「一時停止」ボタン（「運動再開」ボタンにもなる）で運動を停止／再開することができます。さらにその隣の「満月」ボタンと「新月」ボタンは、それぞれの状態に対応する場所に月を持っていきます。</p>
+			<br>　太陽に比べ、月は約1/30だけ回転数が遅いため、地球が止まっていて太陽と月が回る状態にすると、太陽から月がだんだん遅れていくこと、それによって月の見え方（満月か新月か、はたまた半月か三日月か）などが変わっていきます。
+			<br>　なお、実際の太陽はもっと遠いところ（地球から１億５千万キロ、地球の直径の約１万2千倍離れています）を回っています。
+		  </div>
+	  </div>
+		<div data-role="footer" align="center">
+			<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+			<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			<input type="button" value="太陽中心に見た地球と月の動き" data-icon="arrow-r" onclick="location.href='#page2'">
+		</div>
+	  <div data-role="footer" align=center>
+		<a href="#page2" data-icon="arrow-r">2 ページへ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page2">
+	  <div data-role="header">
+		<h1>太陽中心に見た地球と月の動き</h1>
+	  </div>
+	  <div data-role="content">
+		<div align="center"><canvas id="canvas2" width="300" height="300" ></canvas></div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a"><label><input type="checkbox" onChange="moveStop('#stopbtn2','graphWrite2()');" id="stopbtn2">一時停止</label></div>
+		  <div class="ui-block-b" align="center"><canvas id="canvas2sub" width="100",height="100"></canvas></div>
+		</div>
+		<div class="setsumei">　今度は実際の運動に近く、太陽を静止させて地球がその周りを周り、さらに月が地球の周りを回る、という図です。
+		  <br>　地球は１公転する（太陽を一周する）間に、366.24回自転します。すると、１公転の間に365.24回正午がくる（小数以下は閏年のせい）ことになります（自転回数より正午がくる回数の方が1少ない理由がわかりますか？）。
+		</div>
+	  </div>
+		<div data-role="footer" align="center">
+			<input type="button" value="地球中心に見た太陽と月の動き" data-icon="arrow-l" onclick="location.href='#page1'">
+			<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+			<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			<input type="button" value="太陽と地球・金星・火星の動き" data-icon="arrow-r" onclick="location.href='#page3'">
+		</div>
+	</div>
+	<div data-role="page" id="page3">
+	  <div data-role="header">
+		<h1>太陽と地球・金星・火星の動き</h1>
+	  </div>
+	  <div data-role="content">	
+
+		<div class="aka">　下の図で惑星がどんな動きをするのかを見ましょう。</div>
+		<div align="center"><canvas id="canvas3" width="60" height="60" ></canvas></div>
+		<div class="ui-grid-c">
+		  <div class="ui-block-a"><label><input type="checkbox" onChange="changeECFlg();" id="earthcenter" checked="true" >地球を中心<br><small><small>（チェック外すと太陽中心）</small></small></label></div>
+		  <div class="ui-block-b" ><label><input type="checkbox" onChange="changeEKFlg();" id="enkincut">遠近感をなくす<br><small><small>（地球中心の時のみ有効）</small></small></label></div>
+		  <div  class="ui-block-c" ><label><input type="checkbox" onChange="changeOWFlg();" id="orbitwrite">軌道を描く</label></div>
+		  <div  class="ui-block-d"><label><input type="checkbox" onChange="moveStop('#stopbtn3','graphWrite3()');" id="stopbtn3">一時停止</label></div>
+		</div>
+		<div class="setsumei">　惑星の運動も見てみましょう。緑が地球、赤が火星、黄色が金星です（明るい黄色で影がついていないのは太陽です）。惑星はもちろんもっとたくさんあるのですが、ここでは残りは省略しました。惑星や太陽の大きさはかなり誇張してます（軌道のサイズにくらべてずっと小さいです）。
+		  <br>　最初の状態だと、惑星はふらふらと動き回っているように見えると思います。この図は“上”から見た図になっていますが、実際に我々が観測する時は地球上から見ているため、惑星までの距離はすぐにはわかりません。だから、惑星の動きはもっともっと不思議な動きに見えます。		
+		  <br>　距離がわかったとしてこの動きを見ていると、「地球を中心にして考えているから変な動きに見えるのだ」ということがわかってきます。</p>
+		  <br>　太陽を中心にして考えるとどうなるか、「太陽を中心に」ボタンを押してみて、太陽と地球、どちらを中心とすることが「素直」な動きなのか、を考えてみましょう。
+		  <br>　「遠近感をなくす」にチェックを入れると、地球と太陽／金星／火星の距離が同じになります。惑星の距離を測るのは簡単ではないので、我々が観測する星の動きに近いのはこの状態です。この状態から、「実際はどう動いているのか？」を考えていった、と思うと、なかなか簡単にはいかなかったろうな、と思われます。
+		  <br>　「軌道を描く」にチェックを入れると、惑星がどのような軌道にそって動いているのかを表示します。		
+		  <br>　地球を中心にしつつ軌道を描くと、「地球の周りを太陽が周り、太陽の周りを惑星が回る」というイメージがわかるかと思います。見たまんまで考えるとこうなるわけですが、太陽の大きさ（実際は直径で比較して地球の109倍もある）を考えると、それは不自然に思えてきます。</p>
+		  <br>　太陽を中心として考える立場で見ると、地球も「惑星」の仲間であった、ということがわかってきて、そちらの方が素直な見方だと感じられるのではないかと思います。
+		</div>
+	  </div>
+		<div data-role="footer" align="center">
+			<input type="button" value="太陽中心に見た地球と月の動き" data-icon="arrow-l" onclick="location.href='#page2'">
+			<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+			<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		</div>
+	</div>
+  </body>
+</html>

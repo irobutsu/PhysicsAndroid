@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>微分ってなあに？（その１）</title>
+<style type="text/css">
+	body {
+		background-color: #FFFFFF;
+	}
+	img {
+	vertical-align:middle;
+	}
+</style>
+</head>
+<body onload="init(); drawALL();">
+<script type="application/javascript" src="bibuntoha.js"></script>
+<h1>微分ってなあに？（その１）</h1>
+<div align=center><a href="index.html">表紙に戻る</a></div>
+<p>　微分の雰囲気を知るために、まずは下のグラフで「遊んで」みましょう。
+</p>
+<br>
+<br>
+<canvas id="maincanvas" width="600" height="450" style="-ms-touch-action:none;">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+<br>
+<br>
+
+<br>
+二つの▲は（マウスまたは指で）つかんで動かすことができます。ちなみにこのグラフはy=x<sup>2</sup>のグラフです。
+<br>
+　微分の定義を確認しましょう。ある関数f(x)の微分とは、
+<p>
+<img src="bibuntoha1.png" width="308" height="60" alt="(df/dx)=lim_{Δx→0}(f(x+Δx)-f(x)/Δx)">
+</p>
+です。Δは「変化量」を意味する記号で、「Δx」で一つの量であって、「Δとxの掛け算」の意味ではないので注意しましょう。
+<br>　分子にあるf(x+Δx)-f(x)を、グラフの中では「<img src="df.png" width="36" height="20">」と書いています（これはもちろん、「ｆの変化」という意味です）。
+<br>　<img src="dfdx.png" width="30" height="40">はグラフに現れる三角形の傾きです。グラフの右横に、その三角形と相似で底辺が「１」である三角形を表示してありますが、この三角形の高さが<img src="dfdx.png" width="30" height="40">です。
+<br>　この式に現れる極限（lim）というところがなかなか難しいところなのですが、上のグラフで二つの▲の位置を動かした時、<img src="dfdx.png" width="30" height="40">がどのように変化するかを見てください。
+<br>　Δx→0の極限とは二つの▲が重なるところだと考えてくれればいいです。
+<br>
+<br>　こころゆくまで動かして「微分を計算する」ことのイメージをつかんでください。<br>
+<br>　ある程度つかめたら、関数をかえてやってみましょう。
+<hr>
+<div align=center><a href="bibuntoha2.html">その２へ進む</a></div>
+</body>
+</html>
+

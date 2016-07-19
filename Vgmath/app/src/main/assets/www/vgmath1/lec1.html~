@@ -1,0 +1,773 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>第１章　関数</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+		<script src="jquery.js" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="dragmanscreen.js" type="text/javascript"></script>
+		<script src="draggablepoint.js" type="text/javascript"></script>
+		<style type="text/css">
+		img {float:left;}
+		img.withb{border: 2px #880 solid;}
+		h2{
+			color:#300;
+			background-color: #9CC;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		h3{
+			color:#300;
+			background-color: #CC9;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.footnote {
+			font-size:50%;
+			padding:5px;
+			background-color: #FEE;
+			color:#009;
+			boder: solid #008 double;
+			border-radius:8px;
+		}
+		.floatright{
+			float:right;
+		}
+		.floatleft{
+			float:left;
+		}
+		.floatcenter{
+			float:center;
+		}
+		.floatnone{
+			float:none;
+		}
+		.case{
+			color:#000;
+			background-color: #FCC;
+			border: solid #800 thin;
+			border-radius:10px;
+		}
+		.fukidasi{
+			padding:5px;
+			color:#000;
+			background-color: #DDF;
+			border: solid #800 thin;
+			border-radius:10px;
+		}
+		.setsumei{
+			padding:5px;
+			color:#008;
+			background-color: #CFC;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.keyword{
+			padding:3px;
+			color:#050;
+			background-color:#FCF;
+			boder: solid #FF8 double;
+			border-radius:8px;
+		}
+		.akansetsumei{
+			padding:5px;
+			color:#080;
+			background-color: #FCC;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.gray{
+			color:#888;
+		}
+		.magenta{
+			color: #D0D;
+		}
+		.kussetsukaku{
+			color: #D00;
+		}
+		.aka{
+			color: #F00;
+		}
+		.A{
+			color: #F00;
+		}
+		.red{
+			color: #D00;
+		}
+		.green{
+			color: #0D0;
+		}
+		.yellow{
+			color: #DD0;
+		}
+		.Q { 
+			padding:5px;
+			background-color: #CCC;
+			color: #00F; 
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.ao {
+			color: #00F;
+		}
+		.blue{
+			color: #00D;
+		}
+		</style>
+
+	</head> 
+	<body> 
+		<script>
+		var PointY=function(rr,cc) {
+			this.r=rr;
+			this.col=cc;
+			this.write=function(ct) {
+				ct.fillStyle=this.col;
+				ct.beginPath();
+				ct.moveTo(this.x,this.y+0.3*this.r);
+				ct.lineTo(this.x+this.r,this.y);
+				ct.lineTo(this.x,this.y-0.3*this.r);
+				ct.lineTo(this.x-this.r,this.y);
+				ct.closePath();
+				ct.fill();
+			}
+			this.setXY=function(xx,yy) {
+				this.x=xx;
+				this.y=yy;
+			}
+		}
+		var PointX=function(xx,yy,rr,c,x0,x1) {
+			this.y=0;
+			DraggablePoint.call(this,xx,yy,rr,c); // 親クラスのコンストラクタを呼ぶ。DraggablePointはプロトタイプを使わなかったのでこれでいい。
+			this.setRange=function(xx0,xx1) {
+				this.rangex0=xx0;
+				this.rangex1=xx1;
+			};
+			this.setRange(x0,x1);
+			this.setXY=function(xx,yy) {
+				// y座標を動かす必要はないので上書き。
+				if( xx < this.rangex0 ) {
+					this.x =this.rangex0;
+				} else if( xx > this.rangex1 ) {
+					this.x = this.rangex1;
+				} else {
+					this.x=xx;
+				}
+			};
+			this.write=function(ct) {
+				ct.fillStyle=this.col;
+				ct.beginPath();
+				ct.moveTo(this.x,this.y+this.r);
+				ct.lineTo(this.x+0.3*this.r,this.y);
+				ct.lineTo(this.x,this.y-this.r);
+				ct.lineTo(this.x-0.3*this.r,this.y);
+				ct.closePath();
+				ct.fill();
+			};
+		}
+		// 親クラスタのプロトタイプを継承する。
+		PointX.prototype=Object.create(DraggablePoint.prototype);
+		PointX.prototype.constructor=PointX;
+
+
+		var ct_func;
+		var sc_func;
+		var ct_power;
+		var sc_power;
+		var ct_niji;
+		var sc_niji;
+		var ct_sanji;
+		var sc_sanji;
+		var pointx,pointy;
+		$(document).delegate('#page_func','pageinit',function(e) {
+			sc_func=new DragmanScreen("canvas_func",6,6,0.9);
+			sc_func.setLeft(-3);
+			sc_func.setBottom(-3);
+			sc_func.gobackOriginalSize();
+			ct_func=sc_func.canvas.getContext("2d");
+			sc_func.writeContents=function() {
+				write_func();
+			}
+			pointx=new PointX(1,0,0.3,"rgba(255,0,0,0.5)",sc_func.leftwx,sc_func.rightwx);
+			pointy=new PointY(0.3,"rgba(0,0,255,0.5)");
+			sc_func.pushDragObjList(pointx);
+		});
+		$(document).delegate('#page_func','pageshow',function() {
+			gs=ct_func;
+			write_func();
+		});
+		$(document).delegate('#page_power','pageinit',function(e) {
+			sc_power=new DragmanScreen("canvas_power",4,4,0.9);
+			sc_power.setLeft(-2);
+			sc_power.setBottom(-2);
+			sc_power.gobackOriginalSize();
+			ct_power=sc_power.canvas.getContext("2d");
+			sc_power.writeContents=function() {
+				write_power();
+			}
+		});
+		$(document).delegate('#page_power','pageshow',function() {
+			gs=ct_power;
+			write_power();
+		});
+		function write_func() {
+			var ct=sc_func.ctx;
+			sc_func.clearALL();
+			sc_func.writeCoordinate();
+			var i;
+			ct.strokeStyle="rgb(0,128,128)";
+			ct.beginPath();
+			pointx.setRange(sc_func.leftwx,sc_func.rightwx);
+
+			if( funcNo==2 ) {
+				ct.moveTo(sc_func.leftwx,Func(sc_func.leftwx));
+				for(i=sc_func.leftwx+0.03; i< -0.001 ; i+=0.03 ) {
+					ct.lineTo(i,Func(i));
+				}
+				ct.stroke();
+				ct.beginPath();
+				ct.moveTo(0.0001,Func(0.0001));
+				for(i=0.05; i<= sc_func.rightwx ; i+=0.05 ) {
+					ct.lineTo(i,Func(i));
+				}
+			} else if( funcNo==4 ) { 
+				if( a>=0 ) {
+					pointx.setRange(0,sc_func.rightwx);
+					if( pointx.x < 0 ) { pointx.x=-pointx.x;}
+					ct.moveTo(0,0);
+					for(i=0.03; i<= sc_func.rightwx ; i+=0.03 ) {
+						ct.lineTo(i,Func(i));
+					}
+				} else {
+					pointx.setRange(sc_func.leftwx,0);
+					if( pointx.x > 0 ) { pointx.x=-pointx.x;}
+					ct.moveTo(0,0);
+					for(i=-0.03; i>= sc_func.leftwx ; i-=0.03 ) {
+						ct.lineTo(i,Func(i));
+					}
+				}
+			} else {
+				ct.moveTo(pointx.rangex0,Func(pointx.rangex0));
+				for( i=pointx.rangex0+0.02 ; i<= sc_func.rightwx ; i+=0.02 ) {
+					ct.lineTo(i,Func(i));
+				}
+			}
+			ct.stroke();
+
+			pointx.write(ct);
+			ct.strokeStyle="rgba(128,0,128,0.3)";
+			ct.beginPath();
+			var x=pointx.x;
+			var y=Func(x);
+			ct.moveTo(x,0);
+			ct.lineTo(x,y);
+			ct.lineTo(0,y);
+			ct.stroke();
+			pointy.setXY(0,y);
+			pointy.write(ct);
+		}
+		function write_power() {
+			var ct=sc_power.ctx;
+			sc_power.clearALL();
+			sc_power.writeCoordinate();
+			var i;
+			ct.strokeStyle="rgb(0,128,128)";
+			var x=sc_power.leftwx;
+			var y=Math.pow(x,power_a);
+			var xx=x;
+			var yy=y;
+			while( yy> sc_power.topy || yy< sc_power.bottomy ) {
+				x=xx;
+				y=yy;
+				xx += 0.01;
+				yy=Math.pow(xx,power_a);
+			}
+			ct.beginPath();
+			ct.moveTo(x,y);
+			while( x<sc_power.rightwx ) {
+				x +=0.01;
+				y=Math.pow(x,power_a);
+				if( y> sc_power.topy || y< sc_power.bottomy ) {
+					ct.lineTo(x,y);
+					ct.stroke();
+					ct.beginPath();
+					xx=x+0.01;
+					yy=y;
+					while( (yy> sc_power.topy || yy< sc_power.bottomy ) && xx <= sc_power.rightwx ) {
+						x=xx;
+						y=yy;
+						xx +=0.01;
+						yy=Math.pow(xx,power_a);
+					}
+					ct.moveTo(x,y);
+				} else {
+					ct.lineTo(x,y);
+				}
+			}
+			ct.stroke();
+		}
+		function changefunc(selector_str) {
+			funcNo=Number($(selector_str).val());
+			if( funcNo==8 ) {
+				pointx.rangex0=0.00001;
+				if( pointx.x < 0 ) {
+					pointx.x = -pointx.x;
+				}
+			} else {
+				pointx.rangex0=sc_func.leftwx;
+			}
+			write_func();
+		}
+		var funcNo=1;
+		function Func(x) {
+			switch( funcNo ) {
+				case 1:
+					return a*x;
+					break;
+				case 2:
+					return a/ x;
+					break;
+				case 3:
+					return a*x*x;
+					break;
+				case 4:
+					return Math.sqrt(Math.abs(x/ a));
+					break;
+				case 5:
+					return a*x*x*x;
+					break;
+				case 6:
+					return Math.sin(a*x);
+					break;
+				case 7:
+					return Math.exp(a*x);
+					break;
+				case 8:
+					return Math.log(Math.abs(x))/ a;
+					break;
+			}
+		}
+		var a=1;
+
+		function upA() {
+			a +=0.1;
+			if( a>5 ) { a=5; }
+			changeA();
+		}
+		function downA() {
+			a-=0.1;
+			if( a<-5 ) { a=-5;}
+			changeA();
+		}
+
+		function changeA() {
+			var elements = document.getElementsByName('a_value');
+			a *=10;
+			a=Math.round(a);
+			a = a/ 10;
+			var i;
+			for(i=0; i<elements.length ; i++ ) {
+				elements.item(i).innerHTML=a;
+			}
+			write_func();
+		}
+
+		var power_a=1;
+
+		function up_power() {
+			power_a += 1;
+			set_power();
+		}
+		function down_power() {
+			power_a -= 1;
+			set_power();
+		}
+
+		function set_power() {
+			$("#power_n").html(power_a);
+			write_power();
+		}
+		</script>
+		<div data-role="page" id="hajimeni">
+			<div data-role="header">
+				自然科学のための数学・2015年度第１回
+			</div>
+			<div data-role="content">
+				<h2>これからの勉強についての注意</h2>
+				<p>　この自然科学のための数学I・IIでは、高校までに比べて難しい数学をたくさん使うことになります。「数学は苦手だ」とか「こんな数学なんて使いたくないのに」とか思う人はきっと多いと思う。しかし、数学は必要なのです！</p>
+
+				<p>　高校までは、物理でも化学でも生物でも地学でも、それほど難しい数学を使わなくて済みました。しかし、今後はそうはいかないということを覚悟しておいてください。難しい概念を扱うには、数学を使った方が楽になるということもあります。</p>
+
+				<p>　それに、数学は自然科学にとっては全世界の共通言語です。日本語をしゃべる人も英語をしゃべる人も、自然科学をする時には「数学」という言葉を使って会話する。だから、理学部の学生である以上数学を嫌うわけにはいかないのです。</p>
+
+				<p>　そこで、皆さんに数学が得意な人になってもらうために、数学とつきあうためにどうしていかなければいけないかを書いておきます。</p>
+
+				<h3>数学は自然科学を簡単にするためにある</h3>
+				<p>　まず心に留めておかなくてはいけないのはこの点です。自然科学者が（いっけん難しく見える）数学を使う理由は「使った方が簡単だから」なのです。「なぜこんな式を使うんだろう？」ということを手がかりに考えていこう。「なるほど、こういう利点があるからこういう式を使うのか」ということがわかれば、難しげに見える式にも親近感が持てます。最初から毛嫌いせずに「新しく出てきたこれはどう役に立つのだろう？」という前向きな気持ちで学習していこう。</p>
+
+				<p>　世間では「数式は頭のいい人が使うもの」と思われているようです。だが実はそうではありません。天才ならば、数式を使わずに難しい自然科学が理解できます。でもそんな天才は世界に一握りしかいません。むしろ、「天才ではない人でも自然科学がわかるための道具」が数式だと思いましょう。</p>
+
+
+
+				<h3>いろんな方向から攻めよう</h3>
+				<p>　数式だけ見てもイメージが湧かない、という人は多い。この講義では、できる限り数式と図形などのイメージを並列して話していくつもりです。また、数式を使うにしても計算のやり方はいろいろあります。数式でわからない人は図形で理解しよう。図形でわかりにくい人は数式で理解しよう。一つの概念を理解するには、それをいろんな方向から見ることが大切です。どういう説明がわかりやすいかには個人差があるようです。一つの方法でわからない時は他のアプローチをとろう。いろいろやっているうちに自分に適した理解方法が見つかる。</p>
+
+				<h3>大切なのは自己学習</h3>
+				<p>　「授業に出ているからこれで大丈夫」などとは決して思わないこと。これに加えて、自己学習をみっちりしなくてはダメ。数学の力がついていく過程は、スポーツや音楽の場合と同じです。あなたたちが大天才なら別ですが、そうでないのなら「自分の手で計算し、鍛錬する」という手数を踏まなくては数学ができるようにはなりません。素振りをせずにプロ野球選手になった人も、バイエル練習曲を弾かずにピアニストになった人も（大天才を除いて）いません。「先生の話を聞いているとわかるんですが、実際に問題を解こうとするとわかりません」という人は多いです。こうなる理由は一つ、練習不足です。簡単な問題からでいいので、自分で手を動かして計算し、自分で図を書いてみよう。人の話だけ聞いてわかった気になっていると、絶対にどこかで行き詰ります。</p>
+
+				<h3>最良の勉強手段は、人に教えること</h3>
+				<p>　自分があることをわかっているかどうかを判定する、もっともよい方法は、「それを人に教えられるか？」ということです。人に教えられないということは、自分の理解に何かが不足しているということです。数人で集まって自主ゼミ（一人が先生役になって教科書等を読む）などをすると、とっても効果が上がります。</p>
+
+				<div class="A">　この授業を受けている人には中学高校の理科教員志望の人は多いと思うけど、たとえば「中学生に『エネルギーって何？』と聞かれたら？」「高校生に『微分って何？』と聞かれたら？」などと考えてみよう。自信を持って答えられないとしたら、あなたの勉強は何か足りない。</div>
+
+				<h3>勉強時間と理解度は比例しない</h3>
+				<p>　自然科学の勉強は、勉強したら勉強した分わかるかというと、そうはなっていません。「勉強しても勉強してもちっとも理解が進まない」時期があるかと思えば「最近勉強してないな、と思って教科書開いてみたらあら不思議。前に読んだ時にわからなかったことがすらすらわかる」時期もあります。成果があがらないような気がしても、我慢して続けていれば「すらすらわかる」時期が必ずやってくる。あきらめるな。 </p>
+
+				
+				<p><big>自然科学の勉強は難しい。しかし、だからこそやりがいもあるし、わかった時の喜びも大きい。</big></p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#kansuutoha" data-icon="arrow-r">関数とは</a>
+			</div>
+		</div>
+		<div data-role="page" id="kansuutoha">
+			<div data-role="header">
+				<h1>第１章　関数とは</h1>
+			</div>
+			<div data-role="content">
+				<p><span class="setsumei">自然法則を数学を使って表現しその関係を探る</span>というのが本講義の目的であるが、この章では（今後何度となくお世話になる）「関数」の例を示し、次の章で微分を、さらにその先で積分を考えるための準備をしよう。</p>
+
+				<p>自然科学を探求していくとき、</p>
+				<div class="setsumei">
+					<span class="fukidasi">ある量A</span>を変化させた時に、それとは別の<span class="fukidasi">ある量B</span>がそれに応じてどう変化するか？
+				</div>
+				<p>を調べていかなくてはいけないことがよくある。この「AからBへの関係」（A→B）のことを「関数(function)」<span class="footnote">英語のfunctionは「機能」とか「作用」のような意味を持っている。</span>と呼ぶ。「数」に限らず「何かを入力（インプット）したら何かが出力（アウトプット）される」働きを持っていればそれは「function（関数）」と呼んでも良い<span class="footnote">コンピュータ言語においても「関数(function)」という言葉があるが、コンピュータ言語における関数には「出力（アウトプット）がない関数（void関数）」もある。</span>。数学的な意味で「関数」と言う時は数（もしくは数で表現できる量）を相手にしていることが多いが、数学だからと言って「数」を扱っているとは限らない。</p>
+				<p>　この変化させる数を「変数(variable)<span class="footnote">variableという言葉は「変化させることができるもの」という意味になる。</span>」と呼ぼう。まず最初に変化させるある量Aは「独立変数(independent variable)」、それに応じて変化するある量Bは「従属変数(dependent variable)」と呼ぶ<span class="footnote">英語の「depend」は「依存する」だから、「従属変数(dependent variable)は何かに依存して変化する量、という意味を持つ。independentはその反対。</span>。独立変数は文字通り独立に、好きに選ぶことができて、それに応じて従属変数の値が決まる、という意味を持たせたネーミングである<span class="footnote">実はある量が独立変数なのか従属変数なのかは、状況によって違う。たとえば実験する時には、１つの量を変化させつつもう１つの量を測る、ということを行うが、どの量を変化させるかは実験の状況に応じて変わる（変えることができる）。</span>。</p>
+				<p>　互いに関係のある量を計測する実験を何度も行うことによってし、それぞれの間にどのような法則があるかを求めていこうとすること、それが自然科学の始まりである。自然科学で計測するものは数であることが多いので、「ある数→また別のある数」という対応関係（「関数」）を調べていくことが多くなるのは必然的である。</p>
+				
+				<p>　高校までの数学では独立変数にx、従属変数にyを使うことが多いが、これは別にそうでなくてはいけないというものではない。文字に何を使うかというのは全く本質ではない。<br>
+					　xとyに「xを１つ決めればyが１つ決まる」という関係があるとき、「yはxの関数だ」と言う。下のプログラムでその実例を見よう。</p>
+				<p>例を述べよう。</p>
+
+				<div class="box">棒の両端に力を掛けると、棒が曲がる。その曲がりと力の関係は？---<small>そんなことを知ってどうするのか、と思うかもしれないが、例えば体重計が体重を測定できるのは力と物体の曲がりに関係があり、体重計を製作する人がその関係を熟知しているからこそだ。</small></div>
+				<br>
+				<div class="box">一定量の気体に掛ける圧力を高くすると、気体の体積が縮む。圧力と体積の関係は？---<small>車や飛行機などの性能を上げるためには、こういう法則も知らなくてはいけない。</small></div>
+
+				<div class="box">温度が高いと一定の水に溶ける砂糖の量が増える（冷水よりもお湯の方がよく溶ける）。温度と砂糖の質量の関係は？---<small>アイスコーヒーに入れる砂糖の量を考えるときに、知っておくべき情報だ。</small></div>
+
+
+				<p>　２番めの圧力と体積の例などは、<span class="fukidasi">圧力（独立変数）</span>→<span class="fukidasi">体積（従属変数）</span>と考える場合も、<span class="fukidasi">体積（独立変数）</span>→<span class="fukidasi">圧力（従属変数）</span>と考える場合もある（どちらを“独立に”コントロールできるかは気体の置かれた状況によるだろう）。</p>
+
+				<p>　互いに関係のある量を計測する実験を何度も行うことによってそれぞれの間にどのような法則があるかを求めていこうとすること、それが自然科学の始まりだ。自然科学で計測するものは数であることが多いので、ある数→また別のある数という対応関係（「関数」）を調べていくことが多くなるのは必然的である。</p>
+
+				<p>高校までの数学では独立変数に${x}$、従属変数に${y}$を使うことが多いが、これは別にそうでなくてはいけないというものではない。文字に何を使うかというのは全く本質ではない。</p>
+				<p>　では、以下のページでアニメーションを使って「関数」を勉強していこう。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#hajimeni" data-icon="arrow-l">これからの学習についての注意</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#page_func" data-icon="arrow-r">いろんな関数のグラフ</a>
+			</div>
+		</div>
+		<div data-role="page" id="page_func">
+			<div data-role="header">
+				<h1>いろんな関数のグラフ</h1>
+			</div>
+			<div data-role="content">
+				<div class="setsumei">
+					　いろんな関数の場合で、<img src="xset.png" class="floatnone">を動かしてxを変化させると、それに応じて<img src="yset.png" class="floatnone">つまりyが動く。yの方は動かせません。「従属」変数ですから。<br>
+					　関数と定数aの値はいろいろ変化させることができるので、試してみること。
+				</div>
+				<p><canvas width="400" height="400" id="canvas_func" style="-ms-touch-action: none;"></canvas></p>
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<div data-role="fieldcontain">y=
+							<select name="selectmenu" id="selectmenu" data-inline="true" onChange="changefunc('#selectmenu');">
+								<option value="1">ax</option>
+								<option value="2">a/x</option>
+								<option value="3">ax^2</option>
+								<option value="4">√(x/a)</option>
+								<option value="5">ax^3</option>
+								<option value="6">sin(ax)</option>
+								<option value="7">exp(ax)</option>
+								<option value="8">(log|x|)/a</option>
+							</select>
+						</div>
+					</div>
+					<div class="ui-block-b">
+						<div data-role="fieldcontain">
+							<p> <a href="#btd3" data-role="button" data-inline="true" onClick="downA();">＜</a>a=<span name="a_value" class="a_value">1.0</span><a href="#btu3" data-role="button" data-inline="true" onClick="upA(); ">＞</a></p>	
+						</div>
+					</div>
+				</div>
+				<p>　ここで、いろんな関数の場合で「$x$を変えると$y$がどう変わるか」ということと、「パラメータaを変化させると関数がどう変わるか」を実感してもらった。</p>
+				<p>　たとえば、y=axでaを変えると傾きが変わる。y=ax<sup>2</sup>でaを変えると曲がり具合が変わる。このようなパラメータと「線の形」の関係は、この後でも重要。</p>
+				<div class="Q">　このexp(ax)で、a=0にすると全部1になるんですが、なぜですか？</div>
+				<div class="A">　その場合、考えている式はy=exp(0x)、つまりは$y={\mathrm e}^0$ということになります。${\mathrm e}^0$は「$\mathrm e$を0回掛ける」と考えると0っぽいのだけど、</div>
+				<div class="A"> ${\mathrm e}^0,{\mathrm e}^1,{\mathrm e}^2,{\mathrm e}^3,{\mathrm e}^4,\cdots$</div>
+				<div class="A">という並び（数列）を考えると、右に一ついくと${\mathrm e}$倍になり、左に一ついくと${1\over{\mathrm e}}$倍になる、というルールで並んでいるでしょう。だから、${\mathrm e}^0$は<span class="box">$\mathrm e$倍すると${\mathrm e}^1$になる数</span>というわけで、つまり1です。だからexp(0)=1になる。</div>
+				<hr>
+				<p>　それぞれの関数の雰囲気を見ておこう。理学部の学生なら「指数関数で増える（減る）」とか言われたらここにあるexp(ax)のグラフが思い浮かぶようでないとダメである。「この授業の出席者は指数関数で減少する」のように使う。</p>
+				<hr>
+				<div class="setsumei">
+					　ここで、y=ax^2（これは、y=ax<sup>2</sup>のこと）とy=√(x/a)は互いに逆関数。exp(ax)と(log|x|)/aも互いに逆関数である。
+				</div>
+				<p>　逆関数のグラフは互いにどういう関係にあるか、を見よう。</p>
+			</div>
+			<div data-role="footer" align=center>
+				<a href="#kansuutoha" data-icon="arrow-l">関数とは</a>
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#page_power" data-icon="arrow-r">累乗関数</a>
+			</div>
+		</div>
+		<div data-role="page" id="page_power">
+			<div data-role="header">
+				<h1>冪乗関数</h1>
+			</div>
+			<div data-role="content">
+				<p>　このページでは、$y=x^n$の形（冪乗）の関数のグラフを見よう。</p>
+				<div class="setsumei">　このグラフはxもyも-2から2までの範囲で描かれている。nは下のボタンで変えることができるので、いろんな値で関数がどのようなグラフになるのかを実感しよう。</div>
+				<p><canvas width="400" height="400" id="canvas_power" style="-ms-touch-action: none;"></canvas></p>
+				<div><button data-inline="true" onClick="down_power();">←</button>
+					n=<span id="power_n">1</span>
+					<button data-inline="true" onClick="up_power();">→</button>
+				</div>
+				<div class="A">このグラフを見て、気づくことはなんだろう？？</div>
+				<div class="Q">nが偶数だと答えは全部正だけど、nが奇数だと正になったり負になったりする。</div>
+				<div class="A">そう、まず一つ、それが大事。これは式を見ても、nが偶数なら負にならない、というのはわかるよね。</div>
+				<div class="A">他には？？特に「nが増加するとどうなるか？」という変化について気がついたことは？</div>
+				<div class="Q">$n$が大きいとグラフが広がる？</div>
+				<div class="A">「広がる」というのは？</div>
+				<div class="Q">$x=1$のところの線に近づく。</div>
+				<div class="A">ああなるほど。$n$が大きくなるとグラフが凹の形に近くなっていく、ということですね。これも大事なことです。$x=-1$と$x=1$の間を見ると、グラフがどんどん$x$軸に近づいていく。これはなぜか？？</div>
+				<div class="Q">$x$が小数だから、$n$乗すると0に近づくから？</div>
+				<div class="A">うん。いいたいことはわかるけど「小数だから」というのは言葉が足りないね。0.xxxxみたいな「1より小さい小数で表される数字だから」というのが言いたいことだと思う。そういう数は掛ければ掛けるほど小さくなり、0に近づく。</div>
+				<p>　このことから、変数$x$が1より小さい範囲では、$n$が大きい項は重要度が低い（計算に大きく寄与しない可能性が高い）ということになる。これは自然科学でいろんな量を考える時、とても大事。</p>
+				<p>　もちろん、逆に変数$x$が1より大きい範囲では、$n$が大きい項の方が重要になる。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page_func" data-icon="arrow-l">いろいろな関数のグラフ</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#page_qa" data-icon="arrow-r">受講者の感想・コメントへ</a>
+			</div>
+		</div>
+		<div data-role="page" id="page_qa">
+			<div data-role="header">
+				<h1>受講者の感想・コメント</h1>
+			</div>
+			<div data-role="content">
+				<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+				<div class="Q">「数学は自然科学の共通言語である」という言葉が印象的でした。私は天才ではないので数学を道具として自然科学に向き合います。</div>
+				<div class="A">数学を味方につけましょう。</div>
+				<p></p>
+				<div class="Q">$y=x^n$（0＜$x$＜1）のときは$n$が大きくなくても近似できることがわかった。</div>
+				<div class="A">ん？ もちろん$n$が大きければ大きいほど近似しやすくなりますが。</div>
+				<p></p>
+				<div class="Q">ある変数の値を変化させることによる様々な関数によっての違いがあってとても楽しかった。</div>
+				<div class="A">いろんな関数のイメージをつけておきましょう。</div>
+				<p></p>
+				<div class="Q">高校までの数学ではなんとなく理解して細かいところがよくわかっていませんでしたが、先生の授業で関数の意味がよくわかりました。</div>
+				<div class="A">「細かい」というより、「関数の意味」は一番肝心なところですよ。</div>
+				<p></p>
+				<div class="Q">$x$＜1の範囲では次数の小さい数が大事で、$x$＞1の範囲では次数の大きい数が大切だという話、とても興味深くておもしろかったです。</div>
+				<div class="A">実験データなどを数値化し計算し、ということをやる時には大事なことです。</div>
+				<p></p>
+				<div class="Q">実際にタブレットを使って関数の変化を見たことで、文章では難しかった部分の理解をすることができきてよかったです。</div>
+				<div class="A">「関数」のイメージを動きで掴んでください。</div>
+				<p></p>
+				<div class="Q">関数の意味がわかった。</div>
+				<div class="A">今？　うん。でもわかってよかった。</div>
+				<p></p>
+				<div class="Q">タブレットを使ってグラフと自分で実際に動かしてみるというのはとっても楽しかった。</div>
+				<div class="A">いろいろな変化のイメージを持っておきましょう。</div>
+				<p></p>
+				<div class="Q">関数についてタブレットを用いて独立変数に対しての従属変数の動き方を調べた、y=exp(ax)という表示が$y={\mathrm e}^{ax}$を表すことを知った。$y=x^n$の$n$が偶奇の２パターンがあることがわかった。</div>
+				<div class="A">いろいろな関数が出てきますが、それぞれイメージを掴んでおいてください。</div>
+				<p></p>
+				<div class="Q">関数のグラフについて、タブレットを使った授業で学ぶことができて、新鮮でわかりやすかったです。</div>
+				<div class="A">タブレットはこれからもたくさん使っていきます。</div>
+				<p></p>
+				<div class="Q">関数で遊ぶのが楽しかったです。これから数学頑張ります。</div>
+				<div class="A">はい、楽しみながら頑張ってください。</div>
+				<p></p>
+				<div class="Q">タブレットを使っていろいろな関数の変化について学ぶことができて、関数の性質がおもしろいと思いました。</div>
+				<div class="A">これからもいろいろ面白い関数が出てきます。</div>
+				<p></p>
+				<div class="Q">関数のグラフを視覚的に理解できたので、わかりやすかったです。４年後には、微積分もろもろしっかり扱えるようになりたい。</div>
+				<div class="A">微積分を使いこなせるようになるまで、頑張ってください。</div>
+				<p></p>
+				<div class="Q">頭ではわかっているそれぞれの関数の性質ではあるが、実際にグラフで見てみると本当にその通りで、逆に新鮮に感じた。</div>
+				<div class="A">実際にいろいろ見てみるのは大事ですね。</div>
+				<p></p>
+				<div class="Q">キャンセルしようと思っていたけど、授業楽しいので頑張りたいと思いました。微分方程式で未来予想（？）ができるというのは知っているのですが僕もできるようになりたいです。</div>
+				<div class="A">では頑張ってください。この授業では微分方程式は後半になってから出てきますが、強力な道具だということがわかると思います。</div>
+				<p></p>
+				<div class="Q">公開授業で参加しました。数学から離れて約10年です。数学は苦手でした。教科書ペラペラめくっていたら、難しそうだなーと思いました。授業についていけるよう努力します。宜しくお願いします。</div>
+				<div class="A">はいよろしく。遠慮なく質問してください。</div>
+				<p></p>
+				<div class="Q">高校の範囲では$n=4とかの$y=x^n$のグラフなんて見たことなかったので、次数が大きいグラフを実際見ることができて嬉しかった。次数が大きくなると0付近はほぼ無視というのも始めて知った。</div>
+				<div class="A">次数が高い部分も重要になってきます。</div>
+				<p></p>
+				<div class="Q">関数のグラフについてじっくり考えるこてゃ今まであまりなかったので、楽しかったです。</div>
+				<div class="A">これからはじっくり、考えていってください。</div>
+				<p></p>
+				<div class="Q">なんとなくやっていた数学をもっと厳密に考えられるようにしないといけないと思った。</div>
+				<div class="A">うん、数学は「なんとなく」ではいけませんね。</div>
+				<p></p>
+				<div class="Q">最初は先生の威圧感に押されたけど、視覚でわかるので良い。</div>
+				<div class="A">威圧なんてしてないんだけどなぁ。</div>
+				<p></p>
+				<div class="Q">数学の関数は、今まで何気なく使っていたけど、「関数」にもいろいろなものがあって非常に奥が深いんだと感じた。</div>
+				<div class="A">関数はもちろん、今日やった以外にもたくさんあります。</div>
+				<p></p>
+				<div class="Q">極端に数字を大きくしてみたりすることで、関数のグラフの概形がどういう変化をするかというイメージができたので、深い理解ができた。関数それぞれの定義をしっかり確認していきたい。</div>
+				<div class="A">それぞれの関数の定義とイメージを作っていってください。</div>
+				<p></p>
+				<div class="Q">体重計の仕組みを初めて知った。</div>
+				<div class="A">今日紹介した以外にもいろんな仕掛けがありますよ。</div>
+				<p></p>
+				<div class="Q">タブレットを使って、グラフの違いなどを見ると、非常に理解しやすい。</div>
+				<div class="A">グラフを動きのイメージで理解しておいてください。</div>
+				<p></p>
+				<div class="Q">タブレットを使った授業は分かりやすく、先生の説明もわかりやすい。関数にも多種多様なものがあるんですね。</div>
+				<div class="A">今日やったのだって、ほんの一部です。</div>
+				<p></p>
+				<div class="Q">関数を色々知ることができた。脱落しないよう頑張りたい！！</div>
+				<div class="A">はい、頑張っていきましょう。</div>
+				<p></p>
+				<div class="Q">$y=x^n$のグラフを$n$を増やしながら形の変化を見ていけて面白かった。$x$＜1と$x$＞1での$y$の値の変化も確認できてよかった。</div>
+				<div class="A">冪乗の関数のあの性質は、とても大事です。</div>
+				<p></p>
+				<div class="Q">面白そうに思えたので、難しくてもあきらめないで頑張ろうと思いました。</div>
+				<div class="A">面白いし、役に立つのが数学です。</div>
+				<p></p>
+				<div class="Q">関数にもいろいろあるのだと知った。あと、物の売れ筋とかが微積で調べることができると聞いてびっくりした。</div>
+				<div class="A">関数にもいろいろあるし、数学の使い途もいろいろあるのです。</div>
+				<p></p>
+				<div class="Q">関数の次数を高くしていくアニメーションがとてもおもしろかった。</div>
+				<div class="A">次数による関数の変化のイメージを持っておきましょう。</div>
+				<p></p>
+				<div class="Q">微分方程式と聞いて初回から難しそうだと感じたけど、理学部は多くのことを期待されているということをモチベーションに頑張りたいです。いろんな関数の性質も知れてよかったです。</div>
+				<div class="A">心配しなくても、微分方程式が出てくるのは基礎固めが終わってから、だいぶ先です。</div>
+				<p></p>
+				<div class="Q">タブレットを使って実際にどのようなグラフになるのかをわかれて、楽しかった。</div>
+				<div class="A">グラフ、数式、両方を関連付けてイメージをつけていきましょう。</div>
+				<p></p>
+				<div class="Q">シミュレーションを使ってイメージしながら勉強できてわかりやすかったです。シミュレーションを使うことで、違った視点で疑問点が出てきました。</div>
+				<div class="A">イメージは大事です。数式とイメージの両方を把握していこう。</div>
+				<p></p>
+				<div class="Q">関数についてあらためて関心を持った。</div>
+				<div class="A">これからいろいろな関数出てくるので、関心を持ち続けてください。</div>
+				<p></p>
+				<div class="Q">数学はあまり得意ではないけど、これからのためにしっかり学んでいこうと思いました。</div>
+				<div class="A">１年後は数学得意になっているようにしてください。</div>
+				<p></p>
+				<div class="Q">タブレットでプログラムを使っての授業はとても楽しいし、イメージしやすかったです。</div>
+				<div class="A">これからもいろいろ使ってやっていきましょう。</div>
+				<p></p>
+				<div class="Q">関数をプログラムで動かすのは初めてで、新鮮だった。１年間よろしくお願いします。</div>
+				<div class="A">この１年、いろんなプログラム使いながら勉強していきます。</div>
+				<p></p>
+				<div class="Q">関数のグラフをタブレットを通して目で見て学ぶことができた。特に$x^n$のグラフが初めてわかったこともあり面白かった。</div>
+				<div class="A">動く図のイメージで、関数を理解しておいてください。</div>
+				<p></p>
+				<div class="Q">実際にグラフを動かして見ると、いままで気付かなかったことに気づいて驚きました。</div>
+				<div class="A">いろいろやってみることは大事ですね。</div>
+				<p></p>
+				<div class="Q">グラフの特徴がつかめた。</div>
+				<div class="A">つかんでおいてください。</div>
+				<p></p>
+				<div class="Q">物理学を学ぶにおいて数学もしっかり学ぼうと思いました。</div>
+				<div class="A">物理には数学は必須です。</div>
+				<p></p>
+				<div class="Q">$x^n$のグラフの概形が分かって面白かった。</div>
+				<div class="A">イメージつかんでおいてください。</div>
+				<p></p>
+				<div class="Q">何かやりたいことを見つけるために数学も少しは頑張りたい。</div>
+				<div class="A">「少しは」？？？<br>やりたいことをやるためには、数学が必要になるかもしれません。その時のために頑張ろう。</div>
+				<p></p>
+				<div class="Q">関数をいろいろと変えていった時の変化が直観的にわかり、とても理解しやすいと思いました。</div>
+				<div class="A">数学も、グラフなどでイメージつけていくことが大事です。</div>
+				<p></p>
+				<div class="Q">これからしっかりと予習・復習をしていきたいです。</div>
+				<div class="A">やりましょう。</div>
+				<p></p>
+				<div class="Q">数学をタブレットで視覚的に見ることができて、楽しかった。</div>
+				<div class="A">楽しんで勉強していきましょう。</div>
+				<p></p>
+				<div class="Q">よろしくお願いします。頑張ります。</div>
+				<div class="A">はい、頑張ってください。</div>
+				<p></p>
+				<div class="Q">数学を学ぶ意欲が出ました。基礎的なことを一から学び直したいと思います。</div>
+				<div class="A">じっくりと取り組んでいってください。</div>
+				<p></p>
+				<div class="Q">今年もこの授業をとりますのでよろしくお願いします。</div>
+				<div class="A">はい、今度こそ頑張ってね。</div>
+				<p></p>
+				<div class="Q">数学を頑張ろうとおもった。$\mathrm e^0=1$の説明がわかりやすかった。</div>
+				<div class="A">頑張りましょう。数学は大事です。</div>
+				<p></p>
+				<div class="Q">$y=x^n$の$n$が大きくなっていくグラフの変化が面白かった。</div>
+				<div class="A">あの変化のイメージをつけておきましょう。</div>
+				<p></p>
+				<div class="Q">タブレットを使って授業をすることがとても新鮮に感じた。</div>
+				<div class="A">いろいろ使っていきます。</div>
+				<p></p>
+				<div class="Q">冊子ありがとうございます。勉強します。</div>
+				<div class="A">勉強しましょう！</div>
+				<p></p>
+				<div class="Q">$y=x^n$の話が面白かった。</div>
+				<div class="A">面白いでしょ。</div>
+				<p></p>
+				<div class="Q">主に授業説明。数学の重要さについての話。先パイから難しい授業だと聞きました。A取ります。</div>
+				<div class="A">そんなに難しくはないです。ちゃんとやればA取れます。頑張って下さい。</div>
+				<p></p>
+				<div class="Q">タブレットやプロジェクタを使った授業はわかりやすく関数がどのように変化していくがよくわかった。</div>
+				<div class="A">ヴィジュアルなイメージで、数学を理解していきましょう。</div>
+				<p></p>
+				<div class="Q">よろしくおねがいします。</div>
+				<div class="A">こちらこそよろしく。</div>
+				<p></p>
+				<div class="Q">関数の意味がよくわかった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">いつもタブレットを使ったわかりやすい講義ありがとうございます。今年で単位を取れるよう頑張ります。よろしくお願いします。<br>余談ですが、前野先生の本、月９の『デート』で映った気がします。</div>
+				<div class="A">はい、今年もわかりやすくいきますので、ぜひ単位取ってね。<br>はい映ってました（ちゃんとドラマのスタッフから連絡ありました）。</div>
+				<p></p>
+				<div class="Q">月９ドラマデビューおめでとうございます。感動して本を買いました。</div>
+				<div class="A">お買い上げありがとうございました。量子力学勉強してね。</div>
+				<p></p>
+				<div class="Q">アニメーションを使うとすごく分かりやすかったです。関数とは？とか普段なんとなく使っていたものを説明するのは難しいなと思いました。</div>
+				<div class="A">「○○とは？」と言われて詰まってしまうようでは、やっぱりちゃんとわかってないということだと思いますよ。</div>
+				<p></p>
+				<div class="Q">今期は取ります！</div>
+				<div class="A">はい、頑張ってください。</div>
+				<p></p>
+				<div class="Q">逆関数の話を聞いたとき、親子の関係を想像しました。親＝独立変数、子＝従属変数、いつか逆関数に変換させたいです。一番楽しみにしている授業なので、これからご指導ご鞭撻のほど。参考書執筆がんばってください。新しいテキスト大切にします。</div>
+				<div class="A">独立変数と従属変数は親子なのかな？（子供は親に従わないことも多いし）</div>
+				<p></p>
+				<div class="Q">関数のシミュレーションで$y=x^{444}$まで見れたのはうれしかったです。これから１年間よろしくお願いします。</div>
+				<div class="A">そんなところまでやったのか(^_^;)。ほとんど四角形になったでしょう。</div>
+				<p></p>
+				<div class="Q">授業で生徒が指数関数に減るなら0にはならないから大丈夫？</div>
+				<div class="A">いや、1より小さくなったらそれは0ってことでは？？</div>
+				<p></p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page_power" data-icon="arrow-l">累乗関数へ</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>

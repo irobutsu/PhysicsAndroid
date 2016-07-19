@@ -1,0 +1,135 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>弱肉強食の微分方程式</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+	<link href="vg.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+	<script src="rescalecanvas.js" type="text/javascript"></script>
+	<script src="graphcanvas.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		var X0=2;
+		var Y0=2;
+		var X=2;
+		var Y=2;
+		var newX=2;
+		var newY=2;
+		var A=1;
+		var B=1;
+		var C=1;
+		var D=1;
+		var deltat=0.01;
+		var gsLW;
+		$(document).delegate('#lW','pageinit',function(e) {
+			gsLW=new GraphCanvas("lwcanvas",5,5,0.8,-0.5,-0.5);
+			gsLW.clearAndWrite();
+			nextStep();
+		});
+		function clearGraph() {
+			gsLW.clearAndWrite();
+		}
+		function nextStep() {
+			var ct=gsLW.ctx;
+			
+			var KY1=(-C*Y+D*X*Y);
+			var KX1=(A*X-B*X*Y);
+			var KY2=(-C*(Y+KY1*deltat*3)+D*(X+KX1*deltat*3)*(Y+KY1*deltat*3));
+			var KX2=(A*(X+KX1*deltat*3)-B*(X+KX1*deltat*3)*(Y+KY1*deltat*3));
+			var KY3=(-C*(Y+KY2*deltat*3)+D*(X+KX2*deltat*3)*(Y+KY2*deltat*3));
+			var KX3=(A*(X+KX2*deltat*3)-B*(X+KX2*deltat*3)*(Y+KY2*deltat*3));
+			var KY4=(-C*(Y+KY3*deltat*6)+D*(X+KX3*deltat*6)*(Y+KY3*deltat*6));
+			var KX4=(A*(X+KX3*deltat*6)-B*(X+KX3*deltat*6)*(Y+KY3*deltat*6));
+			newX=X+(KX1+2*KX2+2*KX3+KX4)*deltat;
+			newY=Y+(KY1+2*KY2+2*KY3+KY4)*deltat;
+			
+	   
+			ct.beginPath();
+			ct.strokeStyle="rgb(255,0,0)";
+			ct.moveTo(X,Y);
+			ct.lineTo(newX,newY);
+			ct.stroke();
+			X=newX;
+			Y=newY;
+			
+			setTimeout("nextStep();",60);
+		}
+		</script>
+	</head> 
+	<body>
+	  <div data-role="page" id="lW">
+		<div data-role="header">
+		  <h1>肉食動物と草食動物の連立微分方程式</h1>
+		</div>
+		<div data-role="content">
+		  <p>　ある森の中で<span class="box">草食動物（兎）の数${X}$</span>と<span class="box">肉食動物（狐）の数${Y}$</span>がどう増減するかを考える。狐は兎を食べるので、兎は狐と出会うと死ぬと考えよう。森の中に${X}$匹の兎と${Y}$匹の狐がそれぞれ動きまわっている状況を考えると、両者が出会う確率は${X}$と${Y}$の積に比例するだろう。そして出会った後でやはりある確率で「狐が兎を食べる」というイベントが発生し、兎が減る。このように考えると、兎の減少量は${X}{Y}$という積に比例するだろう。兎は草食で、草はなくならないとすれば、狐に出会わなければ今いる量${X}$に比例して増える。よって、
+			\begin{equation}
+			{\mathrm d{X}\over \mathrm dt}= A{X} -B{X}{Y}
+			\end{equation}
+			という式で増減するとする（$A,B$は比例定数）。</p>
+		  <p>　一方狐は、兎を食べないと生きていけないのだから、その増加はどれだけ兎を食べられるかによって決まり、それは${X}{Y}$に比例するのだったから、狐は${X}{Y}$に比例して増える。兎がいなかったら寿命が来て死ぬだけなので、それを$-C{Y}$という形で式に入れて
+			\begin{equation}
+			{\mathrm d{Y}\over \mathrm dt}= -C {Y} + D {X}{Y}\label{lwtwo}
+			\end{equation}
+			という微分方程式に従う（$C,D$は$A,B$とは別の比例定数である）。この方程式はこの式を出した二人の数学者の名前を取って「ロトカ・ヴォルテラの方程式」と呼ばれる。</p>
+		  <p>　時間変化を考えるには、${\mathrm d {X}\over \mathrm dt},{\mathrm d{Y}\over \mathrm dt}$に関する二つの微分方程式を連立させて解けばよい。いきなり解けと言われるとどうしていいのか悩んでしまうところだが、ここでまず、「${\mathrm d {X}\over \mathrm dt}={\mathrm d{Y}\over \mathrm dt}=0$となるのはどんなときか？」から考えるのがよい。${\mathrm d {X}\over \mathrm dt}={\mathrm d{Y}\over \mathrm dt}=0$となる点を「固定点」と呼ぶ。</p>
+		  
+		  <p>　固定点を求める方程式は上の微分方程式の右辺が$0$になる、という式で、因数分解すれば
+			\begin{eqnarray}
+			{X}(A-B{Y})&=&0\\
+			{Y}(-C+D{X})&=&0
+			\end{eqnarray}
+			である。${X}={Y}=0$もこの方程式の解だが、「兎も狐もいない」という「つまらない解」<span class="footnote">最初から兎も狐もいないのだから、未来永劫いないままである。</span>なので無視する。</p>
+
+		  <p>　<span class="box">${X}={C\over D},{Y}={A\over B}$</span>が意味のある固定点である。</p>
+
+		  <p>　固定点からずれた時の${\mathrm d{X}\over\mathrm dt},{\mathrm d {Y}\over\mathrm dt}$の様子をグラフに表示すると</p>
+		  <p><img src="lw.png" width="60%" class="floatnone"></p>
+				
+		  <p>のようになる。これから${X}$-${Y}$平面内で反時計周りにぐるぐる回るような時間発展を行うということが予想される。</p>
+		  <p>　固定点からのずれを${x},{y}$とする。つまり、
+			\begin{equation}
+			{X}= {C\over D}+{x},~~{Y}={A\over B}+{y}
+			\end{equation}
+			とする。こうして${x},{y}$の微分方程式を作ると、
+			\begin{equation}
+			{\mathrm dx\over \mathrm dt}= -B \left({C\over D}+{x}\right) {y},~~~
+			{\mathrm dy \over \mathrm dt}= D\left({A\over B}+{y}\right){x}
+			\end{equation}
+			となる。ここで${x},{y}$は${C\over D},{A\over B}$に比べて小さいと考えて、括弧内の${x},{y}$は無視して、
+			\begin{equation}
+			{\mathrm dx\over \mathrm dt}= -{BC\over D} {y},~~~
+			{\mathrm dy \over \mathrm dt}= {AD\over B} {x}
+			\end{equation}
+			と近似する。第一式を微分して
+			\begin{equation}
+			{\mathrm d^2 x\over \mathrm dt^2}= -{BC\over D} {\mathrm dy\over \mathrm dt} 
+			\end{equation}
+			にしてから第二式を代入すると
+			\begin{equation}
+			{\mathrm d^2 x\over \mathrm dt^2}= -{BC\over D}\times{AD\over B}{x}=-{AC}{x}
+			\end{equation}
+			という、係数は違うが単振動と同じ式が}出てくる。</p>
+		  <div class="A">狐も兎も「増えたり減ったり」を繰り返すことが方程式からわかる。</div>
+		  
+		  <p>　ここで求めたのは近似解なので、${X}$-${Y}$平面に描かれる図形は単純な楕円であるが、実際に微分方程式を解いてみると少々複雑な図形を描く。</p>
+		  <div class="A">　下のアニメーションで動きを見よう。</div>
+		  <div class="setsumei">ここではコンピュータで数値的に計算させた。下に$A=B=C=D=1$にして、$X,Y$の初期値を変えてグラフを描くプログラムをつけた。X,Yを変更してから「初期値変更」ボタンを押せばその値を初期値としてグラフを描いてくれる。どのように時間変化していくかをじっくり見よう。</div>
+		  <p><canvas id="lwcanvas"></canvas></p>
+		  <p>X=<input id="X" type="range" value="2" min="0.1" max="4" step="0.1" onchange="X0=Number($('#X').val());"></p>	
+		  <p>Y=<input id="Y" type="range" value="2" min="0.1" max="4" step="0.1" onchange="Y0=Number($('#Y').val());"></p>	
+		  <button onclick="X=X0; Y=Y0;" data-inline="true">初期値変更</button>
+		  <button onclick="clearGraph();" data-inline="true">グラフ消去</button>
+		</div>
+		<div data-role="footer" align="center">
+		  <input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		  <input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		</div>
+	  </div>
+	</body>
+</html>
+

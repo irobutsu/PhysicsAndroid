@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>微分ってなあに？（その２）</title>
+<style type="text/css">
+	body {
+		background-color: #FFFFFF;
+	}
+	img {
+	vertical-align:middle;
+	}
+</style>
+</head>
+<body onload="init(); drawALL();">
+<script type="application/javascript" src="bibuntoha.js"></script>
+<h1>微分ってなあに？（その２）</h1>
+<div align=center><a href="bibuntoha1.html">その１に戻る</a></div>
+<hr><p>　今度は関数を変えられるようにしてみました。最初は相変わらずy=x<sup>2</sup>のグラフだが、次にある選択肢を選んで、いろんな関数の場合で遊んでみてください。
+<p>
+<form action="#">
+<label for="func">どの関数？</label>
+<select name="func" id="func">
+<option value="linearx">y=x</option>
+<option selected="selected" value="sqx">y=x^2</sup></option>
+<option value="cbx">y=x^3</sup></option>
+<option value="totsuhb">y=1-x^2</sup></option>
+<option value="sinx">y=sin 3x</sup></option>
+</select>
+</form>
+</p>
+<br>
+<br>
+<canvas id="maincanvas" width="600" height="450" style="-ms-touch-action:none;">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+<br>
+<br>　一番上のy=xはあまりおもしろくない「直線」です。微分の値も常に一定ですね。
+<br>　y=x<sup>3</sup>はy=x<sup>2</sup>に似ていますが、より微分の変化の様子が激しいことがわかるでしょうか。<br>
+<br>　y=1-x<sup>2</sup>は上に凸で、y=x<sup>2</sup>とは逆の向きになっています。<br>
+<br>
+<br>
+<br>
+　ところで、「あれ、微分ってグラフの傾きのことじゃなかったっけ？」と思っている人はいませんか？　ここで考えている微分と、グラフの傾きは同じものです。それをチェックしておきましょう。
+<hr>
+<div align=center><a href="bibuntoha3.html">その３へ進む</a></div>
+</body>
+</html>
+

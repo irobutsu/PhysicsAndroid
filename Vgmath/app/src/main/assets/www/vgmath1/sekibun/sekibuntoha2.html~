@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width; target-densityDpi=device-dpi; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"/>
+<title>積分ってなあに？（その２）</title>
+<style type="text/css">
+	body {
+		background-color: #FFFFFF;
+	}
+	img {
+	vertical-align:middle;
+	}
+	.centering{ text-align:center;}
+	.magenta { color:magenta; }
+	.red { color:red; }
+	.blue { color:blue; }
+	.chuumoku {
+		text-align:center;
+		font-size: x-large;
+		color:red;
+	}
+</style>
+</head>
+<body onload="init(); c=0; b=0.5; N=200; nuriFlg=0; autoUpFlg=0; f=linear; Intf=Intlinear; animationGO();">
+<script type="application/javascript" src="sekibuntoha.js"></script>
+<h1>積分ってなあに？（その２）</h1>
+<br>
+<div class=centering><a href="sekibuntoha1.html">その１へ戻る</a></div>
+<br>
+<hr>
+  <p>﻿　次に、単位時間に流れ込む水の量が一定でない場合、水槽に溜まる水をどのように計算すればよいかを考える。例えば蛇口を徐々に開いていき、１秒あたりに流れ込む水の量が下のグラフのように時間的に変化したとする。<br>
+<br><hr>
+<canvas width=500 height=500 id="maincanvas"></canvas>
+<hr>
+　考えてみると、我々が実際に風呂に水を溜める時でも、いっきに蛇口を開いてしまうことなどできないのだから、「徐々に蛇口が開いていって、流れ込む量が増えてくる」という状況の方が“現実的”である。それにしたって「こんなにじっくり時間かけてレバー回さなくてもいいだろう」と思うかもしれないが、ここではそういう状況を考えることにする（レバーがものすご〜〜く固かったのかもしれない、とでも解釈しておいて欲しい）。
+<br>ここでは、１秒あたりに流れ込む量（これはもちろん、蛇口の開き具合で決まる）を式で表すと
+<br><br>
+<span class="centering">v(t)=at</span><br><br>
+だったとしよう。<br>
+　ではこの時浴槽に溜まった水の量はどうやって計算するか。
+<br>　流量vが一定であり続ける場合はvtで溜まった量が計算できるが、vが時間的に変化している時については簡単には、わからない。
+<br>　積分を知っている人間ならば簡単だが、知らなければ<a href="sekibuntoha3.html">次に書く</a>ように考える。
+<hr>
+<div class=centering><a href="sekibuntoha3.html">その３へ進む</a></div>
+<div class=centering><a href="index.html">表紙に戻る</a></div>
+</body>
+</html>
+

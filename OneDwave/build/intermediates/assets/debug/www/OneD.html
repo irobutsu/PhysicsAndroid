@@ -1,0 +1,177 @@
+<!-- Copyright (c) 2012 Mobile Developer Solutions -->
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-type" name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, charset=UTF-8">
+    <title>１次元波動のアニメーション</title>
+    <link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.1.0.min.css" />
+	<style type="text/css">
+	 .aka{
+	   color: #D00;
+	 }
+	 .ao{
+	   color: #00D;
+	 }
+	 .ki{
+	   color:#880;
+	 }
+	 .teihen {
+	   color: #D00;
+	 }
+	 .takasa {
+	   color: #00D;
+	 }
+	 .shahen {
+	   color: #880;
+	 }
+	</style>
+	 <script src="jquery.mobile/jquery-1.7.2.min"></script>
+	<script src="jquery.mobile/jquery.mobile-1.1.0.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="cordova-1.9.0.js"></script>
+  	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="graphscreen.js" type="text/javascript"></script>
+	</head>
+  
+  <body>
+  	<script type="text/javascript">
+	 var gs;
+	 $(document).delegate('#page0','pageinit',function(e) {
+	   gs=new GraphScreen("canvas0",8,2.5,0.9);
+	   gs.setLeft(-1);
+	   gs.setBottom(-1.25);
+	   gs.gobackOriginalSize();
+	   gs.writeContents=function() {
+		 if( !nowAnime ) {
+		   graphWrite(gs);
+		 }
+	   }
+	   graphWrite(gs);
+	 });
+	 $(document).delegate('#page0','pageshow',function(e) {
+	   if( !nowAnime ) {
+	     graphWrite(gs);
+	   }
+	 });
+	 var nowAnime=true;
+	 var k=Math.PI;
+	var omega=Math.PI*0.5;
+	var t=0;
+	function wave(x,t) {
+		return Math.sin(k*x-omega*t);
+	}
+	function waveV(x,t) {
+		return -0.2*omega*Math.cos(k*x-omega*t);
+	}
+	function graphWrite(gs) {
+		var ct=gs.ctx;
+		gs.setScale();
+    	gs.clearALL();
+		ct.fillStyle="rgb(235,255,255)";
+		ct.beginPath();
+		ct.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+
+		gs.writeCoordinate();
+		if( sFlg ) {
+			ct.fillStyle="rgba(200,200,200,0.5)";
+			ct.fillRect(gs.leftwx,gs.bottomy,0.95-gs.leftwx,gs.h);
+			ct.fillRect(1.05,gs.bottomy,gs.rightwx-1.05,gs.h);
+			ct.beginPath();
+			ct.strokeStyle="rgb(0,200,0)";
+			ct.moveTo(0.95,wave(0.95,t));
+			for(x=0.96; x < 1.05 ; x += 0.01 ) {
+				ct.lineTo(x,wave(x,t));
+			}
+		} else {
+			ct.beginPath();
+			ct.strokeStyle="rgb(0,200,0)";
+			ct.moveTo(gs.leftwx,wave(gs.leftwx,t));
+			for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.01 ) {
+				ct.lineTo(x,wave(x,t));
+			}
+		}
+		ct.stroke();
+		var startx,endx;
+		if( sFlg ) {
+			startx =1; endx=1;
+		} else {
+			startx = gs.leftwx; endx=gs.rightwx;
+		}
+		for(x=startx; x<= endx ; x += 0.25 ) {
+			ct.fillStyle="rgba(0,0,255,0.7)";
+			ct.beginPath();
+			var y=wave(x,t);
+			ct.arc(x,y,0.05,0,2*Math.PI,false);
+			ct.fill();	
+			if( vFlg ) {
+				writeYaY(ct,0.03,y,y+waveV(x,t),x,"rgba(155,155,0,0.6)");	
+			}
+			if( fFlg ) {
+				writeYaY(ct,0.02,y,y-0.06*omega*omega*wave(x,t),x,"rgba(255,0,0,0.6)");	
+			}
+		}	
+		t += 0.03;
+		setTimeout("graphWrite(gs);",100);
+	}	
+	var fFlg=false;
+	var vFlg=false;
+	var sFlg=false;
+	function writeYaY(ct,h,x1,x2,y,col) {
+		var len=x2-x1;
+		if( Math.abs(len) < 4*h ) {
+			h=Math.abs(len)/4;
+		 }
+		 if( len <0 ) {
+		   h=-h;
+	 	}
+	 	ct.fillStyle=col;
+	 	ct.beginPath();
+		ct.moveTo(y+h,x1);
+		ct.lineTo(y-h,x1);
+		ct.lineTo(y-h,x2-2*h);
+		ct.lineTo(y-2*h,x2-2*h);
+		ct.lineTo(y,x2);
+		ct.lineTo(y+2*h,x2-2*h);
+		ct.lineTo(y+h,x2-2*h);
+		ct.closePath();
+		ct.fill();
+	}
+	function setV() {
+		$("#T").html((2*Math.PI)/omega);
+		$("#k").html(k);
+		$("#v").html(omega/k);
+	}
+	</script>
+	<div data-role="page" id="page0">
+	  <div data-role="content">
+		<div align="center"><canvas id="canvas0" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+		<div data-role="fieldcontain">
+		  <label for="slider">波長:</label>
+		  <input type="range" name="slider" id="slider" value="2" min="0.5" max="10" step="0.1" onChange="k=2*Math.PI/Number($('#slider').val()); setV();" />
+		</div>
+		<div data-role="fieldcontain">
+		  <label for="slider2">振動数:</label>
+		  <input type="range" name="slider2" id="slider2" value="0.25" min="0.05" max="1" step="0.01" onChange="omega=2*Math.PI*Number($('#slider2').val()); setV();"/>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div>波数：<span id="k">3.141592653589793</span></div>
+			<div>周期：<span id="T">4</span></div>
+			<div>速度：<span id="v">0.5</span></div></div>
+		  <div class="ui-block-b"><fieldset data-role="controlgroup" data-type="horizontal">
+			<legend>
+			  <input type="checkbox" name="checkbox0" id="checkboxs" class="custom" value="" onchange="sFlg=$('#checkboxs').prop('checked');"/>
+			  <label for="checkboxs" >一箇所のみ表示</label>
+			  <input type="checkbox" name="checkbox1" id="checkboxv" class="custom" value="" onchange="vFlg=$('#checkboxv').prop('checked');"/>
+			  <label for="checkboxv" class="ki">速度を表示</label>
+			  <input type="checkbox" name="checkbox2" id="checkboxf" class="custom" value="" onchange="fFlg=$('#checkboxf').prop('checked');"/>
+			  <label for="checkboxf" class="aka">力を表示</label>
+			</legend>
+		  </fieldset></div></div>
+		<p>　右方向に進行する波を示した。波長と振動数は下のスライダで変更できる。波の媒質<span class="ao">●</span>が上下にしか運動してないことに注意（波の進行は媒質がその方向に運動しているのではない）。そのことを実感するには、『一箇所のみ表示』ボタンを押してx=1の場所の媒質の運動だけを見るか、『<span class="ki">速度を表示</span>』ボタンを押して速度のベクトル矢印を表示させた方がよいかもしれない。</p>
+		  </div>
+		<div data-role="footer" align="center">
+		
+		</div>
+	</div>			
+  </body>
+</html>

@@ -1,0 +1,333 @@
+<!Doctype html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebText 動く！熱力学</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script src="vector.js" type="text/javascript"></script>
+	<script src="yajirushi.js" type="text/javascript"></script>
+    <script src="rescalescreen.js" type="text/javascript"></script>
+    <script src="dragmanscreen.js" type="text/javascript"></script>
+    <script src="draggablepoint.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		var piston;
+		var falsepiston;
+		var yaP;
+		var fgc,fpc,ffc;
+		var ctf,ctp,ctfp;
+		$(document).delegate('#graphF','pageinit',function(e) {
+			fgc=new RescaleScreen("Fgraphcanvas",4.5,4.5,0.5);
+			fpc=new DragmanScreen("Fpistoncanvas",4.5,1,0.5);
+			ffc=new DragmanScreen("Ffalsepistoncanvas",4.5,1,0.5);
+			fgc.setBottom(-0.5);
+			fgc.setLeft(-0.5);
+			fpc.setBottom(0);
+			fpc.setLeft(-0.5);
+			ffc.setBottom(0);
+			ffc.setLeft(-0.5);
+			fgc.gobackOriginalSize();
+			fpc.gobackOriginalSize();
+			ffc.gobackOriginalSize();
+			yaP=new Yajirushi("rgba(200,200,100,0.9)");
+			ctf=fgc.canvas.getContext("2d");
+			ctp=fpc.canvas.getContext("2d");
+			ctfp=ffc.canvas.getContext("2d");
+			fgc.writeContents=function() {
+				write_fg();
+			};
+			fpc.writeContents=function() {
+				var p;
+				var v=piston.x;
+				p=trueP(v);
+				write_piston0(fpc,ctp,v,p,true);
+			};
+			ffc.writeContents=function() {
+				var p;
+				var v=falsepiston.x;
+				p=falseP(v);
+				write_piston0(ffc,ctfp,v,p,false);
+			};
+			piston=new DraggablePoint(1,0,0.4,"rgba(255,0,0,0.5)");
+			falsepiston=new DraggablePoint(1,0,0.4,"rgba(255,0,0,0.5)");
+			piston.setXY=function(xx,yy,x0,y0,x1,y1) {
+				piston.setXY0(xx,0,0,0,0,0);
+				falsepiston.setXY0(xx,0,0,0,0,0);
+				fpc.writeContents();
+				ffc.writeContents();
+				write_fg();
+			};
+			piston.inP=function(xx,yy) {
+				if( this.canDrag ) {
+					return (xx > this.x && xx < 0.2+this.x);
+				} else {
+					return false;
+				}
+			};
+			piston.write=function() {};
+			falsepiston.setXY=function(xx,yy,x0,y0,x1,y1) {
+				piston.setXY0(xx,0,0,0,0,0);
+				falsepiston.setXY0(xx,0,0,0,0,0);
+				fpc.writeContents();
+				ffc.writeContents();
+				write_fg();
+			};
+			falsepiston.inP=function(xx,yy) {
+				if( this.canDrag ) {
+					return (xx > this.x && xx < 0.2+this.x);
+				} else {
+					return false;
+				}
+			};
+			falsepiston.write=function() {};
+			piston.setXY0=function(xx,yy,x0,y0,x1,y1) {
+				this.x=xx;
+				this.y=0;
+			};
+			falsepiston.setXY0=function(xx,yy,x0,y0,x1,y1) {
+				this.x=xx;
+				this.y=0;
+			};
+			fpc.pushDragObjList(piston);
+			ffc.pushDragObjList(falsepiston);
+
+
+		});
+		function trueP(v) {
+			var p;
+			if( v <1 ) {
+				p=1.0/(v*v);
+			} else if( v<2 ) {
+				p=1;
+			} else {
+				p=1.0/((v-1)*(v-1));
+			}
+			return p;
+		}
+		function falseP(v) {
+			var p;
+			if( v <1 ) {
+				p=1.0/(v*v);
+			} else if( v<2 ) {
+				p=1-4*(v-1)*(v-2)*(v-2)-4*(v-1)*(v-1)*(v-2);
+			} else {
+				p=1.0/((v-1)*(v-1));
+			}
+			return p;
+		}
+		function write_piston0(sc,ct,x,p,flg){
+			ct.fillStyle="rgb(255,255,255)";
+			ct.fillRect(sc.leftwx,sc.bottomy,sc.w,sc.h);
+			ct.fillStyle="rgb(0,0,0)";
+			ct.fillRect(-0.1,0,sc.w,1);
+			ct.fillStyle="rgb(255,255,255)";
+			ct.fillRect(0,0.1,sc.w,0.8);
+			ct.fillStyle="rgb(100,100,100)";
+			ct.fillRect(x,0.1,0.1,0.8);
+			var i;
+			for(i=0; i<4; i++ ) {
+				yaP.setXY(x+0.04,0.5*i+0.25,p*0.5);
+				yaP.setTheta(-0.5*Math.PI);
+				yaP.setL(p*0.25);
+				yaP.draw(ct);
+			}
+			var R=Math.round(255/(3*x));
+			// rgb( 255,255-R,255-R);
+			var s=String(255-R);
+			s="rgb(255,"+s+","+s+")";
+			if( flg && x>1 && x<2 ) {
+				ct.fillStyle="rgb(255,170,170)";
+				ct.fillRect(0,0.1,x*(2-x),0.8);
+				ct.fillStyle="rgb(255,212,212)";
+				ct.fillRect(x*(2-x),0.1,x*(x-1),0.8);
+			} else {
+				ct.fillStyle=s;
+				ct.fillRect(0,0.1,x,0.8);
+			}
+		}
+		$(document).delegate('#graphF','pageshow',function(e) {
+			fgc.writeContents();
+			fpc.writeContents();
+			ffc.writeContents();
+
+		});
+		var N=50;
+		function marume(x) {
+			var xx=100*x;
+			return Math.round(xx)/100;
+		}
+		function trueF(v) {
+			if( v<1 ) {
+				return 1+1.0/v;
+			} else if( v<2 ) {
+				return -v+3;
+			} else {
+				return 1.0/(v-1);
+			}
+		}
+		function falseF(v) {
+			if( v<1 ) {
+				return 1+1.0/v;
+			} else if( v<2 ) {
+				return -v+3+4*(v-1)*(v-1)*(v-2)*(v-2);
+			} else {
+				return 1.0/(v-1);
+			}
+		}
+		function write_fg() {
+			fgc.clearALL();
+			fgc.writeCoordinate();
+			if( Fflg ) {
+				ctf.lineWidth=0.03;
+				ctf.strokeStyle="rgba(200,200,0,0.5)";
+				ctf.beginPath();
+				ctf.moveTo(1.0/3,4);
+				var x;
+				for(i=1; i<=N ; i++ ) {
+					x=1.0/3+2.0*i/150;
+					ctf.lineTo(x,1.0+1.0/x);
+				}
+				ctf.lineTo(1,2);
+				ctf.lineTo(2,1);
+				for(i=1; i<=N ; i++ ) {
+					x=2.0+2.0*i/50;
+					ctf.lineTo(x,1.0/(x-1));
+				}
+				ctf.stroke();
+				ctf.lineWidth=0.01;
+				ctf.strokeStyle="rgba(200,0,0,0.5)";
+				ctf.beginPath();
+				ctf.moveTo(1.0/3,4);
+				var x;
+				for(i=1; i<=N ; i++ ) {
+					x=1.0/3+2.0*i/(3*N);
+					ctf.lineTo(x,1.0+1.0/x);
+				}
+				for(i=1; i<=N ; i++ ) {
+					x=1.0+1.0*i/N;
+					ctf.lineTo(x,-x+3+(x-1)*(x-1)*(x-2)*(x-2)*4);
+				}
+				for(i=1; i<=N ; i++ ) {
+					x=2.0+2.0*i/N;
+					ctf.lineTo(x,1.0/(x-1));
+				}
+				ctf.stroke();
+				ctf.beginPath();
+				ctf.fillStyle="rgba(150,0,0,0.5)";
+				ctf.arc(falsepiston.x,falseF(falsepiston.x),0.03,0,2*Math.PI,true);
+				ctf.fill();
+				ctf.beginPath();
+				ctf.fillStyle="rgba(100,100,0,0.5)";
+				ctf.arc(piston.x,trueF(piston.x),0.03,0,2*Math.PI,true);
+				ctf.fill();
+			}
+			if( Pflg ) {
+				ctf.lineWidth=0.03;
+				ctf.strokeStyle="rgba(100,100,0,0.5)";
+				ctf.beginPath();
+				ctf.moveTo(0,trueP(0));
+				var x;
+				for(i=1; i<=100 ; i++ ) {
+					x=i*0.04;
+					ctf.lineTo(x,trueP(x));
+				}
+				ctf.stroke();
+				ctf.lineWidth=0.01;
+				ctf.strokeStyle="rgba(150,0,0,0.5)";
+				ctf.moveTo(0,falseP(0));
+				var x;
+				for(i=1; i<=100 ; i++ ) {
+					x=i*0.04;
+					ctf.lineTo(x,falseP(x));
+				}
+				ctf.stroke();
+				ctf.beginPath();
+				ctf.fillStyle="rgba(200,0,0,0.5)";
+				ctf.arc(falsepiston.x,falseP(falsepiston.x),0.03,0,2*Math.PI,true);
+				ctf.fill();
+				ctf.beginPath();
+				ctf.fillStyle="rgba(100,100,0,0.5)";
+				ctf.arc(piston.x,trueP(piston.x),0.03,0,2*Math.PI,true);
+				ctf.fill();
+			}
+		}
+		var Fflg=true;
+		var Pflg=false;
+		function checkF(){
+			if ($("#ckF").is(':checked')) {
+				Fflg=true;
+			} else {
+				Fflg=false;
+			}
+			write_fg();
+		}
+		function checkP() {
+			if ($("#ckP").is(':checked')) {
+				Pflg=true;
+			} else {
+				Pflg=false;
+			}
+			write_fg();
+		}
+		</script>
+  </head> 
+  <body>
+	<div data-role="page" id="phase">
+	  <div data-role="header">
+		<h1>相転移</h1>
+	  </div>
+	  <div data-role="content">
+		<h3>気相と液相の共存</h3>
+		<p>　「つりあいの式」から何が言えるかを考えよう。</p>
+		<p>　系が$(T;V_1,N_1)$の系と$(T;V_2,N_2)$の系の二つに分けられるとする（$V=V_1+V_2,N=N_1+N_2$）。つりあいの条件は
+		  $$
+		  {\partial F[T;V_1,N_1]\over\partial V_1}={\partial F[T;V_2,N_2]\over\partial V_2}
+		  $$
+		  すなわち$p(T;V_1,N_1)=p(T;V_2,N_2)$と、
+		  $$
+		  {\partial F[T;V_1,N_1]\over\partial N_1}={\partial F[T;V_2,N_2]\over\partial N_2}
+		  $$
+		  すなわち$\mu(T;V_1,N_1)=\mu(T;V_2,N_2)$である。
+		</p>
+		<p>　理想気体ではそうならないが、状態方程式から計算した擬似的ヘルムホルツ自由エネルギーが「下に凸」でない状況を含んでいる可能性もある。このときは接線を引いて「下に凸」になる「正しいヘルムホルツ自由エネルギー」を作る必要がある。</p>
+		<p><img src="gijiF.png" width="50%" class="floatnone"></p>
+		<p>　その段階で$F$のグラフが直線になる（つまり、${\partial^2 F\over\partial V^2}=-{\partial P\over \partial V}=0$になる）状況が現れた。この状況$V_{\rm L}\leq V\leq V_{\rm G}$では異なる${N\over V}$の状況が共存し、圧力は$p=p_{\rm v}$で一定になる。この時化学ポテンシャル$\mu$も一定である（つりあいからもわかるし、$F=-Vp+\mu N$という関係から$\mu={F+Vp\over N}$とすれば、この範囲では$F+Vp$が一定値になる）。</p>
+		<p>　これはたとえば水と水蒸気の共存状態である（ただし、日常に置いて見られる「水と（水蒸気＋空気）の共存状態」はこれとは全く別）</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" onclick="location.href='./henbun.html#Maxwell'" data-icon="arrow-l" value="Maxwellの関係式">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+		<input type="button" onclick="location.href='#graphF'" data-icon="arrow-r" value="相転移のときのF-Vグラフ">
+	  </div>
+	</div>
+		<div data-role="page" id="graphF">
+			<div data-role="header">
+				<h3>相転移のときのF-Vグラフ</h3>
+			</div>
+			<div data-role="content">
+				<div class="setsumei">　ヘルムホルツ自由エネルギー$F$が下に凸という性質を満たしていない場合、実際にはどのように状態変化が起こるかを動くグラフで見よう。</div>
+				<hr>
+				<p><canvas id="Fgraphcanvas"></canvas></p>
+				<p>↓相転移が起こってない場合（グラフの<span class="aka">赤線</span>）</p>
+				<canvas id="Ffalsepistoncanvas"></canvas></p>
+				<p>↓相転移が起こっている場合（グラフの<span class="ki">黄線</span>）</p>
+				<canvas id="Fpistoncanvas"></canvas></p>
+				<fieldset data-role="controlgroup" data-type="horizontal">
+				<input type="checkbox" id="ckF" name="ckF" checked="true" value="1" data-mini="true" onclick="checkF();"><label for="ckF">Fを描く</label>
+				<input type="checkbox" id="ckP" name="ckP" value="1" data-mini="true" onclick="checkP();"><label for="ckP">Pを描く</label>
+				</fieldset>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" onclick="location.href='vdw.html#vanderWaals'" data-icon="arrow-r" value="ファンデルワールスの状態方程式">
+			</div>
+		</div>
+	</body>
+</html>

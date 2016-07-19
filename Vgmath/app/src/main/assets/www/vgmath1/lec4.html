@@ -1,0 +1,792 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>第１章　関数（続き：合成関数・逆関数・指数関数・対数関数）</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.2.min.css?lec=4" rel="stylesheet" type="text/css"/>
+	<script src="jquery.js?lec=4" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+	<script src="rescalescreenxy.js" type="text/javascript"></script>
+	<script src="graphscreenxy.js" type="text/javascript"></script>
+	<script src="three.min.js" type="application/javascript"></script>
+	<script src="TrackballControls.js" type="application/javascript"></script>
+	<script src="threejsscreen.js" type="application/javascript"></script>
+	<script src="funccomposite.js" type="text/javascript"></script>
+	<style type="text/css">
+	 table { display: inline; }
+	 tr.eq { display: inline-table; }
+	 .ki{
+	   color:#880;
+	 }
+	 .teihen {
+	   color: #D00;
+	 }
+	 .takasa {
+	   color: #00D;
+	 }
+	 .shahen {
+	   color: #880;
+	 }
+	 .warning{
+	   padding:5px;
+	   color:#F00;
+	   background-color: #FF0;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h2{
+	   color:#300;
+	   background-color: #9CC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .floatnone{
+	   float:none;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #DDF;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .faq{
+	   padding:5px;
+	   color:#400;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .question{
+	   padding:5px;
+	   color:#003;
+	   background-color: #CCF;
+	   border: solid #333 double;
+	   border-radius:13px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+
+  </head> 
+  <body> 
+	<script type="text/javascript">
+	</script>
+	<div data-role="page" id="page_gousei">
+	  <div data-role="header">
+		<h1>合成関数</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　関数は「数→数」の対応関係であるが、この対応関係を二段階にしたもの「数→数→数」を「合成関数」と呼ぶ。</p>
+
+		<p>　たとえば、ある気体を電気ヒーターで暖めているとしよう。ヒーターの電力を変えれば温度が変わる（電力→温度）。そして、温度が変わればその気体中の音速が変わる（温度→音速）。こうすると「電力を変えれば（温度の変化を通じて）音速が変わる」（電力→温度→音速）という関数関係ができることになる。</p>
+		<div class="A">こういう例を自分でも考えてみよう。</div>
+		<div class="Q">時給と月給とか？</div>
+		<div class="A">それは確かに関数だが、合成されてないなぁ。もう１つ段階をはさもう。たとえば「熟練度」→「時給」→「月給」とか。<br>
+			新米なら650円の時給が、熟練すると800円に上ったりする。これは１つの関数。一ヶ月に働く時間が決まっているとすれば、時給が決まれば月給が決まる。これが二つめの関数。この二つの関数を合成すると「熟練度」→「月給」という関数ができる。</div>
+		<div class="A">他にはないかな？</div>
+		<div class="Q">扇風機のつまみをひねると風の強さが変わって、体感温度がいい感じになって、勉強するやる気が出る、とか。</div>
+		<div class="A">なるほど面白い例だ（だんだん「風が吹くと桶屋が儲かる」みたいな話しになってきた）。この場合「扇風機のつまみ」→「風力」→「体感温度」→「やる気」という感じの合成になってるね。</div>
+		<p>　こんなふうに日常的な話でも「関連する数の変化を追いかけて合成していく」ということをやっている。これが「合成関数」の気持ち。</p>
+		<p>　数式の例をあげよう。${y}=1-{x^2}$という${x}\to {y}$という対応関係があり、さらに${z}=\sqrt{{y}}$という${y}\to {z}$の対応関係があれば、この二つをまとめて、${z}=\sqrt{1-{x}^2}$という${x}\to{z}$という「合成関数」を作ることができる。</p>
+		<p>　二つの関数を${y}=f({x})$（<span class="ao">y</span>が<span class="aka">x</span>の関数である）および${z}=g({y})$（<span class="magenta">z</span>が<span class="ao">y</span>の関数である）と書けば、合成関数は${z}=g(f({x}))$のように書ける（この式の意味は「まず$f({x})$を計算して、計算結果を$g({y})$の<span class="ao">y</span>に代入すると、<span class="magenta">z</span>が求められる」ということだ）<span class="footnote">$g(f({x}))$を$(g\circ f)({x})$と書くこともある。</span>。</p>
+		<p><img src="../sizensuugaku/funcCompo.png" class="floatnone" width="40%"></p>
+		<p>図は</p>
+		<p>$f({x})={x}^3-{x}^2-2{x}+1$</p>
+		<p>$g({y})=\sin 3{y}$</p>
+		<p>の場合で、この時、</p>
+		\begin{equation}
+		{z}=g(f({x}))= \sin \left(3({x}^3-{x}^2-2{x}+1)\right)
+		\end{equation}
+		<p>ということになる<span class="footnote"><span class="ao">y</span>の変化の激しいところでは合成関数の結果である<span class="magenta">z</span>が激しく振動する、という様子が見て取れる。</span>。</p>
+
+		<p>　合成関数の定義域と値域には注意する必要がある。たとえば上にあげた例（${y}=1-{x^2}$と${z}=\sqrt{{y}}$を合成して${z}=\sqrt{1-{x}^2}$）の場合、${y}=1-{x^2}$だけを見れば<span class="aka">x</span>はどんな実数でもよさそう（定義域を$-\infty<{x}<\infty$としてもよさそう）に見えるが、その後で${z}=\sqrt{{y}}$という式にこの答えである<span class="ao">y</span>が代入されることを思えば、$-1\leq{x}\leq 1$という定義域にしておかないと、${z}=\sqrt{1-{x}^2}$という関数が定義されてないことになる（虚数を含めれば話は別であるが）。</p>
+
+		<p>　下に、動かせる合成関数の図をつける。</p>
+		<div class="setsumei">　webGLという3Dのライブラリが動かないブラウザ環境では遅くなる場合があります。できるかぎり、webGLの使える環境で動かしてください。</div>
+		<div class="fukidasi">　↓の図は、マウスを使って視点の移動／拡大縮小などができます。</div>
+		<p><canvas id="tcanvas" width=200 height=200></canvas></p>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a"></div>
+		  <div class="ui-block-b"></div>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">y=
+			  <select name="selectmenu" id="selectmenuxy" data-inline="true" onChange="changefuncxy('#selectmenuxy');">
+				<option value="1">ax</option>
+				<option value="2">a/x</option>
+				<option value="3">ax^2</option>
+				<option value="4">√(|x|/a)</option>
+				<option value="5">sin(ax)</option>
+				<option value="6">arcsin(x)/a</option>
+				<option value="7">exp(ax)</option>
+				<option value="8">(log|x|)/a</option>
+			  </select>
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">z=
+			  <select name="selectmenuyz" id="selectmenuyz" data-inline="true" onChange="changefuncyz('#selectmenuyz');">
+				<option value="1">by</option>
+				<option value="2">b/y</option>
+				<option value="3">by^2</option>
+				<option value="4">√(|y|/b)</option>
+				<option value="5">sin(by)</option>
+				<option value="6">arcsin(y)/b</option>
+				<option value="7">exp(by)</option>
+				<option value="8">(log|y|)/b</option>
+			  </select>
+			</div>
+		  </div>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <p> <a href="#btd3" data-role="button" data-inline="true" onClick="downA_fc();">＜</a>a=<span name="a_f_value" class="a_f_value">1.0</span><a href="#btu3" data-role="button" data-inline="true" onClick="upA_fc(); ">＞</a></p>	
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <p> <a href="#btd3" data-role="button" data-inline="true" onClick="downB_fc();">＜</a>b=<span name="b_f_value" class="b_f_value">1.0</span><a href="#btu3" data-role="button" data-inline="true" onClick="upB_fc(); ">＞</a></p>	
+			</div>
+		  </div>
+		</div>
+		<p>　ここでは、</p>
+		<p><span class="ao">y</span>=<span id="yfx"><span class="aka">x</span></span>という関数と</p>
+		<p><span class="magenta">z</span>=<span id="zgy"><span class="ao">y</span></span>という関数が合成され、</p>
+		<p><span class="magenta">z</span>=<span id="zgfx">(<span class="aka">x</span>)</span>という関数になっている。</p>
+		<hr>
+		<p>　<span class="aka">◆</span>や<span class="ao">◆</span>や<span class="magenta">◆</span>のような形が走り回っているが、これは<span class="aka">x</span>,<span class="ao">y</span>,<span class="magenta">z</span>の変化を表したものである。</p>
+		<div class="setsumei">　初期状態では<span class="ao">y</span>=<span class="aka">x</span>と<span class="magenta">z</span>=<span class="ao">y</span>というつまらない状態になっているが、図の下にあるセレクタやボタンで関数の種類やパラメータを変化させることができるので、いろいろと試してみよう。</div>
+		<div class="list">
+		  <ul>
+			<li><span class="ao">y</span>=<span class="aka">x</span><sup>2</sup>と<span class="magenta">z</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr class="eq"><td align="center" nowrap="nowrap">1<hr noshade="noshade" size="1"><span class="ao">y</span></td></tr></tbody></table>を合成すると、<span class="magenta">z</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr class="eq"><td align="center" nowrap="nowrap">1<hr noshade="noshade" size="1"><span class="aka">x</span><sup>2</sup></td></tr></tbody></table></li>
+			<li><span class="ao">y</span>=<span class="aka">x</span><sup>2</sup>と<span class="magenta">z</span>=exp(-<span class="ao">y</span>)を合成すると、<span class="magenta">z</span>=exp(-<span class="aka">x</span><sup>2</sup>)</li>
+			<li><span class="ao">y</span>=sin(<span class="aka">x</span>)と<span class="magenta">z</span>=<span class="ao">y</span><sup>2</sup>を合成すると、<span class="magenta">z</span>=sin(<span class="aka">x</span>)<sup>2</sup></li>
+		  </ul>
+		</div>
+		<p>のように関数が合成されるところを確認しよう（もちろん他にももっといろいろなパターンがあるので、試してみよう）。</p>
+		<h3>コンピュータにグラフを描かせる時の注意</h3>
+		<p>たとえば、</p>
+		<div><span class="ao">y</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr class="eq"><td align="center" nowrap="nowrap">1<hr noshade="noshade" size="1"><span class="aka">x</span></td></tr></tbody></table>に</div>
+		<div><span class="magenta">z</span>=sin(3<span class="ao">y</span>)を合成して、</div>
+		<div><span class="magenta">z</span>=sin(<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr class="eq"><td align="center" nowrap="nowrap">3<hr noshade="noshade" size="1"><span class="aka">x</span></td></tr></tbody></table>)という関数を作ったとすると、そのグラフは、</div>
+		<p><img src="../sizensuugaku/sin3overx.png" class="floatnone" width="50%"></p>
+		<p>のようになる。この<span class="aka">x</span>=0付近のぐしゃっとなっているところ<img src="../sizensuugaku/sin3overxzerofukin.png"class="floatnone" width="10%">は、実は無限回の振動が隠れている<span class="footnote">なぜ無限回振動するのか、考えてみよう！</span>。しかしコンピュータの画面も内部での計算でも「無限回の振動」を表すようにはできていない。実際には<span class="aka">x</span>を0.01とか0.02とか、小さなステップで増加させては線を引く、というのを繰り返している。そのステップとステップの間に関数が激しく振動してしまうと、描かれたグラフは正確なものにはならないのである。</p>
+		<h3>逆関数のペア</h3>
+		<p>　これらの関数は互いに逆関数になっているペアがある。それらを確認しよう。</p>
+		<p>　上の図では<span class="aka">x</span>→<span class="ao">y</span>→<span class="magenta">z</span>という合成関数を考えているが、２個めの<span class="ao">y</span> <span class="magenta">z</span>が１個めの<span class="aka">x</span> <span class="ao">y</span>の逆関数であるので、<span class="aka">x</span>→<span class="ao">y</span>→<span class="aka">x</span>というつながりで元に戻ってくる。</p>
+		<p>　よって、正しく逆関数になっていれば、<span class="magenta">z</span>=<span class="aka">x</span>になるはずだ。</p>
+		<div class="list">
+		  <ul>
+			<li><span class="ao">y</span>=a<span class="aka">x</span>の逆関数は<span class="aka">x</span>=b<span class="ao">y</span>（ただし、a=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr class="eq"><td align="center" nowrap="nowrap">1<hr noshade="noshade" size="1">b</td></tr></tbody></table>）。</li>
+			<li><span class="ao">y</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr class="eq"><td align="center" nowrap="nowrap">a<hr noshade="noshade" size="1">x</td></tr></tbody></table>の逆関数は<span class="aka">x</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr class="eq"><td align="center" nowrap="nowrap">a<hr noshade="noshade" size="1"><span class="ao">y</span></td></tr></tbody></table>。</li>
+			<li><span class="ao">y</span>=<span class="aka">x</span><sup>2</sup>の逆関数は<span class="aka">x</span>=√(<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr class="eq"><td align="center" nowrap="nowrap">|<span class="ao">y</span>|<hr noshade="noshade" size="1">a</td></tr></tbody></table>)</li>
+			<li><span class="ao">y</span>=sin(a<span class="aka">x</span>)の逆関数は<span class="aka">x</span>=<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr class="eq"><td align="center" nowrap="nowrap">arcsin(<span class="ao">y</span>)<hr noshade="noshade" size="1">a</td></tr></tbody></table></li>
+			<li><span class="ao">y</span>=exp(a<span class="aka">x</span>)の逆関数は<span class="aka">x</span>=log(<table cellpadding="2" cellspacing="0" style="display:inline-table"><tbody><tr class="eq"><td align="center" nowrap="nowrap">|<span class="ao">y</span>|<hr noshade="noshade" size="1">a</td></tr></tbody></table>)</li>
+		  </ul>
+		</div>
+		<p>　ただし、実際やってみるとわかるように、これらは全てがちゃんとした逆関数にはなっていない。たとえば<span class="ao">y</span>=<span class="aka">x</span><sup>2</sup>という関数は<span class="aka">x</span>が正でも負でも結果の<span class="ao">y</span>は正になる。そして、<span class="aka">x</span>=√|<span class="ao">y</span>|)の結果はどちらにしろ正の数になる。よって、<span class="aka">x</span>＜0である状況では「<span class="aka">x</span>の符号を外す（絶対値を取る）」ということをしてしまって、逆関数にならない<span class="footnote">じゃあどうなるか、は上で確認すべし！</span>。</p>
+		<p>　同じような状況が他の場合でも起こり、上の例が<span class="fukidasi">逆関数</span>になっていると言ってよい<span class="aka">x</span>の範囲は制限されることになる。これも、確認しよう。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		  <input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		  <input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		  　<a href="#page_gyaku" data-icon="arrow-r">「逆関数」へ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page_gyaku">
+	  <div data-role="header">
+		<h1>逆関数</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　<span class="aka">x</span>→<span class="ao">y</span>という対応に対してこの逆の<span class="ao">y</span>→<span class="aka">x</span>という対応を元の関数の「逆関数」と呼ぶ<span class="footnote">$y=f(x)$に対して${x}=f^{-1}({x})$と書くこともある。</span>。</p>
+
+		<p>　たとえば${y}=2{x}$、すなわち<span class="fukidasi">ある<span class="aka">x</span>に対しその2倍を対応させる関数</span>の逆関数は${x}={1\over 2}{y}$、すなわち、<span class="fukidasi">ある<span class="ao">y</span>に対しその${1\over 2}$倍を対応させる関数</span>である。この${x}={1\over 2}{y}$という書き方では、独立変数が<span class="ao">y</span>で従属変数が<span class="aka">x</span>だということになる。前にも書いたように「独立変数に<span class="aka">x</span>、従属変数に<span class="ao">y</span>を使うことが多い」のは単なる慣習であり、こだわる必要は何もない。もしどうしても「独立変数は<span class="aka">x</span>、従属変数は<span class="ao">y</span>」という形にしたければ、「ここで<span class="aka">x</span>と<span class="ao">y</span>を取り替えます」と宣言した上で${y}={1\over 2}{x}$と書き直せばよい<span class="footnote">それで何か本質的なことが変わるわけではない。自然科学ではむしろ「この文字は何を表すか」（質量だったり、圧力だったり温度だったり時間だったり）の方が大事なので、同じ量なら従属変数だろうが独立変数だろうが同じ文字を使い、取り替えたりしない事が多い。</span>。</p>
+
+		<p>　逆関数を考える時にも定義域と値域に対する注意は必要である。たとえば、「${y}={x}^2$という関数の逆関数は${x}=\sqrt{{y}}$」と言いたくなるが、これは${x}\geq0$という範囲で考えないと正しくない。${x}<0$の範囲であれば、「${y}={x}^2$という関数の逆関数は${x}=-\sqrt{{y}}$」となる。つまり<span class="aka">x</span>の領域によって逆関数の形を変えてやらなくてはいけない（これはすぐ下で述べる「関数が1対1か？」という問題のせいでもある）。また、${y}=\sin{{x}}$の逆関数は${x}=\arcsin {y}$と書く（$\arcsin$は「アークサイン」と読む）のだが、${x}=\arcsin {y}$の<span class="ao">y</span>は$-1\leq{y}\leq1$の範囲になくてはいけない（こう書いた時には<span class="ao">y</span>は独立変数なので、この範囲は「定義域」である）。</p>
+
+		<p>　もう一つ、逆関数を考える時に気をつけなくてはいけないのは、元の関数が「1対1対応」かどうか、という点である。たとえば${y}=a{x}$（逆関数は${x}={1\over a}{y}$または${y}={a\over {x}}$（逆関数は${x}={1\over a{y}}$）などは、一つの<span class="aka">x</span>に対応する<span class="ao">y</span>はただ一つであり（でなかったらそもそも関数ではない）、さらに一つの<span class="ao">y</span>に対応する<span class="aka">x</span>もただ一つである。</p>
+
+		<p>　しかし、上でも例にした${y}={{x}^2}$はそうではない。たとえば${x}=1$でも${x}=-1$でも${y}=1$になってしまうから、<span class="aka">x</span>二つと<span class="ao">y</span>一つが対応している（${x}=0$を除く）。このような場合には${x}\to {y}$は関数であるが、${y}\to{x}$は関数ではない。このような場合は前に書いたように、定義域を制限するか、代表を一つ取り出すことで<span class="ao">y</span>に対して<span class="aka">x</span>が一つだけ決まるようにする。${y}={{x}^2}$の場合であれば、${x}\geq 0$の範囲しか考えないことにすればよい。</p>
+
+		<p>　より深刻な「1対1対応でない例」が${y}=\sin{{x}}$の逆関数${x}=\arcsin {y}$である。${y}=\sin{{x}}$は$x$に$x+2n\pi$（$n$は整数）を代入しても値が変わらない。つまり、<span class="ao">y</span>一つ（ただし、$-1\leq {y}\leq 1$）に対して無限個の<span class="aka">x</span>が対応してしまう。</p>
+
+		<p>　では、ここで${y}=\sin {x}$と${x}=\arcsin{y}$のグラフを描いてみよう。</p>
+
+		<img src="../sizensuugaku/grasinasin.png" class="floatnone" width="80%">
+
+		<img src="../sizensuugaku/sinarcsin.png" width="40%" class="floatright">
+		<p>　関数と逆関数のグラフの関係は、（独立変数と従属変数の役割を取り替えるものだから）上の図に示したように「${y}={x}$の線、つまり斜め45度$\left({\pi\over 4}\right)$の線を対称線にして折り返す」ことで得られる。しかしこのままでは、${x}=\arcsin{y}$の方が関数になっていない。一つの<span class="ao">y</span>に対し<span class="aka">x</span>がたくさんあるからである。そこでグラフのうち太い線にした部分$-{\pi\over 2}\leq {x}\leq {\pi\over 2}$だけを取り出して、残りは捨てることにする。結果、${x}=\arcsin{y}$の定義域は$-1\leq {y} \leq 1$、値域は$-{\pi\over 2}\leq {x}\leq {\pi\over 2}$だということになる（こうしないと一つの<span class="ao">y</span>に対して一つの<span class="aka">x</span>が対応しない）<span class="footnote">ここで、<span class="aka">x</span>のうちどの部分を選ぶかには任意性があるが、対称性のよい$-{\pi\over 2}\leq {y}\leq {\pi\over 2}$を使うことが多い。</span>。</p>
+
+		<p>　この二つの関数を合成するとこれは<span class="aka">x</span>=<span class="aka">x</span>に戻る…と期待したいところだが、そうはいかない。右に${y}=\sin {x}$と${z}=\arcsin{y}$（まだ元に戻るとは限らないから左辺は<span class="aka">x</span>にせず新しい変数<span class="magenta">z</span>とした）のグラフが合成されるとどのようになるかを描いた。順番に見ていくと、${y}=\sin {x}$という関数の「答え」は$-1\leq {y} \leq 1$の範囲である。さらに${z}=\arcsin {y}$という関数による「答え」は$-{\pi\over 2}\leq {z}\leq {\pi\over 2}$に制限されてしまう。</p>
+
+		<p>　つまり元々の<span class="aka">x</span>の範囲は任意の実数であったのに、二つの関数を（元に戻ると期待して）作用させた結果、$-{\pi\over 2}\leq {z}\leq {\pi\over 2}$に制限された答えが返ってきたということである。よって、この範囲であれば確かに$\arcsin$は$\sin$の逆関数になっている（グラフの形からわかるように、1対1対応にするためにはこんなふうに変数の領域を制限する他はない）。逆関数を作る時にはこの点に注意が必要である。</p>
+
+		<p>　${y}=\cos{x}$の逆関数は${x}=\arccos{y}$である（$\arccos$は「アークコサイン」と読む）。こちらも変数の範囲に注意が必要だが、ここではグラフだけを載せておこう。</p>
+		<img src="../sizensuugaku/cosacos.png" class="floatnone" width="80%">
+
+
+		<p>　$y=\arccos x$の値域は$0\leq y \leq \pi$にすることが多い。$\tan$の逆関数である$y=\arctan x$もある。</p>
+		<img src="../sizensuugaku/tanatan.png" class="floatnone" width="80%">
+
+
+		<p>　$\arctan$は「アークタンジェント」と読む。値域は$-{\pi\over 2}<{y}<{\pi\over 2}$とすることが多い。グラフからわかるように、$\tan {x}$のグラフは同じ形の繰り返しだが、その一つだけを取り出して考えないと、逆関数は定義できない。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		  <a href="#page_gousei" data-icon="arrow-l">「合成関数」に戻る</a>
+		  <input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		  <input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		  <a href="#page_hen" data-icon="arrow-r">「関数らしくない関数」へ</a>
+	  </div>
+	</div>
+
+
+		<div data-role="page" id="page_hen">
+	  <div data-role="header">
+		<h1>「関数」らしくない関数</h1>
+	  </div>
+	  <div data-role="content">
+		関数を<span class="fukidasi"><span class="aka">x</span>を`計算'すると<span class="ao">y</span>が得られる</span>という考え方で捉えると、以下のような関数は少し「変」に思えるかもしれない。
+
+		<p align="center">階段関数</p>
+		<p align="center"><img src="../sizensuugaku/thetax.png" width="40%" class="floatnone"></p>
+		\begin{equation}
+		\theta({x})=\begin{cases}1&{x}>0\\ 0&{x}<0\end{cases}
+		\end{equation}
+
+		<p align="center">符号関数</p>
+		<p align="center"><img src="../sizensuugaku/epsilonx.png" width="40%" class="floatnone"></p>
+		\begin{equation}
+		\epsilon({x})=\begin{cases}1&{x}>0\\ -1&{x}<0\end{cases}
+		\end{equation}
+
+		<p>　しかし、`計算'はしてないかもしれないが<span class="fukidasi"><span class="aka">x</span>を決めれば<span class="ao">y</span>が決まる</span>という対応である以上、これも立派な関数である<span class="footnote">なお、${\theta}({x})$も$\epsilon({x})$も、${x}=0$での値を示していないが、${\theta}(0)={1\over 2},\epsilon(0)=0$とすることが多い。</span>。</p>
+
+		<p>もっと「変」な関数<span class="footnote">正確には、デルタ関数は関数として認められないのだが、細かい議論はここでは省く。</span>の例が</p>
+
+		<p align="center">Diracのデルタ関数</p>
+		<p align="center"><img src="../sizensuugaku/deltax.png" width="40%" class="floatnone"></p>
+		\begin{equation}
+		\delta({x})=\begin{cases}0&{x}\neq 0\\ \infty &{x}=0\end{cases}
+		\end{equation}
+		\begin{equation}
+		かつ~~~~~ \int_a^b \delta({x})\mathrm dx
+		=\begin{cases}
+		0& 区間(a,b)が{x}=0を含まないとき\\
+		1& 区間(a,b)が{x}=0を含むとき
+		\end{cases}
+		\end{equation}
+		<p>である（本書ではまだ積分について説明してないので、後半部分については積分まで勉強した後で理解して欲しい）。こういう関数をどう使うのか（どんな使い途があるのか）についてはずっと後で述べることにしよう。</p>
+
+		<p>　とっても変な関数としては、</p>
+		\begin{equation}
+		f(x)=\begin{cases}
+		0&xが無理数のとき\\
+		1&xが有理数のとき
+		\end{cases}
+		\end{equation} 
+		<p>もある。これは何かに使うというより「こういう変なものも関数だから、気をつけろ」という「例外を示す」のによく使われるようだ。この関数はありとあらゆる場所で連続でない、という病的な性質を持っている。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		  <a href="#page_gyaku" data-icon="arrow-l">「逆関数」に戻る</a>
+		  <input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		  <input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		  <a href="#page_exp" data-icon="arrow-r">「指数関数」へ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page_exp">
+	  <div data-role="header">
+		<h1>指数関数</h1>
+	  </div>
+	  <script type="text/javascript">
+	   function marume6(x) {
+		 var xx=x*1000000;
+		 xx=Math.round(xx);
+		 xx  /= 1000000;
+       if( x- xx == 0 ) {
+         return xx;
+       } else {
+         return xx+"…";
+       }
+	 }
+	 function marume4(x) {
+	   x*=10000;
+	   x=Math.round(x);
+	   x /= 10000;
+       return x;
+	   }
+	   var nowgs;
+	   var gs_exp;
+	   var a_exp=2;
+	   $(document).delegate('#page_exp','pageinit',function(e) {
+		 gs_exp=new GraphScreenXY("canvas_exp",6.5,4.5,0.7,1);
+		 gs_exp.setLeft(-2.25);
+		 gs_exp.setBottom(-0.5);
+		 gs_exp.gobackOriginalSize();
+		 gs_exp.setFunction(function(x) { return Math.pow(a_exp,x);});
+		 nowgs=gs_exp;
+	   });
+	   $(document).delegate('#page_exp','pageshow',function(e) {
+		 nowgs=gs_exp;
+		 gs_exp.writeGraph();
+	   });
+	   function upA() {
+		 a_exp +=0.1;
+		 if( a_exp>10 ) { a_exp=10; }
+		 changeA();
+	   }
+	   function downA() {
+		 a_exp-=0.1;
+		 if( a_exp<0.1 ) { a_exp=0.1;}
+		 changeA();
+	   }
+	   var s=4;
+	   function upS() {
+		 s +=1;
+		 if( s>100 ) { s=100; }
+		 changeS();
+	   }
+	   function downS() {
+		 s-=1;
+		 if( s<2 ) { s=2;}
+		 changeS();
+	   }
+	   function changeS() {
+		 $('#s_value').html(s);
+		 var scale=(s+0.5)/ 4.5;
+		 gs_exp.setScaleYX(scale);
+		 gs_exp.setScale();
+		 gs_exp.writeGraph();
+	   }
+	   
+	   function changeA() {
+		 a_exp *=10;
+		 a_exp=Math.round(a_exp);
+		 a_exp = a_exp/ 10;
+		 $('#a_value').html(a_exp);
+		 nowgs.writeGraph();
+	   }
+	  </script>
+	  <div data-role="content">
+
+		自然科学によく現れる関数としては、指数関数およびその逆関数である対数関数がある。
+
+		<h3>指数（冪の指数）</h3>
+		<p>　$x\times x={x}^2,x\times x\times x={x}^3$などと、同じ数を複数回掛ける計算を右肩に小さい字で回数を示して表すが、この${x}^2,{x}^3,{x}^4,\cdots$などの右肩の数字を「指数(expornent)」、冪乗されている方の数を「底(base)」と呼ぶ。$x^n$と書いた時、$n$が指数で$x$が底である（つまり、$底^{指数}$）。底は正の定数としておこう<span class="footnote">負になった場合は定義の仕方に注意が必要である。</span>。</p>
+
+		<p>　関数${y}={x}^n$の時は底<span class="aka">x</span>が独立変数であって指数$n$が関数の形を決めるパラメータとなっている。つまり$（従属変数）=（独立変数）^{（パラメータ）}$であった。</p>
+
+		<p>　「指数関数」というのはこの指数の方が独立変数になっている関数である。指数関数を${y}=a^{{x}}$と表現すると、指数<span class="aka">x</span>が独立変数で、底$a$がパラメータである。つまり$（従属変数）=（パラメータ）^{（独立変数）}$である（式の形は同じでも「何を変化させた時の変化が見たいのか」が違う）<span class="footnote">一般的には、${y}=C a^{{x}}$のように、指数関数に更に定数$C$が掛かった関数を考えることが多い。</span>。</p>
+
+		<p>　こういう関数が必要になる例は自然科学でも日常生活でもある。たとえば年10％の利子がつく借金があったとすると、最初10000円借りても、１年ほっておくと$10000\times 1.1=11000$円になる。そして２年ほっておくと、12000円になるのではなく、$11000\times 1.1=12100$円になる（３年だと$12100\times 1.1=13310$円である）。この場合は<span class="aka">x</span>年経った時、借金は${y}=10000\times 1.1^{{x}}$になっている（ちなみに10年だと25937.42460100002円である）。指数関数はこんなふうに「毎回同じ割合で増えていく（あるいは減っていく）」時に使われる。</p>
+
+		<p>　例として、${y}=2^{{x}}$という関数を考えて、まずは<span class="aka">x</span>が0以上の整数である場合（負の場合についてはすぐ後で考える）の表を作ってみると、</p>
+		<p>
+		  <table border="1">
+			<tr>
+			  <th><span class="aka">x</span></th><th> 0 </th><th>1 </th><th>2 </th><th>3 </th><th>4 </th><th>5 </th><th>…</th>
+			</tr>
+			<tr>
+			  <td>y=2<sup><span class="aka">x</span></sup></td><td> 1 </td><td>2 </td><td>4 </td><td>8 </td><td>16 </td><td>32 </td><td>…</td>
+			</tr>
+		  </table>
+		</p>
+
+		<p>のようになる。</p>
+
+
+		<img src="../sizensuugaku/2^x.png" class="floatright" width="40%">
+
+		<p>説明なしに書き込んだので、上の表で$x=0$の時${y}=1$であること（$2^0=1$）を不思議に思う人は多いかもしれない。</p>
+		
+		
+		<div><span class="fukidasi">$2$を$0$回掛算したのなら、答は0では？？</span>と</div>
+
+
+		<p>　しかし上の表および右のグラフを見ると、この関数は「<span class="aka">x</span>が1増えると2倍になる」「<span class="aka">x</span>が1減ると半分になる」という変化をしている。だから、$x=1$から1減って$x=0$になれば、$x=1$の時の値である2の半分になる（つまり1になる）方が筋が通っている。
+		<p>それに、$2^0=0$にしてしまうと</p>
+		<img src="../sizensuugaku/../sizensuugaku/funcCompo.png" class="floatnone" width="40%"></p>
+		<p align="center">同じ底の冪の掛算は、指数の足算</p>
+		\begin{equation}
+		a^{x_1}\times a^{x_2}=a^{x_1+x_2}\label{sisuukakezan}
+		\end{equation}
+
+		<p>という関係が、$x_1$もしくは$x_2$が0の時に成り立たなくなってしまう。$x_1$と$x_2$が自然数である時は、この式は「$a$を$x_1$回掛けたものと$a$を$x_2$回掛けたものの掛算は$a$を$x_1+x_2$回掛けたものだ」と主張している。$x_1=0$にするとこの式は</p>
+		\begin{equation}
+		a^{x_1} \times a^{0}=a^{x_1+0}
+		\end{equation}
+		<p>となるから、$a^0$は（$a$が0でない、どんな数であろうが！）1でなくてはいけない。</p>
+
+		<p>たとえばどっかの偉い人が<span class="fukidasi"$2^0=0$にする！</span>と決めてしまったりすると、$a^{x_1}\times a^{x_2}=a^{x_1+x_2}$という計算ルールは、指数が0の時を例外とする、としなくてはいない。なるべくなら例外のないルールの方がいいので、世間ではそうしていないのである。</p>
+
+		<p>　別の言い方をすれば、以下のようにも考えられる。掛算における「なにもしない」という計算は「1を掛ける」ことである。掛算を指数を使った計算に直すと足算になるが、足算における「なにもしない」という計算は「0を足す」である。よって、「1を掛ける」と「指数に0を足す」が同じ計算になるためには、$a^0=1$でなくてはいけない。</p>
+
+		<img src="..\sizensuugaku\2^x_2.png" class="floatnone" width="40%">
+		<p>　以下で、この$x_1$や$x_2$を自然数および0以外の数にも拡張していこう。</p>
+
+		<p>　まず、$x_1$もしくは$x_2$が負の整数である場合はどうだろう？---グラフを<span class="aka">x</span>が負の領域まで伸ばしてみたのが右の図で、これから、$2^{-1}={1\over 2},2^{-2}={1\over 4}$と半分にしていけばよいのではないかと思われる。</p>
+		
+		<p>これが上の計算ルールに即していることを確認しよう。</p>
+		\begin{equation}
+		\underbrace{2^{4}}_{16}\times 2^{-1}=2^{4-1}=2^3=8
+		\end{equation}
+		<p>という式が成立するためにも、$2^{-1}={1\over 2}$であればよいことがわかる。こうして、</p>
+		
+		<div class="fukidasi">指数が負の数である場合は、$a^{-{x}}={1\over a^{{x}}}$とすればよい。</div>
+		<p>と気づくだろう。これから、</p>
+		<p aling="center">同じ底の冪の割算は、指数の引算</p>
+		\begin{equation}
+		{a^{x_1}\over a^{x_2}}=a^{x_1-x_2}
+		\end{equation}
+		<p>ということもわかる。$2^{x}\times 2^{-x}=2^{x-x}=2^0$という式を書いてみれば、$2^0=1$が妥当な選択だということが再び確認された。</p>
+
+		<p>　「$a^{x_1}\times a^{x_2}=a^{x_1+x_2}$という計算ルールを尊重する」という立場に立てば、$a^{1\over 2}$や$a^{1\over 3}$（あるいは$a^{1\over 100}$だろうと）をどのように定義すべきかわかる。$a^{1\over 2}\times a^{1\over 2}=a$となるためには$a^{1\over 2}=\sqrt{a}$となるわけである。同様に、$a^{1\over 3}=\sqrt[3]{a}$であり、$a^{1\over 100}=\sqrt[100]{a}$である<span class="footnote">$\sqrt[n]{a}$は「$n$乗すると$a$になる正の数字」という定義だから、これは定義を別の書き方で書きなおしているだけのことだ。</span>。こうしてたとえば$a^{3.42}$という量を計算する方法を我々は知ることができる（たとえば100回掛けたら$a^{342}$になる数だと思えばよい---計算で求めるのはたいへんそうだが！<span class="footnote">しかしそんなたいへんな計算も、後で出てくる対数関数や、微分やテイラー展開の助けを借りて楽に計算できるようになる。</span>）。こうして$a^{{x}}$という関数を<span class="aka">x</span>が小数、分数などで表現される有理数である場合について計算できるようになる。</p>
+
+		<p>　では<span class="aka">x</span>が無理数である場合（たとえば$2^{\sqrt{2}}$は？---あるいは$5^\pi$は？）はどう考えようか。</p>
+		<p>　たとえば、$\sqrt{2}\fallingdotseq1.41421356237\cdots$であるから、</p>
+		<img src="..\sizensuugaku\exponential23456.png" class="floatright" width="30%">
+		<table>
+			<tr><td> $2^1$</td><td>=2 </td></td></tr>
+			<tr><td> $2^{1.4}$</td><td>≒ 2.63901582… </td></tr>
+			<tr><td> $2^{1.41}$</td><td>≒ 2.65737162… </td></tr>
+			<tr><td> $2^{1.414}$</td><td>≒ 2.66474965… </td></tr>
+			<tr><td> $2^{1.4143}$</td><td>≒ 2.66530382… </td></tr>
+			<tr><td> $2^{1.41435}$</td><td>≒ 2.66539620…</td></tr>
+			<tr><td> $2^{1.414356}$</td><td>≒ 2.66540728…</td></tr>
+		</table>
+		<p>のようにどんどん精度を上げつつ計算していけば、$2^{\sqrt{2}}$の値が計算できる<span class="footnote">実際には我々は後で説明する微積分の応用であるテイラー展開という方法を使ってこの値を計算する。</span>。もちろん有限桁の小数では$\sqrt{2}$は絶対に表せない（$\sqrt{2}$は有理数ではない）から、値そのものが計算できるとはいえない。しかし、「$2^{\sqrt{2}}$の値が必要な精度（有効数字）に達するまで、いくらでも$\sqrt{2}$の近似値の精度を挙げて、その精度で$2^{\sqrt{2}}$に近い数字を計算することが可能である」ということである<span class="footnote">この「必要な精度になるまでいくらでも桁数を上げていける」という考え方は重要である。</span>。</p>
+		
+		<p>　図は$2^{{x}},3^{{x}},4^{{x}},5^{{x}},6^{{x}}$のグラフである。グラフの形状は、<span class="aka">x</span>が増加するに従って急速に（グラフの傾きが大きくなりながら）増大していく関数である。そのため「指数関数的に増大する」という言葉はしばしば「手に負えないほど非常に速く増える」を意味するものとして使われる<span class="footnote">既に述べたように借金の増大は指数関数的だから、放っておくと手に負えなくなる。</span>。グラフは${x}=2$までしか描かれていないが、例えば${x}=10$では$2^{10}=2014$であり、右のグラフはあっという間に天井を突き抜けてしまうのである。さらに、${x}=100$では$2^{100}=1267650600228229401496703205376$というとんでもない数字になる。</p>
+
+		<div class="setsumei">
+			紙を1回折ると、折る前に比べて厚さが2倍になる、とする。厚さ0.01 mmの紙を100回折ることがもしできたら（実際にはできない）、紙の厚さはどれだけになるか？
+		</div>
+		<div class="A">　上の答えはもちろん、12676506002282294014967032.05376 mということになる。大雑把に$1.3\times10^{25}$ mである。これはだいたい、13億光年。授業で答を確認せずに「隣の星まで行ける」とか言ってしまったが、実際のところ隣の銀河団まで行けるほどだ。</div>
+		<div class="setsumei">では、指数関数の「動くグラフ」を見よう。</div>
+		<div align="center">
+			<canvas id="canvas_exp" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+		</div>
+		<p>
+			上のグラフは指数関数</a><span class="ao">y</span>=a<sup><span class="aka">x</span></sup>のグラフである。
+		</p>
+		<div class="setsumei">
+			下↓のスライダーでaの値を変えられるので、いろいろと変えてみよう（ただしa=1.0は意味が無い）。</div>
+		<div>
+			<input type="range" name="slider_a" id="slider_a" value="2" min="0.1" max="5" step="0.1" onChange="a_exp=Number($('#slider_a').val()); changeA();" />
+		</div>
+		<p><span class="ao">y</span>=(<span id="a_value">2.0</span>)<sup><span class="aka">x</span></sup></p>
+		<p>底（a）を大きくすると、あっというまに線がグラフの上端を突き抜けてしまう。</p>
+		<div class="setsumei">下↓のボタンでグラフの上端を変えられるので、いろいろと変えてみよう。</div>
+		<div>
+			<input type="range" id="slider_s" value="4" min="2" max="64" step="1" onChange="s=Number($('#slider_s').val()); changeS();" />
+		</div>
+		<p>グラフ一番上のy座標が<span id="s_value" >4</span></p>
+	  </div>
+	  <div data-role="footer" align="center">
+			<a href="#page_hen" data-icon="arrow-l">「関数らしくない関数」に戻る</a>
+			<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+			<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			<a href="#pageQA" data-icon="arrow-r">「受講者の感想・コメント」へ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="pageQA">
+	  <div data-role="header">
+		<h1>受講者の感想・コメント</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+
+		<div class="Q">合成関数とはどういったことなのかを理解することができたし、普段の生活の中でも合成関数が成り立っていると知ってびっくりしました。</div>
+		<div class="A">というより、普段の生活の中でも起こっていることを表現できるように、数学が作られているのです。</div>
+		<p></p>
+
+		<div class="Q">いろいろな関数を勉強していくにつれすごく数学に興味がわきました。</div>
+		<div class="A">興味を持っていろいろ勉強してみてください。</div>
+		<p></p>
+
+		<div class="Q">日常生活でこれは関数だ、合成関数だと言える人間になりたいです。</div>
+		<div class="A">普段からそういう考え方をしてみてください。数学的関係ってのはいろんなところにある。</div>
+		<p></p>
+
+		<div class="Q">合成関数のグラフがいろいろ変化があっておもしろかった。デルタ関数などのグラフがあるということは驚いた。</div>
+		<div class="A">デルタ関数は、使うときになったらまた悩むと思います。</div>
+		<p></p>
+
+		<div class="Q">合成関数のいろいろなグラフが見れて面白かった。指数関数の$2^{a+b}=2^a\times 2^b$から指数が0になったり分数になったときの値が求められるのはすごいと思った。</div>
+		<div class="A">数学では「公式」を一旦作るとその公式を使って数式の意味をどんどん広げていける、ということがよくあります。</div>
+		<p></p>
+
+		<div class="Q">アニメーションを見て合成関数がx,y,zとどのように対応しているのかがわかった。</div>
+		<div class="A">合成関数のイメージをつけておいてください。</div>
+		<p></p>
+
+		<div class="Q">グラフを使うことで関数についての理解が深まりました。</div>
+		<div class="A">図でイメージを持ちましょう。</div>
+		<p></p>
+
+		<div class="Q">二つの関数を合成すると新しい関数になり、元の関数によってはとても複雑で規則性の分からないものができあがる。こういったものが日常にたくさん散らばっているんですね。何気なく普通に使ってました。</div>
+		<div class="A">日常にもある関係を数式で表現していったものが「関数」なのです。</div>
+		<p></p>
+
+		<div class="Q">合成関数を身近な例にたとえて考えた。連鎖的につながっていることがわかった。逆関数においては「yに対してxが１つだけ決まるようにする」というルールを再確認した。デルタ関数→点電荷という話しに興味が湧いた。</div>
+		<div class="A">デルタ関数は、ずっと後（この授業じゃない授業）で出現するでしょう。</div>
+		<p></p>
+
+		<div class="Q">関数の定義によってxが決まってyが１つきまっても、yを決めてxが二つ出てくると逆関数は言えないということがわかった。</div>
+		<div class="A">１対１対応になることが大事ですね。</div>
+		<p></p>
+
+		<div class="Q">様々な組み合わせで合成関数を作ると予想外のグラフができておもしろかった。</div>
+		<div class="A">いろいろ遊んでみてください。</div>
+		<p></p>
+
+		<div class="Q">$y=x^2$には逆関数はないが、範囲を決めてやると逆関数が存在することがわかった。</div>
+		<div class="A">はい、そうです。1対1にすることが大事です。</div>
+		<p></p>
+
+		<div class="Q">指数関数や合成関数が日常で多く使われていることがわかった。</div>
+		<div class="A">関数という考え方自体がよく使われています。</div>
+		<p></p>
+
+		<div class="Q">合成関数のグラフが特徴的で面白かった。</div>
+		<div class="A">いろいろ試してみてください。</div>
+		<p></p>
+
+		<div class="Q">合成関数と指数関数および逆関数についてよくわかった。ただ、夜更かしして眠かったので気をつけたい。夜にする読書は実に危険であった。</div>
+		<div class="A">今日はねている人多かったですね…。</div>
+		<p></p>
+
+		<div class="Q">合成関数のグラフをタブレットを使ってみると面白いし、とてもわかりやすかった。</div>
+		<div class="A">いろいろ試しながら理解していってください。</div>
+		<p></p>
+
+		<div class="Q">逆関数についてよくわかった。３次元グラフを使ってy:〜z:〜を調整する度に、グラフの変化が面白かった。</div>
+		<div class="A">それはよかった。</div>
+		<p></p>
+
+		<div class="Q">n乗根の復習ができたのでよかった。逆関数のグラフが意外な形になって興味深かった。</div>
+		<div class="A">逆関数のグラフは元の関数を45度の斜め線を対称軸にしてひっくり返したものになるんですが、気づきましたか？</div>
+		<p></p>
+
+		<div class="Q">合成関数のグラフを思い浮かべるのはとてもとても難しかったです。</div>
+		<div class="A">だからこそ、関数を数式で計算する意味があるわけです（人間に想像できないものを数式が示してくれる）。</div>
+		<p></p>
+
+		<div class="Q">合成関数の組み合わせを色々と変えてみるのが楽しかった。</div>
+		<div class="A">いろいろやってみてください。</div>
+		<p></p>
+
+		<div class="Q">関数を逆関数にすることは係数を逆にすることではなかったのか…。逆かんすをとるときは決めた定義域の中でxとyが対になるのを確認する必要がある。$\sin^{-1} y\neq{1\over \sin y}$は昨日の授業で謎の部分だったので今回よくわかってよかった。</div>
+		<div class="A">逆というのは対応関係を全部ひっくり返さなくてはいけません。$\sin^{-1}$は間違えないように気をつけましょう。</div>
+		<p></p>
+
+		<div class="Q">逆関数の定義を知ることで関数の定義を再確認できた。</div>
+		<div class="A">う〜ん、今再確認してちゃ困るんだけど、まぁとにかくちゃんと確認しておきましょう。</div>
+		<p></p>
+
+		<div class="Q">合成関数・指数関数がよくわかった。</div>
+		<div class="A">逆関数もね。</div>
+		<p></p>
+
+		<div class="Q">少し忘れていた逆関数を思い出せました。独立変数と従属変数が１対１のとき成り立つことを気をつけたいと思います。</div>
+		<div class="A">逆関数の意味と作り方をよく理解しておきましょう。</div>
+		<p></p>
+
+		<div class="Q">逆関数についての十分条件、必要条件の重要性、また特別な性質をもつ関数（デルタ関数）について知った。</div>
+		<div class="A">必要・十分というより、「１対１対応」が重要です。</div>
+		<p></p>
+
+		<div class="Q">階段関数や符号関数、デルタ関数など初めて知りました。理解できるようにしたいです。</div>
+		<div class="A">理解って、今日やったあれだけのものですよ（特に階段関数と符号関数）。</div>
+		<p></p>
+
+		<div class="Q">合成関数とか逆関数とか、高校の復習になった。</div>
+		<div class="A">それはよかった。</div>
+		<p></p>
+
+		<div class="Q">合成関数の考え方が日常生活にも隠れていて、急に身近になった気がした。指数・対数は人間が現実にはできないことを数値的に表現することができるので単純にすごいと思った。</div>
+		<div class="A">急に身近になったわけではなくて、そういう関係があるからこそそれを関数で表現しているのです。</div>
+		<p></p>
+
+		<div class="Q">指数に関数ことは知っていることがほとんどでしたが、あらためて始めからしることができました。逆関数もとても分かりやすかったです。ネイピア数はよくわかっていなかったので、次回が楽しみです。</div>
+		<div class="A">お楽しみに。といっても、実はすごく簡単な話なのですが…。</div>
+		<p></p>
+
+		<div class="Q">紙１００回まげることができれば何光年もの長さになることに驚きました。100折り曲げるころには原子のレベルの大きさになっているのかなと自分で考えていました。関数を合成するという原理が今日わかったのでよかったです。</div>
+		<div class="A">たしかに、厚さが何光年にもなったときには大きさは原子以下になってるね。</div>
+		<p></p>
+
+		<div class="Q">指数関数もっと自由に使いこなしたいです。</div>
+		<div class="A">うん、そこは使いこなしていって欲しい。</div>
+		<p></p>
+
+		<div class="Q">中学・高校で指数楽しくてすごく計算してたの思い出した。$2^{1\over2}$や$2^0$の値が高校では「そうなること」は教えてくれたけどどうしてそうなるのかは教わらず、一人で本を読んで考えていたので、今日の授業が少し嬉しかった（？）です。デルタ関数初めてみました。On/OFFの２進数的なグラフなんだろうな、と思いました。</div>
+		<div class="A">「どうしてそうなるか」がないとやはり面白くないですよね。デルタ関数はグラフに書けない関数です。</div>
+		<p></p>
+
+		<div class="Q">今日の指数関数は高校の数学とほとんど同じだった気がします。次から難しくなりそうなので頑張ります。</div>
+		<div class="A">次の後半から微分です。</div>
+		<p></p>
+
+		<div class="Q">指数関数はめっちゃおもしろいなと思いました。紙を32回折ったら宇宙に行けるって聞いたことがあったんで、めっちゃおもしろいなと思いました。</div>
+		<div class="A">確かに32回でもかなりすごいことにはなりますね。</div>
+		<p></p>
+
+		<div class="Q">指数の原理や合成関数の原理がわかった。</div>
+		<div class="A">それはよかった。</div>
+		<p></p>
+
+		<div class="Q">$2^{\sqrt{2}}$のところは「ファッ？」となって後で自分で証明してみたい。</div>
+		<div class="A">証明ってほどのことはないけど、まぁやってみてください。</div>
+		<p></p>
+
+		<div class="Q">先生の威圧感も指数関数的に増大しているが、私は途中で合成関数のグラフのアプリの構造で頭がいっぱいだった。</div>
+		<div class="A">アプリはそんなに複雑でもないですよ（3Dになっているので少しややこしいかな）。</div>
+		<p></p>
+
+		<div class="Q">$(2^{0.1})^{10}=2$となる考え方で$2^{0.1}$を求めるやり方はわかりやすかったです。折り紙100回曲げて隣の星…。</div>
+		<div class="A">実はもっともっと遠かったです(^_^;)。</div>
+		<p></p>
+
+		<div class="Q">指数が難しかった。知らない関数があった。</div>
+		<div class="A">知っていってください。</div>
+		<p></p>
+
+		<div class="Q">逆関数よくわかった。指数関数よくわかった。</div>
+		<div class="A">次から微分に入ります。</div>
+		<p></p>
+
+		<div class="Q">指数の法則が$2^{a+b}=2^a\times 2^b$から導かれることを知り、より理解が深まりました。</div>
+		<div class="A">いろんなことがこれから導かれます。</div>
+		<p></p>
+
+		<div class="Q">$2^0$が1になるのは知ってたが、今日はじめて理由を知った。</div>
+		<div class="A">どうしてそう定義するかも大事です。</div>
+		<p></p>
+
+		<div class="Q">昔読んだ本で「$0^0$のことは考えるな」と書いてあったのを思い出しました。先生は$0^0$はどうなると思いますか？</div>
+		<div class="A">$0^0$を「$x^y$で$x,y$を0にしたもの」と考えると、$y$が先に0になると$0^0$→1です。もし$x$が先に0になると$0^0$→0です。つまり、同じ$0^0$でも、どういう定義にするかで答が違う。</div>
+		<p></p>
+
+		<div class="Q">先生、私は最近ロックにはまっているんですが、どんな音楽を聞きますか？</div>
+		<div class="A">私はアニソンしか聞きません。</div>
+		<p></p>
+
+		<div class="Q">寝不足でも先生の授業はテンポが良いのでねむくならなくておもしろいです。</div>
+		<div class="A">寝不足にならないようにしようね。</div>
+		<p></p>
+
+		<div class="Q">夜はもう１時間早く寝ようと思います。</div>
+		<div class="A">そうしましょう、適度な睡眠で元気に勉強。</div>
+		<p></p>
+
+		<div class="Q">１限大変〜〜。</div>
+		<div class="A">ちゃんと起きよう。</div>
+		<p></p>
+		<div class="Q">みんなで声を合わせて答えるのは目が覚めるし答の確認もできるからいいと思った。また、指数についてもよくわかった。</div>
+		<div class="A">まだ声を出してない人がいていかんなぁ、と思ってます。</div>
+		<p></p>
+		<p>　なんでこう眠たがっている奴ばっかりなのだ。</p>
+		<p></p>
+		<div class="Q">最近の小学生は液体窒素や超電導の実験授業を受けられるなんてうらやましいと思います。３年から前野先生の熱力学がおもしろいと聞いて、授業受けるの楽しみにしてます。$2^0=0$になったら困ります。</div>
+		<div class="A">熱力学は面白いですが、そのためには数学も大事です。</div>
+		<p></p>
+		<div data-role="footer" align="center">
+			<a href="#page_exp" data-icon="arrow-l">「指数関数」へ</a>
+			<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+			<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		</div>
+	  </div>
+  </body>
+</html>

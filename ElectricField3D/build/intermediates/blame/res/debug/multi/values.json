@@ -1,0 +1,406 @@
+[
+    {
+        "outputFile": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/build/intermediates/res/merged/debug/values/values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 39,
+                    "endOffset": 90
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 19,
+                        "startColumn": 4,
+                        "startOffset": 865,
+                        "endColumn": 39,
+                        "endOffset": 900
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 95,
+                    "endColumn": 38,
+                    "endOffset": 129
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 18,
+                        "startColumn": 4,
+                        "startOffset": 826,
+                        "endColumn": 38,
+                        "endOffset": 860
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 134,
+                    "endColumn": 39,
+                    "endOffset": 169
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 16,
+                        "startColumn": 4,
+                        "startOffset": 747,
+                        "endColumn": 39,
+                        "endOffset": 782
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 174,
+                    "endColumn": 38,
+                    "endOffset": 208
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 17,
+                        "startColumn": 4,
+                        "startOffset": 787,
+                        "endColumn": 38,
+                        "endOffset": 821
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 213,
+                    "endColumn": 47,
+                    "endOffset": 256
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 258,
+                        "endColumn": 47,
+                        "endOffset": 301
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 261,
+                    "endColumn": 46,
+                    "endOffset": 303
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 306,
+                        "endColumn": 46,
+                        "endOffset": 348
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 308,
+                    "endColumn": 45,
+                    "endOffset": 349
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 4,
+                        "startOffset": 448,
+                        "endColumn": 45,
+                        "endOffset": 489
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 354,
+                    "endColumn": 44,
+                    "endOffset": 394
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 11,
+                        "startColumn": 4,
+                        "startOffset": 494,
+                        "endColumn": 44,
+                        "endOffset": 534
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 399,
+                    "endColumn": 47,
+                    "endOffset": 442
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 353,
+                        "endColumn": 47,
+                        "endOffset": 396
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 447,
+                    "endColumn": 46,
+                    "endOffset": 489
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 401,
+                        "endColumn": 46,
+                        "endOffset": 443
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 12,
+                    "startColumn": 4,
+                    "startOffset": 494,
+                    "endColumn": 69,
+                    "endOffset": 559
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 69,
+                        "endOffset": 120
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 13,
+                    "startColumn": 4,
+                    "startOffset": 564,
+                    "endColumn": 56,
+                    "endOffset": 616
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 14,
+                        "startColumn": 4,
+                        "startOffset": 636,
+                        "endColumn": 56,
+                        "endOffset": 688
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 14,
+                    "startColumn": 4,
+                    "startOffset": 621,
+                    "endColumn": 62,
+                    "endOffset": 679
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 20,
+                        "startColumn": 4,
+                        "startOffset": 905,
+                        "endColumn": 62,
+                        "endOffset": 963
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 15,
+                    "startColumn": 4,
+                    "startOffset": 684,
+                    "endColumn": 45,
+                    "endOffset": 725
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 21,
+                        "startColumn": 4,
+                        "startOffset": 968,
+                        "endColumn": 45,
+                        "endOffset": 1009
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 16,
+                    "startColumn": 4,
+                    "startOffset": 730,
+                    "endColumn": 42,
+                    "endOffset": 768
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 22,
+                        "startColumn": 4,
+                        "startOffset": 1014,
+                        "endColumn": 42,
+                        "endOffset": 1052
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 17,
+                    "startColumn": 4,
+                    "startOffset": 773,
+                    "endColumn": 40,
+                    "endOffset": 809
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 125,
+                        "endColumn": 40,
+                        "endOffset": 161
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "startOffset": 814,
+                    "endColumn": 40,
+                    "endOffset": 850
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 166,
+                        "endColumn": 40,
+                        "endOffset": 202
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 19,
+                    "startColumn": 4,
+                    "startOffset": 855,
+                    "endColumn": 50,
+                    "endOffset": 901
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 207,
+                        "endColumn": 50,
+                        "endOffset": 253
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 20,
+                    "startColumn": 4,
+                    "startOffset": 906,
+                    "endColumn": 48,
+                    "endOffset": 950
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 12,
+                        "startColumn": 4,
+                        "startOffset": 539,
+                        "endColumn": 48,
+                        "endOffset": 583
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 21,
+                    "startColumn": 4,
+                    "startOffset": 955,
+                    "endColumn": 47,
+                    "endOffset": 998
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 13,
+                        "startColumn": 4,
+                        "startOffset": 588,
+                        "endColumn": 47,
+                        "endOffset": 631
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 22,
+                    "startColumn": 4,
+                    "startOffset": 1003,
+                    "endColumn": 53,
+                    "endOffset": 1052
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField3D/res/values/strings.xml",
+                    "position": {
+                        "startLine": 15,
+                        "startColumn": 4,
+                        "startOffset": 693,
+                        "endColumn": 53,
+                        "endOffset": 742
+                    }
+                }
+            }
+        ]
+    }
+]

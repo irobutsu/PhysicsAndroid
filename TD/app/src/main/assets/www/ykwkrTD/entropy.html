@@ -1,0 +1,765 @@
+<!Doctype html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebText 動く！熱力学</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="dragmanscreen.js" type="text/javascript"></script>
+	<script src="draggablepoint.js" type="text/javascript"></script>
+	<script src="vector.js" type="text/javascript"></script>
+	<script src="yajirushi.js" type="text/javascript"></script>
+	<script src="rescalescreenxy.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<script type="text/javascript">
+		var sc,scp,scvt,scst;
+		var ct,ctp,ctvt,ctst;
+		var pImg,vImg,tImg,sImg;
+		$(document).delegate('#carnot','pageinit',function(e) {
+			pImg=new Image();
+			vImg=new Image();
+			tImg=new Image();
+			sImg=new Image();
+			pImg.src="p.png";
+			vImg.src="v.png";
+			tImg.src="T.png";
+			sImg.src="S.png";
+			sc=new DragmanScreen("carnotcanvas",14,14,0.4);
+			scp=new RescaleScreen("pistoncanvas",14,4,0.4);
+			scvt=new RescaleScreenXY("canvasvt",14,26,0.4,0.5);
+			scst=new RescaleScreenXY("canvasst",14,26,0.4,0.5);
+			sct=new RescaleScreen("tempcanvas",10,1,0.4);
+			sc.setBottom(-0.5);
+			sc.setLeft(-1);
+			sc.setXLabel(vImg);
+			sc.setYLabel(pImg);
+			scvt.setXLabel(vImg);
+			scvt.setYLabel(tImg);
+			scst.setXLabel(sImg);
+			scst.setYLabel(tImg);
+			scvt.setBottom(-0.5);
+			scvt.setLeft(-1);
+			scst.setBottom(-0.5);
+			scst.setLeft(-1);
+			scp.setBottom(-1);
+			scp.setLeft(-1);
+			sct.setBottom(0);
+			sct.setLeft(0);
+			sc.gobackOriginalSize();
+			scvt.gobackOriginalSize();
+			scst.gobackOriginalSize();
+			scp.gobackOriginalSize();
+			sct.gobackOriginalSize();
+			yaP=new Yajirushi("rgba(200,200,100,0.9)");
+			yaQ=new Yajirushi("rgba(200,200,200,0.9)");
+			ct=sc.canvas.getContext("2d");
+			ctvt=scvt.canvas.getContext("2d");
+			ctst=scst.canvas.getContext("2d");
+			ctp=scp.canvas.getContext("2d");
+			ctt=sct.canvas.getContext("2d");
+			sc.writeContents=function() {
+				write_func();
+			}
+			write_temp0();
+			point1=new DraggablePoint(7,3,0.4,"rgba(255,0,0,0.5)");
+			point2=new DraggablePoint(6,2,0.4,"rgba(0,0,255,0.5)");
+			point1.setXY=function(xx,yy,x0,y0,x1,y1) {
+				if( xx <= 0 ) {
+					this.x=0.1;
+				} else {
+					this.x=xx;
+				}
+				this.y=Ta/this.x;
+				if( this.y > sc.topy ) {
+					this.y=sc.topy;
+					this.x=Ta/this.y;
+				}
+				report();
+			};
+			point2.setXY=function(xx,yy,x0,y0,x1,y1) {
+				if( xx <= 0 ) {
+					this.x=0.1;
+				} else {
+					this.x=xx;
+				}
+				this.y=Tb/this.x;
+				if( this.y > sc.topy ) {
+					this.y=sc.topy;
+					this.x=Tb/this.y;
+				}
+				report();
+			};
+			sc.pushDragObjList(point1);
+			sc.pushDragObjList(point2);
+			reset();
+			report();
+			go();
+		});
+		function reset() {
+			point1.x=2;
+			point1.y=8;
+			point2.x=10;
+			point2.y=1;
+		}
+		var minT=4;
+		var maxT=25;
+		var N=50;
+		function report() {
+			var V1=point1.x;
+			var P1=point1.y;
+			var T1=Ta;
+			var V2=point2.x;
+			var P2=point2.y;
+			var T2=Tb;
+			//point3は、温度がT2で、断熱過程によりpoint1から到着できる点
+			var V3=V1*Math.pow(T1/ T2, 1.0/ gammamone);
+			var P3=T2/ V3;
+			//point4は、温度がT1で、断熱過程によりpoint2から到着できる点
+			var V4=V2*Math.pow(T2/ T1,1.0/ gammamone);
+			var P4=T1/ V4;
+			// サイクルは1→4→2→3→1と回る。
+
+			
+			$("#akaondo").html(marume(T1));
+			$("#aoondo").html(marume(T2));
+			var ratio;
+			var tokeimawari;
+			ratio=1-T2/T1;
+			if( V3<V2 ) {
+				tokeimawari=true;
+			} else {
+				tokeimawari=false;
+			}
+			$("#ratio").html(ratio);
+
+			// 等温操作での熱量の計算は仕事でいいから、RT∫dV/V = RT log(V)
+				var Qin,Qout;
+			Qin=T1*Math.log(V4/V1);
+			Qout=T2*Math.log(V2/V3);
+			$("#Qin").html(marume(Qin));
+			$("#Qout").html(marume(Qout));
+			$("#Work").html(marume(Qin-Qout));
+			
+			
+		}
+		function marume(x) {
+			var xx=100*x;
+			return Math.round(xx)/100;
+		}
+		var gamma=5.0/ 3.0;
+		var gammamone=2.0/ 3.0;
+
+		function write_func() {
+			sc.clearALL();
+			sc.writeCoordinate();
+			scvt.clearALL();
+			scvt.writeCoordinate();
+			scst.clearALL();
+			scst.writeCoordinate();
+			point1.write(ct);
+			point2.write(ct);
+			
+			var V1=point1.x;
+			var P1=point1.y;
+			var T1=Ta;
+			var V2=point2.x;
+			var P2=point2.y;
+			var T2=Tb;
+
+			// T1≧T2は保証されている。
+
+			ct.strokeStyle="rgba(255,0,50,0.5)";
+
+			//point3は、温度がT2で、断熱過程によりpoint1から到着できる点
+			var V3=V1*Math.pow(T1/ T2, 1.0/ gammamone);
+			var P3=T2/ V3;
+			//point4は、温度がT1で、断熱過程によりpoint2から到着できる点
+			var V4=V2*Math.pow(T2/ T1,1.0/ gammamone);
+			var P4=T1/ V4;
+
+			//point1→point4への等温過程
+			var minV=T1/sc.topy;
+			var maxV=sc.rightwx;
+
+			var stepV41=(V4-V1)/ N;
+			var stepV=(maxV-minV)/ N;
+			ct.strokeStyle=rgb_temp(T1,minT,maxT-minT);
+
+			ct.beginPath();
+			ct.moveTo(minV,T1/minV);
+			for(i=1; i<=N ; i++ ) {
+				ct.lineTo(minV+stepV*i,T1/(minV+stepV*i));
+			}
+			ct.stroke();
+
+			ctvt.lineWidth=scvt.stdStrokeWidth*4;
+			ctvt.beginPath();
+			ctvt.strokeStyle=rgb_temp(T1,minT,maxT-minT);
+			ctvt.moveTo(scvt.leftwx,T1);
+			ctvt.lineTo(scvt.rightwx,T1);
+			ctvt.stroke();
+			ctvt.lineWidth=scvt.stdStrokeWidth;
+
+			ctst.lineWidth=scst.stdStrokeWidth*4;
+			ctst.beginPath();
+			ctst.strokeStyle=rgb_temp(T1,minT,maxT-minT);
+			ctst.moveTo(scst.leftwx,T1);
+			ctst.lineTo(scst.rightwx,T1);
+			ctst.stroke();
+			ctst.lineWidth=scst.stdStrokeWidth;
+
+			
+			// point4→point2への断熱過程
+			ct.strokeStyle="rgba(100,0,100,0.5)";
+			ct.beginPath();
+			ct.moveTo(V4,P4);
+			var stepV24=(V2-V4)/ N;
+			for(i=1; i<=N ; i++ ) {
+				ct.lineTo(V4+stepV24*i,P4*Math.pow((V4/ (V4+stepV24*i)),gamma));
+			}
+			ct.stroke();
+
+			ctvt.strokeStyle="rgba(100,0,100,0.5)";
+			ctvt.beginPath();
+			ctvt.moveTo(V4,T1);
+			for(i=1; i<=N; i++ ) {
+				ctvt.lineTo(V4+stepV24*i,T1*Math.pow((V4/ (V4+stepV24*i)),gammamone));
+			}
+			ctvt.stroke();
+
+			ctst.strokeStyle="rgba(100,0,100,0.5)";
+			ctst.beginPath();
+			var S1=Math.log(T1)/gammamone+Math.log(V4);
+			ctst.moveTo(S1,T1);
+			ctst.lineTo(S1,T2);
+			ctst.stroke();
+			
+			// point2→point3への等温過程
+			minV=T2/sc.topy;
+			stepV=(maxV-minV)/N;
+			var stepV32=(V3-V2)/ N;
+			ct.strokeStyle=rgb_temp(T2,minT,maxT-minT);
+			ct.beginPath();
+			ct.moveTo(minV,T2/minV);
+			for(i=1; i<=N; i++ ) {
+				ct.lineTo(minV+stepV*i,T2/ (minV+stepV*i));
+			}
+			ct.stroke();
+
+			ctvt.lineWidth=scvt.stdStrokeWidth*4;
+			ctvt.beginPath();
+			ctvt.strokeStyle=rgb_temp(T2,minT,maxT-minT);
+			ctvt.moveTo(scvt.leftwx,T2);
+			ctvt.lineTo(scvt.rightwx,T2);
+			ctvt.stroke();
+			ctvt.lineWidth=scvt.stdStrokeWidth;
+
+			ctst.lineWidth=scst.stdStrokeWidth*4;
+			ctst.beginPath();
+			ctst.strokeStyle=rgb_temp(T2,minT,maxT-minT);
+			ctst.moveTo(scst.leftwx,T2);
+			ctst.lineTo(scst.rightwx,T2);
+			ctst.stroke();
+			ctst.lineWidth=scst.stdStrokeWidth;
+
+			ct.strokeStyle="rgba(100,0,100,0.5)";
+			ct.beginPath();
+			ct.moveTo(V3,P3);
+			// point3→point1への断熱過程
+			var stepV13=(V1-V3)/ N;
+			for(i=1; i<=N; i++ ) {
+				ct.lineTo(V3+stepV13*i,P3*Math.pow((V3/ (V3+stepV13*i)),gamma));
+			}
+			ct.stroke();
+			ctvt.strokeStyle="rgba(100,0,100,0.5)";
+			ctvt.beginPath();
+			ctvt.moveTo(V3,T2);
+			for(i=1; i<=N; i++ ) {
+				ctvt.lineTo(V3+stepV13*i,T2*Math.pow((V3/ (V3+stepV13*i)),gammamone));
+			}
+			ctvt.stroke();
+			ctst.strokeStyle="rgba(100,0,100,0.5)";
+
+			ctst.beginPath();
+			S1=Math.log(T2)/gammamone+Math.log(V3);
+			ctst.moveTo(S1,T1);
+			ctst.lineTo(S1,T2);
+			ctst.stroke();
+
+			
+			//if( t<=0 ) {
+			//t=N*4+41;
+			if( t>=N*4+40 ) {
+				t=0;
+			}
+			var p,v;
+			if( t<N ) {
+				v=V1+stepV41*t;
+				p=P1*V1/ v;
+			} else if( t<N+10 ) {
+				v=V4;
+				p=P4;
+			} else if( t<N*2+10 ) {
+				v=V4+stepV24*(t-N-10);
+				p=P4*Math.pow((V4/ v),gamma);
+			} else if( t<N*2+20 ) {
+				v=V2;
+				p=P2;
+			} else if( t<N*3+20 ) {
+				v=V2+stepV32*(t-N*2-20);
+				p=P2*V2/ v;
+			} else if( t< N*3+30 ) {
+				v=V3;
+				p=P3;
+			} else if( t< N*4+30){
+				v=V3+stepV13*(t-N*3-30);
+				p=P3*Math.pow((V3/ v),gamma);
+			} else {
+				v=V1;
+				p=P1;
+			}
+			ct.fillStyle="rgb(0,0,0)";
+			ct.beginPath();
+			ct.arc(v,p,0.1,0,2*Math.PI,false);
+			ct.fill();
+			ctvt.save();
+			ctvt.fillStyle="rgb(0,0,0)";
+			ctvt.beginPath();
+			ctvt.scale(1,2);
+			ctvt.arc(v,p*v*0.5,0.1,0,2*Math.PI,false);
+			ctvt.fill();
+			ctvt.restore();
+
+			ctst.save();
+			ctst.fillStyle="rgb(0,0,0)";
+			ctst.beginPath();
+			ctst.scale(1,2);
+			ctst.arc(Math.log(p*v)/gammamone+Math.log(v),p*v*0.5,0.1,0,2*Math.PI,false);
+			ctst.fill();
+			ctst.restore();
+			// write_piston(v,p,p*v,P1*V1,P2*V2,V4-V1,V2-V4);
+			write_piston(v,p,p*v,maxT,minT,V1-V4,V4-V2);
+		}
+		var yaP,yaQ;
+		function write_piston(v,p,T,tmax,tmin,firstBouchou,secondBouchou) {
+			// tmax > tminとは限らないことに注意。
+			ctp.fillStyle="rgb(255,255,255)";
+			ctp.fillRect(scp.leftwx,scp.bottomy,scp.w,scp.h);
+			ctp.fillStyle="rgb(0,0,0)";
+			ctp.fillRect(0,0,scp.w,2);
+			ctp.fillStyle="rgb(255,255,255)";
+			ctp.fillRect(0.1,0.1,scp.w,1.8);
+			ctp.fillStyle="rgb(50,50,50)";
+			ctp.fillRect(v,0.1,0.3,1.8);
+			var tdiff=tmax-tmin;
+			if( tdiff <0 ) {
+				tdiff = -tdiff;
+				tmin=tmax;
+			}
+			
+			var i;
+			for(i=0; i<4; i++ ) {
+				yaP.setXY(v+0.04,0.5*i+0.25,p*0.5);
+				yaP.setTheta(-0.5*Math.PI);
+				yaP.setL(p*0.25);
+				yaP.draw(ctp);
+			}
+			write_temp(T,tmin,tdiff);
+			ctp.fillStyle=rgb_temp(T,tmin,tdiff);
+			ctp.fillRect(0.1,0.1,v-0.1,1.8);
+			var ofset=0;
+			var firstS,secondS,thirdS,forthS;
+			if( firstBouchou>0 ) {
+				firstS="圧縮";
+				thirdS="膨張";
+			} else {
+				firstS="膨張";
+				thirdS="圧縮";
+			}
+			if( secondBouchou>0 ) {
+				secondS="圧縮";
+				forthS="膨張";
+			} else {
+				secondS="膨張";
+				forthS="圧縮";
+			}
+			if( t<N ) {
+				ofset=0;
+				$("#now").html(
+					"<span class='aka'>等温"+firstS+"</span>→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+			} else if( t<N+10 ) {
+				ofset = t-N;
+				$("#now").html("等温"+firstS+"→<span class='aka'>熱浴を取り去る</span>→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+			} else if( t<N*2+10 ) {
+				ofset = 10;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"<span class='aka'>断熱"+secondS+"</span>→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+			} else if( t<N*2+20 ) {
+				ofset = N*2+20-t;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→<span class='aka'>熱浴で包む</span>→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+			} else if( t<N*3+20 ) {
+				ofset=0;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→<span class='aka'>等温"+thirdS+"</span>→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+			} else if( t< N*3+30 ) {
+				ofset = t-N*3-20;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→<span class='aka'>熱浴を取り去る</span>→断熱"+forthS+"→熱浴で包む→");
+
+			} else if( t< N*4+30 ){
+				ofset=10;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→<span class='aka'>断熱"+forthS+"</span>→熱浴で包む→");
+
+			} else {
+				ofset = 4*N+40-t;
+				$("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→<span class='aka'>熱浴で包む→</span>");
+
+			}
+			ctp.fillStyle=rgb_temp(T,tmin,tdiff);
+			ofset *= 0.1;
+			ctp.beginPath();
+			ctp.moveTo(scp.leftwx,scp.topy);
+			ctp.lineTo(scp.rightwx,scp.topy);
+			ctp.lineTo(scp.rightwx,scp.topy-1+ofset);
+			ctp.lineTo(-ofset,scp.topy-1+ofset);
+			ctp.lineTo(-ofset,scp.bottomy+1-ofset);
+			ctp.lineTo(scp.rightwx,scp.bottomy+1-ofset);
+			ctp.lineTo(scp.rightwx,scp.bottomy);
+			ctp.lineTo(scp.leftwx,scp.bottomy);
+			ctp.closePath();
+			ctp.fill();
+			if( t< N) {
+				writeQ(firstBouchou,p,v);
+			} else if( t<N*3+20 && t> N*2+20 ) {
+				writeQ(-firstBouchou,p,v);
+			}
+		}
+		function writeQ(firstBouchou,p,v) {
+			var xx;
+			if( firstBouchou>0 ) {
+				xx=0.125*p+0.05;
+				yaQ.setTheta(0.5*Math.PI);	
+			} else {
+				xx=-0.125*p+0.05;
+				yaQ.setTheta(-0.5*Math.PI);
+			}
+			yaQ.setL(0.25*p);
+			yaQ.setXY(xx,1);
+			yaQ.draw(ctp);
+			var x1;
+			x1=v/ 3;
+			if( firstBouchou>0 ) {
+				yaQ.setTheta(Math.PI);
+			} else {
+				yaQ.setTheta(0);
+			}
+			yaQ.setXY(x1,xx);
+			yaQ.draw(ctp);
+			x1 *= 2;
+			yaQ.setXY(x1,xx);
+			yaQ.draw(ctp);
+			x1= v/ 3;
+			if( firstBouchou>0 ) {
+				yaQ.setTheta(0);
+			} else {
+				yaQ.setTheta(Math.PI);
+			}
+			yaQ.setXY(x1,2-xx);
+			yaQ.draw(ctp);
+			x1 *= 2;
+			yaQ.setXY(x1,2-xx);
+			yaQ.draw(ctp);
+			x1= v/ 3;
+		}
+		function rgb_temp(T,tmin,tdiff) {
+			var r=Math.ceil((T-tmin)/ tdiff*255);
+			var b=255-r;
+			var g=Math.ceil(b*0.8+50);
+			return "rgb("+r+","+g+","+b+")";
+		}
+		function write_temp0() {
+			var i;
+			var step=sct.w/ N;
+			for(i=0; i<N; i++ ) {
+				ctt.fillStyle=rgb_temp(i,0,N);
+				ctt.beginPath();
+				ctt.moveTo(i*step,1);
+				ctt.lineTo(i*step,0.5);
+				ctt.lineTo((i+1.1)*step,0.5);
+				ctt.lineTo((i+1.1)*step,1);
+				ctt.closePath();
+				ctt.fill();
+			}
+		}
+		function write_temp(T,tmin,tdiff) {
+			ctt.fillStyle="rgb(200,200,200)";
+			ctt.fillRect(0,0,sct.w,0.5);
+			var x;
+			x=((T-tmin)/ tdiff);
+			ctt.fillStyle="rgb(0,0,0)";
+			ctt.beginPath();
+			ctt.moveTo(x*sct.w,0.5);
+			ctt.lineTo(x*sct.w+0.3,0);
+			ctt.lineTo(x*sct.w-0.3,0);
+			ctt.closePath();
+			ctt.fill();
+		}
+		var t=0;
+		var stopFlg=false;
+		function startstop() {
+			if( stopFlg ) {
+				stopFlg=false;
+				go();
+			} else {
+				stopFlg=true;
+			}
+		}
+		function go() {
+			if( stopFlg ) {
+				return;
+			} else {
+				write_func();
+				t++;
+				setTimeout("go();",200);
+			}
+		}
+		var Ta=16;
+		var Tb=10;
+		function changeTA() {
+			var t=Number($('#Ta').val());
+			if( t<Tb ) {
+				Ta=Tb;
+			} else {
+				Ta=t;
+			}
+			var Pa=Ta/point1.x;
+			if( Pa > sc.topy ) {
+				Pa=sc.topy;
+				point1.y=Pa;
+				point1.x=Ta/Pa;
+			} else {
+				point1.y=Pa;
+			}
+			if( t != Ta ) {
+				$('#Ta').val(Ta);
+				$('#Ta').slider('refresh');
+			}
+			report();
+		}
+		function changeTB() {
+			var t=Number($('#Tb').val());
+			if( t>Ta ) {
+				Tb=Ta;
+			} else {
+				Tb=t;
+			}
+			var Pb=Tb/point2.x;
+			if( Pb > sc.topy ) {
+				Pb=sc.topy;
+				point2.y=Pb;
+				point2.x=Tb/Pb;
+			} else {
+				point2.y=Pb;
+			}
+			if( t != Tb ) {
+				$('#Tb').val(Tb);
+				$('#Tb').slider('refresh');
+			}
+			report();
+		}
+		</script>
+
+	</head> 
+	<body>
+	  <div data-role="page" id="carnot">
+		<div data-role="header">
+		  <h2>カルノーサイクルとエントロピー</h2>
+		</div>
+		<div data-role="content">
+		  <p>毎度おなじみのカルノーサイクルのアニメーションだが、今回はグラフが３種類書かれている（全部動く）ところが違う。</p>
+		  <p>↓は、V-Pグラフ（横軸V、縦軸P）。</p>
+		  <p><canvas id="carnotcanvas"></canvas></p>
+		  <p>↓の左はV-Tグラフ、↓の右はS-Tグラフ。</p>
+		  <p><canvas id="canvasvt"></canvas>　<canvas id="canvasst"></canvas></p>
+		  <p><span id="now"></span></p>
+		  <p><canvas id="pistoncanvas"></canvas></p>
+		  <p>温度計→（低温）<canvas id="tempcanvas"></canvas>（高温）</p>
+		  <p><span class="aka">●</span>の温度：<input type="range" id="Ta" min="4" max="25" value="16" step="0.2" data-inline="true" onchange="changeTA();"></p>
+				</p>
+				<p><span class="ao">●</span>の温度：<input type="range" id="Tb" min="4" max="25" value="10" step="0.2" data-inline="true" onchange="changeTB();"></p>
+				<p>
+					カルノーサイクルの効率＝<span id="ratio"></span>
+				</p>
+				<p><span class="aka">●</span>の温度での吸熱量Q<sub>1</sub>=<span id="Qin"></span>　<span class="ao">●</span>の温度放熱量Q<sub>2</sub>=<span id="Qout"></span>　仕事量W=<span id="Work"></span></p>
+				<hr>
+				<div class="setsumei">
+					<p>　物質量Nと気体定数Rは1にして計算してある。</p>
+					<p>　四つの「角」のうち二つ（図の赤と青の●）はドラッグして動かせるので、サイクルの行程を変化させていろいろ試してみて欲しい。</p>
+					<p>　ただし、温度は4から25の範囲までしか変化しないし、<span class="aka">●</span>の温度は<span class="ao">●</span>の温度より高くないといけない。</p>		  
+				</div>
+				<p>カルノーサイクルは等温操作と断熱操作を組み合わせているが、その等温線と断熱線を、$V$-$P$グラフ上に表現したものを見てみよう（↓は静止画）。</p>
+				<p><img src="iaVP.png" width="35%" class="floatnone"></p>
+				<div class="fukidasi">等温線と断熱線が「ゆがんだ碁盤（将棋盤でもチェス盤でもいいが）の線のようになっている。</div>
+
+				<p>ということに気づいて欲しい。どちらの線も曲線で、しかもよく似ているのだから少々見た目がわかりにくい。そこで等温線の方だけを水平にしよう（それは簡単で、縦軸を温度$T$にすればよい）。グラフを次に載せよう。</p>
+
+				<p><img src="iaVT.png" width="35%" class="floatnone"></p>
+
+				<p>　この横軸（体積$V$）を適当にスケールして、軸を水平・垂直な格子状にすることもできるのは？---つまり、</p>
+				<p><img src="iaST.png" width="35%" class="floatnone"></p>
+				<p>のようなグラフを作りたい！！という「野望」を抱こう。</p>
+				<div class="setsumei">　その「野望」を実現するのが、すぐ後で定義する「エントロピー$S$」という物理量なのである。</div>
+				<p>　理想気体の場合では、断熱線は$T^cV=$一定の線だから、$x=T^cV$として新しい変数$x$を使えばよいかもしれない。しかし理想気体でない場合はまだ「断熱線上で一定となる数」を見つけてない。一般的にそういう量が見つけられる保証はあるだろうか？---そういう量が見つかるためには、</p>
+				<ul>
+					<li>図の$2\to3$と$4\to1$で「変化量」が0。</li>
+					<li>図の$1\to2$での「変化量」の積分と、$3\to4$での「変化量」の積分が逆符号で絶対値が同じ。</li>
+				</ul>
+				<p>という二つの条件が満たされなくてはいけない。別の言い方をすれば「変化量」をサイクルで一周積分すれば0にならなくてはいけない。</p>
+				<p>　たとえばその変化量として熱量$Q$を使う---というのはまずいアイデアである。というのは$1\to2$で吸収する熱量と$3\to4$で放出する熱量は絶対値が一致しない。逆符号で同じ大きさにはなってない。</p>
+
+				<p>　ここでこれらの量の間に他に条件式はなかったっけ？---と思い出してみると、Carnotの原理により、
+\begin{equation}
+ {Q_{\rm out}\over Q_{\rm in}}={T_{3\to 4}\over T_{1 \to 2}}
+  ~~~あるいは、~~~
+ {Q_{\rm out}\over T_{3\to 4}}={Q_{\rm in}\over T_{1 \to 2}}
+\end{equation}
+					<p>があるから、$\Delta S={Q\over T}$のような変化をする量$S$を定義すると、ちゃんと$1\to2$での変化と$3\to4$での変化が逆符号で消し合うことになりそうだ。</p>
+					<div class="A">これは電磁気で${\rm rot}\vec E=0$のときに（つまり一周積分が0のときに）電位$V$が定義できたのと同様のこと。</div>
+					<p>もう１つ別の方向からのアプローチとして、図の2と3で等しく、図の1と4でも等しくなるような「状態量」を定義するという方法で考えてみよう。</p>
+					<div class="A">　これまで出てきた状態量を考えると、$T,U,F$などが思い浮かぶから、これらの組み合わせでよい量は作れないか、と考えてみる。</div>
+					<p>等温操作での吸熱量は$U$の変化と$F$の変化の差であるから、$Q_{\rm in}=(U_2-U_1)-(F_2-F_1)$と$Q_{\rm out}=(U_3-U_4)-(F_3-F_4)$（$Q_{\rm out}$の方は引き算の方向が逆だが、これはinとoutの違い）という式が出る。これを代入すれば、</p>
+\begin{equation}
+{(U_3-F_3)-(U_4-F_4)\over T_{3\to 4}}={(U_2-F_2)-(U_1-F_1)\over T_{1 \to 2}}
+\end{equation}
+					<p>となる。ここで、${U-F\over T}$という量を$S$と書くことにすれば、</p>
+\begin{equation}
+ S_3-S_4 = S_2 - S_1
+\end{equation}
+					<p>なる式が出てくる。この式は「過程$1\to 2$における$S$の変化」と、「過程$3\to4$における$S$の変化」が等しいという式になっている。</p>
+					<p>　これを少し入れ替えて$S_3-S_2=S_4-S_1$としてみる。これは「過程$2\to 3$における$S$の変化」と、「過程$4\to1$における$S$の変化」（二つの過程はどちらも断熱準静的操作であることに注意）と読み取ることができるが、これが$S$-$T$グラフ上で鉛直線となるためには、$S_3-S_2=0,S_4-S_1=0$となって欲しい。</p>
+					<p>　そんなことできるのか、というと、できる。</p>
+					<p>　というのはヘルムホルツ自由エネルギー$F$を定義したとき「等温操作において最大仕事の分だけ変化する量」として定義した（そして、温度が変化したときにどう変化するかはまだ定義してなかった）からである。</p>
+					<p>　だから、「$F_1$と$F_2$の差」および「$F_3$と$F_4$の差」は最大仕事で定義されているが、「$F_2$と$F_3$の差」と「$F_4$と$F_1$の差」はまだ定義してなかった（ちなみに一方を決めればもう一方も決まる）。</p>
+					<p>　よって、$F$の定義を調節することで、$S_3=S_2,S_4=S_1$にすることができる。</p>
+					<p>　これで、$S$なる量を「$2\to3$と$4\to1$、つまり断熱準静的操作において変化しない量」あるいは「グラフの断熱線上で一定となる量」と定義する（ということは$S_3=S_4,S_2=S_1$と定義するということだが、それは上の式と矛盾なく行える）。そして、こう置いたことで、きまってなかった$F_3-F_4$と$F_2-F_1$を決めることができたことになる。</p>
+									<p>　そのためには$S$はある平衡状態が与えられれば計算できるようにしたいから、「状態量」の組み合わせで作る必要がある。これまで出てきた状態量は、$P,V,T$の他に、</p>
+				<div class="box"><big>ヘルムホルツ自由エネルギー$F$：</big>等温準静操作による仕事（最大仕事）により、$F_2-F_1=-W_{{\rm max:}1\to2}$のように定義。</div>
+				<p>と、</p>
+				<div class="box"><big>内部エネルギー$U$：</big>断熱操作による仕事により、$U_2-U_1=-W_{1\to2}$のように定義。</div>
+				<p>の二つがあった。</p>
+				<p>　$U$と$F$の定義を今の場合に適用すると</p>
+				<div class="box">　
+					<p align="center">等温操作で成り立つ式</p>
+					<ul>
+						<li>状態１→状態２で成り立つ式：$F_2-F_1=-W_{{\rm max:}1\to2}$</li>
+						<li>状態３→状態４で成り立つ式：$F_4-F_3=-W_{{\rm max:}3\to4}$</li>
+					</ul>
+				</div>
+				<p>と、</p>
+				<div class="box">
+					<p align="center">断熱操作で成り立つ式</p>
+					<ul>
+						<li>状態１→状態２で成り立つ式：$U_2-U_1=-W_{1\to2}$（←注意：今考えているサイクルとは別の仮想的操作）</li>
+						<li>状態２→状態３で成り立つ式：$U_3-U_2=-W_{2\to3}$</li>
+						<li>状態３→状態４で成り立つ式：$U_4-U_3=-W_{3\to4}$（←注意：今考えているサイクルとは別の仮想的操作）</li>
+						<li>状態４→状態１で成り立つ式：$U_1-U_4=-W_{4\to1}$</li>
+					</ul>
+				</div>
+				<p>が言える。１→２と３→４は等温操作であるが、出発点と到着点が同じになるような断熱操作（あるいは、その逆の操作）は必ず存在していて、その時の仕事で内部エネルギー$U$の差が定義されているので、上のような式を作ることができることに注意。</p>
+				<div class="A">　もちろん、このときの仕事$W_{{\rm max:}1\to2}$と$W_{1\to2}$は違う（その違いが外部から入ってきた熱になる）ので注意（←実は黒板で最初うっかりと同じになる式を作って計算してしまったが、指摘してもらって気づいた）。もちろんこんな間違いをやってはだめ。</div>
+				<p>　そして、等温準静的操作での仕事と、同じ出発点・到着点が同じ断熱操作での仕事での差から系の吸収する熱量が定義できているから、</p>
+				<p>$Q_{\rm in}=U_2-U_1-(F_2-F_1)$（内部エネルギーの増加とヘルムホルツ自由の増加との差が吸熱量）</p>
+				<p>$Q_{\rm out}=U_3-U_4-(F_3-F_4)$（←こちらは「放出する熱量」なので引き算が逆）</p>
+				<p>がいえて、かつカルノーの定理${Q_{\rm out}\over Q_{\rm in}}={T'\over T}$または${Q_{\rm out}\over T'}={Q_{\rm in}\over T}$より、</p>
+				<p>$\displaystyle {U_3-U_4-(F_3-F_4)\over T'}={U_2-U_1-(F_2-F_1)\over T}$</p>
+				<p>となる。
+					<p>　今から定義する新しい状態量$S$は、断熱準静的操作では変化しないように（つまりカルノーサイクルの$2\to 3$と$4\to1$で変化しないように）しなくてはいけないから、</p>
+					<ol>
+						<li>状態２と状態３で変化しない。$S_2=S_3$</li>
+						<li>状態４と状態１で変化しない。$S_1=S_4$</li>
+					</ol>
+					<p>という二つの条件を満たすことが必要となる。この式を辺々引くと</p>
+					<p>$S_2-S_1=S_3-S_4$</p>
+					<p>となるが、まずこの式が以下ですぐに示せる。</p>
+					<p></p>
+					<p>$\displaystyle {U_3-U_4-(F_3-F_4)\over T'}={U_2-U_1-(F_2-F_1)\over T}$という式をじっくり見ると、$S={U-F\over T}$という量を作ると、この式は</p>
+					<p>$\displaystyle \underbrace{U_3-F_3\over T'}_{S_3}-\underbrace{U_4-F_4\over T'}_{S_4}=\underbrace{U_2-F_2\over T}_{S_2}-\underbrace{U_1-F_1\over T'}_{S_1}$</p>
+					<p>となって$S_3-S_4=S_2-S_1$となる。満たして欲しい条件は$S_2=S_3,S_1=S_4$だから、この二つの式の引き算については証明できた。</p>
+					<p>さて問題は$S_2=S_3$になるかどうかだが、その式は</p>
+					<p>$\displaystyle {U_2-F_2\over T}={U_3-F_3\over T'}$</p>
+					<p>である。ここで$F$の定義が、</p>
+					<div class="box"><big>ヘルムホルツ自由エネルギー$F$：</big>等温準静操作による仕事（最大仕事）により、$F_2-F_1=-W_{{\rm max:}1\to2}$のように定義。</div>
+					<p>だったことを思い出す。この定義は、等温操作による変化である$1\to2$と$3\to4$においてどのように$F$が変化したかは定義されている（つまり$F_2-F_1$と$F_4-F_3$は決っている。しかし$F_2$と$F_3$の関係については何も言ってない（決めてない）。</p>
+					<p>　別の言い方をすれば、$F$は一本の「等温線」の上では値が（正確には、等温線に沿って動くときにどう値が変化するか）は決っているが、違う等温線ではどう変化するか（たとえば、断熱線に沿って動いたときにはどう変化するのか？？）は「まだ」決めていない。</p>
+					<p><big>「じゃあいつ決めるの？---<big>今でしょ！</big>」</big>ということでここで、$S_2=S_3$になるように決める。</p>
+					<p>　$S_3-S_4=S_2-S_1$はすでに示したから、$S_2=S_3$ならば$S_4=S_1$も決まる。</p>
+					<br>
+					<p>　このようにして決めた新しい状態量が$S$すなわちエントロピーである。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="カルノーの定理" data-icon="arrow-l" onclick="location.href='./carnot.html#carnotth'">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+				<input type="button" value="エントロピーの性質" data-icon="arrow-r" onclick="location.href='#S'">
+			</div>
+		</div>
+		<div data-role="page" id="S">
+			<div data-role="header">
+				<h1>エントロピーの性質</h1>
+			</div>
+			<div data-role="content">
+				<p>　エントロピーが示量変数で相加性を持つことは、$U,F$および$U,F$の定義に使った仕事という量が示量的で相加的であることを考えるとすぐに納得できる。また、断熱準静的操作で変化しないということも、ここで説明した作り方からすれば納得がいく。</p>
+				<p>　次に大事な性質として、</p>
+				<div class="box">任意の$T$＜$T'$と任意の体積$V$について、<br><br>
+				  $S(T;V)$＜$S(T';V)$
+				  <br><br>が成り立つ。また、（それぞれの変数が微分可能なら）<br><br>
+				  $\displaystyle {\partial U(T;V)\over \partial T}=T{\partial S(T;V)\over \partial T}$
+				  <br><br>が成り立つ。
+				</div>
+				<p>がある。</p>
+				<p>　これを証明するために、次の図のような二つの操作を考える。</p>
+				<p><img src="ST.png" width="50%" class="floatnone"></p>
+				<p>　ここで、操作１の４→１は、外界の温度（常に$T$）に接触した系（その前の段階で温度は$T'$になっていた）の温度が$T$に一致するまで待つ、という操作である（外界は常に温度$T$であることに注意）。</p>
+				<p>　操作２の１→４も同様で、この場合は外界の温度が常に$T'$で、系の温度がそれに一致していく。</p>
+				<p>　上の操作１（１→２→４→１）の一周において系のする仕事は、</p>
+				<p>$W_{\rm cyc}=\overbrace{F(T;V_1)-F(T;V_2)}^{1\to2での仕事}+\overbrace{U(T;V_2)-U(T';V_1)}^{2\to4での仕事}$</p>
+				<p>と書けるが、いまや$F=U-TS$となったことを使うと、</p>
+				<p>$W_{\rm cyc}=\overbrace{U(T;V_1)-U(T;V_2)-T(S(T;V_1)-S(T;V_2))}^{F(T;V_1)-F(T;V_2)}+U(T;V_2)-U(T';V_1)$</p>
+				<p>となり、ここで$-U(T;V_2)+U(T;V_2)$を消して、さらに$S(T;V_2)=S(T';V_1)$を使うと、</p>
+				<p>$W_{\rm cyc}=U(T;V_1)-T(S(T;V_1)-S(T';V_1))-U(T';V_1)$</p>
+				<p>となる。体積$=V_1$という、１つの体積について式が出せたことに注意。</p>
+				<p>　ここで、環境（外界）の温度は常に$T$だったことを考えると、ケルビンの原理により、$W_{\rm cyc}\leq 0$だから、</p>
+				<p>$U(T;V_1)-U(T';V_1)-T(S(T;V_1)-S(T';V_1))\leq 0$</p>
+				<p>よって、</p>
+				<p>$T(S(T';V_1)-S(T;V_1))\leq U(T';V_1)-U(T;V_1)$</p>
+				<p>となる。同様に操作２（４→３→１→４）を考えると、</p>
+				<p>$W_{\rm cyc}=\overbrace{F(T';V_1)-F(T';V_3)}^{4\to3での仕事}+\overbrace{U(T;V_1)-U(T';V_3)}^{3\to1での仕事}$</p>
+				<p>から、</p>
+				<p>$W_{\rm cyc}=U(T';V_1)-T'(S(T';V_1)-S(T;V_1))-U(T;V_1)$</p>
+				<p>となって、これが$\leq0$であることから、</p>
+				<p>$U(T';V_1)-U(T;V_1)\leq T'(S(T';V_1)-S(T;V_1))$</p>
+				<p>が言える。</p>
+				<p>　この二つをまとめて考えて、</p>
+				<p>$T(S(T';V_1)-S(T;V_1))\leq U(T';V_1)-U(T;V_1)\leq T'(S(T';V_1)-S(T;V_1))$</p>
+				<p>$T'\to T$になる極限（つまり、$T'-T=\Delta T\to0$となる極限）を考えると左辺も右辺も$T{\partial S(T;V)\over\partial T}\Delta T$へと接近する（中辺は${\partial U\over\partial T}\Delta T$になる）ので、</p>
+				<p>${\partial U\over \partial T}=T{\partial S\over \partial T}$</p>
+				<p>が言える。</p>
+				<p>　このこと（つまり、内部エネルギーの$T$微分とエントロピーの$T$微分が、比例定数$T$で比例すること）からエントロピー$S$が温度の増加関数であることがわかる。</p>
+				<div class="A">　次でエントロピーの物理的意味について詳しく話すが、「示量変数（体積など）を固定して断熱操作を行うと必ず温度があがる」という定理（プランクの定理）思い出すと、この式からも「エントロピーを大きくするのは可能だが、小さくはできない（しかも、外部から頑張って仕事をしてもやっぱり小さくできない）」ということ（エントロピー増大の法則）が見えてくる。</div>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" onclick="location.href='#carnot'" data-icon="arrow-l" value="カルノーサイクルとエントロピー">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+				<input type="button" onclick="location.href='./henbun.html'" data-icon="arrow-r" value="変分原理">
+			</div>
+		</div>
+	</body>
+</html>

@@ -2,64 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../ActionPrinciple/ActionPrinciple.iml" filepath="$PROJECT_DIR$/../ActionPrinciple/ActionPrinciple.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Ampere/Ampere.iml" filepath="$PROJECT_DIR$/../Ampere/Ampere.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../AndroidStudioProjects.iml" filepath="$PROJECT_DIR$/../AndroidStudioProjects.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../BHthru/BHthru.iml" filepath="$PROJECT_DIR$/../BHthru/BHthru.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../BiotSavart/BiotSavart.iml" filepath="$PROJECT_DIR$/../BiotSavart/BiotSavart.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Bohr/Bohr.iml" filepath="$PROJECT_DIR$/../Bohr/Bohr.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Charges/Charges.iml" filepath="$PROJECT_DIR$/../Charges/Charges.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Charges3D/Charges3D.iml" filepath="$PROJECT_DIR$/../Charges3D/Charges3D.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Currents/Currents.iml" filepath="$PROJECT_DIR$/../Currents/Currents.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../DenjiYuudou/DenjiYuudou.iml" filepath="$PROJECT_DIR$/../DenjiYuudou/DenjiYuudou.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../DiffGraph/DiffGraph.iml" filepath="$PROJECT_DIR$/../DiffGraph/DiffGraph.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../DiffLimit/DiffLimit.iml" filepath="$PROJECT_DIR$/../DiffLimit/DiffLimit.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Divergence/Divergence.iml" filepath="$PROJECT_DIR$/../Divergence/Divergence.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ElectricField/ElectricField.iml" filepath="$PROJECT_DIR$/../ElectricField/ElectricField.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ElectricField3D/ElectricField3D.iml" filepath="$PROJECT_DIR$/../ElectricField3D/ElectricField3D.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Elemagwave/Elemagwave.iml" filepath="$PROJECT_DIR$/../Elemagwave/Elemagwave.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ExpLog/ExpLog.iml" filepath="$PROJECT_DIR$/../ExpLog/ExpLog.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Flux/Flux.iml" filepath="$PROJECT_DIR$/../Flux/Flux.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../FuncComposite/FuncComposite.iml" filepath="$PROJECT_DIR$/../FuncComposite/FuncComposite.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../FuncPoly/FuncPoly.iml" filepath="$PROJECT_DIR$/../FuncPoly/FuncPoly.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../GMm/GMm.iml" filepath="$PROJECT_DIR$/../GMm/GMm.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../HanshaTouka/HanshaTouka.iml" filepath="$PROJECT_DIR$/../HanshaTouka/HanshaTouka.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Jiba2/Jiba2.iml" filepath="$PROJECT_DIR$/../Jiba2/Jiba2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Kepler/Kepler.iml" filepath="$PROJECT_DIR$/../Kepler/Kepler.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Lec18/Lec18.iml" filepath="$PROJECT_DIR$/../Lec18/Lec18.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../LineCharge/LineCharge.iml" filepath="$PROJECT_DIR$/../LineCharge/LineCharge.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../MagneticField/MagneticField.iml" filepath="$PROJECT_DIR$/../MagneticField/MagneticField.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Magnets/Magnets.iml" filepath="$PROJECT_DIR$/../Magnets/Magnets.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../MichelsonMorley/MichelsonMorley.iml" filepath="$PROJECT_DIR$/../MichelsonMorley/MichelsonMorley.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Nihensuu/Nihensuu.iml" filepath="$PROJECT_DIR$/../Nihensuu/Nihensuu.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../OneDwave/OneDwave.iml" filepath="$PROJECT_DIR$/../OneDwave/OneDwave.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Oscillator/Oscillator.iml" filepath="$PROJECT_DIR$/../Oscillator/Oscillator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Rakutai/Rakutai.iml" filepath="$PROJECT_DIR$/../Rakutai/Rakutai.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../RelativisticTrain/RelativisticTrain.iml" filepath="$PROJECT_DIR$/../RelativisticTrain/RelativisticTrain.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Rutherford/Rutherford.iml" filepath="$PROJECT_DIR$/../Rutherford/Rutherford.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Sankaku/Sankaku.iml" filepath="$PROJECT_DIR$/../Sankaku/Sankaku.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../SankakuBibun/SankakuBibun.iml" filepath="$PROJECT_DIR$/../SankakuBibun/SankakuBibun.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../SuperConductor/SuperConductor.iml" filepath="$PROJECT_DIR$/../SuperConductor/SuperConductor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../SurfaceCharge/SurfaceCharge.iml" filepath="$PROJECT_DIR$/../SurfaceCharge/SurfaceCharge.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Taylor/Taylor.iml" filepath="$PROJECT_DIR$/../Taylor/Taylor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../Urashima/Urashima.iml" filepath="$PROJECT_DIR$/../Urashima/Urashima.iml" />
       <module fileurl="file://$PROJECT_DIR$/VectorPotential.iml" filepath="$PROJECT_DIR$/VectorPotential.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../VgVp/VgVp.iml" filepath="$PROJECT_DIR$/../VgVp/VgVp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../constDE/constDE.iml" filepath="$PROJECT_DIR$/../constDE/constDE.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../denba/denba.iml" filepath="$PROJECT_DIR$/../denba/denba.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../denba3D/denba3D.iml" filepath="$PROJECT_DIR$/../denba3D/denba3D.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../divrot/divrot.iml" filepath="$PROJECT_DIR$/../divrot/divrot.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../gsense/gsense.iml" filepath="$PROJECT_DIR$/../gsense/gsense.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../jiba/jiba.iml" filepath="$PROJECT_DIR$/../jiba/jiba.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../pde/pde.iml" filepath="$PROJECT_DIR$/../pde/pde.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../phys_lib/phys_lib.iml" filepath="$PROJECT_DIR$/../phys_lib/phys_lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../rotM/rotM.iml" filepath="$PROJECT_DIR$/../rotM/rotM.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../spherical/spherical.iml" filepath="$PROJECT_DIR$/../spherical/spherical.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../sphericalDiv/sphericalDiv.iml" filepath="$PROJECT_DIR$/../sphericalDiv/sphericalDiv.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../thermodynamics/thermodynamics.iml" filepath="$PROJECT_DIR$/../thermodynamics/thermodynamics.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../tool3D/tool3D.iml" filepath="$PROJECT_DIR$/../tool3D/tool3D.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../xtgraph/xtgraph.iml" filepath="$PROJECT_DIR$/../xtgraph/xtgraph.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../xva/xva.iml" filepath="$PROJECT_DIR$/../xva/xva.iml" />
     </modules>
   </component>
 </project>

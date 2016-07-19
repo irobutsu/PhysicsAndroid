@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Jiba2/res/values/strings.xml -->
-    <eat-comment/>
-    <string name="app_name">電流と磁場</string>
+    <string name="app_name" translatable="false"/>
     <string name="eB_equal">外部磁場=</string>
-    <string name="hello">Hello World, DenbaActivity!</string>
     <string name="m1_equal">単極=</string>
     <string name="q1_equal">電流1=</string>
     <string name="q2_equal">電流2=</string>

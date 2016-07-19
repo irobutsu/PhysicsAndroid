@@ -1,0 +1,349 @@
+[
+    {
+        "outputFile": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/build/intermediates/res/merged/debug/values/values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 39,
+                    "endOffset": 90
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 19,
+                        "startColumn": 4,
+                        "startOffset": 863,
+                        "endColumn": 39,
+                        "endOffset": 898
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 95,
+                    "endColumn": 38,
+                    "endOffset": 129
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 18,
+                        "startColumn": 4,
+                        "startOffset": 824,
+                        "endColumn": 38,
+                        "endOffset": 858
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 134,
+                    "endColumn": 39,
+                    "endOffset": 169
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 16,
+                        "startColumn": 4,
+                        "startOffset": 745,
+                        "endColumn": 39,
+                        "endOffset": 780
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 174,
+                    "endColumn": 38,
+                    "endOffset": 208
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 17,
+                        "startColumn": 4,
+                        "startOffset": 785,
+                        "endColumn": 38,
+                        "endOffset": 819
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 213,
+                    "endColumn": 47,
+                    "endOffset": 256
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 256,
+                        "endColumn": 47,
+                        "endOffset": 299
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 261,
+                    "endColumn": 46,
+                    "endOffset": 303
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 304,
+                        "endColumn": 46,
+                        "endOffset": 346
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 308,
+                    "endColumn": 45,
+                    "endOffset": 349
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 4,
+                        "startOffset": 446,
+                        "endColumn": 45,
+                        "endOffset": 487
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 354,
+                    "endColumn": 44,
+                    "endOffset": 394
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 11,
+                        "startColumn": 4,
+                        "startOffset": 492,
+                        "endColumn": 44,
+                        "endOffset": 532
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 399,
+                    "endColumn": 47,
+                    "endOffset": 442
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 351,
+                        "endColumn": 47,
+                        "endOffset": 394
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 447,
+                    "endColumn": 46,
+                    "endOffset": 489
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 399,
+                        "endColumn": 46,
+                        "endOffset": 441
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 12,
+                    "startColumn": 4,
+                    "startOffset": 494,
+                    "endColumn": 67,
+                    "endOffset": 557
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 67,
+                        "endOffset": 118
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 13,
+                    "startColumn": 4,
+                    "startOffset": 562,
+                    "endColumn": 56,
+                    "endOffset": 614
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 14,
+                        "startColumn": 4,
+                        "startOffset": 634,
+                        "endColumn": 56,
+                        "endOffset": 686
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 14,
+                    "startColumn": 4,
+                    "startOffset": 619,
+                    "endColumn": 40,
+                    "endOffset": 655
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 123,
+                        "endColumn": 40,
+                        "endOffset": 159
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 15,
+                    "startColumn": 4,
+                    "startOffset": 660,
+                    "endColumn": 40,
+                    "endOffset": 696
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 164,
+                        "endColumn": 40,
+                        "endOffset": 200
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 16,
+                    "startColumn": 4,
+                    "startOffset": 701,
+                    "endColumn": 50,
+                    "endOffset": 747
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 205,
+                        "endColumn": 50,
+                        "endOffset": 251
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 17,
+                    "startColumn": 4,
+                    "startOffset": 752,
+                    "endColumn": 48,
+                    "endOffset": 796
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 12,
+                        "startColumn": 4,
+                        "startOffset": 537,
+                        "endColumn": 48,
+                        "endOffset": 581
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "startOffset": 801,
+                    "endColumn": 47,
+                    "endOffset": 844
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 13,
+                        "startColumn": 4,
+                        "startOffset": 586,
+                        "endColumn": 47,
+                        "endOffset": 629
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 19,
+                    "startColumn": 4,
+                    "startOffset": 849,
+                    "endColumn": 53,
+                    "endOffset": 898
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/ElectricField/res/values/strings.xml",
+                    "position": {
+                        "startLine": 15,
+                        "startColumn": 4,
+                        "startOffset": 691,
+                        "endColumn": 53,
+                        "endOffset": 740
+                    }
+                }
+            }
+        ]
+    }
+]

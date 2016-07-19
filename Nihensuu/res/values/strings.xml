@@ -6,4 +6,8 @@
     <string name="action_settings">Settings</string>
     <string name="_right">up</string>
     <string name="_left">down</string>
+    <string name="xtwoplus">x<sup>2</sup>+</string>
+    <string name="xplus">x+</string>
+    <string name="ytwoplus">y<sup>2</sup>+</string>
+    <string name="xyplus">xy+</string>
 </resources>

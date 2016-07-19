@@ -1,0 +1,91 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebText 動く！熱力学</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config( {
+			tex2jax: {
+				inlineMath: [['$','$'], ["\\(","\\)"]]
+			},
+				TeX: {
+					extensions: ["color.js"],
+				}
+		});</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script type="text/javascript" src="../jquery.footnotes.js"></script>
+	<script language="JavaScript" type="text/javascript">
+	 $(function() {
+	   $("#hajimeni").footnotes(); 
+	 });
+	</script>
+  </head> 
+  <body>
+	<div data-role="page" id="hajimeni">
+	  <div data-role="header">
+		  <h1>WebText 動く！熱力学</h1>
+	  </div>
+	  <div data-role="content">
+		  <p>　このテキストは、2015年度に琉球大学で行った「熱力学」の講義<span class="footnote">2015年の講義内容は<a href="http://www.phys.u-ryukyu.ac.jp/~maeno/td2015/">ここ</a>から読める。</span>を元に、インタラクティブな動画コンテンツを含むwebテキストとして編集したものです。</p>
+		  <p>　内容および説明の流れは<a href="http://www.gakushuin.ac.jp/~881791/td/">田崎晴明著「熱力学〜現代的な視点から」</a>に準拠しています。</p>
+		  <h2>目次</h2>
+		  <h3></h3>
+		  <ul>
+			  <li>はじめに</li>
+			  <ul>
+				  <li><input type="button" onclick="location.href='./hajimeni.html'" value="はじめに"></li>
+			  </ul>
+			  <li>平衡状態と準静的操作</li>
+			  <ul>
+				  <li><input type="button" onclick="location.href='./qstatic.html'" value="準静的操作とは何か"></li>
+			  </ul>
+			  <li>等温操作とヘルムホルツの自由エネルギー</li>
+			  <ul>
+				  <li><input type="button" onclick="location.href='./touonsousa.html'" value="等温操作とケルビンの原理"></li>
+				  <li><input type="button" onclick="location.href='./Helmholtz.html'" value="ヘルムホルツの自由エネルギー"></li>
+			  </ul>
+			  <li>断熱操作と内部エネルギー</li>
+			  <ul>
+				  <li><input type="button" onclick="location.href='./dannetsu.html'" value="断熱操作"></li>
+				  <li><input type="button" onclick="location.href='./carnot.html'" value="カルノーサイクル"></li>
+			  </ul>
+			  <li>エントロピー</li>
+			  <ul>
+				  <li><input type="button" onclick="location.href='./entropy.html'" value="エントロピー"></li>
+			  </ul>
+			  <li>ヘルムホルツの自由エネルギーと変分原理</li>
+			  <ul>
+				  <li><input type="button" onclick="location.href='./henbun.html'" value="変分原理"></li>
+				  <li><input type="button" onclick="location.href='./phase.html'" value="相転移と相の共存"></li>
+				  <li><input type="button" onclick="location.href='./vdw.html'" value="ファンデルワールスの状態方程式"></li>
+			  </ul>
+			  <li>ギッブスの自由エネルギー</li>
+			  <ul>
+				  <li><input type="button" onclick="location.href='./gibbs.html'" value="ギッブスの自由エネルギー"></li>
+			  </ul>
+		  </ul>
+		  <h3>付録</h3>
+		  <ul>
+			  <li><input type="button" onclick="location.href='./LegendreTR.html'" value="ルジャンドル変換"></li>
+		  </ul>
+		  <h3>プログラム</h3>
+		  <ul>
+			  <li><input type="button" onclick="location.href='./PVgraphi.html'" value="PVグラフ（等温操作のみ）"></li>
+			  <li><input type="button" onclick="location.href='./PVgrapha.html'" value="PVグラフ（断熱操作のみ）"></li>
+			  <li><input type="button" onclick="location.href='./PVgraph.html'" value="PVグラフ（等温／断熱切り替え）"></li>
+		  </ul>
+		  <hr>
+		  【脚注】
+		  <ol id="autoFootnotes0" class="footnotesList"></ol>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+	  </div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>流行の方程式</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="vg.css" rel="stylesheet" type="text/css"/>
+		<script src="jquery.js" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="graphscreen.js" type="text/javascript"></script>
+		<script src="yajirushi.js" type="text/javascript"></script>
+		<script src="vector.js" type="text/javascript"></script>
+				<script type="text/javascript">
+		var Lx1=0;
+		var gsL;
+		var k=2;
+		function F_L(x) {
+			return 1/(1+Math.exp(-k*x-Lx1));
+		} 
+		function changeL() {
+			Lx1=Math.round(Lx1*10)/ 10;
+			document.getElementById('Lsl1').value=Lx1;
+			rewriteL();
+		}
+		function rewriteL() {
+			clearHatFlg();
+			if( stopHatAnime ) {
+				setTimeout('animeL();',125);
+				stopHatAnime=false;
+			}
+			gsL.clearALL();
+			gsL.writeContents();
+		};
+		var stopHatAnime=true;
+		var lineModeL=true;
+		var gsLL;
+		var tL=-2.5;
+		var hatFlg;
+		var hatCount;
+		var hatCount_p;
+		var hatNext=0;
+		function writePeople() {
+			var newHat=hatCount-hatCount_p;
+			if( newHat >0 ) {
+				while( newHat >0 ) {
+					var i;
+					i=Math.floor(Math.random()*50);
+					hatNext += i;
+					while( hatNext>=100 ) { hatNext -= 100; }
+					while( hatFlg[hatNext]==true ) {
+						hatNext++;
+						if( hatNext>=100 ) {
+							hatNext =0;
+						}
+					}
+					hatFlg[hatNext]=true;
+					newHat -=1;
+				}
+				hatCount_p=hatCount;
+			}
+			var i,j;
+			var ct=gsLL.ctx;
+			ct.fillStyle="rgb(255,255,255)";
+			ct.fillRect(gsLL.leftwx,gsLL.bottomy,gsLL.w,gsLL.h);
+			for(i=0; i<10 ; i++ ) {
+				for(j=0; j<10 ; j++ ) {
+					ct.fillStyle="rgb(200,200,0)";
+					ct.beginPath();
+					ct.arc(i+0.5,j+0.5,0.4,0,2*Math.PI);
+					ct.fill();
+					if( hatFlg[i*10+j] ) {
+						ct.fillStyle="rgb(200,0,0)";
+						ct.beginPath();
+						ct.arc(i+0.5,j+0.5,0.43,0,Math.PI);
+						ct.fill();
+					}
+				}
+			}
+		}
+		function clearHatFlg() {
+			hatCount=Math.floor(F_L(-5)*100);
+			hatTime=-2.5;
+			var i;
+			for(i=0; i<100 ; i++) {
+				hatFlg[i]=false;
+			}
+			hatCount= Math.floor(F_L(-5)*100);
+			hatCount_p=0;
+		}
+		$(document).delegate('#logistic','pageinit',function(e) {
+			gsLL=new RescaleScreen("ryukou",10,10,0.3);
+			gsLL.setLeft(0);
+			gsLL.setBottom(0);
+			gsLL.gobackOriginalSize();
+			hatFlg=[];
+			clearHatFlg();
+			writePeople();
+			gsL=new GraphScreen("canvasL",5,2.2,0.75);
+			gsL.setLeft(-2.5);
+			gsL.setBottom(-0.6);
+			gsL.gobackOriginalSize();
+			gsL.writeGraphs=function() {
+				var i;
+				
+				var x,y;
+				var ya=new Yajirushi("rgba(0,200,0,0.5)");
+				var ct=gsL.ctx;
+				ct.fillStyle="rgb(240,240,240)";
+				ct.fillRect(gsL.leftwx,gsL.bottomy,gsL.w,gsL.h);
+				var step=0.25;
+				for( x=gsL.leftwx+step; x< gsL.rightwx; x += step ) {
+					for( y=gsL.bottomy+step; y< gsL.topy; y += step ) {
+						var dydx=k*(y*(1-y));
+						var r=step/Math.sqrt(1+dydx*dydx);
+						ya.setVXY(r,dydx*r);
+						ya.setXY(x-0.5*r,y-0.5*dydx*r);
+						ya.draw(ct);
+					}
+				}
+				if( lineModeL ) {
+					var minC=-7;
+					var maxC=7;
+					var savex1=Lx1;
+					for(i=minC; i<=maxC ; i+=0.5 ) {
+						Lx1=i;
+						gsL.setFunction(F_L);
+						gsL.writeFunction("rgba(0,0,200,0.2)");
+					}
+					Lx1=savex1;
+					gsL.setFunction(F_L);
+					gsL.writeFunction("rgb(255,0,0)");
+				}
+				ct.strokeStyle="rgba(100,100,100,0.2)";
+				ct.beginPath();
+				ct.moveTo(hatTime,-3);
+				ct.lineTo(hatTime,3);
+				ct.stroke();
+			};
+			gsL.writeContents();
+			setTimeout('animeL();',125);
+		});
+		var hatTime=-2.5;
+		function animeL() {
+			hatCount= Math.floor(F_L(hatTime)*100+0.5);
+			hatTime+=0.02;
+			if( hatTime < 2.52 ) {
+				writePeople();
+				gsL.writeContents();
+				setTimeout('animeL();',125);
+			} else {
+				stopHatAnime=true;
+			}
+		}
+		function restartLL() {
+			rewriteL();
+		}
+		</script>
+	</head> 
+	<body>
+	  <div data-role="page" id="logistic">
+		<div data-role="header">
+		  <h3>流行の方程式</h3>
+		</div>
+		<div data-role="content">
+		  <p class="setsumei">「ある流行（服でも靴でもいい）がどのように時間的に流行していくかを方程式で示す」という問題を考えよう。以下にそのシミュレーションを示す。</p>
+		  <p>　下の図の<img src="bousioff.png" width="30pt" class="floatnone">は「流行の帽子をまだかぶってない人」、<img src="bousion.png" width="30pt" class="floatnone">は「流行の帽子をかぶっている人」を表す。</p>
+		  <p>　<img src="bousioff.png" width="30pt" class="floatnone">は周りを見て、「あ、あの帽子俺も欲しい」と思ったら購入して<img src="bousion.png" width="30pt" class="floatnone">になる。</p>
+		  <p>　その様子のアニメーションが↓なので、まずは眺めて欲しい。</p>
+		  <p align="center"><canvas width="100" height="100" id="ryukou" style="-ms-touch-action: none;"></canvas></p>
+		  <p align="center"><canvas width="400" height="400" id="canvasL" style="-ms-touch-action: none;"></canvas></p>
+		  <p><input type="button" data-inline="true" value="再スタート" id="restartL" onClick="restartLL();">←再スタートしないときは下のスライダーを動かしてください。</p>
+		  
+		  <p>k=<input type="range" id="ksl" value="2" min="0" max="5" step="0.1" onchange="k=this.valueAsNumber; rewriteL();"></p>
+		  <p>C=<input type="range" id="Lsl1" value="0" min="-5" max="5" step="0.1" onchange="Lx1=this.valueAsNumber; changeL();"></p>
+		  <hr>
+		  <p>　眺めて、</p>
+		  <ul>
+			<li>最初の<img src="bousion.png" width="30pt" class="floatnone">が少ない状況ではなかなか増えないが、ある程度を超えるとどどっとかぶる人が増える。</li>
+			<li>ある程度より<img src="bousion.png" width="30pt" class="floatnone">が増えると、増え方が鈍る。</li>
+		  </ul>
+		  <p>ということが確認できたろうか？---できたら、これを微分方程式を解くことで確認しよう。</p>
+		  <p>　全人口の${y}$倍がすでにその流行に乗っているとしよう。変数${y}$の意味は、<span class="box">${y}=0$</span>なら「誰もかぶってない」、<span class="box">${y}=1$</span>なら「全員がかぶっている」という状態である。</p>
+
+		  <p>単純に「回りの人がかぶっていたら自分もかぶりたくなるだろう」と考えると、</p>
+		  \begin{equation}
+		  {\mathrm dy\over \mathrm dt}= k{y}
+		  \end{equation}
+		  <p>という「既にかぶっている人の率に比例してかぶる人が増える」という式にしたくなる。ところがこれだと解は指数関数となり${y}$はどんどん上昇して1を超えてしまう（全人口よりかぶっている人の方が多い？？）。失敗は「すでにかぶっている人は影響を受けない」を考えてなかったことである。「今からかぶろう」と決断することができるのは、まだかぶっていない人（全体の$1-{y}$倍の人）だけであると考えると微分方程式は</p>
+		  \begin{equation}
+		  {\mathrm dy\over \mathrm dt}= k{y}(1-{y})
+		  \end{equation}
+		  <p>なる。これを解くには、<span class="box">${y}(1-{y})\neq0$</span>を仮定しつつ変数分離して</p>
+		  \begin{equation}
+		  {\mathrm dy\over {y}(1-{y})}= k\mathrm dt
+		  \end{equation}
+		  <p>とする。</p>
+		  <p>　左辺の積分は
+			$${1\over {y}(1-{y})}= {1\overbrace{-{y}+{y}}^0\over {y}(1-{y})}={1\over {y}}+{1\over 1-{y}}$$
+			と分数を書き直すことで</p>
+		  \begin{equation}
+		  \begin{array}{rl}
+		  {\mathrm dy\over {y}}+{\mathrm dy\over 1-{y}} =&k\mathrm dt \\
+		  \log |{y}|-\log|1-{y}|=&k {t}+C \\
+		  \end{array}
+		  \end{equation}
+		  <p>と積分できる（$C$は積分定数）。この段階では<span class="box">$0\leq {y}\leq 1$</span>という状況で考えているので、本来は絶対値を取るという操作は不要である。</p>
+		  <p>　これを整理すると</p>
+		  \begin{equation}
+		  \begin{array}{rl}
+		  \log \left({{y}\over 1-{y}}\right)=&k {t}+C  \\
+		  {{y}\over 1-{y}}=&\mathrm e^{k {t}+C}\\
+		  {y}
+		  =&(1-{y})\mathrm e^{k {t}+C}  \\
+		  {y}\left(
+		  1+\mathrm e^{k {t}+C}
+		  \right)
+		  =&\mathrm e^{k {t}+C}
+		  \\
+		  {y}
+		  =&
+		  {\mathrm e^{k {t}+C}\over 
+		  1+\mathrm e^{k {t}+C}
+		  }
+		  ={1\over 
+		  1+\mathrm e^{-k {t}-C}
+		  }
+		  \end{array}
+		  \end{equation}
+		  <p>となる。</p>
+		  <p>　ここでもう一度動くグラフを見てもらえば、$k$が大きいほど急激な流行になることがわかる。</p>
+		</div>
+		<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>
+

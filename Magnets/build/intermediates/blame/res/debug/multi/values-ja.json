@@ -1,0 +1,121 @@
+[
+    {
+        "outputFile": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Magnets/build/intermediates/res/merged/debug/values-ja/values-ja.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 44,
+                    "endOffset": 95
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Magnets/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 2,
+                        "startOffset": 97,
+                        "endColumn": 42,
+                        "endOffset": 137
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 100,
+                    "endColumn": 43,
+                    "endOffset": 139
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Magnets/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 142,
+                        "endColumn": 43,
+                        "endOffset": 181
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 144,
+                    "endColumn": 47,
+                    "endOffset": 187
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Magnets/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 6,
+                        "startOffset": 188,
+                        "endColumn": 49,
+                        "endOffset": 231
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 192,
+                    "endColumn": 42,
+                    "endOffset": 230
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Magnets/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 280,
+                        "endColumn": 42,
+                        "endOffset": 318
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 235,
+                    "endColumn": 43,
+                    "endOffset": 274
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Magnets/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 43,
+                        "endOffset": 94
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 279,
+                    "endColumn": 43,
+                    "endOffset": 318
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Magnets/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 236,
+                        "endColumn": 43,
+                        "endOffset": 275
+                    }
+                }
+            }
+        ]
+    }
+]

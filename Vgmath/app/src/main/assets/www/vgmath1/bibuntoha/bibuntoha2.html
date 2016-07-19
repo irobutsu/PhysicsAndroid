@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>微分ってなあに？（その２）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="../jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="../vg.css" rel="stylesheet" type="text/css"/>
+		<script src="../jquery.js" type="text/javascript"></script>
+		<script src="../jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<style type="text/css">
+		body {
+			background-color: #FFFFFF;
+		}
+		img {
+			vertical-align:middle;
+		}
+		</style>
+		<script type="application/javascript" src="bibuntoha.js"></script>
+		<script type="application/javascript">
+			$(document).delegate('#page','pageinit',function(e) {
+			init(); drawALL();
+			});
+		</script>
+	</head>
+	<body>
+			<div data-role="page" id="page">
+			<div data-role="header">
+				<h1>微分ってなあに？（その２）</h1>
+			</div>
+			<div data-role="content">
+				<p>　今度は関数を変えられるようにしてみました。最初は相変わらず$y=x^2$のグラフだが、次にある選択肢を選んで、いろんな関数の場合で遊んでみてください。
+<p>
+<form action="#">
+<label for="func">どの関数？</label>
+<select name="func" id="func">
+<option value="linearx">y=x</option>
+<option selected="selected" value="sqx">y=x^2</sup></option>
+<option value="cbx">y=x^3</sup></option>
+<option value="totsuhb">y=1-x^2</sup></option>
+<option value="sinx">y=sin 3x</sup></option>
+</select>
+</form>
+</p>
+<br>
+<br>
+<canvas id="maincanvas" width="600" height="450" style="-ms-touch-action:none;">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+<br>
+<br>　一番上の$y=x$はあまりおもしろくない「直線」です。微分の値も常に一定ですね。
+<br>　$y=x^3$は$y=x^2$に似ていますが、より微分の変化の様子が激しいことがわかるでしょうか。<br>
+<br>　$y=1-x^2$は上に凸で、$y=x^2$とは逆の向きになっています。<br>
+<br>
+<br>
+<br>
+　ところで、「あれ、微分ってグラフの傾きのことじゃなかったっけ？」と思っている人はいませんか？　ここで考えている微分と、グラフの傾きは同じものです。それをチェックしておきましょう。
+			</div>
+			<div data-role="footer" align=center>
+				<input type="button" value="その1" data-icon="arrow-l" onclick="location.href='./bibuntoha1.html'">
+		  		<input type="button" value="微分ってなあに？の目次" data-icon="arrow-u" onclick="location.href='./index.html'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="その3" data-icon="arrow-r" onclick="location.href='./bibuntoha3.html'">
+				</div>
+		</div>
+</body>
+</html>
+

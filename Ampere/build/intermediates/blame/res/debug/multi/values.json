@@ -1,0 +1,45 @@
+[
+    {
+        "outputFile": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Ampere/build/intermediates/res/merged/debug/values/values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 45,
+                    "endOffset": 96
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Ampere/res/values/strings.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 119,
+                        "endColumn": 45,
+                        "endOffset": 160
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 101,
+                    "endColumn": 62,
+                    "endOffset": 159
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Ampere/res/values/strings.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 56,
+                        "endColumn": 62,
+                        "endOffset": 114
+                    }
+                }
+            }
+        ]
+    }
+]

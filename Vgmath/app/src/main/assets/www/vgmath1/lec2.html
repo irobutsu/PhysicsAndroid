@@ -1,0 +1,1148 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>第１章　関数（続き）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+		<script src="jquery.js" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="dragmanscreen.js" type="text/javascript"></script>
+		<script src="draggablepoint.js" type="text/javascript"></script>
+		<style type="text/css">
+		img {float:left;}
+		img.withb{border: 2px #880 solid;}
+		h2{
+			color:#300;
+			background-color: #9CC;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		h3{
+			color:#300;
+			background-color: #CC9;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.footnote {
+			font-size:50%;
+			padding:5px;
+			background-color: #FEE;
+			color:#009;
+			boder: solid #008 double;
+			border-radius:8px;
+		}
+		.floatright{
+			float:right;
+		}
+		.floatleft{
+			float:left;
+		}
+		.floatcenter{
+			float:center;
+		}
+		.floatnone{
+			float:none;
+		}
+		.case{
+			color:#000;
+			background-color: #FCC;
+			border: solid #800 thin;
+			border-radius:10px;
+		}
+		.Question{
+			padding:5px;
+			color:#F00;
+			background-color: #FFC;
+			border: solid #800 thin;
+			border-radius:10px;
+		}
+		.fukidasi{
+			padding:5px;
+			color:#000;
+			background-color: #DDF;
+			border: solid #800 thin;
+			border-radius:10px;
+		}
+		.box{
+			padding:5px;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.setsumei{
+			padding:5px;
+			color:#008;
+			background-color: #CFC;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.keyword{
+			padding:3px;
+			color:#050;
+			background-color:#FCF;
+			boder: solid #FF8 double;
+			border-radius:8px;
+		}
+		.akansetsumei{
+			padding:5px;
+			color:#080;
+			background-color: #FCC;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.gray{
+			color:#888;
+		}
+		.magenta{
+			color: #D0D;
+		}
+		.kussetsukaku{
+			color: #D00;
+		}
+		.aka{
+			color: #F00;
+		}
+		.A{
+			color: #F00;
+		}
+		.red{
+			color: #D00;
+		}
+		.green{
+			color: #0D0;
+		}
+		.yellow{
+			color: #DD0;
+		}
+		.Q { 
+			padding:5px;
+			background-color: #CCC;
+			color: #00F; 
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.ao {
+			color: #00F;
+		}
+		.blue{
+			color: #00D;
+		}
+		</style>
+
+	</head> 
+	<body>
+ 		<script>
+			var PointY=function(rr,cc) {
+			this.r=rr;
+			this.col=cc;
+			this.write=function(ct) {
+			ct.fillStyle=this.col;
+			ct.beginPath();
+			ct.moveTo(this.x,this.y+0.3*this.r);
+			ct.lineTo(this.x+this.r,this.y);
+			ct.lineTo(this.x,this.y-0.3*this.r);
+			ct.lineTo(this.x-this.r,this.y);
+			ct.closePath();
+			ct.fill();
+			}
+			this.setXY=function(xx,yy) {
+			this.x=xx;
+			this.y=yy;
+			}
+			}
+			var PointX=function(xx,yy,rr,c,x0,x1) {
+			this.y=0;
+			DraggablePoint.call(this,xx,yy,rr,c); // 親クラスのコンストラクタを呼ぶ。DraggablePointはプロトタイプを使わなかったのでこれでいい。
+			this.setRange=function(xx0,xx1) {
+			this.rangex0=xx0;
+			this.rangex1=xx1;
+			};
+			this.setRange(x0,x1);
+			this.setXY=function(xx,yy) {
+			// y座標を動かす必要はないので上書き。
+			if( xx < this.rangex0 ) {
+			this.x =this.rangex0;
+			} else if( xx > this.rangex1 ) {
+			this.x = this.rangex1;
+			} else {
+			this.x=xx;
+			}
+			};
+			this.write=function(ct) {
+			ct.fillStyle=this.col;
+			ct.beginPath();
+			ct.moveTo(this.x,this.y+this.r);
+			ct.lineTo(this.x+0.3*this.r,this.y);
+			ct.lineTo(this.x,this.y-this.r);
+			ct.lineTo(this.x-0.3*this.r,this.y);
+			ct.closePath();
+			ct.fill();
+			};
+			}
+			// 親クラスタのプロトタイプを継承する。
+			PointX.prototype=Object.create(DraggablePoint.prototype);
+			PointX.prototype.constructor=PointX;
+
+
+			var ct_func;
+			var sc_func;
+			var ct_power;
+			var sc_power;
+			var ct_niji;
+			var sc_niji;
+			var ct_sanji;
+			var sc_sanji;
+			var pointx,pointy;
+			$(document).delegate('#page_func','pageinit',function(e) {
+			sc_func=new DragmanScreen("canvas_func",6,6,0.9);
+			sc_func.setLeft(-3);
+			sc_func.setBottom(-3);
+			sc_func.gobackOriginalSize();
+			ct_func=sc_func.canvas.getContext("2d");
+			sc_func.writeContents=function() {
+			write_func();
+			}
+			pointx=new PointX(1,0,0.3,"rgba(255,0,0,0.5)",sc_func.leftwx,sc_func.rightwx);
+			pointy=new PointY(0.3,"rgba(0,0,255,0.5)");
+			sc_func.pushDragObjList(pointx);
+			});
+			$(document).delegate('#page_func','pageshow',function() {
+			gs=ct_func;
+			write_func();
+			});
+			$(document).delegate('#page_power','pageinit',function(e) {
+			sc_power=new DragmanScreen("canvas_power",4,4,0.9);
+			sc_power.setLeft(-2);
+			sc_power.setBottom(-2);
+			sc_power.gobackOriginalSize();
+			ct_power=sc_power.canvas.getContext("2d");
+			sc_power.writeContents=function() {
+			write_power();
+			}
+			});
+			$(document).delegate('#page_power','pageshow',function() {
+			gs=ct_power;
+			write_power();
+			});
+			$(document).delegate('#page_niji','pageinit',function(e) {
+			sc_niji=new DragmanScreen("canvas_niji",20,20,0.9);
+			sc_niji.setLeft(-10);
+			sc_niji.setBottom(-10);
+			sc_niji.gobackOriginalSize();
+			ct_niji=sc_niji.canvas.getContext("2d");
+			sc_niji.writeContents=function() {
+			write_niji();
+			}
+			});
+			$(document).delegate('#page_niji','pageshow',function() {
+			gs=ct_niji;
+			write_niji();
+			});
+			$(document).delegate('#page_linear','pageinit',function(e) {
+			sc_linear=new DragmanScreen("canvas_linear",20,20,0.9);
+			sc_linear.setLeft(-10);
+			sc_linear.setBottom(-10);
+			sc_linear.gobackOriginalSize();
+			ct_linear=sc_linear.canvas.getContext("2d");
+			sc_linear.writeContents=function() {
+			write_linear();
+			}
+			});
+			$(document).delegate('#page_linear','pageshow',function() {
+			gs=ct_linear;
+			write_linear();
+			});
+			$(document).delegate('#page_sanji','pageinit',function(e) {
+			sc_sanji=new DragmanScreen("canvas_sanji",20,20,0.9);
+			sc_sanji.setLeft(-10);
+			sc_sanji.setBottom(-10);
+			sc_sanji.gobackOriginalSize();
+			ct_sanji=sc_sanji.canvas.getContext("2d");
+			sc_sanji.writeContents=function() {
+			write_sanji();
+			}
+			});
+			$(document).delegate('#page_sanji','pageshow',function() {
+			gs=ct_sanji;
+			write_sanji();
+			});
+			function write_func() {
+			var ct=sc_func.ctx;
+			sc_func.clearALL();
+			sc_func.writeCoordinate();
+			var i;
+			ct.strokeStyle="rgb(0,128,128)";
+			ct.beginPath();
+			pointx.setRange(sc_func.leftwx,sc_func.rightwx);
+			if( funcNo==2 ) {
+			ct.moveTo(sc_func.leftwx,Func(sc_func.leftwx));
+			for(i=sc_func.leftwx+0.03; i< -0.001 ; i+=0.03 ) {
+			ct.lineTo(i,Func(i));
+			}
+			ct.stroke();
+			ct.beginPath();
+			ct.moveTo(0.0001,Func(0.0001));
+			for(i=0.05; i<= sc_func.rightwx ; i+=0.05 ) {
+			ct.lineTo(i,Func(i));
+			}
+			} else if( funcNo==4 ) { 
+			if( a>=0 ) {
+			pointx.setRange(0,sc_func.rightwx);
+			if( pointx.x < 0 ) { pointx.x=-pointx.x;}
+			ct.moveTo(0,0);
+			for(i=0.03; i<= sc_func.rightwx ; i+=0.03 ) {
+			ct.lineTo(i,Func(i));
+			}
+			} else {
+			pointx.setRange(sc_func.leftwx,0);
+			if( pointx.x > 0 ) { pointx.x=-pointx.x;}
+			ct.moveTo(0,0);
+			for(i=-0.03; i>= sc_func.leftwx ; i-=0.03 ) {
+			ct.lineTo(i,Func(i));
+			}
+			}
+			} else {
+			ct.moveTo(pointx.rangex0,Func(pointx.rangex0));
+			for( i=pointx.rangex0+0.02 ; i<= sc_func.rightwx ; i+=0.02 ) {
+			ct.lineTo(i,Func(i));
+			}
+			}
+			ct.stroke();
+
+			pointx.write(ct);
+			ct.strokeStyle="rgba(128,0,128,0.3)";
+			ct.beginPath();
+			var x=pointx.x;
+			var y=Func(x);
+			ct.moveTo(x,0);
+			ct.lineTo(x,y);
+			ct.lineTo(0,y);
+			ct.stroke();
+			pointy.setXY(0,y);
+			pointy.write(ct);
+			}
+			function write_niji() {
+			var ct=sc_niji.ctx;
+			sc_niji.clearALL();
+			sc_niji.writeCoordinate();
+			var i;
+			ct.strokeStyle="rgb(0,128,128)";
+			ct.beginPath();
+			ct.moveTo(sc_niji.leftwx,niji_a*sc_niji.leftwx*sc_niji.leftwx+niji_b*sc_niji.leftwx+niji_c);
+			for(i=sc_niji.leftwx+0.03; i< sc_niji.rightwx ; i+=0.03 ) {
+			ct.lineTo(i,niji_a*i*i+niji_b*i+niji_c);
+			}
+			ct.stroke();
+			}
+			function write_linear() {
+			var ct=sc_linear.ctx;
+			sc_linear.clearALL();
+			sc_linear.writeCoordinate();
+			var i;
+			ct.strokeStyle="rgb(0,128,128)";
+			ct.beginPath();
+			ct.moveTo(sc_linear.leftwx,linear_a*sc_linear.leftwx+linear_b);
+			ct.lineTo(sc_linear.rightwx,linear_a*sc_linear.rightwx+linear_b);
+			ct.stroke();
+			}
+			function write_power() {
+			var ct=sc_power.ctx;
+			sc_power.clearALL();
+			sc_power.writeCoordinate();
+			var i;
+			ct.strokeStyle="rgb(0,128,128)";
+			var x=sc_power.leftwx;
+			var y=Math.pow(x,power_a);
+			var xx=x;
+			var yy=y;
+			while( yy> sc_power.topy || yy< sc_power.bottomy ) {
+			x=xx;
+			y=yy;
+			xx += 0.01;
+			yy=Math.pow(xx,power_a);
+			}
+			ct.beginPath();
+			ct.moveTo(x,y);
+			while( x<sc_power.rightwx ) {
+						x +=0.01;
+						y=Math.pow(x,power_a);
+						if( y> sc_power.topy || y< sc_power.bottomy ) {
+			ct.lineTo(x,y);
+			ct.stroke();
+			ct.beginPath();
+			xx=x+0.01;
+			yy=y;
+			while( (yy> sc_power.topy || yy< sc_power.bottomy ) && xx <= sc_power.rightwx ) {
+			x=xx;
+			y=yy;
+			xx +=0.01;
+			yy=Math.pow(xx,power_a);
+			}
+			ct.moveTo(x,y);
+			} else {
+			ct.lineTo(x,y);
+			}
+			}
+			ct.stroke();
+			}
+			function write_sanji() {
+			var ct=sc_sanji.ctx;
+			sc_sanji.clearALL();
+			sc_sanji.writeCoordinate();
+			var i;
+			ct.strokeStyle="rgb(0,128,128)";
+			ct.beginPath();
+			ct.moveTo(sc_sanji.leftwx,sanji_a*sc_sanji.leftwx*sc_sanji.leftwx*sc_sanji.leftwx+sanji_b*sc_sanji.leftwx*sc_sanji.leftwx+sanji_c*sc_sanji.leftwx+sanji_d);
+			for(i=sc_sanji.leftwx+0.03; i< sc_sanji.rightwx ; i+=0.03 ) {
+			ct.lineTo(i,sanji_a*i*i*i+sanji_b*i*i+sanji_c*i+sanji_d);
+			}
+			ct.stroke();
+			}
+			function changefunc(selector_str) {
+			funcNo=Number($(selector_str).val());
+			if( funcNo==8 ) {
+			pointx.rangex0=0.00001;
+			if( pointx.x < 0 ) {
+			pointx.x = -pointx.x;
+			}
+			} else {
+			pointx.rangex0=sc_func.leftwx;
+			}
+			write_func();
+			}
+			var funcNo=1;
+			function Func(x) {
+			switch( funcNo ) {
+			case 1:
+			return a*x;
+			break;
+			case 2:
+			return a/ x;
+			break;
+			case 3:
+			return a*x*x;
+			break;
+			case 4:
+			return Math.sqrt(Math.abs(x/ a));
+			break;
+			case 5:
+			return a*x*x*x;
+			break;
+			case 6:
+			return Math.sin(a*x);
+			break;
+			case 7:
+			return Math.exp(a*x);
+			break;
+			case 8:
+			return Math.log(Math.abs(x))/ a;
+			break;
+			}
+			}
+			var a=1;
+
+			function upA() {
+			a +=0.1;
+			if( a>5 ) { a=5; }
+			changeA();
+			}
+			function downA() {
+			a-=0.1;
+			if( a<-5 ) { a=-5;}
+			changeA();
+			}
+
+			function changeA() {
+			var elements = document.getElementsByName('a_value');
+			a *=10;
+			a=Math.round(a);
+			a = a/ 10;
+			var i;
+			for(i=0; i<elements.length ; i++ ) {
+						  elements.item(i).innerHTML=a;
+						  }
+						  write_func();
+						  }
+
+						  var power_a=1;
+						  var linear_a=1;
+						  var linear_b=1;
+						  var niji_a=1;
+						  var niji_b=1;
+						  var niji_c=1;
+						  var sanji_a=1;
+						  var sanji_b=1;
+						  var sanji_c=1;
+						  var sanji_d=1;
+						  function sanji_up3() {
+						  sanji_a +=1;
+						  set_sanji3();
+						  }
+						  function sanji_down3() {
+						  sanji_a -=1;
+						  set_sanji3();
+						  }
+						  function sanji_up2() {
+						  sanji_b +=1;
+						  set_sanji2();
+						  }
+						  function sanji_down2() {
+						  sanji_b -=1;
+						  set_sanji2();
+						  }
+						  function sanji_up1() {
+						  sanji_c +=1;
+						  set_sanji1();
+						  }
+						  function sanji_down1() {
+						  sanji_c -=1;
+						  set_sanji1();
+						  }
+						  function sanji_up0() {
+						  sanji_d +=1;
+						  set_sanji0();
+						  }
+						  function sanji_down0() {
+						  sanji_d -=1;
+						  set_sanji0();
+						  }
+						  function set_sanji3() {
+						  if( sanji_a ==0 ) {
+						  $('#sanji3').html("");
+						  } else if( sanji_a == 1 ) {
+						  $('#sanji3').html("x<sup>3</sup>");
+			} else if( sanji_a == -1 ) {
+			$('#sanji3').html("-x<sup>3</sup>");
+			} else {	 
+			$('#sanji3').html(sanji_a+"x<sup>3</sup>");		 
+			}
+			set_sanji2();
+			}
+			function set_sanji2() {
+			if( sanji_b ==0 ) {
+			$('#sanji2').html("");
+			set_sanji1();
+			return;
+			}
+			var s;
+			if( sanji_b==1 ) {
+			s="x<sup>2</sup>";
+			} else if( sanji_b==-1 ) {
+			s="-x<sup>2</sup>";
+			} else {
+			s=sanji_b+"x<sup>2</sup>";
+			}
+			if( sanji_a == 0 || sanji_b <0 ) {
+			$('#sanji2').html(s);
+			} else {
+			$('#sanji2').html("+"+s);
+			}
+			set_sanji1();
+			}
+
+			function set_sanji1() {
+			if( sanji_c ==0 ) {
+			$('#sanji1').html("");
+			set_sanji0();
+			return;
+			}
+			var s;
+			if( sanji_c==1 ) {
+			s="x";
+			} else if( sanji_c==-1 ) {
+			s="-x";
+			} else {
+			s=sanji_c+"x";
+			}
+			if( (sanji_a == 0 && sanji_b==0) || sanji_c <0 ) {
+			$('#sanji1').html(s);
+			} else {
+			$('#sanji1').html("+"+s);
+			}
+			set_sanji0();
+			}
+
+			function set_sanji0() {
+			if( sanji_d ==0 ) {
+			if( ( sanji_a != 0 || sanji_b != 0 || sanji_c != 0) ) {
+			$('#sanji0').html("");
+			} else {
+			$('#sanji0').html("0");
+			}
+			} else {
+			if( (sanji_a == 0 && sanji_b == 0 && sanji_c==0 ) || sanji_d <0 ) {
+			$('#sanji0').html(sanji_d);
+			} else {
+			$('#sanji0').html("+"+sanji_d);
+			}
+			}
+			write_sanji();
+			}
+			function up_power() {
+			power_a += 1;
+			set_power();
+			}
+			function down_power() {
+			power_a -= 1;
+			set_power();
+			}
+			function set_power() {
+			$("#power_n").html(power_a);
+			write_power();
+			}
+
+
+			function linear_up1() {
+			linear_a +=1;
+			set_linear1();
+			}
+			function linear_down1() {
+			linear_a -=1;
+
+			set_linear1();
+			}
+			function linear_up0() {
+			linear_b +=1;
+			set_linear0();
+			}
+			function linear_down0() {
+			linear_b -=1;
+			set_linear0();
+			}
+
+
+			function up2() {
+			niji_a +=1;
+			set_niji2();
+			}
+			function down2() {
+			niji_a -=1;
+
+			set_niji2();
+			}
+			function up1() {
+			niji_b +=1;
+			set_niji1();
+			}
+			function down1() {
+			niji_b -=1;
+
+			set_niji1();
+			}
+			function up0() {
+			niji_c +=1;
+			set_niji0();
+			}
+			function down0() {
+			niji_c -=1;
+			set_niji0();
+			}
+			function set_niji2() {
+			if( niji_a ==0 ) {
+			$('#niji2').html("");
+			} else if( niji_a == 1 ) {
+			$('#niji2').html("x<sup>2</sup>");
+			} else if( niji_a == -1 ) {
+			$('#niji2').html("-x<sup>2</sup>");
+			} else {	 
+			$('#niji2').html(niji_a+"x<sup>2</sup>");		 
+			}
+			set_niji1();
+			}
+			function set_niji1() {
+			if( niji_b ==0 ) {
+			$('#niji1').html("");
+			set_niji0();
+			return;
+			}
+			var s;
+			if( niji_b==1 ) {
+			s="x";
+			} else if( niji_b==-1 ) {
+			s="-x";
+			} else {
+			s=niji_b+"x";
+			}
+			if( niji_a == 0 || niji_b <0 ) {
+			$('#niji1').html(s);
+			} else {
+			$('#niji1').html("+"+s);
+			}
+			set_niji0();
+			}
+			function set_niji0() {
+			if( niji_c ==0 ) {
+			if( ( niji_a != 0 || niji_b != 0 ) ) {
+			$('#niji0').html("");
+			} else {
+			$('#niji0').html("0");
+			}
+			} else {
+			if( (niji_a == 0 && niji_b == 0 ) || niji_c <0 ) {
+			$('#niji0').html(niji_c);
+			} else {
+			$('#niji0').html("+"+niji_c);
+			}
+			}
+			write_niji();
+			}
+
+			function set_linear1() {
+			if( linear_a ==0 ) {
+			$('#linear1').html("");
+			set_linear0();
+			return;
+			}
+			var s;
+			if( linear_a==1 ) {
+			s="x";
+			} else if( linear_a==-1 ) {
+			s="-x";
+			} else {
+			s=linear_a+"x";
+			}
+			$('#linear1').html(s);
+			set_linear0();
+			}
+			function set_linear0() {
+			if( linear_b ==0 ) {
+			if( linear_a != 0 ) {
+			$('#linear0').html("");
+			} else {
+			$('#linear0').html("0");
+			}
+			} else {
+			if( linear_a == 0 || linear_b <0 ) {
+			$('#linear0').html(linear_b);
+			} else {
+			$('#linear0').html("+"+linear_b);
+			}
+			}
+			write_linear();
+			}
+		</script>
+		<div data-role="page" id="page_linear">
+			<div data-role="header">
+				<h1>自然科学のための数学・2015年度第２回</h1>
+			</div>
+			<div data-role="content">
+				<p>前回では、冪（べき）、すなわち$x^n$の形の関数を考えた。大事なところを確認しておくと、</p>
+				<div class="box">
+					<table>
+						<tr><td></td><td align="center">←次数低い　　　次数高い→</td></tr>
+						<tr><td></td><td>$\cdots,{1\over x^3},{1\over x^2},{1\over x},1,x,x^2,x^3,\cdots$</td></tr>
+						<tr><td>$x\ll 1$の時</td><td align="center">←次数低いほど大事</td></tr>
+						<tr><td>$x\gg 1$の時</td><td align="center">次数高いほど大事→</td></tr>
+					</table>
+				</div>
+				<p>ということである。数学としても大事だが、「自然科学で測定量などを調べて考える」ときもこの「どの項が大事か」という感覚は必要である。</p>
+				<div class="A">たとえば万有引力は距離の自乗に反比例（${1\over x^2}$の形）だから遠方にいくと大事ではない。我々にとって地球の重力は大事だが火星の重力は大事ではない、というのはこのような式の形から決まっている。</div>
+				<h3>多項式関数</h3>
+				<p>　前節まで、n次式で表された関数を考えてきたが、さらにいろんな冪の関数を足したものを考えていくことにしよう。$5,8x,4x^3y^2,\cdots$などのように、定数と変数のn乗（ここでのnは0以上の整数）になる式を「<ruby>単<rt>たん</rt>項<rt>こう</rt>式<rt>しき</rt></ruby>(monominal)」と呼び、単項式を足して（あるいは引いて）できた式を「<ruby>多<rt>た</rt>項<rt>こう</rt>式<rt>しき</rt></ruby>(polynomial)」と呼ぶ。変数（文字）を含まない項は「定数項」と呼ぶ。<span class="aka">x</span><sup>n</sup>が掛算されている項は「n次の項」と呼ばれる（$n=0$の場合が「定数項」である）。最大の次数の項がn次の単項式である多項式は「n次の多項式」と言う。$x^4-3x^2+5$は「$x$に関して4次の多項式」である（「n次の多項式」は「nより小さい次数の単項式」を含んでよい）。</p>
+				<h3>１次関数</h3>
+				<p>　<span class="ao">y</span>=a<span class="aka">x</span>+b（a,bは定数）の形、すなわち1次の多項式の形の関数を「1次関数」と呼ぶ。ここで、bは0でも構わないが、a≠0である（でないと、1次式でなくなってしまう）。aを「傾き」、bを「切片（またはy切片）」と呼ぶ。1次関数のグラフは正比例同様「直線」となる。</p>
+
+		  <div class="setumei">　下の動くグラフでa,bを変化させた時のグラフの変化を実感しよう。xsy
+		  <br>a,bは下のボタンで変えることができるので、いろんな値で関数がどのようなグラフになるのかを実感しよう。</div>
+			</div>
+			<div data-role="content">
+				<p><canvas width="400" height="400" id="canvas_linear" style="-ms-touch-action: none;"></canvas></p>
+				<div class="ui-grid-c">
+					<div class="ui-block-a"></div>
+					<div class="ui-block-b">
+						<button data-inline="true" onClick="linear_up1();">↑</button>
+					</div>
+					<div class="ui-block-c">
+						<button data-inline="true" onClick="linear_up0();">↑</button>
+					</div>
+				</div>
+				<div class="ui-grid-c">
+					<div class="ui-block-a">y=</div>
+					<div class="ui-block-b">
+						<span id="linear1">x</span>
+					</div>
+					<div class="ui-block-c">
+						<span id="linear0">+1</span>
+					</div>
+				</div>
+				<div class="ui-grid-c">
+					<div class="ui-block-a"></div>
+					<div class="ui-block-b">
+						<button data-inline="true" onClick="linear_down1();">↓</button>
+					</div>
+					<div class="ui-block-c">
+						<button data-inline="true" onClick="linear_down0();">↓</button>
+					</div>
+				</div>
+				<p>　bの意味が<span class="fukidasi"><span class="aka">x</span>=0のときの<span class="ao">y</span></span>であることは式を見てもわかる。一方aは増加率すなわち~<span class="fukidasi"><span class="aka">x</span>が1増えたとき、<span class="ao">y</span>がどれだけ増えるか</span>という意味を持つ。この「1次の項の係数が増加率を表す」という点は後々重要になるだろう。</p>
+				<p>　図では、aはまさに「線の傾き」を表現している。</p>
+			</div>
+			<div data-role="footer" align=center>
+			  	<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#page_niji" data-icon="arrow-r">２次関数へ→</a>
+			</div>
+		</div>
+		<div data-role="page" id="page_niji">
+			<div data-role="header">
+				<h1>２次関数</h1>
+			</div>
+			<div data-role="content">
+	  			<p>　<span class="ao">y</span>=a<span class="aka">x</span><sup>2</sup>+b<span class="aka">x</span>+cの形、すなわち2次の多項式の形の関数を「2次関数」と呼ぶ。そのグラフは「放物線(parabola)」と呼ばれる<span class="footnote">この線は物体を放り投げた時の軌跡なので「放物」と名付けられている。</span>。このページでは、y=ax<sup>2</sup>+bx+cの形の関数（２次関数）のグラフを見よう。</p>
+				<div class="setsumei">　a,b,cは下のボタンで変えることができるので、いろんな値で関数がどのようなグラフになるのかを実感しよう。</div>
+				<p><canvas width="400" height="400" id="canvas_niji" style="-ms-touch-action: none;"></canvas></p>
+				<div class="ui-grid-c">
+					<div class="ui-block-a"></div>
+					<div class="ui-block-b">
+						<button data-inline="true" onClick="up2();">↑</button>
+					</div>
+					<div class="ui-block-c">
+						<button data-inline="true" onClick="up1();">↑</button>
+					</div>
+					<div class="ui-block-d">
+						<button data-inline="true" onClick="up0();">↑</button>
+					</div>
+				</div>
+				<div class="ui-grid-c">
+					<div class="ui-block-a">y=</div>
+					<div class="ui-block-b">
+						<span id="niji2">x<sup>2</sup></span>
+					</div>
+					<div class="ui-block-c">
+						<span id="niji1">+x</span>
+					</div>
+					<div class="ui-block-d">
+						<span id="niji0">+1</span>
+					</div>
+				</div>
+				<div class="ui-grid-c">
+					<div class="ui-block-a"></div>
+					<div class="ui-block-b">
+						<button data-inline="true" onClick="down2();">↓</button>
+					</div>
+					<div class="ui-block-c">
+						<button data-inline="true" onClick="down1();">↓</button>
+					</div>
+					<div class="ui-block-d">
+						<button data-inline="true" onClick="down0();">↓</button>
+					</div>
+				</div>
+				<p>　これでわかるように$b,c$は放物線の位置を決めるパラメータ<span class="footnote">関数の独立変数とは別の「変化できる量」をパラメータ（媒介変数）と呼ぶ。</span>であり、$b,c$を変えても形は変わらず、平行移動するだけである。一方、$a$が変化すると放物線の形が変わる。</p>
+
+		<img src="../sizensuugaku/odoru2.png" "width=40%" class="floatnone">
+		<p>さらに、↑こんな感じで踊ってみた。2次の係数を変化させた時の放物線の形状変化の感じ。</p>
+		<img src="../sizensuugaku/odoru.png" "width=60%" class="floatnone">
+		<p>ここで、↑こんな感じで踊ってみた。1次の係数を変化させた時の放物線の移動の感じ。</p>
+		<div class="Question">　1次の係数$b$の図形的意味はなんだろう？？----$c=0$にして、原点付近を見ているとわかる。</div>
+		<div class="A">　定数項を0にして、2次の係数を固定して$b$を変化させた時の原点付近をよく見ていると、この原点での曲線の傾き具合こそが、この$b$が表現している量であることがわかる。</div>
+		<div class="A">　今日の授業の最初で述べたように、$x=0$付近ではまず定数項が、次に$x$の1次の項が大きく、それに比べて2次の項は小さい。つまり原点付近だけを見ているときは、1次の項の係数（$x=0$での傾き）が重要なのである。</div>
+		<div class="A">　この「2次の係数はとりあえず忘れて、1次の係数を見れば傾きがわかる」ということは、後で出てくる微分の考え方にもつながるので、重要である。</div>
+		<p>　では次に3次関数を考えよう。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page_linear" data-icon="arrow-l">1次関数へ</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#page_sanji" data-icon="arrow-r">3次関数へ</a>
+			</div>
+		</div>
+		<div data-role="page" id="page_sanji">
+			<div data-role="header">
+				<h1>３次関数</h1>
+			</div>
+			<div data-role="content">
+				<p>　<span class="ao">y</span>=a<span class="aka">x</span><sup>3</sup>+b<span class="aka">x</span><sup>2</sup>+c<span class="aka">x</span>+dの形の関数である。パラメータはさらに一つ増えて4個となっている。下に、a,b,cを変化させた時のグラフの変化の様子を示した（dすなわち定数項の変化については<span class="ao">y</span>方向の平行移動であることはもうわかるだろうから省略した）。</p>
+
+		<img src="../sizensuugaku/sanjis.png" width="95%" class="floatnone">
+
+		<p>　<span class="aka">x</span>=0の近辺だけを見ると、2次の項の係数（この場合b）がやはり「<span class="aka">x</span>=0近辺での曲がり具合」を、1次の項の係数（この場合c）がやはり「<span class="aka">x</span>=0近辺での傾き」を表現している（ただしこれは<span class="aka">x</span>=0付近でみ）。</p>
+
+		<p>　見た目ではわかりにくいかもしれないが、左の図（3次の係数aを変えている図）では、1次と2次の係数は変わってないので、原点（重なりあっている部分）においては傾きと曲がり具合は変化していない。</p>
+		<p>　2次関数では「上に凸なら山、下に凸なら谷」が一つあるだけだったが、3次関数では山と谷が一つずつ現れる（可能性がある<span class="footnote">状況によっては山も谷もない。</span>）。それだけ複雑な形となっている。</p>
+	    		<p>　このページでは、y=ax<sup>3</sup>+bx<sup>2</sup>+cx+dの形の関数（３次関数）のグラフを見よう。</p>
+				<div class="setsumei">　a,b,c,dは下のボタンで変えることができるので、いろんな値で関数がどのようなグラフになるのかを実感しよう。</div>
+				<p><canvas width="400" height="400" id="canvas_sanji" style="-ms-touch-action: none;"></canvas></p>
+				<div class="ui-grid-d">
+					<div class="ui-block-a"></div>
+					<div class="ui-block-b">
+						<button data-inline="true" onClick="sanji_up3();">↑</button>
+					</div>
+					<div class="ui-block-c">
+						<button data-inline="true" onClick="sanji_up2();">↑</button>
+					</div>
+					<div class="ui-block-d">
+						<button data-inline="true" onClick="sanji_up1();">↑</button>
+					</div>
+					<div class="ui-block-e">
+						<button data-inline="true" onClick="sanji_up0();">↑</button>
+					</div>
+				</div>
+				<div class="ui-grid-d">
+					<div class="ui-block-a">y=</div>
+					<div class="ui-block-b">
+						<span id="sanji3">x<sup>3</sup></span>
+					</div>
+					<div class="ui-block-c">
+						<span id="sanji2">+x<sup>2</sup></span>
+					</div>
+					<div class="ui-block-d">
+						<span id="sanji1">+x</span>
+					</div>
+					<div class="ui-block-e">
+						<span id="sanji0">+1</span>
+					</div>
+				</div>
+				<div class="ui-grid-d">
+					<div class="ui-block-a"></div>
+					<div class="ui-block-b">
+						<button data-inline="true" onClick="sanji_down3();">↓</button>
+					</div>
+					<div class="ui-block-c">
+						<button data-inline="true" onClick="sanji_down2();">↓</button>
+					</div>
+					<div class="ui-block-d">
+						<button data-inline="true" onClick="sanji_down1();">↓</button>
+					</div>
+					<div class="ui-block-e">
+						<button data-inline="true" onClick="sanji_down0();">↓</button>
+					</div>
+				</div>
+				<div class="A">　3次関数においても、$x=0$付近を見ると、1次の項が傾きを表現していることは同じである（上の図でいろいろやってみて確認せよ）。なお、2次の項は$x=0$付近での「曲がり具合」を表現している（これも確認しよう！）。</div>
+			</div>
+			<div data-role="footer" align="center">
+			  <a href="#page_niji" data-icon="arrow-l">2次関数</a>
+
+			  <input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+			  <input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			  <a href="#page_trans" data-icon="arrow-r">関数の平行移動</a>
+			</div>
+		</div>
+		<div data-role="page" id="page_trans">
+			<div data-role="header">
+				<h2>関数の平行移動</h2>
+			</div>
+			<div data-role="content">
+				<p>　ここで関数の平行移動とはどういうものかを考えておこう。</p>
+				<div class="Question">　たとえば$y=x^3+x^2$という関数がある。この関数のグラフを1だけ右に平行移動させるにはどう式を書き直せばよいか？</div>
+				<div class="Q">$x\to x+1$と置き換える？</div>
+				<div class="A">というふうに間違える例が多い、って話をしたかったところで、絶好の答をありがとう。そして「悪い例」にしちゃってごめんなさい。でもこの間違いする人は多いから安心して。</div>
+				<br>
+				<div class="A">　$x\to x+1$と置き換えるのが間違いなのは、元の関数が$x=0$の時$y=0$だということに注目するとわかる。これを「右に1平行移動した後の関数」はどうあるべきかというと「$x=1$の時$y=0$」にならなくてはいけない。</div>
+				<div class="A">　ということは、$x\to x+1$と置き換えて$y=(x+1)^3+(x+1)^2$としたのではダメ（それでは$2^3+2^2になって0にならない！）で、むしろ、$y=(x-1)^3+(x-1)^2$とする、つまり、$x\to x-1$と置き換えることで、今度は$x=1$で$y=0$になる（平行移動した！）。</div>
+				<p>　グラフを<span class="ao">y</span>方向にy<sub>0</sub>だけ平行移動させるには、<span class="ao">y</span>→ <span class="ao">y</span>-y<sub>0</sub>と置き換えて、<span class="ao">y</span>-y<sub>0</sub>=f(<span class="aka">x</span>)という式に直せばよい。</p>
+				<p><img src="../sizensuugaku/heikouidou.png" width="40%" class="floatnone"></p>
+				<p>　同様に<span class="aka">x</span>方向にx<sub>0</sub>だけ平行移動させるには、<span class="aka">x</span>→<span class="aka">x</span>-x<sub>0</sub>と置き換えて<span class="ao">y</span>=f(<span class="aka">x</span>-x<sub>0</sub>)という式に変える。両方を同時に行うと、</p>
+		<p>$y=f(x){\rightarrow}y-y_0=f(x-x_0)$</p>
+		<p>とすることで、<span class="aka">x</span>方向にx<sub>0</sub>、<span class="ao">y</span>方向にy<sub>0</sub>という平行移動が実現する。</p>
+		<p>　この平行移動によって、</p>
+		<p>$y= ax^2+bx+c ~~~\to~~~y=a\left(x-x_0\right)^2+b\left(x-x_0\right)+c$</p>
+		<p>と式が変わるが、結果を展開すれば</p>
+		<p>$ax^2+\underbrace{(b+2a)}_{新しいb}x+\underbrace{a^2(x_0)^2-bx_0+c}_{新しいc}$</p>
+		<p>となり、2次の項の係数aは変化せず、1次の項と定数項が変化することになる。逆に言えば、b,cを変化させても起こる変化はグラフの平行移動で、「形」は変わらないということになる。</p>
+		<p>　もともと、2次関数は三つのパラメータ$a,b,c$を含んでいた（独立変数-従属変数のペアとは別に、「その数を変化させると関数そのものの形が変化する」数を「パラメータ」と呼ぶ）。ところが放物線を平行移動させるとパラメータのうち二つはどんどん変化する。ということは、三つのパラメータのうち一つだけが「平行移動しても変わらない、形を表すパラメータ」なのだということがわかる。</p>
+		<p>　平行移動は二つのパラメータを持つから、関数そのもののパラメータ（2次関数なら3つ、3次関数なら4つ、4次関数なら5つ…）のうち、「平行移動しても変化しない、形を表現するパラメータ」の数は2個減って、2次関数なら1つ、3次関数なら2つ、4次関数なら3つ…となる。</p>
+		<div class="Question">　ここで不思議（？）なのは1次関数で、上の「2次関数なら1つ、3次関数なら2つ、4次関数なら3つ…となる」ということからすると1次関数の「形を表すパラメータ」は0になりそうだが、「傾き$a$」というのは「平行移動しても変わらない、形を表すパラメータ」である。なんでこういうことになっているのだろう？？</div>
+		<div class="A">　なかなかわかりにくいようなので、1次関数すなわち直線を$x$方向、$y$移動に平行移動しているところを図に描いてみた。</div>
+		<p><img src="linearidou.png" width="40%" class="floatnone"></p>
+		<p>　これからわかるように、1次関数（グラフが直線）の場合に限っては、$x$方向の平行移動と$y$方向の平行移動は同じ意味になる。つまり、1次関数の場合に限り、平行移動によって変わるパラメータは一つしかないので、1次関数の「形を表すパラメータ」は一つ残るのである。</p>
+			</div>
+			<div data-role="footer" align="center">
+			  <a href="#page_sanji" data-icon="arrow-l">３次関数</a>
+			  
+			  <input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+			  <input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			  <a href="#page_qa" data-icon="arrow-r">受講者の感想・コメント</a>
+			</div>
+		</div>
+		<div data-role="page" id="page_qa">
+			<div data-role="header">
+				<h1>受講者の感想・コメント</h1>
+			</div>
+			<div data-role="content">
+				<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+				<div class="Q">「多項式関数なんて中学校でほぼやり尽くしただろ？」と思いましたが、パラメータから平行移動を考えるのは面白かったです。平行移動＝平方完成ということでしか考えてなかったので、また数学が楽しくなった気がします。</div>
+				<div class="A">やり尽くしたように思えても、係数と関数の形の関係について、こういう「勘」が働くようになっていないと関数を使う立場としてはまだまだ、関数への親しみ方が足りない。</div>
+				<p></p>
+				<div class="Q">ジェスチャーが豊富で授業がわかりやすかった。ただ早く、大学で扱えるような微積分を学習したい。</div>
+				<div class="A">今やっていることも「微積」の心をつかむために必要です。</div>
+				<p></p>
+				<div class="Q">高校の時に当たり前に使っていたことが改めて理解できた。先生のジェスチャーがおもしろかったです。</div>
+				<div class="A">身体も使って(^_^;)、数学を理解していきましょう。</div>
+				<p></p>
+				<div class="Q">1次関数ではx軸方向に平行移動するのも、y軸方向に平行移動するのも同じになるのは知らなかった。実際にグラフを見るのはとても印象に残るので面白かった。</div>
+				<div class="A">1次関数というのは、ある意味「簡単すぎる関数」なのです。</div>
+				<p></p>
+				<div class="Q">初めて受講したのでタブレットを使ってする授業とてもわかりやすかったです。関数のこともよくわかりました。</div>
+				<div class="A">動く図でイメージをつくっていきましょう。</div>
+				<p></p>
+				<div class="Q">各項が変化するとグラフでどの部分が変わるのかがよくわかりました。</div>
+				<div class="A">式とグラフを結びつけて理解することが大事です。</div>
+				<p></p>
+				<div class="Q">関数を決めるパラメータなどについては今まで考えていなかったので面白かったです。</div>
+				<div class="A">いろんな関数の形がどう決まるのか、式と連結して理解しましょう。</div>
+				<p></p>
+				<div class="Q">関数のx=0付近の影響の大きさの感覚がなんとなく分かったと思う。</div>
+				<div class="A">この「付近の影響」という物の見方、大事です。</div>
+				<p></p>
+				<div class="Q">係数は形を決めるものと位置を決めるものに分けられていると知ったので驚きました。</div>
+				<div class="A">それぞれの係数にそれぞれの役割があります。</div>
+				<p></p>
+				<div class="Q">高次の関数でも、x=0付近ではxの係数が傾きを表すという見方をしたことはなかったので、知れてよかったです。</div>
+				<div class="A">この「付近でこうなる」という考え方が、微分につながっていきます。</div>
+				<p></p>
+				<div class="Q">グラフの形を係数で変えるんだなぁって思いました。</div>
+				<div class="A">関数に含まれるパラメータは、それぞれにグラフの形の情報を担ってます。</div>
+				<p></p>
+				<div class="Q">関数にはパラメータが存在し、そのうち平行移動のパラメータがあるということが分かった。</div>
+				<div class="A">関数はいろんなものがありますから、それぞれにパラメータを持ってます。</div>
+				<p></p>
+				<div class="Q">多項式関数の平行移動の仕組みがよくわかった。</div>
+				<div class="A">平行移動の概念も、大事です。</div>
+				<p></p>
+				<div class="Q">多項式のそれぞの項が持つ性質や、関数の形を決めるパラメータ、平行移動するパラメータの話がとてもわかりやすく、楽しかったです。</div>
+				<div class="A">関数の「形」を何が決めるのか、という概念を持っておきましょう。y</div>
+				<p></p>
+				<div class="Q">1次の係数が原点付近では傾きを表していることがわかり面白いなと思った。また、グラフの形を決めるパラメータと平行移動を表すパラメータがあることが分かり、１次関数においては区別がつかないためパラメータが一つになるなど、初めて聞く話がたくさんありとても為になった。</div>
+				<div class="A">この「傾き」がどう決まるかというのが、微分を勉強するときとっても大事です。</div>
+				<p></p>
+				<div class="Q">多項式関数と平行移動をならった！！　高校の時も習ったけど、こんなに細かく習ってなかったら、あんがいたのしかった。</div>
+				<div class="A">高校のときも、きっといろいろ習ったはずですよ。</div>
+				<p></p>
+				<div class="Q">高校の授業では一つの決まりとして習っていたことを、ではそれがどうしてこうなるのかという視点からみていくと、これまで見えてこなかったことがわかるようになっていくことは、とても楽しいです。</div>
+				<div class="A">「なぜ」という視点は常に持ちましょう。自然科学の為です。</div>
+				<p></p>
+				<div class="Q">平行移動の際、プラスではなくマイナスなのはなんでだろうと気にしたことがありませんでした。理解できました。</div>
+				<div class="A">数式のいろんなところ、是非気にして、答えを見つけてみてください。</div>
+				<p></p>
+				<div class="Q">xが0付近が大切な話が面白かったです。x家の近所付き合いを想像しました。肩、お大事に。</div>
+				<div class="A">近所（数学的には「近傍」という言葉をよく使う）をまず考える、これ大事。</div>
+				<p></p>
+				<div class="Q">1次関数の平行移動でx方向とy方向の平行移動の本質は変わらないのはなるほどと思った。</div>
+				<div class="A">1次関数は特に簡単な関数なので、そういうことになります。</div>
+				<p></p>
+				<div class="Q">大体理解できた。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">今日はついていくことができた。この調子でがんばりたい。</div>
+				<div class="A">がんばりましょう。</div>
+				<p></p>
+				<div class="Q">多項式関数、平行移動について。パラメータの存在の発見。</div>
+				<div class="A">いろいろ話しましたが、納得できましたか？</div>
+				<p></p>
+				<div class="Q">平行移動のとき、自分も$x_0$を足すのか引くのか迷ったが、図でみるとよくわかった。これからは迷ったときは図を描いてみるようにしたい。</div>
+				<div class="A">図を書くのは大事です。どんどん書きましょう。</div>
+				<p></p>
+				<div class="Q">しっかりと関数の法則を復習できてよかった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">基礎のところだから余裕だろうと思っていたが案外わからなくて少し驚いた。またついていけるように復習したい。</div>
+				<div class="A">基礎ではありますが、だからこそしっかり理解しておかないとね。</div>
+				<p></p>
+				<div class="Q">原点付近を注目するのが大事だと分かった。平行移動をきちんと理解できるようにしたい。</div>
+				<div class="A">はい、どちらも大事です。</div>
+				<p></p>
+				<div class="Q">家でしっかり復習して、今日の内容は特に定着させたい。</div>
+				<div class="A">やりましょう。</div>
+				<p></p>
+				<div class="Q">2次関数のx=0付近ではグラフはほぼ直線とみなせて、1次の項の係数がその傾きを表すことがわかった。</div>
+				<div class="A">それが後で出てくる「微分」の考え方の第一歩です。</div>
+				<p></p>
+				<div class="Q">よく使っている関数も、深く考えたりグラフをじっくり見てみると、面白い発見があった。</div>
+				<div class="A">他の関数についても、深く考えて発見していきましょう。</div>
+				<p></p>
+				<div class="Q">平衡移動のところを最初間違えていたので、次は間違えないようにしっかり復習したいです。</div>
+				<div class="A">平行移動で何が起こるか、その意味を考えれば、間違えないはず。</div>
+				<p></p>
+				<div class="Q">段々と先生の威圧感を押し返せるようになりたいと思った。あと、この授業にはちょっとした衝撃を受ける。</div>
+				<div class="A">まぁ、威圧感など押し返してください。</div>
+				<p></p>
+				<div class="Q">自分でグラフの性質がみつけられないものもありましたが、説明を聞いてすごく納得することができました。</div>
+				<div class="A">いろいろとグラフを見ながら、考えてみてください。</div>
+				<p></p>
+				<div class="Q">多項式の大事な項とかがわかった。教科書の変数に漢字を使ったりすることに賛同します。</div>
+				<div class="A">大事なところを理解しておきましょう。</div>
+				<p></p>
+				<div class="Q">多項式関数$y=ax+b,y=ax^2+bx+c,y=ax^3+bx^2+cx+d$。イメージ感覚に問う授業だった。原点付近においてのグラフの概形を重視した。</div>
+				<div class="A">イメージと、「原点付近を見る」という視点、とても大事です。</div>
+				<p></p>
+				<div class="Q">今まで、意味を考えずに覚えこむことが多かったですが、そのまま次へ次へ難しいところにいくとつまってしまうので、よく復習しておきます。</div>
+				<div class="A">やはり意味を知らないと勉強する意味も勉強しがいもないですよ。</div>
+				<p></p>
+				<div class="Q">タブレット端末を使うと、考える時間が増え発見をも増えるので楽しいです。「$x=0$付近では$x$が大事」これを念頭にして考えるようにします。</div>
+				<div class="A">タブレット使いつつ、じっくり考えていきましょう。考えることが自然を知る為の道です。</div>
+				<p></p>
+				<div class="Q">4次関数で、グラフの形を変えるパラメータは三つ。3次関数では二つ、2次関数では一つ。なのに1次関数では0ではなく一つ、不思議。高次関数のグラフでは各項の係数をうまく調節することで定数項なくても平行移動できることはびっくりでした。</div>
+				<div class="A">不思議ですね、でも納得できましたか？</div>
+				<p></p>
+				<div class="Q">こんなに深く1次関数、2次関数3次関数について考えたことがなかったのでとても不思議に感じました。</div>
+				<div class="A">これから出てくるいろんな関数についても、深く考えていきましょう。</div>
+				<p></p>
+				<div class="Q">平行移動とかパラメータの詳しい話が初めてちゃんと理解できた。</div>
+				<div class="A">それはよかったです。</div>
+				<p></p>
+				<div class="Q">1次関数から4次関数までの特徴がわかった。</div>
+				<div class="A">よく理解しておきましょう。</div>
+				<p></p>
+				<div class="Q">計算する上ではわかっていた関数の平行移動の仕方を、さらにその理屈を知ったことでより深い理解をすることができた。</div>
+				<div class="A">理屈を知ることは大事ですよ。</div>
+				<p></p>
+				<div class="Q">出身はどちらですか？。5/7の授業は仕事のため欠席させてください。</div>
+				<div class="A">神戸生まれです。5/7には、たまたまこの授業は最初から休みです（木曜日だけど月曜日の授業をやる日になってます）。</div>
+				<p></p>
+				<div class="Q">xが0付近のときは$x^2$より$x$の方に注目することが大事ということがわかった。</div>
+				<div class="A">その考え方、大事です。</div>
+				<p></p>
+				<div class="Q">自然科学において数学がどのような役割をするのかが意識できたと感じました。$n$次関数について、多項式関数について、式をミクロな視点でも見ていけるようにしたい。</div>
+				<div class="A">ミクロな（あるいは「近所のみを見る」という意味で「ローカルな」）視点というのは自然科学でとても大事な考え方なのです。</div>
+				<p></p>
+				<div class="Q">2次関数のグラフで、1次の負のパラメータを変化させると頂点が放物線を描きながら移動していくのがおもしろかった。</div>
+				<div class="A">どうしてそうなるのか、を式からも理解してみてください。</div>
+				<p></p>
+				<div class="Q">xの冪での$x,x^2,x^3$の需要度があまり実感できなかったけど、アニメーションで動かしてみて実感できた。自然科学のための数学というものが何か、わかってきた気がする。</div>
+				<div class="A">関数やグラフを「実感できる」形で理解していきましょう。</div>
+				<p></p>
+				<div class="Q">形を決めるパラメータという考え方が新しくてまだなれない感じがしました。</div>
+				<div class="A">慣れて下さい。新しいことを知り、使えるようになっていかないと。</div>
+				<p></p>
+				<div class="Q">関数の性質が少しわかった。それぞれの次数の係数が何に関係しているのか知れてよかった。</div>
+				<div class="A">この「少し」の部分は、関数の持っている情報の中で一番大事な部分なのです。</div>
+				<p></p>
+				<div class="Q">xの1次と2次の係数が関数の大まかな形を決めるということがわかった。</div>
+				<div class="A">より細かな部分を決めようとすると、高次の項が必要になってきます。</div>
+				<p></p>
+				<div class="Q">今まで考えたこともないような内容だった。</div>
+				<div class="A">式のそれぞれの部分とグラフの形と、結びつけて考えることは大事ですよ。</div>
+				<p></p>
+				<div class="Q">前半は眠くてあまり授業に集中できませんでした。次回はしっかり睡眠取ってどんどん質問していきたいです。</div>
+				<div class="A">元気を出そう！</div>
+				<p></p>
+				<div class="Q">自分の勉強してきたことと照らしあわせて確認できました。</div>
+				<div class="A">一つ一つ確認しながら進んでください。</div>
+				<p></p>
+				<div class="Q">x=0付近ではxが大事とか、最初は意味がわからなかったけど、グラフで見てみるとなんとなく言いたいことがわかった。</div>
+				<div class="A">グラフを思い浮かべながら、イメージをつけてください。</div>
+				<p></p>
+				<div class="Q">1次関数の平行移動した時に、yにa平行移動するのとxに-1平行移動するのは同じだということに初めて気がついた。</div>
+				<div class="A">1次関数の特殊なところです。</div>
+				<p></p>
+				<div class="Q">グラフ全体を見ていると何が起こっているのかよく分からなくても、0付近をみると初めて発見できることが多くあった。</div>
+				<div class="A">その考え方は大事です。付近を見る、つまり「ローカル情報」を見ることで法則が見えることがよくあります。</div>
+				<p></p>
+				<div class="Q">パラメータの話が気になっていたけど、最後になっとくできてよかった。</div>
+				<div class="A">納得できてよかったです。</div>
+				<p></p>
+				<div class="Q">グラフとアンドロイドでイメージができました。</div>
+				<div class="A">数式だけでなくイメージで理解するようにしましょう。</div>
+				<p></p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page_trans" data-icon="arrow-l">平行移動へ</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>

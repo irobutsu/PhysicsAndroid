@@ -1,0 +1,56 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<title>図形で考える変分</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<script src="jquery.js" type="text/javascript"></script>
+	<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+	<link href="vg.css" rel="stylesheet" type="text/css"/>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="draggablescreen.js" type="text/javascript"></script>
+	<script src="graphscreen.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+
+  </head> 
+  <body> 
+	<script src="henbun.js" type="application/javascript"></script>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>図形で考える変分：長方形の等周問題</h1>
+	  </div>
+	  <div data-role="content">
+		  <div class="fukidasi">長方形の辺の長さの和が一定の時、もっとも面積の大きくなるのはどのような形のときか？</div>
+		  <p>という問題を考えてみよう。このような「周囲が一定の図形」を考える問題は「<strong>等周問題</strong>」と呼ばれる。</p>
+		  <p>　辺の長さの和を$L$とする。長方形の横の長さを$x$、縦の長さを$y$とすると、面積は$S=xy$である。$2x+2y=L$が成り立つから、$y={L\over 2}-x$となり、<br>
+			\begin{equation}<br>
+			S=x\left({L\over 2}-x\right)<br>
+			\end{equation}<br>
+		  </p>
+		  <p>である。この関数のグラフは次の図のようになり、最大値は$x={L\over 4}$の時だということがわかる。</p>
+		  <div><canvas id="canvas1" width=200 height=200></canvas>　<canvas id="canvas2" width=200 height=200></canvas></div>
+		  <div id="answer" class="red"></div>
+		  <div id="answer2" class="blue"></div>
+		  <div data-role="fieldcontain">
+			<label for="slider">x=</label>
+			<input type="range" name="slider" id="slider" value="6" min="0" max="8" step="0.1" onChange="x=Number($('#slider').val());graphWrite();" />
+		  </div>
+		  <div data-role="fieldcontain">
+			<fieldset data-role="controlgroup" data-type="horizontal">
+			  <legend>表示</legend>
+			  <input type="checkbox" name="checkboxdx" id="checkboxdeltax" class="custom" value="" onChange="ondeltaFlgchange();"/>
+			  <label for="checkboxdeltax">$\Delta x=0.5$変化した図</label>
+			</fieldset>
+		  </div>
+		  
+		  <p>　図の下についてるスライダで$x$の値を変えることができる。図では$L=16$にしているので、$x$をいろいろ変えながら確かに$x=4$の時面積が最大になることを確認しよう。</p>
+		  <p>　下の「$\Delta x=0.5$変化した図」のところを押すと、$x$が0.5違っている場合の図を同時に描いてくれるので、比較してみよう。</p>
+		  <div data-role="footer" align="center">
+			
+		  </div>
+		</div>
+	</div>
+  </body>
+</html>

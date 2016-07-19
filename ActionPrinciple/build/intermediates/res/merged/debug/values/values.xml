@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/ActionPrinciple/res/values/strings.xml -->
-    <eat-comment/>
     <string name="accel_off">(accel.)</string>
     <string name="accel_on">[accel.]</string>
     <string name="app_name">Action Principle</string>

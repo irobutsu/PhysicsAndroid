@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width; target-densityDpi=device-dpi; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"/>
+<title>積分ってなあに？（その３）</title>
+<style type="text/css">
+	body {
+		background-color: #FFFFFF;
+	}
+	img {
+	vertical-align:middle;
+	}
+	.centering{ text-align:center;}
+	.magenta { color:magenta; }
+	.cyan { color:cyan; }
+	.red { color:red; }
+	.blue { color:blue; }
+	.chuumoku {
+		text-align:center;
+		font-size: x-large;
+		color:red;
+	}
+</style>
+</head>
+<body onload="init(); c=0; b=0.5; N=5; autoUpFlg=0; nuriFlg=-1; f=linear; Intf=Intlinear; animationGO();">
+<script type="application/javascript" src="sekibuntoha.js"></script>
+<h1>積分ってなあに？（その３）</h1>
+<br>
+<div class=centering><a href="sekibuntoha2.html">その２へ戻る</a></div>
+<br>
+<hr>
+　いっきに連続的に蛇口を開く状況の計算はできないので、まずはこれに近い状況を考える。すなわち、蛇口を「徐々に」開くのではなく、段階的に開く。下のグラフの階段状の部分で表されるような過程を踏んで、流れ込む水の量を階段状に変化させる（このグラフでは５段階に分けて変化させている）。
+<br>　この場合の水槽に溜まる水の量は、各段階ごとにvtで計算すればよい（vが段階的に増えていっているわけである）。つまり、<span class="cyan">水色で表現されている部分</span>の面積が、今入っている水の量である。
+<br><hr>
+<canvas width=500 height=500 id="maincanvas"></canvas>
+<br><button id="bdown"
+onClick="bdown();document.getElementById('blabel').innerHTML=b;">（←減）
+</button>a=<span id="blabel">0.5</span><button id="bup"
+onClick="bup();document.getElementById('blabel').innerHTML=b;">（増→）
+</button>
+<hr><br>　vの増える割合であるaを変化させることができるようになっているので、いろいろ変化させてみてほしい。<br><span class="red">赤で示した直線グラフ</span>の表す水の入れ方と階段状グラフで示した水の入れ方はもちろん同じではない。実際に計算したいのは直線の方なので、「階段状に流量が増えていく」を「少しずつ流量が増えていく」に近づけていくことを考える。そのためにはここで書いたような５分割ではなく、もっと分割数を増やしていくべきだ、ということになるだろう。分割数を増やしていくグラフは次の<a href="sekibuntoha4.html">その４</a>にある。
+<hr>
+<div class=centering><a href="sekibuntoha4.html">その４へ進む</a></div>
+<div class=centering><a href="index.html">表紙に戻る</a></div>
+</body>
+</html>
+

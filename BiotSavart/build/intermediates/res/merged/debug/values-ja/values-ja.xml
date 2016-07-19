@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/res/values-ja/strings.xml -->
-    <eat-comment/>
     <string name="app_name">ビオ・サバールの法則（円電流）</string>
     <string name="resetScreen">画面初期化</string>
     <string name="x_comp">ｘ成分</string>

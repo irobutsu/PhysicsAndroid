@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width; target-densityDpi=device-dpi; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"/>
+		<title>積分ってなあに？（その６）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="../jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="../vg.css" rel="stylesheet" type="text/css"/>
+		<script src="../jquery.js" type="text/javascript"></script>
+		<script src="../jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<style type="text/css">
+		body {
+			background-color: #FFFFFF;
+		}
+		img {
+			vertical-align:middle;
+		}
+		.centering{ text-align:center;}
+		.magenta { color:magenta; }
+		.red { color:red; }
+		.blue { color:blue; }
+		.chuumoku {
+			text-align:center;
+			font-size: x-large;
+			color:red;
+		}
+		</style>
+		<script type="application/javascript" src="sekibuntoha.js"></script>
+		<script type="application/javascript">
+		$(document).delegate('#page6','pageinit',function(e) {
+			init(); c=0; b=0.4; N=5; nuriFlg=-1; autoUpFlg=0; kaidan2Flg=-1; f=linear; Intf=Inthoubutsu; animationGO();
+		});
+		</script>
+	</head>
+	<body>
+		<div data-role="page" id="page6">
+			<div data-role="header">
+				<h1>積分ってなあに？（その６）</h1>
+			</div>
+			<div data-role="content">
+				<br>　と言われても「ギザギザの階段でN→∞にしても、ほんとうにグラフの面積と同じだろうか？　三角形ならうまくいくけど、いつでもうまくいくんだろうか？」と心配になる人もいるかもしれない。<br>
+				<br>
+				　そうなることをきっちり証明するには、ちゃんとした極限を取って考える必要がある。ここでは証明はしないのだが、「こういう感じで考えればいい」という雰囲気だけ（グラフで）表現しておく。<br>
+				<br>
+				<hr>
+				<canvas width=500 height=500 id="maincanvas"></canvas>
+				<br><br><button id="bdown"
+							onClick="bdown();document.getElementById('blabel').innerHTML=b;" data-inline="true">（←減）
+				</button>a=<span id="blabel">0.3</span><button id="bup"
+														   onClick="bup();document.getElementById('blabel').innerHTML=b;" data-inline="true">（増→）
+				</button>
+				<br>
+				<br><button id="Ndown"
+						onClick="Ndown();document.getElementById('Nlabel').innerHTML=N;" data-inline="true">（←減）
+				</button>N=<span id="Nlabel">5</span><button id="Nup"
+														 onClick="Nup();document.getElementById('Nlabel').innerHTML=N;" data-inline="true">（増→）
+				</button><br><hr><br>
+				　上の図のように、やはり階段状ではあるが、実際の量を上回るような階段状の操作を考える。<input type="button" onclick="location.href='sekibuntoha4.html'" value="その４" data-inline="true">で考えた階段では、実際よりは水量が少なくなる状況であったことと比べてみよう。N→∞の極限でこの二つが一致することを示せばよい（<small>この場合、それは大丈夫だということは図でもわかるし、式でも示せる</small>）。<br>　極限が一致しないような場合は積分が定義できないが、そんな無茶苦茶な関数は物理ではまず出てこない。<br>　この両極限がちゃんと一致してくれるということは、ここまでの計算で高次の微小量を無視できた（具体的には、NΔtと(N-1)Δtを同じとして扱った）理由でもある。つまり、高次の微小量の部分の計算はこの極限で消滅するので、計算する必要がなかったのである。
+			</div>
+			<div data-role="footer" align=center>
+				<input type="button" value="その５" data-icon="arrow-l" onclick="location.href='./sekibuntoha5.html'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>
+

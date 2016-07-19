@@ -1,0 +1,45 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:2:1-23:12
+	package
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:3:5-40
+	android:versionName
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:5:5-30
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml
+	android:versionCode
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:4:5-28
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:2:11-69
+uses-sdk
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:7:5-43
+	android:minSdkVersion
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:7:15-40
+application
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:9:5-21:19
+	android:label
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:11:9-41
+	android:icon
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:10:9-38
+activity#jp.ac.u_ryukyu.phys.denba.DenbaActivity
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:12:9-20:20
+	android:screenOrientation
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:14:94-130
+	android:label
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:13:13-45
+	android:configChanges
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:14:43-93
+	android:name
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:14:13-42
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:15:13-19:29
+action#android.intent.action.MAIN
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:16:17-69
+	android:name
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:16:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:18:17-77
+	android:name
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/denba/AndroidManifest.xml:18:27-74

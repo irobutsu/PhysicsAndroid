@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>第５章　微分の応用（半減期）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="vg.css" rel="stylesheet" type="text/css"/>
+		<script src="jquery.js" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script type="text/javascript" src="hangen.js"></script>
+	</head> 
+	<body> 
+		<div data-role="page" id="hangen">
+			<div data-role="header">
+				<h1>半減期</h1>
+			</div>
+			<div data-role="content">
+				<script>
+				$(document).delegate('#hangen','pageinit',function(e) {
+					init();
+					setN(2500); setBq(25);  radGO();
+				});
+				</script>
+				<p>　微分方程式${\mathrm dy\over\mathrm dx}=y$に従う自然現象の例としては、放射性物質の崩壊がある。放射性物質は、「半減期」と呼ばれる一定期間（以下$T$とする）を経過すると元の量のうち半分が崩壊<span class="footnote">注意すべきは「半減期の2倍」の時間が経過すると全部なくなるのではなく、元の量の${1\over 4}$になる、ということ。</span>し、別の物質に変化する。よって、時刻$t$における放射性物質の量${N}(t)$は</p>
+				\begin{equation}
+				\begin{array}{rll}
+				{N}({t})=&{N}(0)\left({1\over 2}\right)^{{t}\over T}
+				&({1\over 2}=\mathrm e^{-\log 2})\\
+				=&{N}(0)\mathrm e^{-{\log 2\over T}{t}}
+				\end{array}\label{hangenki}
+				\end{equation}
+				<p>という式で表すことができる。これは言わば大局的な情報としての式である（そして、実験的にもよく確認された式であると言える）。では、この式にはどのような自然法則が隠れているだろうか。「微分」という作業によりこの現象の局所的情報を取り出すことでそれがわかる。</p>
+				<p>この式を微分してみると、</p>
+				\begin{equation}
+				{\mathrm d \over \mathrm dt}{N}({t})=-{\log2\over T} {N}({t})
+				~~または~~
+				dN=-{\log2\over T}{N} \mathrm dt\label{hangenDE}
+				\end{equation}
+				<p>のように、${\mathrm dy\over\mathrm dx}={y}$に似た式が出てくる（違いは${x}\to{t},{y}\to {N}({t})$という変数の違いと、右辺に定数係数$-{\log2\over T}$がついていること）。</p>
+
+				<p>この式$dN=-{\log2\over T}{N} \mathrm dt$の意味は、微小時間$\mathrm dt$の間に放射性物質の量が${\log 2\over T}{N}\mathrm dt$だけ減るということである。${N},\mathrm dt$以外の量は定数なので、「今ある量に比例して減る」という法則を示している。これは、ある一個の放射性物質の原子を取り出して考えると、その原子はまわりの状況や物質の状態とは無関係に一定確率で崩壊するということを示している<span class="footnote">まわりの状況によって変化する確率が違ってくる場合は、また別の形の微分方程式が出てくることになる。</span>。これが生物の死であれば「年老いた個体は死にやすい」「密集した環境では食料が確保できず死にやすい」などの理由で確率が変わる。放射性物質原子には「年齢」のような個性がないということがわかる。逆にいえば、そういう性質を持っている物が起こす現象は、これと同様の微分方程式で記述できるだろう。</p>
+				<div class="setsumei">以下は放射性物質が崩壊していく様子を表している。<br>一個一個の原子は一定時間ごとにある確率で崩壊する。結果として、原子の数が多いほど崩壊数も多い。<br>グラフは、横軸が時間で、縦軸が「どれだけ残っているか」を表す。確かに指数関数的になっていることを確認しよう。</div>
+				<hr>
+				<p><canvas id="maincanvas" width="500" height="500">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+					<canvas id="subcanvas" width="500" height="500">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas></p>
+				<p><input type="button" value="再スタート" id="restart" onClick="restart();"></p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>
+

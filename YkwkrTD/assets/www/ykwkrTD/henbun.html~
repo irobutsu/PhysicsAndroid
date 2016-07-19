@@ -1,0 +1,571 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebText 動いてよくわかる熱力学（変分原理）</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="draggablescreen.js" type="text/javascript"></script>
+	<script src="graphscreen.js" type="text/javascript"></script>
+	<script src="LegendreTR.js" type="application/javascript"></script>
+	<script type="application/javascript">
+	  var gsUF;
+var gsUF2;
+
+$(document).delegate('#UtoF','pageinit',function(e) {
+    tildefimg.src="U.png";
+    fimg.src="largeF.png";
+    xpximg.src="TS.png";
+    gsUF=new GraphScreen("canvasUF",4,6,0.45);
+    gsUF.setLeft(-1);
+    gsUF.setBottom(-3);
+    gsUF.gobackOriginalSize();
+    gsUF.setxlabel("S.png");
+    gsUF.setylabel("U.png");
+    gsUF.writeGraphs=function() {
+		graphUFWriteContent();
+    }
+    gsUF2=new GraphScreen("canvasUF2",4,6,0.45);
+    gsUF2.setLeft(-1);
+    gsUF2.setBottom(-3);
+    gsUF2.gobackOriginalSize();
+    gsUF2.setxlabel("T.png");
+    gsUF2.setylabel("largeF.png");
+    gsUF2.writeGraphs=function() {
+		graphUF2Write();
+    }
+});
+
+var t0=1;
+var v0=1;
+$(document).delegate('#UtoF','pageshow',function(e) {
+    t0=Number($('#slider_T').val());
+    v0=Number($('#slider_V').val());
+    graphUFWrite();
+});
+
+
+function graphUFWrite() {
+    gsUF.setScale();
+    gsUF.clearALL();	
+    gsUF.writeCoordinate();
+    graphUFWriteContent();
+    graphUF2Write();
+}
+
+function U_T(t) {
+	return t;
+}
+function U_S(s) {
+    return Math.exp(s-1)/Math.pow(v0,1/1.5);
+}
+
+// U(s)の接線
+// U'(s)=exp(s-1)/V^(1/c)
+// U-exp(s0-1)=exp(s0-1)*(s-s0)
+// U=exp(s0-1)*s -(s0-1)*exp(s0-1)
+
+// U→Fというルジャンドル変換
+// t=exp(s-1);
+// s=log(t)+1;
+// F(t)=U-TS=t-t*(log(t)+log(v)/1.5+1)
+// F(s)=exp(s-1)*(1-s)/V^(1/1.5)
+// F'(t)=1-(log(t)+log(v)/1.5+1)-1=-\log(t)-\log(v)/1.5-1
+function F_T(t) {
+    if( t==0 ) {
+        return 0;
+    }
+    return t-t*(Math.log(t)+ Math.log(v0)/1.5 +1);
+}
+function F_S(s) {
+	return Math.exp(s-1)*(1-s)/Math.pow(v0,1/1.5);
+}
+
+function graphUFWriteContent() {
+    gsUF.setFunction(U_S);
+    gsUF.writeFunction("rgba(255,0,0,0.5)");
+    gsUF.setFunction(F_S);
+    gsUF.writeFunction("rgba(0,0,255,0.1)");
+	if( t0 == 0 ) {
+		gsUF.writeLinear(0,0,"rgba(128,128,0,1)");
+		gsUF.ctx.drawImage(fimg,-0.2,0,0.176,0.20);
+		gsUF.ctx.drawImage(tildefimg,-0.4,0,0.204,0.204);
+		gsUF.writePoint(0,0,0.05,"rgba(255,0,255,0.8)");
+	} else {
+		var vf=Math.pow(v0,1/1.5);
+		var u0=t0;
+		var f0=F_T(t0);
+		var s0=(u0-f0)/t0;
+		gsUF.writeLinear(u0,-(s0-1)*u0,"rgba(128,128,0,1)");
+		gsUF.writePoint(0,-(s0-1)*u0,0.05,"rgba(0,0,255,0.5)");
+		gsUF.ctx.drawImage(tildefimg,-0.2,u0,0.204,0.204);
+		gsUF.writeLine(0,u0,s0,u0,"rgba(120,120,120,0.5)");
+		gsUF.writeLine(s0,gsUF.topy,s0,gsUF.bottomy,"rgba(120,120,120,0.1)");
+		gsUF.writeLine(s0,f0,0,f0,"rgba(120,120,120,0.5)");
+		gsUF.writePoint(0,u0,0.05,"rgba(255,0,0,0.5)");
+		gsUF.ctx.drawImage(fimg,-0.2,-(s0-1)*u0,0.176,0.20);
+		gsUF.ctx.strokeStyle="rgba(120,120,120,0.5)";
+		gsUF.ctx.beginPath();
+		gsUF.ctx.moveTo(0,u0);
+		gsUF.ctx.quadraticCurveTo(-0.5,(-0.5*s0+1)*u0,0,-(s0-1)*u0)
+		gsUF.ctx.stroke();
+		gsUF.ctx.drawImage(xpximg,-0.8,(-0.5*s0+1)*u0,0.5,0.224);
+	}
+}
+
+function graphUF2Write() {
+	gsUF2.setScale();
+	gsUF2.clearALL();	
+	gsUF2.writeCoordinate();
+	graphUF2WriteContent();
+}
+
+function graphUF2WriteContent() {
+    gsUF2.setFunction(F_T);
+    gsUF2.writeFunction("rgba(0,0,255,0.5)");
+    gsUF2.setFunction(U_T);
+    gsUF2.writeFunction("rgba(255,0,0,0.1)");
+
+	if( t0 == 0 ) {
+		// 縦線を引く
+		gsUF2.ctx.strokeStyle="rgba(128,128,0,1)";
+		gsUF2.ctx.beginPath();
+		gsUF2.ctx.moveTo(0,gsUF2.topy);
+		gsUF2.ctx.lineTo(0,gsUF2.bottomy);
+		gsUF2.ctx.stroke();
+		gsUF2.writePoint(0,0,0.05,"rgba(255,0,255,0.8)");
+		gsUF2.ctx.drawImage(fimg,-0.2,0,0.176,0.20);
+		gsUF2.ctx.drawImage(tildefimg,-0.4,0,0.204,0.204);
+	} else {
+		var u0=t0;
+		var f0=F_T(t0);
+		var s0=(u0-f0)/t0;
+		gsUF2.writePoint(0,f0,0.05,"rgba(0,0,255,0.5)");
+		gsUF2.writeLinear(-Math.log(t0)-Math.log(v0)/1.5-1,t0,"rgba(128,128,0,1)");
+		gsUF2.writeLine(0,f0,t0,f0,"rgba(120,120,120,0.5)");
+		gsUF2.writeLine(t0,gsUF2.topy,t0,gsUF2.bottomy,"rgba(120,120,120,0.1)");
+		gsUF2.writeLine(t0,t0,0,t0,"rgba(120,120,120,0.5)");
+		gsUF2.writePoint(0,t0,0.05,"rgba(255,0,0,0.5)");
+		gsUF2.ctx.strokeStyle="rgba(120,120,120,0.5)";
+		gsUF2.ctx.beginPath();
+		gsUF2.ctx.moveTo(0,t0);
+		gsUF2.ctx.quadraticCurveTo(-0.5,(-0.5*s0+1)*t0,0,-(s0-1)*t0)
+		gsUF2.ctx.stroke();
+		gsUF2.ctx.drawImage(xpximg,-0.8,(-0.5*s0+1)*t0,0.5,0.224);
+		gsUF2.ctx.drawImage(fimg,-0.2,-(s0-1)*t0,0.176,0.20);
+		gsUF2.ctx.drawImage(tildefimg,-0.2,t0,0.204,0.204);
+	}
+	  }
+	</script>
+  </head> 
+  <body>
+	<div data-role="page" id="delF">
+	  <div data-role="header">
+		<h1>ヘルムホルツ自由エネルギーと変分原理</h1>
+	  </div>
+	  <div data-role="content">
+		<h3>ここまでで使った「変数」のまとめ</h3>
+		<p>　ここまでで、熱力学を記述するための独立変数（正確には、この中から独立変数を選ぶことになる、独立変数候補）は、</p>
+		<p align="center">温度$T$,エントロピー$S$,圧力$P$,体積$V$,物質量（モル数）$N$</p>
+		<p>である。そしてこれらにより表現される従属変数が内部エネルギー$U(T;V,N)$とヘルムホルツの自由エネルギー$F[T;V,N]$である。</p>
+		<p>　これらの独立変数・従属変数の間の関係を考えると、まず（この式がエントロピーを定義である）、</p>
+		$$F[T;V,N]=U(T;V,N)-TS(T;V,N)$$
+		<p>がある。また、微分を使った関係として、</p>
+		$${\partial U(T;V,N)\over \partial T}=T{\partial S(T;V,N)\over \partial T}$$
+		<p>もあった。</p>
+		<p>　ヘルムホルツ自由エネルギーの定義（等温準静操作で仕事をすると、その仕事の分だけ$F$が減る）を式で表現すると$\Delta F=-P\Delta V$（$P\Delta V$が系のする仕事）であり、これを偏微分を使って表現すれば、</p>
+		$${\partial F[T;V,N]\over\partial V}=-P(T;V,N)$$
+		<p>である。</p>
+		<p>　一方、断熱準静操作での仕事は$\Delta U=-P\Delta V$となる。ただしこの時は温度は一定ではないから、${\partial U(T;V,N)\over\partial V}=-P(T;V,N)$<big><big>ではない</big></big>（←違う関数だから当たり前と言えば当たり前だが、この違いは重要）。</p>
+		<p>　断熱準静操作を考えるならば、$T$を固定するのではなく、$S$を固定する微分を行いたいところである（つまり後で出てくるように、$-{\partial U[S,V,N]\over\partial V}$を計算すれば圧力が出るのである）。次にヘルムホルツ自由エネルギーの微分についてもう少し考えよう。</p>
+		<h3>ヘルムホルツ自由エネルギーの微分</h3>
+		<p>ヘルムホルツの自由エネルギー$F[T;V,N]=U(T;V,N)-TS(T;V,N)$を$T$で微分してみる。</p>
+		$$
+		{\partial F[T;V,N]\over\partial T}={\partial U(T,V,N)\over\partial T}-S(T;V,N)-T{\partial S(T;V,N)\over \partial T}
+		$$
+		<p>となる。</p>
+		<div class="setsumei">　ここで行っている微分（$V,N$を一定として$T$で偏微分）は<span class="fukidasi">$V,N$を固定して（系を動かさないようにして）、環境の温度を変える</span>ことを意味している。</div>
+		<p>　すでに示したように、${\partial U(T,V,N)\over\partial T}=T{\partial S(T;V,N)\over \partial T}$だから、</p>
+		$$
+		{\partial F[T;V,N]\over\partial T}=-S(T;V,N)
+		$$
+		<p>である。つまり、$F$を$T$で微分すると$S$が求められる。</p>
+		<p>　ということは、$U(T;V,N)$は</p>
+		$$
+		U(T;V,N)=F[T;V,N]-TS(T;V,N)=F[T;V,N]+T{\partial F[T;V,N]\over \partial T}=-{1\over T^2}{\partial\over \partial T}\left({F[T;V,N]\over T}\right)
+		$$
+		<p>という計算で$F$から求めることができる（ところが、逆はできない！）。</p>
+		<p>　ここで、$F$に対しては「$T$で微分すると$-S$」「$V$で微分すると$-P$」という関係ができている。これはいわば、$T\leftrightarrow S$と$P\leftrightarrow V$という「相棒関係」があるということである（では$N$には相棒はいないのかというと、後で出てくる）。</p>
+		<div class="setsumei">　以下で具体的な例を考えよう。</div>
+		<h3>理想気体の場合</h3>
+		<p>　理想気体の場合の内部エネルギーとヘルムホルツ自由エネルギーは、</p>
+		$$
+		U(T;V,N)=cNRT+Nu,~~~~F[T;V,N]=-NRT\log\left({T^cV\over (T^*)^c v^*N}\right)+Nu
+		$$
+		<p>となった。ここで基準となる体積$V^*$は、$V^*=v^*N$と書きなおしている（$N$依存性をはっきりさせるため）。</p>
+		<p>　ここまで書いてきた$U$は本来$T,V,N$の関数だったが、理想気体の場合は$V$によらない（よって上の式は$U(T;N)=cNRT+Nu$と書き直すべきかもしれない）。</p>
+		<p>　さっき、$F[T;V,N]\to U(T;V,N)$はできるが$U(T;V,N)\to F[T;V,N]$はできない、と述べたが、この例ではそれが非常にわかりやすい（$U(T;N)=cNRT+Nu$という式から$V$の情報は得られそうにない）。</p>
+		<div class="A">　つまり、$U(T;V,N)=cNRT+Nu$という表現は「大事な物理量である$V,P$がどこにもない」という困った式なのである。</div>
+		<div>　となれば、<span class="fukidasi">では、別の変数で表すとどうなる？</span>と考えたくなる。そこで以下で<span class="fukidasi">エントロピー$S$を独立変数にしてみるといいのでは？</span>という考えを進めてみる。</div>
+		<p>　ここでエントロピーはどうなっているかを考えてみよう。</p>
+		$$
+		S=cNR+NR\log\left({T^cV\over (T^*)^c v^*N}\right)
+		$$
+		<p>から、</p>
+		$$
+		\begin{array}{rl}
+		{S\over cNR}-1=&\log\left({TV^{1\over c}\over T^*(v^*N)^{1\over c}}\right)\\
+		\exp\left({S\over cNR}-1\right)=&{TV^{1\over c}\over T^*(v^*N)^{1\over c}}\\
+		\end{array}
+		$$
+		<p>ゆえに、$T={T^*(v^*N)^{1\over c}\over V^{1\over c}}\exp\left({S\over cNR}-1\right)$となる。これを使うと$U$は</p>
+		$$
+		U[S,V,N]=cNR\times{T^*(v^*N)^{1\over c}\over V^{1\over c}}\exp\left({S\over cNR}-1\right)+Nu
+		$$
+		<p>と表現される。$T,V,N$でなく$S,V,N$で表したわけだが、こうすることには意味がある。</p>
+		<div class="A">　なぜこうすることに意味があるかというと、もともとヘルムホルツ自由エネルギーは等温準静操作という$T$が一定になる操作を使って定義されて、内部エネルギーは断熱準静操作という、$S$が一定になる操作を使って定義されているからなのである。つまり、「断熱して仕事をさせる」という状況は${\partial U[S,V,N]\over \partial V}$に表現されている。</div>
+		<div class="box">　というわけで、ここで${\partial U[S,V,N]\over \partial V}$と${\partial F[T;V,N]\over\partial V}$を計算してみよう。</div>
+		<p>　上で考えた$U[S,V,N]$を$S,N$を一定にしつつ$V$で偏微分する。
+		$$
+		{\partial U[S,V,N]\over \partial V}={\partial \over \partial V}\left(cNR\times{T^*(v^*N)^{1\over c}\over V^{1\over c}}\exp\left({S\over cNR}-1\right)+Nu\right)
+		$$
+		という式を見るとややこしそうだが、よく見ると$V$は一箇所しかないので、それ以外の足算になっている部分は微分すると消え、掛算になっている部分は素通りさせて外に出し、結果は</p>
+		$$
+		{\partial U[S,V,N]\over \partial V}=cNR\times{T^*(v^*N)^{1\over c}}\exp\left({S\over cNR}-1\right){\partial \over \partial V}\left({1\over T^{1\over c}}\right)
+		$$
+		となり、この微分は${\partial \over \partial V}\left({1\over T^{1\over c}}\right)=-{1\over c}{1\over V^{{1\over c}+1}}$と実行され、
+		$$
+		{\partial U[S,V,N]\over \partial V}=-NR\times\underbrace{{T^*(v^*N)^{1\over c}\over V^{1\over c}}\exp\left({S\over cNR}-1\right){\partial \over \partial V}\left({1\over T^{1\over c}}\right)}_T\times{1\over V}
+		$$
+		<p>となり、ちゃんと$P={NRT\over V}$が出る。</p>
+		<p>　一方、${\partial F[T,V,N]\over \partial V}$の方も一見ややこしそうだが、微分すべき相手は本質的に$\log V$だけなので、</p>
+		$$
+		{\partial F[T,V,N]\over \partial V}={\partial \over \partial V}\left(-NRT\log\left({T^cV\over (T^*)^c v^*N}\right)+Nu\right)=-NRT {\partial (\log V)\over \partial V}=-{NRT\over V}=-P
+		$$
+		<p>という結果になる。</p>
+		<p>　こうして、違う関数を微分しているのに、結果が同じになった（これはもちろん、偶然ではない）。</p>
+		<h3>完全な熱力学関数</h3>
+		<p>　$F[T;V,N]$は「完全な熱力学関数」だが、$U(T;V,N)$はそうではない。$F[T;V,N]$があれば他の量は作れるが、$U(T,V,N)$からはそうはいかないのである。</p>
+		<p>　圧力$P$は$P(T;V,N)=-{\partial F[T;V,N]\over \partial V}$で出せて、理想気体なら結果は$-{NRT\over V}=-P$となり、状態方程式$PV=NRT$が出てくる（$U$は$V$を含んでないから${\partial U\over\partial V}$のような計算をしても$P$を出すことは不可能である）。</p>
+		<p>　ここで$P=-{\partial F\over \partial V}$となるのは、$F$の定義によって決まることで、いわば「当たり前」である。</p>
+		<p>また、</p>
+		$$
+		S(T;V,N)=-{\partial F[T;V,N]\over \partial T}=NR\log\left({T^cV\over (T^*)^c v^*N}\right)+NRT \times {c\over T}=cNR+NR\log\left({T^cV\over (T^*)^c v^*N}\right)
+		$$
+		<p>のようにしてエントロピーも出てくる。</p>
+		<p>　これを一つの式にまとめて書くと、</p>
+		$$
+		F[T+\mathrm dT;V+\mathrm dV,N]=F[T;V,N]-\underbrace{\left(-{\partial F[T;V,N]\over \partial T}\right)}_S\mathrm dT-\underbrace{\left(-{\partial F[T;V,N]\over \partial V}\right)}_P\mathrm dV
+		$$
+		<p>となる。</p>
+		<div class="A">　こうなると${\partial F[T;V;N]\over\partial N}$の項も付け加えたくなるから、<br>
+		  $$
+		  F[T+\mathrm dT;V+\mathrm dV,N+\mathrm dN]=F[T;V,N]-\underbrace{\left(-{\partial F[T;V,N]\over \partial T}\right)}_S\mathrm dT-\underbrace{\left(-{\partial F[T;V,N]\over \partial V}\right)}_P\mathrm dV+\underbrace{\left({\partial F[T;V,N]\over \partial N}\right)}_\mu\mathrm dN
+		  $$
+		  <p>としよう。$\mu$は<span class="fukidasi">化学ポテンシャル</span>と呼ばれる量で、物質量を増やした時の$F$の増加率になる（←今週はまだここまで話せてない）。これを縮めて、</p>
+		  $$
+		  \mathrm dF[T;V;N]=-S\mathrm dT-P\mathrm dV+\mu\mathrm dN
+		  $$
+		  <p>と書く（最後だけ符号がプラスだが、それぞれの偏微分係数の物理的意味に合わせているのでこうなってもしかたない。</p></div>
+		<h3>完全な熱力学関数としての$U[S,V,N]$</h3>
+		<p>$U(T;V,N)=cNRT+Nu$はこれから圧力を導いたりできないから完全な熱力学関数になってない。では</p>
+		$$
+		U[S,V,N]=cNR\times{T^*(v^*N)^{1\over c}\over V^{1\over c}}\exp\left({S\over cNR}-1\right)+Nu
+		$$
+		<p>はどうか（こっちは完全な熱力学関数なので、括弧を「(」ではなく「[」にする）。これを$V$で微分してマイナスをつけると圧力になることはすでに見つけた（微分のとき、$S,N$を固定して微分していることに注意）。</p>
+		<p>　では温度$T$は出てくるのか、ということでこれを$S$で微分してみると、</p>
+		$$
+		{\partial U[S,V,N]\over \partial S}=cNR\times{T^*(v^*N)^{1\over c}\over V^{{1\over c}}}\times{1\over cNR}\exp\left({S\over cNR}-1\right)={T^*(v^*N)^{1\over c}\over V^{{1\over c}}}\exp\left({S\over cNR}-1\right)=T
+		$$
+		<p>となって、ちゃんと$T$が出てくる。</p>
+		<p>　これは、前に計算した、${\partial U(T,V,N)\over \partial T}=T{\partial S(T,V,N)\over \partial T}$という式を考えてもわかる。これは$\mathrm dV=0,\mathrm dN=0$という状況下において${\mathrm dU\over \mathrm dT}=T{\mathrm dS\over\mathrm dT}$と言っているのだから、$T={\mathrm dU\over\mathrm dS}$（ただし、$V,N$が一定という条件において）である。</p>
+		<p>　つまり、</p>
+		$$
+		U[S+\mathrm dS,V+\mathrm dV,N+\mathrm dN]=U[S,V,N]+\underbrace{\left({\partial U[S,V,N]\over \partial S}\right)}_T\mathrm dS-\underbrace{\left(-{\partial U[S,V,N]\over \partial V}\right)}_P\mathrm dV+\underbrace{\left({\partial U[S,V,N]\over \partial N}\right)}_\mu\mathrm dN
+		$$
+		<p>のようになっている。略記するなら、</p>
+		$$
+		\mathrm dU[S,V,N]=T\mathrm dS-P\mathrm dV+\mu\mathrm dN
+		$$
+		<p>である。</p>
+		<p>　ここで、$-{\partial F[T;V,N]\over \partial V}$も$-{\partial U[S,V,N]\over \partial V}$もどちらも同じ$P$となった。$U$と$F$は$F=U-TS$という関係だから違う関数である。違う関数を、違う方法（一方は$T,N$を固定して、もう一方は$S,N$を固定して）で微分した結果が同じになっている。これは「保証」されていることなのだろうか（今は理想気体の例でそうだったが、いつでもそう言えるのだろうか）、ということを考えてみる。</p>
+		<p>　そのため、まず$T,V,N$を独立変数として、</p>
+		$$
+		F[T;V,N]=U[S(T;V,N),V,N]-T\times S(T;V,N)
+		$$
+		<p>と書いてみて、これを$V$で微分してみると、</p>
+		$$
+		{\partial F[T;V,N]\over \partial V}=
+		\underbrace{{\partial U(S(T;V,N),V,N)\over \partial S}}_T{\partial S\over \partial V}
+		+{\partial U(S(T;V,N),V,N)\over \partial V}
+		-T\times {\partial S(T;V,N)\over \partial V}={\partial U(S(T;V,N),V,N)\over \partial V}
+		$$
+		<p>となる。つまり、$-TS$の項のおかげで、$-{\partial F[T;V,N]\over \partial V}$と$-{\partial U[S,V,N]\over \partial V}$が同じになる。</p>
+		<p>　同じ式を、独立変数が$S,V,N$だと思って書けば</p>
+		$$
+		F[T(S,V,N);V,N]=U[S,V,N]-T(S,V,N)\times S
+		$$
+		<p>となるが、これを$V$で微分すると、</p>
+		$$
+		\underbrace{{\partial F[T(S,V,N);V,N]\over \partial T}}_S{\partial T(S,V,N)\over \partial V}
+		+{\partial F[T(S,V,N);V,N]\over \partial V}
+		={\partial U[S,V,N]\over \partial V}-{\partial T(S,V,N)\over \partial V}\times S
+		$$
+		<p>となってやはり一致する。</p>
+		<p>このように、変数を$T$から$S=-{\partial F\over\partial T}$へ、もしくは$S$から${\partial U\over \partial S}$へとのように変えることを「ルジャンドル変換」と呼ぶ（ルジャンドル変換をちゃんとしないと、完全な熱力学関数にならなくて困る）。</p>
+		<p>　$U$と$F$の間のルジャンドル変換は</p>
+		$$
+		U[S(T;V,N),V,N]=F[T;V,N]-T\overbrace{\partial F[T,V,N]\over \partial T}^{-S}
+		$$
+		<p>または</p>
+		$$
+		F[T(S,V,N);V,N]=U[S,V,N]-S\overbrace{\partial U[S,V,N]\over \partial S}^T
+		$$
+		<p>のように対称な形に書ける（これが、$T\leftrightarrow S$が「相棒」だということ）。</p>
+		<p>　なお、ルジャンドル変換は解析力学でもラグランジアンとハミルトニアンの関係</p>
+		$$
+		H(p(\dot x,x),x)=\overbrace{\partial L(\dot x,x)\over \partial \dot x}^p\dot x -L(\dot x,x)
+		$$
+		<p>として現れた（定義が少し違って、引き算の方向が逆であるが、やっていることは本質的に同じである）。</p>
+		<div class="A">　ルジャンドル変換の一般論は、<input type="button" value="付録の「ルジャンドル変換」" data-inline="true" onclick="location.href='./LegendreTR.html'">を見よ。</div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="エントロピーの性質" data-icon="arrow-l" onclick="location.href='entropy.html#S'">　
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">　
+		<input type="button" value="戻る" data-icon="back" onclick="history.back();">　				
+		<input type="button" value="微分形式によるまとめ" data-icon="arrow-r" onclick="location.href='#diffF'">　
+	  </div>
+	</div>
+	<div data-role="page" id="diffF">
+	  <div data-role="header">
+		<h1>微分形式によるまとめ</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　$U$と$F$は$F=U-TS$という関係でつながった「別の関数」だった。そして、$F$は$T;V,N$という変数で記述すると完全な熱力学関数になり、$U$は$S,V,N$という変数で記述すると、完全な熱力学関数になる。こうなる理由は、$F$は等温準静操作（$T$を一定に保つ操作）における仕事で定義され、$U$は断熱準静操作（$S$を一定に保つ操作）における仕事で定義されているということを思えば納得が行く。</p>
+
+		<p>　それぞれを違う方法（一方は$T,N$を固定して、もう一方は$S,N$を固定して）で$V$で微分した結果は、同じ圧力$P$（にマイナス符号をつけたもの）になっていた（同様に$N$で微分しても結果はどちらも同じになる）。</p>
+		<p>　上で、理想気体の例で具体的に</p>
+		$$
+		{\partial F[T;V,N]\over \partial V}={\partial U[S,V,N]\over\partial V}
+		$$
+		<p>ということを示した。具体的には示してないが、</p>
+		$$
+		{\partial F[T;V,N]\over \partial N}={\partial U[S,V,N]\over\partial N}=\mu
+		$$
+		<p>もほぼ同様に示せる。この量$\mu$は<span class="fukidasi">化学ポテンシャル</span>と呼ばれる量で、物質量を増やした時の$F$もしくは$U$の増加率になる。</p>
+		<div class="A">　たとえば「酸素と水素で水ができる」のような現象が起きる時、酸素分子と水素分子が減る分化学ポテンシャルが減り、水分子が増える分化学ポテンシャルが増加する、ということから化学反応がどのように進むか（当然、全エネルギーが低くなる方向に向かう）ということがわかったりする。</div>
+		<p>　以上は二つの関数が「ルジャンドル変換」でつながっていることで「保証」されている。</p>
+		<div class="setsumei">　ルジャンドル変換の一般論の話は後にまわして、まずこの微分の関係を少しコンパクトに書く方法について説明しておく。</div>
+
+		<p>　ついでながら、残る変数での微分は、</p>
+		$$
+		\begin{array}{rl}
+		{\partial F[T;V,N]\over \partial T}=&S(T;V,N)\\
+		-{\partial U[S,V,N]\over \partial S}=&T(S,V,N)
+		\end{array}
+		$$
+		<p>という関係になっていた（今度は等しいのではなく、互いに変数が移り変わるようになっている）。</p>
+		<p>　変数の間の関係を$F$の場合と$U$の場合でまとめると、</p>
+		<p><img src="UF.png" width="50%" class="floatnone"></p>
+		<p>のようになる。</p>
+		<div class="A">　熱力学的系を考えるとき、我々が知りたい量は$T,S,P,V,\mu,N$の六つだが、そのうち３つが独立変数として「設定できる量」で、残りの３つは「完全な熱力学関数の微分で得られる量」ということになる。</div>
+		<p>　これを微分形式という書き方でまとめておこう。一般に多変数関数$f(x,y,\cdots)$の独立変数が変化したときの変化は、</p>
+		$$
+		f(x+\mathrm dx,y+\mathrm dy,\cdots)=f(x,y,\cdots)+{\partial f(x,y,\cdots)\over\partial x}\mathrm dx+{\partial f(x,y,\cdots)\over\partial y}\mathrm dy+\cdots
+		$$
+		<p>のように書ける。</p>
+		<p>　ヘルムホルツの自由エネルギー$F[T;V,N]$の微小変化は</p>
+		$$
+		F[T+\mathrm dT;V+\mathrm dV,N+\mathrm dN]=F[T;V,N]-\underbrace{\left(-{\partial F[T;V,N]\over \partial T}\right)}_{S(T;V,N)}\mathrm dT-\underbrace{\left(-{\partial F[T;V,N]\over \partial V}\right)}_{P(T;V,N)}\mathrm dV+\underbrace{\left({\partial F[T;V,N]\over \partial N}\right)}_{\mu(T;V,N)}\mathrm dN
+		$$
+		<p>となる。これを縮めて、</p>
+		$$
+		\mathrm dF[T;V;N]=-S(T;V,N)\mathrm dT-P(T;V,N)\mathrm dV+\mu(T;V,N)\mathrm dN
+		$$
+		<p>さらに縮めて、</p>
+		$$
+		\mathrm dF=-S\mathrm dT-P\mathrm dV+\mu\mathrm dN
+		$$
+		<p>と書く（最後だけ符号がプラスだが、それぞれの偏微分係数の物理的意味に合わせているのでこうなってもしかたない。</p>
+		<p>　同様に$U[S,V,N]=F[T(S,V,N);V,N]+T(S,V,N)S$の方の微分を考えると（まず略記で計算する）、</p>
+		$$
+		\mathrm dU=\underbrace{-S\mathrm dT-P\mathrm dV+\mu\mathrm dN}_{\mathrm dF}+\mathrm dT S+T\mathrm dS=T\mathrm dS-P\mathrm dV+\mu\mathrm dN
+		$$
+		<p>となる。ちゃんと関数の引数も含めて書くと、</p>
+		$$
+		\mathrm dU[S,V,N]=T(S,V,N)\mathrm dS-P(S,N,N)\mathrm dV+\mu(S,V,N)\mathrm dN
+		$$				
+		<p>という関係を作ることができる。$\mathrm dF[T;V;N]=-S\mathrm dT-P\mathrm dV+\mu\mathrm dN$にせよ$\mathrm dU[S,V,N]=T\mathrm dS-P\mathrm dV+\mu\mathrm dN$にせよ、<span class="fukidasi">それぞれの独立変数が微小変化した時に従属変数（$F$と$U$）がそれに応答してどのように変化するか</span>を余すことなく記述していることになる。</p>
+		<p>　たとえば、$\mathrm dF[T;V,N]=-S\mathrm dT-P\mathrm dV+\mu\mathrm dN$という式は、</p>
+		<div class="box">
+		  <ul>
+			<li>温度を$\mathrm dT$変化させると、$F$は$\mathrm dT$にエントロピー$S$を掛けた分だけ減る。</li>
+			<li>体積を$\mathrm dV$変化させると、$F$は$\mathrm dV$に圧力$P$を掛けた分だけ減る。</li>
+			<li>物質量を$\mathrm dN$変化させると、$F$は$\mathrm dN$に化学ポテンシャル$\mu$を掛けた分だけ増える。</li>
+		  </ul>
+		</div>
+		<p>と「読み取る」ことができる。</p>
+		<div class="A">　結局、$F$が$T;V,N$を使って書いた時に完全な熱力学関数になるのは、<span class="fukidasi">$T,V,N$の変化によって$F$がどう変わるか</span>が、物理的に意味のある（しかも決して０にならない）量になっているからだと言える（そうならない例を後で述べる）。</div>
+
+		<h3>Eulerの関係式</h3>
+		<p>　新しく化学ポテンシャルが導入されたので、化学ポテンシャルを含む式を１つ導出しておく。</p>
+		<p>　$F[T;V,N]$の３つの引数のうち、$V,N$は示量変数だから、系全体を$\lambda$倍すると、</p>
+		$$
+		\lambda F[T;V,N]=F[T;\lambda V,\lambda N]
+		$$
+		<p>という式ができる。これを$\lambda$で微分すると、</p>
+		$$
+		F[T;V,N]={\partial F[T;\lambda V,\lambda N]\over \partial (\lambda V)}{\partial(\lambda V)\over\partial \lambda}+{\partial F[T;\lambda V,\lambda N]\over \partial (\lambda N)}{\partial(\lambda N)\over\partial \lambda}
+		$$
+		<p>となり、この後$\lambda=1$と置くことで、</p>
+		$$
+		F[T;V,N]={\partial F[T;V,N]\over \partial V}V+{\partial F[T;V,N]\over \partial N}N
+		$$
+		<p>という式を得る（これをEulerの関係式と言う）。理想気体の場合で確認すると、</p>
+		$$
+		{\partial F[T;V,N]\over \partial V}V=-NRT\times {1\over V}\times V=-NRT
+		$$
+		<p>および</p>
+		$$
+		{\partial F[T;V,N]\over \partial N}N=\left( -RT\log\left({T^cV\over (T^*)^c v^*N}\right)-NRT\times\left(-{1\over N}\right)\right)\times N= -NRT\log\left({T^cV\over (T^*)^c v^*N}\right)+NRT
+		$$
+		<p>となってこの例では確かに成立している。</p>
+		<p>　圧力$P$と化学ポテンシャル$\mu$の式を考えると、この式は</p>
+		$$
+		F=-PV+\mu N
+		$$
+		<p>ということになる。つまり$F,P,V,N$がわかれば$\mu$は計算できる量になる。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="ヘルムホルツ自由エネルギーと変分原理" data-icon="arrow-l" onclick="location.href='#delF'">　
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">　
+		<input type="button" value="戻る" data-icon="back" onclick="history.back();">　				
+		<input type="button" value="ルジャンドル変換$U\to F$の物理的意味" data-icon="arrow-r" onclick="location.href='#UtoF'">　
+	  </div>
+	</div>
+			<div data-role="page" id="UtoF">
+			<div data-role="header">
+			  <h1>ルジャンドル変換$U\to F$の物理的意味</h1>
+			</div>
+			<div data-role="content">
+			  <p>　まず、$U\to F$のルジャンドル変換のグラフを見よう。</p>
+			  </p>
+			  <hr>
+			  <div><canvas id="canvasUF" width=200 height=200></canvas>　<canvas id="canvasUF2" width=200 height=200></canvas></div>
+			  <div data-role="fieldcontain">
+				<label for="slider">T:</label>
+				<input type="range" id="slider_T" value="1" min="0" max="3" step="0.01" onChange="t0=Number($('#slider_T').val()); graphUFWrite();" />
+			  </div>
+			  <div data-role="fieldcontain">
+				<label for="slider">V:</label>
+				<input type="range" id="slider_V" value="1" min="0.01" max="3" step="0.01" onChange="v0=Number($('#slider_V').val()); graphUFWrite();" />
+			  </div>
+			  <p>理想気体の内部エネルギーの$S,V,N$を独立変数とした表現は</p>
+			  $$
+			  U[S,V,N]=cNR\times{T^*(v^*N)^{1\over c}\over V^{1\over c}}\exp\left({S\over cNR}-1\right)+Nu
+			  $$
+			  <p>だった。一方ヘルムホルツ自由エネルギー$F$の$T,V,N$を独立変数とした表現は</p>
+			  $$
+			  F[T;V,N]=-NRT\log\left({T^cV\over (T^*)^c v^*N}\right)+Nu
+			  $$
+			  <div class="setsumei">上では$cR=1,N=1,T^*=1,v^*=1,u=0$とグラフがシンプルになるような値を使っている。</div>
+			  <p>${\partial U\over \partial S}=T,{\partial F\over\partial T}=-S$が成立していることに注意。</p>
+			  <div class="box">なお、$U$を$T,V,N$で書くと</p>
+			  $$
+			  U(T;V,N)=cNRT
+			  $$
+			  <p>であり、$F$を$S,V,N$で書くと</p>
+			  $$
+			  F(S,V,N)=NR{T^*(v^*N)^{1\over c}\over V^{1\over c}}\left(1-{S\over cNR}\right)\exp\left({S\over cNR}-1\right)+Nu
+			  $$
+			  <p>となる</p>
+			  <p>（以上二つのグラフは薄い線で表現している）。</p>
+			  </div>
+			  <p>　この「$TS$を引く」ということの物理的意味を述べておこう。$U$と$F$の違いは「断熱されているかどうか」あるいは「周囲から熱という形でエネルギーの補給を受けることができるかどうか」であった。その理屈からするとなんとなく「周囲から熱による補給を受けられる$F$の方が多いはず」と考えて<span class="fukidasi">じゃあなんで引くの？</span>と思ってしまう人もいるかもしれない。</p>
+			  <p>　ここで、<span class="fukidasi">エネルギー（内部エネルギーだろうがヘルムホルツ自由エネルギーだろうが）は絶対値が大事なのではなく『差』が大事</span>という点に注意して欲しい。</p>
+			  <p>　仕事をするには「仕事をするもの」が自分のエネルギーを下げなくてはいけない。等温環境においては、$F=U-TS$を下げることによってその分仕事ができる。断熱操作では「$U$を下げる」ことでしか仕事ができないが、等温操作では「$U$を下げる」ことと「$TS$を増やす（←等温操作なのだからこれは「エントロピー$S$を増やす」ことと同じ）でも仕事ができる、ということになる。</p>
+
+			  <p>　こう考えてもよい。今等温準静操作を考えているから、トータルのエントロピーは増大しない。そこで、環境と系の持つエントロピーの和を$S_全$とする。系は$S$の、環境は$S_全-S$のエントロピーを持っていることになる。</p>
+			  <p>　環境から熱の形で（$T\Delta S$という形で）エネルギーが補給されるとすると、<span class="fukidasi">環境は後$T(S_全-S)$だけエネルギーを補給できる用意がある</span>と考えることもできる。つまり「環境＋系」という全系には「隠れたエネルギー」$T(S_全-S)$がある。このうち$TS_全$の部分は「どうせ定数だし」と忘れることにすれば、$U-TS$が「等温環境の中での系の持つエネルギー」と解釈できることになる。</p>
+			  <div class="A">　例によってお金で説明する。断熱状態、つまり他から熱が入ってこない（お金が補給されない）状況では、サイフの中にある金額だけが「払える金額」である。一方ATMが近くにあるならば、「貯金の残高」も「払える金額」に算入する。
+			  <br>　この「貯金の残高」が$T(S_全-S)$である。もともと$TS_全$が貯金されていて、$TS$は「すでに引き出したお金」だと思えばよい。</div>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" onclick="location.href='#diffF'" data-icon="arrow-l" value="微分形式によるまとめ">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+				<input type="button" onclick="location.href='#Maxwell'" data-icon="arrow-r" value="Maxwellの関係式">
+			</div>
+		</div>
+		<div data-role="page" id="Maxwell">
+			<div data-role="header">
+			  <h1>Maxwellの関係式</h1>
+			</div>
+			<div data-role="content">
+			  <p>　もう一度大事な式を書いておくと、</p>
+			  $$
+			  \begin{array}{rrrr}
+			  \mathrm dF[T;V,N]=&-S(T;V,N)\mathrm dT&-P(T;V,N)\mathrm dV&+\mu(T;V,N)\mathrm dN\\
+			  \mathrm dU[S,V,N]=&T(S,V,N)\mathrm dS&-P(S,V,N)\mathrm dV&+\mu(S,V,N)\mathrm dN
+			  \end{array}
+			  $$
+			  <p>である。この二つは$F=U-TS$という式でつながる。上の段は$T;V,N$の関数として、下の段は$S,V,N$の関数として表現されている。$P,\mu$に関しては表現が違うだけで同じ関数である。</p>
+			  <p>　上の$\mathrm dF$や$\mathrm dU$を「$F$の全微分」「$U$の全微分」と呼ぶ（気持ちは「<big>全</big>ての変数に関する<big>微分</big>を全部並べた」というところ）。</p>
+			  <p>　全微分が全微分であるためには条件があった。その条件の一つの表し方は「二つの偏微分が交換すること」である。たとえば</p>
+			  $$
+			  \begin{array}{rl}
+			  {\partial \over\partial T}\left({\partial \over \partial V} F[T;V,N]\right)=&{\partial \over\partial V}\left({\partial \over \partial T} F[T;V,N]\right)\\
+			  {\partial \over\partial T}\left(-P(T;V,N)\right)=&{\partial \over\partial V}\left(-S(T;V,N)\right)\\
+			  {\partial P(T;V,N)\over\partial T}=&{\partial S(T;V,N)\over\partial V}
+			  \end{array}
+			  $$
+			  <p>である。</p>
+			  <p>　同様に、$\mathrm dF=-S\mathrm dT-P\mathrm dV+\mu\mathrm dN$という式の二つの項の微分を考えると、</p>
+			  $$
+			  -{\partial P(T;V,N)\over\partial N}={\partial \mu(T;V,N)\over\partial V}
+			  $$
+			  $$
+			  -{\partial S(T;V,N)\over\partial N}={\partial \mu(T;V,N)\over\partial T}
+			  $$
+			  <p>のような式を作ることができる（$\mathrm dU$に関しても同様に３セットの式を作ることができる）。これらを<span class="fukidasi">Maxwellの関係式</span>と呼ぶ。</p>
+			  <div class="box">
+				  　これは電磁気での静電場での${\rm rot}~\vec E=0$と同じ式である。まず、静電場で成り立つ$\vec E=-{\rm grad}~V$という式を<br>
+				$$
+				\mathrm dV = -E_x\mathrm dx-E_y\mathrm dy-E_z\mathrm dz
+				$$
+				<br>のように表す（この書き方は$E_x=-{\partial V\over \partial x},E_y=-{\partial V\over \partial y},E_z=-{\partial V\over \partial z}$と三つの式を書くのと同じ）。<br>
+				<br>　このように書ける条件は、たとえば${\partial E_y\over\partial x}={\partial E_x\over\partial y}$（およびこれのサイクリック置換）であった。
+			  </div>
+			  <p>ところで、$U$を$T,V,N$で表現するとすれば、$S(T;V,N)$という関数の微分を考えて、</p>
+			  $$
+			  \mathrm dS(T;V,N)={\partial S(T;V,N)\over \partial T}\mathrm dT+{\partial S(T;V,N)\over \partial V}\mathrm dV+{\partial S(T;V,N)\over \partial N}\mathrm dN
+			  $$
+			  <p>となる。</p><p>　これを代入すれば、</p>
+			  $$
+			  \mathrm dU(T;V,N)=T{\partial S(T;V,N)\over \partial T}\mathrm dT+\left(T{\partial S(T;V,N)\over \partial V}-P\right)\mathrm dV+\left(T{\partial S(T;V,N)\over \partial N}+\mu\right)\mathrm dN
+			  $$
+			  <p>のように$\mathrm dU(T;V,N)$を表すことができる。Maxwellの関係式があるから、</p>
+			  $$
+			  \mathrm dU(T;V,N)=T{\partial S(T;V,N)\over \partial T}\mathrm dT+\left(T{\partial P(T;V,N)\over \partial T}-P\right)\mathrm dV+\left(-T{\partial \mu(T;V,N)\over \partial T}+\mu\right)\mathrm dN
+			  $$
+			  <p>となり、これから${\partial U(T;V,N)\over \partial T}=T{\partial S(T;V,N)\over\partial T},{\partial U(T;V,N)\over \partial V}=T{\partial P(T;V,N)\over\partial T}-P,{\partial U(T;V,N)\over \partial N}=-T{\partial \mu(T;V,N)\over\partial T}+\mu$を読み取ることができる。</p>
+			  <p>　理想気体では$P={NRT\over V}$だから${\partial U(T;V,N)\over \partial V}=T{\partial P(T;V,N)\over\partial T}-P=0$になる。</p>
+			  <P>　つまり理想気体の状態方程式からただちに$U(T;V,N)$が$V$に依らないことがわかる。</P>
+			  <div class="A">　$T,V,N$で表現した$U$が完全な熱力学関数にならないのは、上で述べたように$V$の変化による応答が0になってしまうような状況になっているからである。</div>
+			  <div class="A">　じゃ、$T{\partial P\over \partial T}-P$が0じゃなければ大丈夫かというと、その場合、$\mathrm d U$を書くことはできているけど、$T{\partial P\over \partial T}-P$から圧力$P$を求めることができない（場合が多い）。たとえば$P=aT+bT^2+\cdots$のように$T$に比例する項があったとすると、$T{\partial P\over \partial T}-P$には$a$が含まれないので、情報が消えてしまう。</div>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" onclick="location.href='#UtoF'" data-icon="arrow-l" value="ルジャンドル変換$U\to F$の物理的意味">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+				<input type="button" onclick="location.href='./phase.html'" data-icon="arrow-r" value="相転移と相の共存">
+			</div>
+		</div>
+  </body>
+</html>

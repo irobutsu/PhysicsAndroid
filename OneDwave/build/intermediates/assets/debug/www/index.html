@@ -1,0 +1,137 @@
+<!-- Copyright (c) 2012 Mobile Developer Solutions -->
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-type" name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, charset=UTF-8">
+    <title>１次元波動のアニメーション</title>
+	<style type="text/css">
+	 .aka{
+	   color: #D00;
+	 }
+	 .ao{
+	   color: #00D;
+	 }
+	 .ki{
+	   color:#880;
+	 }
+	 .teihen {
+	   color: #D00;
+	 }
+	 .takasa {
+	   color: #00D;
+	 }
+	 .shahen {
+	   color: #880;
+	 }
+	</style>
+	<script type="text/javascript" charset="utf-8" src="cordova-1.9.0.js"></script>
+  	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="graphscreen.js" type="text/javascript"></script>
+	</head>
+  
+  <body onload="init();">
+  	<script type="text/javascript">
+	 var gs;
+	 function init(){
+	   gs=new GraphScreen("canvas0",8,2.5,0.9);
+	   gs.setLeft(-1);
+	   gs.setBottom(-1.25);
+	   gs.gobackOriginalSize();
+	   gs.writeContents=function() {
+		 if( !nowAnime ) {
+		   graphWrite(gs);
+		 }
+	   }
+	   graphWrite(gs);
+	 }
+	 var nowAnime=true;
+	 var k=Math.PI/2;
+	var omega=Math.PI;
+	var t=0;
+	function wave(x,t) {
+		return Math.sin(k*x-omega*t);
+	}
+	function waveV(x,t) {
+		return -0.2*omega*Math.cos(k*x-omega*t);
+	}
+	function graphWrite(gs) {
+		var ct=gs.ctx;
+		gs.setScale();
+    	gs.clearALL();
+		ct.fillStyle="rgb(235,255,255)";
+		ct.beginPath();
+		ct.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+
+		gs.writeCoordinate();
+		if( sFlg ) {
+			ct.fillStyle="rgba(200,200,200,0.5)";
+			ct.fillRect(gs.leftwx,gs.bottomy,0.95-gs.leftwx,gs.h);
+			ct.fillRect(1.05,gs.bottomy,gs.rightwx-1.05,gs.h);
+			ct.beginPath();
+			ct.strokeStyle="rgb(0,200,0)";
+			ct.moveTo(0.95,wave(0.95,t));
+			for(x=0.96; x < 1.05 ; x += 0.01 ) {
+				ct.lineTo(x,wave(x,t));
+			}
+		} else {
+			ct.beginPath();
+			ct.strokeStyle="rgb(0,200,0)";
+			ct.moveTo(gs.leftwx,wave(gs.leftwx,t));
+			for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.01 ) {
+				ct.lineTo(x,wave(x,t));
+			}
+		}
+		ct.stroke();
+		var startx,endx;
+		if( sFlg ) {
+			startx =1; endx=1;
+		} else {
+			startx = gs.leftwx; endx=gs.rightwx;
+		}
+		for(x=startx; x<= endx ; x += 0.25 ) {
+			ct.fillStyle="rgba(0,0,255,0.7)";
+			ct.beginPath();
+			var y=wave(x,t);
+			ct.arc(x,y,0.05,0,2*Math.PI,false);
+			ct.fill();	
+			if( vFlg ) {
+				writeYaY(ct,0.03,y,y+waveV(x,t),x,"rgba(155,155,0,0.6)");	
+			}
+			if( fFlg ) {
+				writeYaY(ct,0.02,y,y-0.06*omega*omega*wave(x,t),x,"rgba(255,0,0,0.6)");	
+			}
+		}	
+		t += 0.03;
+		setTimeout("graphWrite(gs);",100);
+	}	
+	var fFlg=false;
+	var vFlg=false;
+	var sFlg=false;
+	function writeYaY(ct,h,x1,x2,y,col) {
+		var len=x2-x1;
+		if( Math.abs(len) < 4*h ) {
+			h=Math.abs(len)/4;
+		 }
+		 if( len <0 ) {
+		   h=-h;
+	 	}
+	 	ct.fillStyle=col;
+	 	ct.beginPath();
+		ct.moveTo(y+h,x1);
+		ct.lineTo(y-h,x1);
+		ct.lineTo(y-h,x2-2*h);
+		ct.lineTo(y-2*h,x2-2*h);
+		ct.lineTo(y,x2);
+		ct.lineTo(y+2*h,x2-2*h);
+		ct.lineTo(y+h,x2-2*h);
+		ct.closePath();
+		ct.fill();
+	}
+	</script>
+	<p>このプログラムは、１次元波動の進行をアニメーションで見るものです。</p>
+	<p></p>
+		<div align="center"><canvas id="canvas0" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+		<p></p>
+	<p><a href="OneD.html">次のページ</a>で、波のグラフを操作することができます。</p>	
+  </body>
+</html>

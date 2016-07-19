@@ -1,0 +1,1320 @@
+<!Doctype html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="ss.css" rel="stylesheet" type="text/css"/>
+		<link href="jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+		<script src="jquery.js" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="dragmanscreen.js" type="text/javascript"></script>
+		<script src="draggablepoint.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		function marume4(x) {
+			x*=10000;
+			x=Math.round(x);
+			x /= 10000; //
+			return x;
+		}
+		var Doukei=function(t,c) {
+			DraggablePoint.call(this,0,0,1,c);
+			this.val=t;
+			this.inP=function(xx,yy) {
+				var t=Math.atan2(yy,xx);
+				while( t > this.val +Math.PI ) {
+					t -=2*Math.PI;
+				}
+				while( t < this.val -Math.PI ) {
+					t +=2*Math.PI;
+				}
+				if( Math.abs(t-this.val) < 0.1 ) {
+					return true;
+				} else {
+					return false;
+				}
+			};
+			this.setXY=function(xx,yy) {
+				xx += this.shiftx;
+				yy += this.shifty;
+				this.val0=this.val;
+				this.val=Math.atan2(yy,xx);
+				while( this.val > this.val0+Math.PI ) {
+					this.val -= 2*Math.PI;
+				}
+				while( this.val < this.val0-Math.PI ) {
+					this.val += 2*Math.PI;
+				}
+			};
+			this.write=function(ct) {
+				ct.beginPath();
+				ct.strokeStyle=this.col;
+				ct.moveTo(0,0);
+				ct.lineTo(Math.cos(this.val),Math.sin(this.val));
+				ct.stroke();
+				ct.fillStyle="rgba(255,100,0,0.5)";
+				ct.beginPath();
+				ct.arc(0,0,0.1,0,2*Math.PI,true);
+				ct.fill();
+				var theta=this.val;
+				ct.fillStyle="rgba(180,180,255,0.5)";
+				ct.arc(Math.cos(theta),Math.sin(theta),0.1,0,2*Math.PI,true);
+				ct.fill();
+			};
+		};
+		var nowgs;
+
+		Doukei.prototype=Object.create(DraggablePoint.prototype);
+		Doukei.prototype.constructor=Doukei;
+
+		$(document).delegate('#diffsin','pageinit',function(e) {
+			gs4_0=new DragmanScreen("canvas4_0",9.2,2.6,0.85);
+			gs4_0.setLeft(-1.3);
+			gs4_0.setBottom(-1.3);
+			gs4_0.gobackOriginalSize();
+			gs4_0.writeContents=function() {
+				allSinWrite(gs4_0);
+			};
+			gs4_0.theta=0.25*Math.PI;
+			gs4_0.orgx=3.0;
+			gs4_0.doukei=new Doukei(0.25*Math.PI,"rgb(100,100,0)");
+			gs4_0.pushDragObjList(gs4_0.doukei);
+			nowgs=gs4_0;
+			anime();
+		});
+		function allSinWrite(gs) {
+			var ct=gs.ctx;
+			gs.setScale();
+			gs.clearALL();
+			ct.fillStyle="rgb(235,255,255)";
+			ct.fillRect(gs.leftwx,gs.bottomy,2.6,gs.h);
+			ct.fillStyle="rgb(255,255,235)";
+			ct.fillRect(1.4,gs.bottomy,gs.w,gs.h);
+			ct.beginPath();
+			ct.strokeStyle="rgb(200,200,200)";
+			ct.arc(0,0,1,0,2*Math.PI,false);
+			ct.stroke();
+			ct.strokeStyle="rgb(0,0,0)";
+			ct.fillStyle="rgb(0,0,0)";
+			writeTatejiku(ct,1.3,-1.3,0);
+			writeYokojiku(ct,1.3,-1.3,0);
+			writeYokojiku2(ct,7.8,1.4,0);
+
+			var th=gs.doukei.val;
+			document.getElementById("theta").innerHTML=("θ="+marume4(th)+"ラジアン（"+marume4(th*180/ Math.PI)+"度）");
+			//
+			var sinth=Math.sin(th);
+			var costh=Math.cos(th);
+			document.getElementById("sin").innerHTML=("sinθ="+marume4(sinth));
+			document.getElementById("cos").innerHTML=("cosθ="+marume4(costh));
+			
+			// thが表示できる範囲にあるかをチェック。
+			// gs.orgx==3 の時は-0.5*Math.PIから1.5*Math.PIまでを表示している。
+			// -0.5*Math.PI-(gs.orgx-3)から-(gs.orgx-3)+1.5*Math.PIまでを表示する。
+			//						  
+			if( th < -(gs.orgx-3)-0.5*Math.PI ) {
+				gs.orgx = 3-(th +0.5*Math.PI);
+			}
+			if( th > -(gs.orgx-3)+1.5*Math.PI ) {
+				gs.orgx = 3-(th-1.5*Math.PI);
+			}
+
+			if( gs.orgx >= 1.4 && gs.orgx <= 7.8 ) {
+				writeTatejiku(ct,1.3,-1.3,gs.orgx);
+			}
+			ct.strokeStyle="rgb(0,0,200)";
+			ct.fillStyle="rgb(0,0,200)";
+			ct.beginPath();
+			var th1=-(gs.orgx-3)-0.5*Math.PI;
+			ct.moveTo(3.0-0.5*Math.PI,Math.sin(th1));
+			var x;
+			for(x=th1+Math.PI / 50; x<=th1+2*Math.PI ; x+=Math.PI / 50 ) {
+				ct.lineTo(gs.orgx+x,Math.sin(x));
+			}
+			ct.lineTo(gs.orgx+x,Math.sin(x));
+			ct.stroke();
+			ct.strokeStyle="rgb(200,0,0)";
+			ct.beginPath();
+			th1=-(gs.orgx-3)-0.5*Math.PI;
+			ct.moveTo(3.0-0.5*Math.PI,Math.cos(th1));
+			var x;
+			for(x=th1+Math.PI/ 50; x<=th1+2*Math.PI ; x+=Math.PI/ 50 ) {
+				ct.lineTo(gs.orgx+x,Math.cos(x));
+			}
+			ct.lineTo(gs.orgx+x,Math.cos(x));
+			ct.stroke();
+			ct.strokeStyle="rgba(0,0,0,0.1)";
+			ct.beginPath();
+			ct.moveTo(costh,sinth);
+			ct.lineTo(gs.orgx+th,sinth);
+			ct.stroke();
+
+			ct.beginPath();
+			ct.strokeStyle="rgba(100,100,0,0.3)";
+			ct.moveTo(0.8,0);
+			if( th > 0 ) {
+				for( th1=0; th1 < th ; th1 += 0.05 ) {
+					ct.lineTo((0.8-th1*0.01)*Math.cos(th1),(0.8-th1*0.01)*Math.sin(th1));
+				}
+			} else {
+				for( th1=0; th1 > th ; th1 -= 0.05 ) {
+					ct.lineTo((0.8+th1*0.01)*Math.cos(th1),(0.8+th1*0.01)*Math.sin(th1));
+				}
+			}
+			ct.stroke();
+			gs.doukei.write(ct);
+			ct.beginPath();
+			ct.fillStyle="rgba(0,255,0,0.3)";
+			ct.strokeStyle="rgb(0,0,200)";
+			ct.moveTo(costh,sinth);
+			ct.lineTo(costh,0);
+			ct.lineTo(0,0);
+			ct.fill();
+			ct.beginPath();
+			ct.moveTo(costh,sinth);
+			ct.lineTo(costh,0); 
+			ct.moveTo(gs.orgx+th-0.01,0);
+			ct.lineTo(gs.orgx+th-0.01,sinth);
+			ct.stroke();
+			ct.strokeStyle="rgb(200,0,0)";
+			ct.beginPath();
+			ct.moveTo(0,0);
+			ct.lineTo(costh,0);
+			ct.moveTo(gs.orgx+th+0.01,0);
+			ct.lineTo(gs.orgx+th+0.01,costh);
+			ct.stroke();
+			ct.fillStyle="rgba(180,180,0,0.3)";
+			ct.beginPath();
+			ct.moveTo(costh,sinth);
+			ct.lineTo(costh-0.5*sinth,sinth+0.5*costh);
+			ct.lineTo(costh,sinth+0.5*costh);
+			ct.fill();
+			ct.fillStyle="rgba(180,180,255,0.3)";
+			ct.beginPath();
+			var hst;
+			var hct=0.5*costh;
+			if( sinth <0 ) {
+				hst=-0.5*sinth;
+			} else {
+				hst=0.5*sinth;
+			}
+			ct.moveTo(gs.orgx+th,sinth);
+			ct.lineTo(gs.orgx+th+0.5,sinth+hct);
+			ct.lineTo(gs.orgx+th+0.5,sinth);
+			ct.fill();
+			ct.fillStyle="rgba(255,180,180,0.3)";
+			ct.beginPath();
+			hst=0.5*sinth;
+			if( hct < 0 ) {
+				hct=-hct;
+			}
+			//	 ct.moveTo(gs.orgx+th,costh);
+			//	 ct.lineTo(gs.orgx+th+0.5,costh-hst);
+			//	 ct.lineTo(gs.orgx+th+0.5,costh);
+			//	 ct.fill();
+
+			ct.strokeStyle="rgb(180,180,255)";
+			ct.beginPath();
+			ct.moveTo(costh,sinth);
+			ct.lineTo(costh,sinth+0.5*costh);
+			ct.moveTo(gs.orgx+th+0.49,sinth);
+			ct.lineTo(gs.orgx+th+0.49,sinth+0.5*costh);
+			ct.stroke();
+			ct.strokeStyle="rgb(255,180,180)";
+			ct.beginPath();
+			ct.moveTo(costh-0.5*sinth,sinth+0.5*costh);
+			ct.lineTo(costh,sinth+0.5*costh);
+			//	 ct.moveTo(gs.orgx+th+0.51,costh-0.5*sinth);
+			//	 ct.lineTo(gs.orgx+th+0.51,costh);
+			ct.stroke();
+			ct.strokeStyle="rgba(0,0,0,0.1)";
+			ct.beginPath();
+			var costht=Math.cos(th+t);
+			var sintht=Math.sin(th+t);
+			ct.moveTo(costht,0);
+			ct.lineTo(costht,sintht);
+			ct.lineTo(0,0);
+			ct.moveTo(costht,sintht);
+			ct.lineTo(gs.orgx+th+t,sintht);
+			ct.lineTo(gs.orgx+th+t,sinth);
+			ct.stroke();
+			t +=0.02;
+			if( t> 0.5 ) {
+				t=0;
+			}
+		}
+		var t=0;
+		function anime() {
+			allSinWrite(nowgs);
+			setTimeout("anime();",100);
+		}
+
+		function writeYokojiku(ct,x1,x2,y1) {
+			ct.strokeStyle="rgb(150,0,0)";
+			ct.fillStyle="rgb(150,0,0)";
+			ct.beginPath();
+			ct.moveTo(x1,y1);
+			ct.lineTo(x1-0.2,y1+0.1);
+			ct.lineTo(x1-0.2,y1-0.1);
+			ct.closePath();
+			ct.fill();
+			ct.beginPath();
+			ct.moveTo(x1-0.1,y1);
+			ct.lineTo(x2,y1);
+			ct.stroke();
+		}
+		function writeYokojiku2(ct,x1,x2,y1) {
+			ct.strokeStyle="rgb(0,0,0)";
+			ct.fillStyle="rgb(0,0,0)";
+			ct.beginPath();
+			ct.moveTo(x1,y1);
+			ct.lineTo(x1-0.2,y1+0.1);
+			ct.lineTo(x1-0.2,y1-0.1);
+			ct.closePath();
+			ct.fill();
+			ct.beginPath();
+			ct.moveTo(x1-0.1,y1);
+			ct.lineTo(x2,y1);
+			ct.stroke();
+		}
+		function writeTatejiku(ct,y1,y2,x1) {
+			ct.strokeStyle="rgb(0,0,150)";
+			ct.fillStyle="rgb(0,0,150)";
+			ct.beginPath();
+			ct.moveTo(x1,y1);
+			ct.lineTo(x1+0.1,y1-0.2);
+			ct.lineTo(x1-0.1,y1-0.2);
+			ct.closePath();
+			ct.fill();
+			ct.beginPath();
+			ct.moveTo(x1,y2,0);
+			ct.lineTo(x1,y1-0.1);
+			ct.stroke();
+		}
+		</script>
+		<style type="text/css">
+		/* 通常時 */
+		button {
+			font-weight:bold;
+			border:3px solid #999;
+			border-right-color:#333;
+			border-bottom-color:#333;
+			border-radius:10px;
+			color:#333;
+			width:auto;
+			text-decoration:none;
+			float:left;
+			margin-right:10px;
+			background-color: #DDE;
+		}
+		</style>
+		<title>自然科学のための数学2015年度第９講</title>
+	</head> 
+	<body>
+		<div data-role="page" id="diffsin">
+			<div data-role="header">
+				<h1>三角関数の微分：sin（復習）</h1>
+			</div>
+			<div data-role="content">
+				<h3>sinの微分（復習）</h3>
+				<p>前回、数式を使って、</p>
+				\begin{equation}
+				\sin ({\theta}+\mathrm{d}\theta)= \sin {\theta}+\underbrace{\cos {\theta}}_{微係数}\mathrm{d}\theta 
+				\end{equation}
+				<p>となる（$f({x}+\mathrm{d}x)=f({x})+f'({x})\mathrm{d}x$と比較せよ）ということから、</p>
+				<div class="box">
+					sinの微分
+					\begin{equation}
+					\begin{array}{rl}
+					{\mathrm{d} }(\sin {\theta})=&\cos{\theta} \mathrm{d}\theta,~~~~
+					{\mathrm{d} \over \mathrm{d}\theta}(\sin {\theta})=\cos{\theta}
+					\end{array}
+					\end{equation}
+				</div>
+				<p>と示した。</p>
+				<p>　同じことを図で考えると、</p>
+				<p><img src="../sizensuugaku/diffsin.png" width="50%" class="floatnone"></p>
+				<p>のように、角度${\theta}$を$\mathrm d\theta$だけ変化させた時の、「三角形の高さ」である<span class="ao">$\sin\theta$</span>の変化を考える。図に「相似な三角形」として示している<span class="footnote">「小さい方の三角形の斜辺は曲線だから相似な三角形とは言えないぞ！」と思う人もいるかもしれないが、今$\mathrm d\theta$をどんどん小さくしているので、この曲線は限りなく直線に近い</span>ように、$\mathrm d\theta$という長さの弧を斜辺として微小な直角三角形ができていて、この直角三角形の高さにあたる部分が$\mathrm d\theta \cos{\theta}$である。つまり$\sin {\theta}$の微小変化が$\cos {\theta} \mathrm d\theta$と書けるから、微係数は$\cos \theta$である。</p>
+
+				<div class="A">　アニメーションで$\theta$が$\mathrm d\theta$変化する様子を見よう。</div>
+				<div class="setsumei">　下左の図は半径１の円（単位円）を描いたもので、中心から円周の一点に向かっている棒の角度に応じて、<span class="ao">sinθ</span>,<span class="aka">cosθ</span>の値が決まる。</div>
+				<div align="center"><canvas id="canvas4_0" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+				<div id="theta"></div>
+				<div><span id="sin" class="ao"></span>,<span id="cos" class="aka"></span></div>
+				<div class="setsumei">↑の棒の角度はドラッグによって変えることができる。</div>
+				<p>	<img src="../sizensuugaku/diffsin.png" width="30%" class="floatnone"></p>
+				<p>　上の図は長さを描き込んだものである。θが変化したことによる「高さ」<span class="ao">sinθ</span>の変化量である<span class="ao">d(sinθ)</span>がdθ×<span class="aka">cosθ</span>に等しいことが読み取れる。</p>
+				<p>　右側のグラフは<span class="ao">sinθ</span>,<span class="aka">cosθ</span>のグラフであるが、そちらにも、<img src="../sizensuugaku/diffsin2.png" width="23%" class="floatnone">のように傾きが表示してある。この「傾き」が確かに<span class="aka">cosθ</span>に比例していることを確認しよう。</p>
+				<p>　動径の棒をドラッグして動かすことができるので、いろんな場合について確かに<span class="ao">sinθ</span>の変化（増減）が<span class="aka">cosθ</span>に比例していることを動かしながら実感して欲しい。
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#diffcos" data-icon="arrow-r">三角関数の微分：cos</a>
+			</div>
+		</div>
+		<div data-role="page" id="diffcos">
+			<div data-role="header">
+				<h1>三角関数の微分：cos</h1>
+			</div>
+			<div data-role="content">
+				<script type="text/javascript">
+				var nowgs_cos;
+				$(document).delegate('#diffcos','pageinit',function(e) {
+					gs_cos=new DragmanScreen("canvas_cos",9.2,2.6,0.85);
+					gs_cos.setLeft(-1.3);
+					gs_cos.setBottom(-1.3);
+					gs_cos.gobackOriginalSize();
+					gs_cos.writeContents=function() {
+						allCosWrite(gs_cos);
+					};
+					gs_cos.theta=0.25*Math.PI;
+					gs_cos.orgx=3.0;
+					gs_cos.doukei=new Doukei(0.25*Math.PI,"rgb(100,100,0)");
+					gs_cos.pushDragObjList(gs_cos.doukei);
+					nowgs_cos=gs_cos;
+					anime_cos();
+				});
+				function allCosWrite(gs) {
+					var ct=gs.ctx;
+					gs.setScale();
+					gs.clearALL();
+					ct.fillStyle="rgb(235,255,255)";
+					ct.fillRect(gs.leftwx,gs.bottomy,2.6,gs.h);
+					ct.fillStyle="rgb(255,255,235)";
+					ct.fillRect(1.4,gs.bottomy,gs.w,gs.h);
+					ct.beginPath();
+					ct.strokeStyle="rgb(200,200,200)";
+					ct.arc(0,0,1,0,2*Math.PI,false);
+					ct.stroke();
+					ct.strokeStyle="rgb(0,0,0)";
+					ct.fillStyle="rgb(0,0,0)";
+					writeTatejiku(ct,1.3,-1.3,0);
+					writeYokojiku(ct,1.3,-1.3,0);
+					writeYokojiku2(ct,7.8,1.4,0);
+
+					var th=gs.doukei.val;
+					document.getElementById("theta_c").innerHTML=("θ="+marume4(th)+"ラジアン（"+marume4(th*180/ Math.PI)+"度）");
+					//
+					var sinth=Math.sin(th);
+					var costh=Math.cos(th);
+					document.getElementById("sin_c").innerHTML=("sinθ="+marume4(sinth));
+					document.getElementById("cos_c").innerHTML=("cosθ="+marume4(costh));
+					
+					// thが表示できる範囲にあるかをチェック。
+					// gs.orgx==3 の時は-0.5*Math.PIから1.5*Math.PIまでを表示している。
+					// -0.5*Math.PI-(gs.orgx-3)から-(gs.orgx-3)+1.5*Math.PIまでを表示する。
+					//						  
+					if( th < -(gs.orgx-3)-0.5*Math.PI ) {
+						gs.orgx = 3-(th +0.5*Math.PI);
+					}
+					if( th > -(gs.orgx-3)+1.5*Math.PI ) {
+						gs.orgx = 3-(th-1.5*Math.PI);
+					}
+
+					if( gs.orgx >= 1.4 && gs.orgx <= 7.8 ) {
+						writeTatejiku(ct,1.3,-1.3,gs.orgx);
+					}
+					ct.strokeStyle="rgb(0,0,200)";
+					ct.fillStyle="rgb(0,0,200)";
+					ct.beginPath();
+					var th1=-(gs.orgx-3)-0.5*Math.PI;
+					ct.moveTo(3.0-0.5*Math.PI,Math.sin(th1));
+					var x;
+					for(x=th1+Math.PI / 50; x<=th1+2*Math.PI ; x+=Math.PI / 50 ) {
+						ct.lineTo(gs.orgx+x,Math.sin(x));
+					}
+					ct.lineTo(gs.orgx+x,Math.sin(x));
+					ct.stroke();
+					ct.strokeStyle="rgb(100,200,200)";
+					ct.beginPath();
+					var th1=-(gs.orgx-3)-0.5*Math.PI;
+					ct.moveTo(3.0-0.5*Math.PI,-Math.sin(th1));
+					var x;
+					for(x=th1+Math.PI / 50; x<=th1+2*Math.PI ; x+=Math.PI / 50 ) {
+						ct.lineTo(gs.orgx+x,-Math.sin(x));
+					}
+					ct.lineTo(gs.orgx+x,-Math.sin(x));
+					ct.stroke();
+
+					ct.strokeStyle="rgb(200,0,0)";
+					ct.beginPath();
+					th1=-(gs.orgx-3)-0.5*Math.PI;
+					ct.moveTo(3.0-0.5*Math.PI,Math.cos(th1));
+					var x;
+					for(x=th1+Math.PI/50; x<=th1+2*Math.PI ; x+=Math.PI/50 ) {
+						ct.lineTo(gs.orgx+x,Math.cos(x));
+					}
+					ct.lineTo(gs.orgx+x,Math.cos(x));
+					ct.stroke();
+					ct.strokeStyle="rgba(0,0,0,0.1)";
+					ct.beginPath();
+					ct.moveTo(-sinth,costh);
+					ct.lineTo(gs.orgx+th,costh);
+					ct.stroke();
+
+					ct.beginPath();
+					ct.strokeStyle="rgba(100,100,0,0.3)";
+					ct.moveTo(0,0.8);
+					if( th > 0 ) {
+						for( th1=0; th1 < th ; th1 += 0.05 ) {
+							ct.lineTo(-(0.8-th1*0.01)*Math.sin(th1),(0.8-th1*0.01)*Math.cos(th1));
+						}
+					} else {
+						for( th1=0; th1 > th ; th1 -= 0.05 ) {
+							ct.lineTo(-(0.8+th1*0.01)*Math.sin(th1),(0.8+th1*0.01)*Math.cos(th1));
+						}
+					}
+					ct.stroke();
+					gs.doukei.write(ct);
+					ct.beginPath();
+					ct.fillStyle="rgba(0,255,0,0.3)";
+					ct.strokeStyle="rgb(0,0,200)";
+					ct.moveTo(-sinth,costh);
+					ct.lineTo(0,costh);
+					ct.lineTo(0,0);
+					ct.fill();
+					ct.beginPath();
+					ct.moveTo(-sinth,costh);
+					ct.lineTo(0,costh); 
+					ct.stroke();
+					ct.strokeStyle="rgb(150,200,200)";
+					ct.beginPath();
+					ct.moveTo(gs.orgx+th-0.01,0);
+					ct.lineTo(gs.orgx+th-0.01,-sinth);
+					ct.stroke();
+					ct.strokeStyle="rgb(200,0,0)";
+					ct.beginPath();
+					ct.moveTo(0,0);
+					ct.lineTo(0,costh);
+					ct.moveTo(gs.orgx+th+0.01,0);
+					ct.lineTo(gs.orgx+th+0.01,costh);
+					ct.stroke();
+					ct.fillStyle="rgba(180,180,0,0.3)";
+					ct.beginPath();
+					ct.moveTo(-sinth,costh);
+					ct.lineTo(-sinth-0.5*costh,costh-0.5*sinth);
+					ct.lineTo(-sinth,costh-0.5*sinth);
+					ct.fill();
+					//	 ct.fillStyle="rgba(180,180,255,0.3)";
+					//	 ct.beginPath();
+					var hst;
+					var hct=0.5*costh;
+					if( sinth <0 ) {
+						hst=-0.5*sinth;
+					} else {
+						hst=0.5*sinth;
+					}
+					//	 ct.moveTo(gs.orgx+th,sinth);
+					//	 ct.lineTo(gs.orgx+th+0.5,sinth+hct);
+					//	 ct.lineTo(gs.orgx+th+0.5,sinth);
+					//	 ct.fill();
+					ct.fillStyle="rgba(255,180,180,0.3)";
+					ct.beginPath();
+					hst=0.5*sinth;
+					if( hct < 0 ) {
+						hct=-hct;
+					}
+					ct.moveTo(gs.orgx+th,costh);
+					ct.lineTo(gs.orgx+th+0.5,costh-hst);
+					ct.lineTo(gs.orgx+th+0.5,costh);
+					ct.fill();
+
+					ct.strokeStyle="rgb(180,180,255)";
+					ct.beginPath();
+					ct.moveTo(-sinth-0.5*costh,costh-0.5*sinth);
+					ct.lineTo(-sinth,costh-0.5*sinth);
+					//	 ct.moveTo(gs.orgx+th+0.49,sinth);
+					//	 ct.lineTo(gs.orgx+th+0.49,sinth+0.5*costh);
+					ct.stroke();
+					ct.strokeStyle="rgb(255,180,180)";
+					ct.beginPath();
+					ct.moveTo(-sinth,costh-0.5*sinth);
+					ct.lineTo(-sinth,costh);
+					ct.moveTo(gs.orgx+th+0.51,costh-0.5*sinth);
+					ct.lineTo(gs.orgx+th+0.51,costh);
+					ct.stroke();
+					ct.strokeStyle="rgba(0,0,0,0.1)";
+					ct.beginPath();
+					var costht=Math.cos(th+t);
+					var sintht=Math.sin(th+t);
+					ct.moveTo(0,costht);
+					ct.lineTo(-sintht,costht);
+					ct.lineTo(0,0);
+					ct.moveTo(-sintht,costht);
+					ct.lineTo(gs.orgx+th+t,costht);
+					ct.lineTo(gs.orgx+th+t,costh);
+					ct.stroke();
+					t +=0.02;
+					if( t> 0.5 ) {
+						t=0;
+					}
+				}
+				var t=0;
+				function anime_cos() {
+					allCosWrite(nowgs_cos);
+					setTimeout("anime_cos();",100);
+				}
+
+				function writeYokojiku(ct,x1,x2,y1) {
+					ct.strokeStyle="rgb(0,0,150)";
+					ct.fillStyle="rgb(0,0,150)";
+					ct.beginPath();
+					ct.moveTo(x2,y1);
+					ct.lineTo(x2+0.2,y1+0.1);
+					ct.lineTo(x2+0.2,y1-0.1);
+					ct.closePath();
+					ct.fill();
+					ct.beginPath();
+					ct.moveTo(x2+0.1,y1);
+					ct.lineTo(x1,y1);
+					ct.stroke();
+				}
+				function writeYokojiku2(ct,x1,x2,y1) {
+					ct.strokeStyle="rgb(0,0,0)";
+					ct.fillStyle="rgb(0,0,0)";
+					ct.beginPath();
+					ct.moveTo(x1,y1);
+					ct.lineTo(x1-0.2,y1+0.1);
+					ct.lineTo(x1-0.2,y1-0.1);
+					ct.closePath();
+					ct.fill();
+					ct.beginPath();
+					ct.moveTo(x1-0.1,y1);
+					ct.lineTo(x2,y1);
+					ct.stroke();
+				}
+				function writeTatejiku(ct,y1,y2,x1) {
+					ct.strokeStyle="rgb(150,0,0)";
+					ct.fillStyle="rgb(150,0,0)";
+					ct.beginPath();
+					ct.moveTo(x1,y1);
+					ct.lineTo(x1+0.1,y1-0.2);
+					ct.lineTo(x1-0.1,y1-0.2);
+					ct.closePath();
+					ct.fill();
+					ct.beginPath();
+					ct.moveTo(x1,y2,0);
+					ct.lineTo(x1,y1-0.1);
+					ct.stroke();
+				}
+				</script>
+				<h3>cosの微分</h3>
+				<p><img src="../sizensuugaku/diffcos_orig.png" width="50%" class="floatnone"></p>
+				<p>こっちはまず図で考えよう。右の図は、$\sin$の微分の時と同様、斜辺が1の直角三角形の角度を少し変えてみたものだが、今度は底辺である$\cos \theta$の変化を見ている。やはり相似な三角形ができていることを考えると、$\cos \theta$の変化量は$\sin {\theta} \mathrm d\theta$ということになりそうである。</p>
+				<p>ところがここで注意すべき点があって、それはこの$\cos \theta$は減っている（変化の方向が負の方向である）ということである。ゆえに、\wrapfigen</p>
+				<div class="box"><h4>cosの微分</h4>
+					\begin{equation}
+					\begin{array}{rl}
+					\mathrm d (\cos {\theta})=& -\sin {\theta} \mathrm d\theta,~~~
+					{\mathrm d \over \mathrm d\theta}(\cos {\theta})= -\sin {\theta}
+					\end{array} 
+					\end{equation}
+				</div>
+				<p>のように符号をつけるのが正しい。</p>
+
+				<hr>
+				<div class="A">ではこれも動画で実感しよう。</div>
+				<div class="setsumei">　<span class="aka">cosθ</span>とその微分である<span class="usuao">-sinθ</span>を表現している動く図である。</div>
+				<p>　左の単位円の部分は、<a href="lec8_diffsin.html">前ページ</a>のグラフに比べて、90度反時計回りに回した状況になっていることに注意。</p>
+				<div class="box">タブレットで見ている人はむしろこの画面を時計回りに90度回してみた方がよいかも。</div>
+				<div align="center"><canvas id="canvas_cos" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+				<div id="theta_c"></div>
+				<div><span id="sin_c" class="ao"></span>,<span id="cos_c" class="aka"></span></div>
+				<div class="setsumei">↑の棒の角度はドラッグによって変えることができる。</div>
+				<p>　アニメーションのように、θが変化していったときに<span class="ao">sinθ</span>と<span class="aka">cosθ</span>がどのように変化していくかを考えると、それぞれの微分がどうなるかがわかる（はずである）。</p>
+				<img src="../sizensuugaku/diffcos.png" width="40%">
+				<p> 左の図が、それぞれの長さを描き込んだもの。</p>
+				<p>　右のグラフに、<span class="aka">cosθ</span>のグラフの傾きが<img src="../sizensuugaku/diffcos2.png" width="25%" class="floatnone">のように表示されている。これも動径をドラッグすることができるので、動かしながら「<span class="aka">cosθ</span>の微分（傾き）は<span class="usuao">-sinθ</span>だな」ということを実感して欲しい。</p>
+				<hr>
+
+				<p>$\sin $と同じ手順で数式で考えることもできる。三角関数の加法定理を使って、</p>
+				\begin{equation}
+				\begin{array}{rll}
+				\cos ({\theta}+\mathrm d\theta)
+				=&\cos {\theta} \cos \mathrm d\theta - \sin {\theta} \sin \mathrm d\theta&ここで、{\cos\mathrm d\theta=1,\sin\mathrm d\theta=\mathrm d\theta}\\
+				=&\cos {\theta} \underbrace{- \sin {\theta}}_{微係数} \mathrm d\theta\\
+				\end{array}
+				\end{equation}
+				<p>を得るから、${\mathrm d \over \mathrm d\theta}(\cos {\theta})= -\sin {\theta}$となる。</p>
+
+
+				<img src="../sizensuugaku/difftheta.png" width="30%">
+				<p>この（一方にマイナス符号がつく意味）は、左の図のように、微分という操作がちょうど「90度$\left({\pi\over 2}\right)$の回転に対応していると思ってもよいだろう。</p>
+
+				<p>${\pi\over 2}$の回転は<img src="../sizensuugaku/piover2.png" class="floatnone" width="10%">のように、$x$座標を$y$座標に、$y$座標を（符号を変えて）$x$座標にすることで得られる。式で書くなら$(x,y)\to(-y,x)$であるが、これが微分$(\cos \theta,\sin \theta)\to(-\sin \theta,\cos \theta)$と同じ計算になっているわけである<span class="footnote"><span class="fukidasi">θが増加する</span>という現象を<span class="fukidasi">原点を中心とした円運動</span>と捉えると、微分というのは速度を計算することだから、円運動の速度は動径と垂直だ、ということを示していることになる。</span>。</p>
+
+				<div class="A">実際はもうcosの微分を知っているが、ここで「知らないふり」をしてsinの微分からcosの微分を求めてみる。こういうことができるのは、$\sin$と$\cos$の間に、$\cos^2{\theta}+\sin^2{\theta}=1$という関係式があるからである。</div>
+
+				<p>　$\cos^2{\theta}+\sin^2{\theta}=1$を微分すると、</p>
+				\begin{equation}
+				\begin{array}{rl}
+				2\cos{\theta}{\mathrm d (\cos{\theta})}
+				+ 2\sin{\theta}{\mathrm d (\sin{\theta})}
+				&=0 \\
+				{2\cos{\theta}}{\mathrm d (\cos{\theta})}
+				+ {2}\sin{\theta}{\cos{\theta}}\mathrm d\theta
+				&=0 \\
+				{\mathrm d (\cos{\theta})}
+				=&- \sin{\theta}\mathrm d\theta
+				\end{array}
+				\end{equation}
+				<p>この出し方を見ると、$\sin{\theta} $と$\cos{\theta}$の微分のどちらかにはマイナス符号が必要だったことがわかる。</p>
+				<div class="Q">　$\cos\theta$を微分すると$\sin\theta\mathrm d\theta$なのですか？---$\sin\theta$ではなく？？</div>
+				<div class="A">　ああごめんなさい、ちょっと用語に混乱があるんですが、<br>
+					<ol>
+						<li>式${y}={x}^2$から、その微小変化の式$\mathrm dy=2{x}\mathrm dx$を作る（「${y}={x}^2$の両辺を微分すると、$\mathrm dy=2{x}\mathrm dx$」）。</li>
+						<li>関数${y}={x}^2$から、${y}$の導関数${y'}=2{x}$を導く（「${x}^2$を${x}$で微分すると$2{x}$」）。</li>
+					</ol>
+					<p>のどちらも「微分する」と表現するので注意してください（高校で「微分する」というと下だけでしたが）。</p>
+					<br>　区別できるように言うなら上の微分は「微小変化を求める」で上の微分は「導関数を求める」となります。
+				</div>
+				
+				
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#diffsin" data-icon="arrow-l">三角関数の微分：sin</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#difftan" data-icon="arrow-r">三角関数の微分：tan</a>
+			</div>
+		</div>
+		<div data-role="page" id="difftan">
+			<div data-role="header">
+				<h1>三角関数の微分：tan</h1>
+			</div>
+			<div data-role="content">
+				<script type="text/javascript">
+				var gs_tan;
+				$(document).delegate('#difftan','pageinit',function(e) {
+					gs_tan=new DragmanScreen("canvas_tan",9.2,4.6,0.85);
+					gs_tan.setLeft(-1.3);
+					gs_tan.setBottom(-2.3);
+					gs_tan.gobackOriginalSize();
+					gs_tan.writeContents=function() {
+						allTanWrite(gs_tan);
+					};
+					gs_tan.theta=0.25*Math.PI;
+					gs_tan.orgx=3.0;
+					gs_tan.doukei=new Doukei(0.25*Math.PI,"rgb(100,100,0)");
+					gs_tan.pushDragObjList(gs_tan.doukei);
+					nowgs_tan=gs_tan;
+					anime_tan();
+				});
+				function allTanWrite(gs) {
+					var ct=gs.ctx;
+					gs.setScale();
+					gs.clearALL();
+					ct.fillStyle="rgb(235,255,255)";
+					ct.fillRect(gs.leftwx,gs.bottomy,2.6,gs.h);
+					ct.fillStyle="rgb(255,255,235)";
+					ct.fillRect(1.4,gs.bottomy,gs.w,gs.h);
+					ct.beginPath();
+					ct.strokeStyle="rgb(200,200,200)";
+					ct.arc(0,0,1,0,2*Math.PI,false);
+					ct.stroke();
+					ct.strokeStyle="rgb(0,0,0)";
+					ct.fillStyle="rgb(0,0,0)";
+					writeTatejiku(ct,2.3,-2.3,0);
+					writeYokojiku(ct,1.3,-1.3,0);
+					writeYokojiku2(ct,7.8,1.4,0);
+
+					var th=gs.doukei.val;
+					document.getElementById("theta_t").innerHTML=("θ="+marume4(th)+"ラジアン（"+marume4(th*180/ Math.PI)+"度）");
+					//
+					var sinth=Math.sin(th);
+					var costh=Math.cos(th);
+
+					document.getElementById("sin_t").innerHTML=("sinθ="+marume4(sinth));
+					document.getElementById("cos_t").innerHTML=("cosθ="+marume4(costh));
+					document.getElementById("tan_t").innerHTML=("tanθ="+marume4(sinth/ costh));
+					
+					// thが表示できる範囲にあるかをチェック。
+					// gs.orgx==3 の時は-0.5*Math.PIから1.5*Math.PIまでを表示している。
+					// -0.5*Math.PI-(gs.orgx-3)から-(gs.orgx-3)+1.5*Math.PIまでを表示する。
+					//						  
+					if( th < -(gs.orgx-3)-0.5*Math.PI ) {
+						gs.orgx = 3-(th +0.5*Math.PI);
+					}
+					if( th > -(gs.orgx-3)+1.5*Math.PI ) {
+						gs.orgx = 3-(th-1.5*Math.PI);
+					}
+
+					if( gs.orgx >= 1.4 && gs.orgx <= 7.8 ) {
+						writeTatejiku(ct,2.3,-2.3,gs.orgx);
+					}
+					ct.strokeStyle="rgb(0,0,200)";
+					ct.fillStyle="rgb(0,0,200)";
+					ct.beginPath();
+					var th1=-(gs.orgx-3)-0.5*Math.PI;
+					var x;
+					var y;
+					var state=false;
+					x=th1;
+
+					do{
+						y=Math.tan(x);
+						if( y > 3 || y < -3 ) {
+							if( state ) {
+								ct.lineTo(gs.orgx+x,y);
+								state=false;
+							}
+						} else {
+							if( state ) {
+								ct.lineTo(gs.orgx+x,y);
+							} else {
+								ct.moveTo(gs.orgx+x,y);
+								state=true;
+							}
+						}
+						x+= Math.PI/ 50;
+					} while( x<=th1+2*Math.PI );
+					ct.stroke();
+
+					state=false;
+					ct.strokeStyle="rgb(200,0,0)";
+					ct.beginPath();
+					th1=-(gs.orgx-3)-0.5*Math.PI;
+					x=th1;
+					var yy
+					do{
+						yy=Math.cos(x);
+						y=1/ (yy*yy);
+						if( y > 3 || y < -3 ) {
+							if( state ) {
+								ct.lineTo(gs.orgx+x,y);
+								state=false;
+							}
+						} else {
+							if( state ) {
+								ct.lineTo(gs.orgx+x,y);
+							} else {
+								ct.moveTo(gs.orgx+x,y);
+								state=true;
+							}
+						}
+						x+= Math.PI/ 50;
+					} while( x<=th1+2*Math.PI );
+					ct.stroke();
+
+					var tanth=sinth/ costh;
+					var secth=1/ costh;
+					var sectwoth=secth*secth;
+					ct.strokeStyle="rgba(0,0,0,0.1)";
+					ct.beginPath();
+					ct.moveTo(1,-3);
+					ct.lineTo(1,3);
+					ct.moveTo(0,0);
+					ct.lineTo(1,tanth);
+					ct.lineTo(gs.orgx+th,tanth);
+					ct.stroke();
+
+					ct.beginPath();
+					ct.strokeStyle="rgba(100,100,0,0.3)";
+					ct.moveTo(0.8,0);
+					if( th > 0 ) {
+						for( th1=0; th1 < th ; th1 += 0.05 ) {
+							ct.lineTo((0.8-th1*0.01)*Math.cos(th1),(0.8-th1*0.01)*Math.sin(th1));
+						}
+					} else {
+						for( th1=0; th1 > th ; th1 -= 0.05 ) {
+							ct.lineTo((0.8+th1*0.01)*Math.cos(th1),(0.8+th1*0.01)*Math.sin(th1));
+						}
+					}
+					ct.stroke();
+					gs.doukei.write(ct);
+					gs.doukei.write(ct);
+					ct.beginPath();
+					ct.fillStyle="rgba(0,255,0,0.3)";
+					ct.strokeStyle="rgb(0,0,200)";
+					ct.moveTo(1,tanth);
+					ct.lineTo(1,0);
+					ct.lineTo(0,0);
+					ct.fill();
+					ct.beginPath();
+					ct.moveTo(1,tanth);
+					ct.lineTo(1,0); 
+					ct.moveTo(gs.orgx+th-0.01,0);
+					ct.lineTo(gs.orgx+th-0.01,tanth);
+					ct.stroke();
+					ct.strokeStyle="rgb(200,0,0)";
+					ct.beginPath();
+					ct.moveTo(gs.orgx+th+0.01,0);
+					ct.lineTo(gs.orgx+th+0.01,sectwoth);
+					ct.stroke();
+					ct.strokeStyle="rgba(180,180,0,0.3)";
+					ct.fillStyle="rgba(180,180,0,0.3)";
+					ct.beginPath();
+					ct.moveTo(1,tanth);
+					var xx=1-0.3*secth*sinth;
+					var yy=tanth+0.3*secth*costh;
+					ct.lineTo(1,yy/ xx);
+					ct.lineTo(xx,yy);
+					ct.fill();
+					ct.moveTo(0,0);
+					ct.lineTo(xx,yy);
+					ct.stroke();
+					ct.fillStyle="rgba(180,180,255,0.3)";
+					ct.beginPath();
+					var hst;
+					var hct=0.3*costh;
+					if( sinth <0 ) {
+						hst=-0.3*sinth;
+					} else {
+						hst=0.3*sinth;
+					}
+					ct.moveTo(gs.orgx+th,tanth);
+					ct.lineTo(gs.orgx+th+0.3,tanth+0.3*sectwoth);
+					ct.lineTo(gs.orgx+th+0.3,tanth);
+					ct.fill();
+					ct.fillStyle="rgba(255,180,180,0.3)";
+					ct.beginPath();
+					hst=0.3*sinth;
+					if( hct < 0 ) {
+						hct=-hct;
+					}
+					//	 ct.moveTo(gs.orgx+th,costh);
+					//	 ct.lineTo(gs.orgx+th+0.3,costh-hst);
+					//	 ct.lineTo(gs.orgx+th+0.3,costh);
+					//	 ct.fill();
+
+					ct.strokeStyle="rgb(180,180,255)";
+					ct.beginPath();
+					ct.moveTo(1,tanth);
+					ct.lineTo(1,yy / xx);
+					ct.moveTo(gs.orgx+th+0.3,tanth);
+					ct.lineTo(gs.orgx+th+0.3,tanth+0.3*sectwoth);
+					ct.stroke();
+
+					ct.strokeStyle="rgba(0,0,0,0.1)";
+					ct.beginPath();
+					var costht=Math.cos(th+t);
+					var sintht=Math.sin(th+t);
+					var tantht=sintht/ costht;
+					ct.moveTo(1,0);
+					ct.lineTo(1,tantht);
+					ct.lineTo(0,0);
+					ct.moveTo(1,tantht);
+					ct.lineTo(gs.orgx+th+t,tantht);
+					ct.lineTo(gs.orgx+th+t,tanth);
+					ct.stroke();
+					t +=0.02;
+					if( t> 0.3 ) {
+						t=0;
+					}
+				}
+				var t=0;
+				function anime_tan() {
+					allTanWrite(nowgs_tan);
+					setTimeout("anime_tan();",100);
+				}
+
+				function writeYokojiku(ct,x1,x2,y1) {
+					ct.strokeStyle="rgb(150,0,0)";
+					ct.fillStyle="rgb(150,0,0)";
+					ct.beginPath();
+					ct.moveTo(x1,y1);
+					ct.lineTo(x1-0.2,y1+0.1);
+					ct.lineTo(x1-0.2,y1-0.1);
+					ct.closePath();
+					ct.fill();
+					ct.beginPath();
+					ct.moveTo(x1-0.1,y1);
+					ct.lineTo(x2,y1);
+					ct.stroke();
+				}
+				function writeYokojiku2(ct,x1,x2,y1) {
+					ct.strokeStyle="rgb(0,0,0)";
+					ct.fillStyle="rgb(0,0,0)";
+					ct.beginPath();
+					ct.moveTo(x1,y1);
+					ct.lineTo(x1-0.2,y1+0.1);
+					ct.lineTo(x1-0.2,y1-0.1);
+					ct.closePath();
+					ct.fill();
+					ct.beginPath();
+					ct.moveTo(x1-0.1,y1);
+					ct.lineTo(x2,y1);
+					ct.stroke();
+				}
+				function writeTatejiku(ct,y1,y2,x1) {
+					ct.strokeStyle="rgb(0,0,150)";
+					ct.fillStyle="rgb(0,0,150)";
+					ct.beginPath();
+					ct.moveTo(x1,y1);
+					ct.lineTo(x1+0.1,y1-0.2);
+					ct.lineTo(x1-0.1,y1-0.2);
+					ct.closePath();
+					ct.fill();
+					ct.beginPath();
+					ct.moveTo(x1,y2,0);
+					ct.lineTo(x1,y1-0.1);
+					ct.stroke();
+				}
+				</script>
+				<h3>tanの微分</h3>
+
+
+				<p>まず、図解で示そう。</p>
+				<p><img src="../sizensuugaku/difftan_orig.png" width="50%" class="floatnone"></p>
+				<p>上の図のように、底辺1で底辺と斜辺のなす角が${\theta}$である直角三角形を描く（この直角三角形の高さが$\tan{\theta}$である）。角度が\mathrm d\theta だけ大きくなった時、この直角三角形の高さがどれだけ高くなるか、を考えれば$\tan {\theta}$の微分がわかる。</p>
+				
+				<p>この直角三角形の斜辺の長さは${1\over \cos{\theta}}$である<span class="footnote">これを求めるのに、「公式$1+\tan^2{\theta}={1\over \cos^2{\theta}}$を使って…」などとやり始める人がたまにいるのだが、そんな面倒なことは全く必要ない。${底辺\over 斜辺}=\cos {\theta}$という式を思い出せばすぐに出る。</span>から、図に書いた円弧の部分の長さは${\mathrm d\theta\over \cos{\theta}}$である。また相似な三角形ができているから、その相似の関係を使えば、高さの増加は${\mathrm d\theta\over \cos^2{\theta}}$とわかり、結果として${\mathrm d \over \mathrm d\theta}\tan{\theta}={1\over \cos^2{\theta}}$が導かれる。</p>
+
+
+				<div class="A">これを動画で実感しよう。</div>
+				<div class="setsumei">　下左の図は底辺を1で固定した直角三角形を描いたもので、その直角三角形の高さが<span class="ao">tanθ</span>である。</div>
+				<div align="center"><canvas id="canvas_tan" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+				<div id="theta_t"></div>
+				<div><span id="sin_t" class="ao"></span>,<span id="cos_t" class="aka"></span>,<span id="tan_t" class="aka"></span></div>
+				<div class="setsumei">↑の棒の角度はドラッグによって変えることができる。</div>
+				<img src="../sizensuugaku/difftan.png" width="30%">
+				<p>　アニメーションのように、θが変化していったときに縦軸の座標<span class="ao">tanθ</span>がどのように変化していくかを考えると、微分がどうなるかがわかる。</p>
+				<p>　左の図は上のグラフに長さを描き込んだものである。この場合、底辺が1なので、高さが(1/cosθ)であることに注意しよう。</p>
+				<p>　動径の棒をドラッグして動かすことができるので、いろんな場合について確かに<span class="ao">tanθ</span>の変化（増減）が(1/cos<sup>2</sup>θ)に比例していることを動かしながら実感して欲しい。</p>
+
+				<hr>
+				<div class="A">では同じ式を、数式で出してみよう。</div>
+				<p>${y}=\tan{\theta}$の微分を数式を用いて行うには、$\tan {\theta}={{\sin {\theta}\over \cos{\theta}}}$としてから、以下のように行う（もちろん分数関数の微分の式に代入して考えていってもよい）。</p>
+				\begin{equation}
+				\begin{array}{crll}
+				&\cos{\theta}\times{y}  =&\sin {\theta}&ここで両辺を微分\\
+				-\sin{\theta} \mathrm d\theta\times{y} 
+				+&\cos{\theta}\times \mathrm dy
+				=&\cos {\theta} \mathrm d\theta &y={\sin\theta\over\cos {\theta}}を代入\\
+				&-
+				{\sin^2{\theta} \over \cos{\theta}}
+				\mathrm d\theta
+				+\cos\theta\mathrm dy
+				=&\cos\theta\mathrm d\theta &両辺に\cos\thetaを掛け、左辺第１項を移項\\
+				&\cos^2\theta\mathrm dy 
+				=&\underbrace{(\sin^2\theta+\cos^2 {\theta})}_{1}\mathrm d\theta 
+				\\
+				&\mathrm dy=&{1\over\cos^2\theta}\mathrm d\theta\\
+				\end{array}
+				\end{equation}
+				<p>となって、</p>
+				<div class="box"><h4>tanの微分</h4>
+					\begin{equation}
+					\begin{array}{rl}
+					\mathrm d (\tan{\theta})=&{1\over \cos^2{\theta}}\mathrm d\theta\\
+					{\mathrm d\over \mathrm d\theta} (\tan{\theta})=&{1\over \cos^2{\theta}}
+					\end{array}
+					\end{equation}
+				</div>
+				<p>がわかった。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#diffcos" data-icon="arrow-l">三角関数の微分：cos</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#diffexplog" data-icon="arrow-r">指数関数と対数関数の微分</a>
+			</div>
+		</div>
+		<div data-role="page" id="diffexplog">
+			<div data-role="header">
+				<h1>指数関数・対数関数の微分</h1>
+			</div>
+			<div data-role="content">
+				<h3>指数関数の微分</h3>
+				<p>指数関数${y}=a^{{x}}$を微分することを考えよう。まずは数式で「微分の定義」までちゃんと戻って考える。実は$a=\mathrm e$の時が一番簡単なので、まずはその場合を考えよう。</p>
+				\begin{equation}
+				{\mathrm d \over  \mathrm dx }\left(\mathrm e^{x}\right)= \lim_{{\Delta x}\to0}{\mathrm e^{{x}+{\Delta x}}-\mathrm e^{x}\over {\Delta x}}
+				=\mathrm e^{x} \times\lim_{{\Delta x}\to0}{\mathrm e^{{\Delta x}}-1\over {\Delta x}}
+				\end{equation}
+				<p>のように、極限の式から$\mathrm e^x$を外に出してしまう。こんなふうに外に出てしまうのは、指数関数という関数が「${x}$が${\Delta x}$増加すると「元の値」の$\mathrm e^{{\Delta x}}$倍になる」という性質を持っている（ということはつまり、増加量も元の関数の値に比例する）ということの顕れである。</p>
+				<img src="../sizensuugaku/expxdel.png">
+				<p>残った部分$\lim_{{\Delta x}\to0}{\mathrm e^{{\Delta x}}-1\over {\Delta x}}$はよく見ると${x}$によらない定数になっている。そしてこれは、${y}=\mathrm e^{x}$の${x}=0$での傾きそのものである（右のグラフ参照）。そしてそれは$\mathrm e$の定義により1である。つまり、</p>
+				\begin{equation}
+				{\mathrm d \over  \mathrm dx }\left( \mathrm e^{{x}}\right)=\mathrm e^{x}\label{expbibun}
+				\end{equation}
+				<p>なのである。$\mathrm e^x$という関数は「微分しても変わらない関数」であった、ということがわかる（だから$\mathrm e$は重要なのである）。</p>
+
+
+				<p>「微分しても変わらない関数ってどんなもの？」という視点から、指数関数を「導いて」みよう。まず我々は$\mathrm e^{{x}}$の${x}=0$での値が1で傾きが1であること、つまり${x}=0$の近傍では$\mathrm e^{x}=1+{x}$であることを知っている。しかし、$1+{x}$を微分すると</p>
+				\begin{equation}
+				{\mathrm d  \over \mathrm dx }\left(1+{x}\right)\stackrel{?}{=}1
+				\end{equation}
+				<p>となって元に戻らない。微分した後に${x}$がいるためには、関数に${1\over 2}{x}^2$を加えておくとよいだろう。しかし、</p>
+				\begin{equation}
+				{\mathrm d  \over \mathrm dx }\left(1+{x}+{1\over 2}{x}^2\right)\stackrel{?}{=}1+{x}
+				\end{equation}
+				<p>であるからこれでは微分すると（右辺に${1\over 2}{x}^2$が足りない分）元に戻らない。ではということでさらに${1\over 2\times3}{x}^3$を加える。すると、</p>
+				\begin{equation}
+				{\mathrm d  \over \mathrm dx }\left(1+{x}+{1\over 2}{x}^2+{1\over 2\times3}{x}^3\right)\stackrel{?}{=}1+{x}+{1\over 2}{x}^2
+				\end{equation}
+				<p>となる。この手順を繰り返していくと考えれば、</p>
+				\begin{equation}
+				\begin{array}{rl}
+				\mathrm e^{{x}}=&1+{x}+{1\over 2}{x}^2+{1\over 2\times3}{x}^3
+				+{1\over 2\times 3\times 4}{x}^4+{1\over 2\times 3\times 4\times 5}{x}^5
+				+\cdots\\
+				=&\sum_{n=0}^\infty {1\over n!}{x}^n
+				\end{array}
+				\end{equation}
+				<p>という無限につづく項の和で書ける、ということになる。前に$1+1+{1\over2}+{1\over 2\times3}+{1\over 2\times 3\times 4}+{1\over 2\times 3\times4\times 5}+\cdot$という計算で$\mathrm e$が出せる、という話をしたが、その理由はこれである。</p>
+				<p>次に$\mathrm e^{kx}$のように指数が定数$k$倍されている場合を考えると、</p>
+				\begin{equation}
+				{\mathrm d  (\mathrm e^{kx})\over \mathrm dx }=
+				\lim_{{\Delta x}\to0}{\mathrm e^{kx+k{\Delta x}}-\mathrm e^{kx}\over {\Delta x}}
+				=\mathrm e^{kx}\lim_{{\Delta x}\to0}{\mathrm e^{k{\Delta x}}-1\over {\Delta x}}
+				\end{equation}
+				<p>となるが、</p>
+				\begin{equation}
+				\lim_{{\Delta x}\to0}{\mathrm e^{k{\Delta x}}-1\over {\Delta x}}=
+				\lim_{{\Delta x}\to0}{\mathrm e^{k{\Delta x}}-1\over {k{\Delta x}\over k}}  
+				= k\lim_{{\Delta x}\to0}{\mathrm e^{k{\Delta x}}-1\over {k{\Delta x}}}
+				\end{equation}
+				<p>としてから$k{\Delta x}=t$と置くとこの式はさらに$k\lim_{t\to0}{\mathrm e^{t}-1\over {t}}$と書き直せて、この極限は$k$だから、</p>
+				\begin{equation}
+				{\mathrm d  (\mathrm e^{kx})\over \mathrm dx }= k\mathrm e^{kx}
+				\end{equation}
+				<p>となる（このような状況を「$k$が$\exp$の肩から降りてくる」と表現する）。</p>
+
+				<p>ここまでくると、底が$\mathrm e$ではなく一般の正の数であった場合も同様に、$a=\mathrm e^{\log a}$と書けることを使って$a^{{\Delta x}}=\mathrm e^{{\Delta x} \log a}$と直して考えて、</p>
+				<div class="box">一般の指数関数の微分<br>
+					\begin{equation}
+					{\mathrm d  (a^x)\over \mathrm dx }= a^x \log a
+					\end{equation}
+				</div>
+				<p>がわかる（$a=\mathrm e$なら、$\log\mathrm e=1$だから${\mathrm d  (\mathrm e^x)\over \mathrm dx }= \mathrm e^x$に戻る）。</p>
+				<div class="A">いくつかの関連する式が出てきた時、一個一個別々にではなく「この式はあの式をこうすると出てくる」のようなつながりを意識して理解していくことは大事。人間の脳の記憶容量は有限なので、できる限り「こことここは同じ」というところはまとめておいた方が効率がいいし、つながりを知ることはその式の意味をより深く理解することにつながる。</div>
+
+				<h3>対数関数の微分</h3>
+				<p>${y}=\log{x}$を微分するには、まず$\mathrm e^{y}={x}$として、</p>
+				\begin{equation}
+				\begin{array}{rl}
+				\mathrm e^{y}=&{x} \\
+				\underbrace{\mathrm e^{y}}_{{x}}\mathrm dy  =&\mathrm dx  \\
+				{\mathrm dy  \over \mathrm dx }=& {1\over {x}}
+				\end{array}
+				\end{equation}
+				<p>とすればよい（もちろん、$\mathrm e^{{x}}$の逆関数だから${1\over \mathrm e^{{x}}}$になると考えてもよい)。</p>
+				<div class="box">対数関数の微分<br>
+					\begin{equation}
+					{\mathrm d  \over \mathrm dx }(\log{x})={1\over x}~~~（これは底が\mathrm e の時に限る）
+					\end{equation}
+				</div>
+
+				<p>前に、${x}^\alpha$のような冪の形で、微分して${1\over {x}}$になる関数はない、という話をしたが、$\log{x}$というのがそういう関数になる。</p>
+
+				<p>この式と合成関数の微分則から、$\log \left(f({x})\right)$の微分は</p>
+				\begin{equation}
+				{\mathrm d  \over \mathrm dx }\log \left(f({x})\right)
+				=f'({x})\times {\mathrm d  \over \mathrm df}\log|f|=
+				{f'({x})\over f({x})}
+				\end{equation}
+				<p>となる。これから、</p>
+				\begin{equation}
+				f'({x})=f({x})\times {\mathrm d  \over \mathrm dx }\log \left(f({x})\right)
+				\end{equation}
+				<p>のように微分の計算を行うことができる（つまり、<span class="fukidasi">$\log$を取ってから微分して元の関数を掛ける</span>ことで微分ができる）。</p>
+
+				<p>ややこしくなりそうに思うかもしれないが、対数の性質のおかげでこれで楽ができる状況もある。というのは、関数の積$f({x})g({x})$の微分はライプニッツ則を使うと、</p>
+				\begin{equation}
+				{\mathrm d  \over \mathrm dx }\log \left(f({x})g({x})\right)={\overbrace{f'({x})g({x})+f({x})g'({x})}^{(f({x})g({x}))'}\over f({x})g({x})}\label{taisuubibunkihon}
+				\end{equation}
+				<p>積の対数が対数の和になることを使うと</p>
+				\begin{equation}
+				{\mathrm d  \over \mathrm dx }\log \left(f({x})g({x})\right)=
+				{\mathrm d  \over \mathrm dx }\log \left(f({x})\right)
+				+ {\mathrm d  \over \mathrm dx }\log \left(g({x})\right)={f'({x})\over f({x})}
+				+{g'({x})\over g({x})}
+				\end{equation}
+				<p>となり、この二つは（当たり前だが）一致する。</p>
+
+				<p>また、${y}={x}^{{x}}$のようなややこしい冪で表された関数も、対数を取ってから微分する方法が楽である。</p>
+				\begin{equation}
+				{\mathrm d  \over \mathrm dx }\left(\log{x}^{{x}} \right)
+				={\mathrm d  \over \mathrm dx }\left(
+				{x}\log{x}
+				\right)
+				=\log{x}+{x}\times {1\over {x}}=\log{x}+1
+				\end{equation}
+				<p>のように微分して、</p>
+				\begin{equation}
+				{\mathrm d  \over \mathrm dx }{x}^{{x}}={x}^{{x}}\times \left(\log{x}+1\right)
+				\end{equation}
+				<p>とする。</p>
+				<div class="A">過去にあった、よくある間違い</div>
+				<div class="A">
+					${\mathrm d  \over \mathrm dx }\left(x^x\right)=x x^{x-1}=x$
+				</div>
+				<div class="A">↑やってしまわないよう、注意。</div>
+				<h3>指数関数・対数関数の近似式</h3>
+				\begin{eqnarray}
+				\mathrm e^{{x}}&=&1+{x}+{\cal O}({x}^2)\\
+				\log(1+{x})&=& {x}+{\cal O}({x}^2)
+				\end{eqnarray}
+				<p>という式がよく使われる（この二つの式は互いに逆関数になるという関係でつながっている）。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#difftan" data-icon="arrow-l">三角関数の微分：tan</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#qa" data-icon="arrow-r">受講者の感想・コメント</a>
+			</div>
+		</div>
+		<div data-role="page" id="qa">
+			<div data-role="header">
+				<h1>受講者の感想・コメント</h1>
+			</div>
+			<div data-role="content">
+				<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+				<div class="Q">微分のいろいろな公式の意味を知ることで、ただ暗記するより何倍も理解が深まったように思います。</div>
+				<div class="A">「使うための数学」は暗記ではダメですよ。</div>
+				<p></p>
+				<div class="Q">三角関数、指数関数、対数関数の微分を、今までは公式として覚えていたが、その公式に至るまでの過程をじっくりと考えていった。図と計算、二つの方法から導き出すことで、より深い理解ができてよかったです。</div>
+				<div class="A">「来週の試験のために」というその場しのぎならしょうがないですが、本当に「身につく」ためには「公式として覚える」勉強をしてはいけません。</div>
+				<p></p>
+				<div class="Q">sinθ、cosθ、tanθの微分がわかった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">様々な関数の関数の微分について詳しく学んだ。高校の時とは違う視点で学んだのでとても興味深く、より理解が深まった。</div>
+				<div class="A">微分のイメージを持つようにしていってください。</div>
+				<p></p>
+				<div class="Q">面白い内容でした。わかりやすかったです。</div>
+				<div class="A">面白さを感じつつ、勉強していってください。</div>
+				<p></p>
+				<div class="Q">$\mathrm e^x\fallingdotseq1+x$はテイラー展開ですね！！</div>
+				<div class="A">はい、テイラー展開はすぐ後でやりますが。</div>
+				<p></p>
+				<div class="Q">tanの微分が難しかった。</div>
+				<div class="A">自分で一度やってみてください。</div>
+				<p></p>
+				<div class="Q">三角関数の微分や対数関数の微分の仕方を学ぶことができてよかった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">$\log x\to{1\over x}$の異様さはそのままなんかい！！　１本取られたわ。</div>
+				<div class="A">異様？？　異様かなぁ？</div>
+				<p></p>
+				<div class="Q">同じ「微分する」という言い方でもいろんな種類のものがあるということを学んだ。</div>
+				<div class="A">要は「微小変化の割合を考える」ってことなんですけどね。</div>
+				<p></p>
+				<div class="Q">対数関数は救世主だったのか…。</div>
+				<div class="A">救世主は大げさだけど、logのおかげで助かることはよくあります。</div>
+				<p></p>
+				<div class="Q">今日はねむすぎた。</div>
+				<div class="A">そうですか。</div>
+				<p></p>
+				<div class="Q">昨日微分方程式の勉強をしていて「思いつけないんだけどー！」と思っていたのですが、今日の授業で$\mathrm e^x$の微分は元の関数と同じ」というのを聞いて全部意味があってつながっているのをとても感じました。</div>
+				<div class="A">exp(x)のおかげで解ける微分方程式は、とてもたくさんあります。</div>
+				<p></p>
+				<div class="Q">微分の先輩がよくする間違い、自分もしそうなので例に出してもらってよかったです。気をつけたいと思います。</div>
+				<div class="A">やっちゃわないように気をつけましょう。</div>
+				<p></p>
+				<div class="Q">最後に出てきた$f'({x})=f({x})\times {\mathrm d  \over \mathrm dx }\log \left(f({x})\right)$には感動しました。自宅でも微分の演習を頑張りたいと思います。</div>
+				<div class="A">いろんな演習をやってみてください。</div>
+				<p></p>
+				<div class="Q">logの微分難しかったです。cos(α+β)の公式がなんで−になるのか知れてよかったです。</div>
+				<div class="A">今日やったのは微分の式で、加法定理とは別ですが、確かにマイナスになる理由は同じですね。</div>
+				<p></p>
+				<div class="Q">先生が一番かっこいいと思う四文字熟語はなんですか？　僕は「波動関数」ですね。</div>
+				<div class="A">う〜〜ん。「繰込可能」かな。</div>
+				<p></p>
+				<div class="Q">「微分する」に二つの意味があるとは知らなかった。問題で出たとき、どちらの意味であるか考えたりするのかなと思った。</div>
+				<div class="A">文脈でわかります。</div>
+				<p></p>
+				<div class="Q">$f(x+\mathrm dx)=f(x)+f'(x)\mathrm dx$の重要さがだんだんわかってきた。</div>
+				<div class="A">微分の意味がわかってくると、あの書き方の便利さがわかってきます。</div>
+				<p></p>
+				<div class="Q">微分の２種類の意味がわかった。</div>
+				<div class="A">２種類といいつつ、どっちもまぁ「微小変化考える」というのは同じです。</div>
+				<p></p>
+				<div class="Q">指数・対数関数の微分の中身がわかりやすくて理解できた。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">図を使って考える三角関数の微分は少し難しいけど面白かったです。</div>
+				<div class="A">図でいろいろ考えてみてください。</div>
+				<p></p>
+				<div class="Q">${\mathrm d\over \mathrm dx}x^x$の仕方がわからなかったが、今日で$f'({x})=f({x})\times {\mathrm d  \over \mathrm dx }\log \left(f({x})\right)$が理解できたので、すごく計算が楽に感じた。あと、微小変化の意味もなんとなくわかった。</div>
+				<div class="A">いろんな計算方法を、うまく使って計算していってください。</div>
+				<p></p>
+				<div class="Q">$\cos\theta$の微分に−がつくのは微小増加を取ったときに$\sin^2\theta+\cos^2\theta=1$と一定になる必要があるからという説明にとても納得がいった。</div>
+				<div class="A">いろんな式を、成り立ちから理解しておきましょう。</div>
+				<p></p>
+				<div class="Q">$f'({x})=f({x})\times {\mathrm d  \over \mathrm dx }\log \left(f({x})\right)$がとても便利で感動しました。三角関数の微分を説明した図形がとてもわかりやすかったです。</div>
+				<div class="A">微分はいろんなやり方があるので、使い方を理解しておきましょう。</div>
+				<p></p>
+				<div class="Q">合成関数の微分と、ネイピアの数。</div>
+				<div class="A">う〜ん、どっちも今日じゃなく前にやったことを使っただけなんだけど。</div>
+				<p></p>
+				<div class="Q">逆関数・指数関数の微分を学んだ。数IIIでやった「微分可能」の定義や「連続する」の定義をもう一度復習したい。</div>
+				<div class="A">そのあたりの話はこの授業では少ししか取り上げないので、是非復習しておいてください。</div>
+				<p></p>
+				<div class="Q">$x^x$のようなものからライプニッツ則まで、logを使って簡単に説明できるとわかって驚きました。</div>
+				<div class="A">logやexpっていろんなところで役に立つんですよ。</div>
+				<p></p>
+				<div class="Q">図と計算で三角関数の微分が理解できました。</div>
+				<div class="A">両方で理解するのが大事です。</div>
+				<p></p>
+				<div class="Q">微小で増加量を求めたら、微分と同じ。</div>
+				<div class="A">微分というのは、そういうものです。</div>
+				<p></p>
+				<div class="Q">微分よくわかった。逆関数の微分がよくわかった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">$\sin(\theta+\mathrm d\theta)=\sin\theta\underbrace{\cos\mathrm d\theta}_1+\cos\theta\underbrace{\sin\mathrm d\theta}_{\mathrm d\theta}$で$\cos\mathrm d\theta=1,\sin\mathrm d\theta=\mathrm d\theta$になる理由がわからない。<br>$\sin\mathrm d\theta$が$\mathrm d\theta$なら、$\sin(\theta+\mathrm d\theta)=\sin\theta+1$？</div>
+				<div class="A">わからないことはその時すぐ質問しないと。$\sin\mathrm d\theta\simeq \mathrm d\theta$は先週説明した話なので復習してください。そのとき、$\cos\mathrm d\theta\simeq 1-{(\mathrm d\theta)^2\over 2}$となることも説明したはず。あと最後の式は、ちゃんと計算すると$\sin(\theta+\mathrm d\thata)=\sin\theta+\cos\theta\mathrm d\theta$になります。</div>
+				<p></p>
+				<div class="Q">もう一週早くこの内容をやってくれれば、昨日の微積のテストがもう少しましな点数がとれたのに残念です。</div>
+				<div class="A">それは残念でした。</div>
+				<p></p>
+				<div class="Q">微積STの中間テストで出たところを今日先生がやってくれて、全然できてないなー（テストが）と思いました。</div>
+				<div class="A">それは残念なお知らせです。</div>
+				<p></p>
+				<div class="Q">図を作って微分を考えることができた。</div>
+				<div class="A">いろんな考え方をやっていきましょう。</div>
+				<p></p>
+				<div class="Q">変数の変数乗をかんがえるときlogに直して計算すると微分もできることがわかった。$lim_{x\to0}{\log(1+x)\over x}=1$ですか？</div>
+				<div class="A">その極限は確かにそうなります。</div>
+				<p></p>
+				<div class="Q">もし${\mathrm d\over \mathrm d\theta}\cos\theta$や${\mathrm d\over \mathrm d\theta}\tan\theta$を忘れてしまっても（そんなことはないけど）、${\mathrm d\over \mathrm d\theta}\sin\theta$さえわかっていれば順次求められるので、いざというときに便利（多分）。arc型の微分もそこまで難しくなかった。気になることだが陰関数やリサージュ曲線も微分や微分係数を求めることができるのだろうか。理論上可能だと思うが、答えが複数になりそう…。</div>
+				<div class="A">複数の値がある場合は、微分も場合分けなどの注意が必要ですね。</div>
+				<p></p>
+				<div class="Q">色々なことが頭の中でごちゃごちゃしてきた。一回今までの復習をして、全体を見直したい。</div>
+				<div class="A">うん、整理は大事。</div>
+				<p></p>
+				<div class="Q">三角関数の微分でいろんな説明の仕方があっておもしろかった。</div>
+				<div class="A">１つのことをいろんな方向から見てみましょう。</div>
+				<p></p>
+				<div class="Q">sinθとcosθの微分の成り立ちがよくわかった。$\mathrm e^x\fallingdotseq 1+x,x\fallingdotseq \log(1+x)$</div>
+				<div class="A">いろんな式を結びつけて理解しておいてください。</div>
+				<p></p>
+				<div class="Q">微分の参考書とかで、$\mathrm e$(ネイピア数)を使った証明が出てくるのですが、よくわかりません。ネイピア数の式とか性質みたいなものを簡単に解説してくれる本を教えてくれませんか。$\lim_{n\to\infty}\left(1+{1\over n}\right)^n=\mathrm e\to \lim_{n\to\infty}\left(1-{1\over n}\right)^n={1\over \mathrm e}$</div>
+				<div class="A">今配っている教科書にも（そして、その他のたいていの教科書にも）必要なことは書いてあると思いますが、それではどこが「よくわからない」のでしょう？<br>その式は成立しますね。極限を取る計算をやってみましょう。</div>
+				<p></p>
+				<div class="Q">物理学Iを習っていたときに疑問が残っていたsinθやcosθを微分した時に残るdθというのは、変化量を見た場合の計算をしていることがわかりました。高校までの知識は大学で逆に混乱するかもしれないので、大学の勉強をしっかりしていきたいと思います。$\mathrm e$の知識がより深めることができたのでよかったです。</div>
+				<div class="A">大学の教科書は高校までと違って文科省検定なんてものはないので、書き方は統一されてないですが、そこは臨機応変に読むようにしてください。</div>
+				<p></p>
+				<div class="Q">関数が好きになれるよう頑張りたい。</div>
+				<div class="A">好きになりましょう、長いつきあいです。</div>
+				<p></p>
+				<div class="Q">三角関数を絵で理解すると分かりやすかった。</div>
+				<div class="A">図と式の両方で理解しておきましょう。</div>
+				<p></p>
+				<div class="Q">$f'({x})=f({x})\times {\mathrm d  \over \mathrm dx }\log \left(f({x})\right)$という式は今まであまりみたこyとがなかったので覚えておきたい。</div>
+				<div class="A">基本は合成関数の微分です。</div>
+				<p></p>
+				<div class="Q">$\mathrm e^x$の微分が$\mathrm e^x$のままなのがわかった。</div>
+				<div class="A">この性質が後々いろいろと役に立ちます。</div>
+				<p></p>
+				<div class="Q">微小変化を求める微分のやり方に慣れるために頑張りたいと思った。</div>
+				<div class="A">慣れていきましょう、慣れると便利。</div>
+				<p></p>
+				<div class="Q">三角形の図と対数で混乱してしまったので、おうちで頭を整理します。</div>
+				<div class="A">じっくり考えてみてください。</div>
+				<p></p>
+				<div class="Q">三角関数の微分も結局は微小変化のときのの変化量の話をしているのだとわかった。</div>
+				<div class="A">微分というのは、全部それです。</div>
+				<p></p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#diffexplog" data-icon="arrow-l">指数関数・対数関数の微分</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:id="@+id/denba"
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:orientation="horizontal" >
+
+  <LinearLayout
+      android:id="@+id/ll"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:orientation="vertical" >
+
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal" >
+
+      <LinearLayout
+    	  android:layout_width="0dp"
+    	  android:layout_height="fill_parent"
+    	  android:layout_weight="1"
+    	  android:baselineAligned="true"
+    	  android:orientation="vertical" >
+
+       	<LinearLayout
+			android:layout_width="0dp"
+    		android:layout_weight="1"
+            android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
+		  <Button
+			  android:id="@+id/btResetScreen"
+			  android:layout_width="0dp"
+    		  android:layout_weight="1"
+			  android:text="@string/resetScreen"
+			  android:textSize="8dp" />
+
+	      <ToggleButton
+	          android:id="@+id/tbE"
+			  android:layout_width="0dp"
+    		  android:layout_weight="1"
+	          android:layout_height="wrap_content"
+	          android:layout_gravity="center_vertical"
+	          android:checked="false"
+	          android:text="ToggleButton"
+	          android:textOff="@string/E_Line_off"
+	          android:textOn="@string/E_Line_on"
+	          android:textSize="8dp" />
+
+		  <ToggleButton
+		      android:id="@+id/tbV"
+			  android:layout_width="0dp"
+    		  android:layout_weight="1"
+		      android:layout_height="wrap_content"
+		      android:layout_gravity="center_vertical"
+		      android:checked="false"
+		      android:text="ToggleButton"
+		      android:textOff="@string/V_Line_off"
+		      android:textOn="@string/V_Line_on"
+		      android:textSize="8dp" />
+
+	    </LinearLayout>
+
+     	<LinearLayout
+			android:layout_width="0dp"
+    		android:layout_weight="1"
+     		android:orientation="horizontal" >
+
+     	  <ToggleButton
+			  android:layout_width="0dp"
+    		  android:layout_weight="1"
+     		  android:id="@+id/tbF"
+     		  android:layout_height="wrap_content"
+     		  android:checked="true"
+     		  android:text="ToggleButton"
+     		  android:textOff="@string/Force_off"
+     		  android:textOn="@string/Force_on"
+     		  android:textSize="8dp" />
+
+		  <ToggleButton
+			  android:id="@+id/tbY"
+			  android:layout_width="0dp"
+    		  android:layout_weight="1"
+			  android:layout_height="wrap_content"
+			  android:checked="true"
+			  android:text="ToggleButton"
+			  android:textOff="@string/totalE_off"
+			  android:textOn="@string/totalE_on"
+			  android:textSize="8dp" />
+
+		  <ToggleButton
+			  android:id="@+id/tbS"
+			  android:layout_width="0dp"
+    		  android:layout_weight="1"
+			  android:layout_height="wrap_content"
+			  android:checked="true"
+			  android:text="ToggleButton"
+			  android:textOff="@string/directionOnly"
+			  android:textOn="@string/withStrength"
+			  android:textSize="8dp" />
+
+	    </LinearLayout>
+ 	  </LinearLayout>    
+
+      <LinearLayout
+       	  android:layout_width="0dp"
+       	  android:layout_height="wrap_content"
+       	  android:layout_weight="1"
+       	  android:orientation="vertical" >
+	    
+        <LinearLayout
+            android:id="@+id/tableRow1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+          <ToggleButton
+              android:id="@+id/tbY1"
+			  android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:checked="true"
+              android:text="ToggleButton"
+              android:textOff="@string/E1_off"
+              android:textOn="@string/E1_on"
+              android:textSize="8dp" />
+
+	      <Button
+	          android:id="@+id/Q1Down"
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:text="←"
+	          android:textSize="8dp" />
+
+	      <TextView
+	          android:id="@+id/Q1Text"
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:text="Q1=3"
+	          android:textAppearance="?android:attr/textAppearanceLarge"
+	          android:textSize="8dp" />
+
+          <Button
+              android:id="@+id/Q1Up"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="→"
+              android:textSize="8dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+          <ToggleButton
+              android:id="@+id/tbY2"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:checked="true"
+              android:text="ToggleButton"
+              android:textOff="@string/E2_off"
+              android:textOn="@string/E2_on"
+              android:textSize="8dp" />
+
+	      <Button
+	          android:id="@+id/Q2Down"
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:text="←"
+	          android:textSize="8dp" />
+
+          <TextView
+              android:id="@+id/Q2Text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Q2=-3"
+              android:textAppearance="?android:attr/textAppearanceLarge"
+              android:textSize="8dp" />
+
+          <Button
+              android:id="@+id/Q2Up"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="→"
+              android:textSize="8dp" />
+
+	    </LinearLayout>
+      </LinearLayout>
+    </LinearLayout>
+	
+  </LinearLayout>
+</LinearLayout>

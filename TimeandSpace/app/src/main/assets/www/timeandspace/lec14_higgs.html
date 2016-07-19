@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,target-densityDpi=device-dpi,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>第14講　ヒッグス粒子と質量の謎（ヒッグス粒子は何をするか）</title>
+  <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="http://www.phys.u-ryukyu.ac.jp/~maeno/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery-1.8.2.min.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.2.0.min.js" type="text/javascript"></script>
+	<style type="text/css">
+	 button {
+	   font-weight:bold;
+	   border:3px solid #999;
+	   border-right-color:#333;
+	   border-bottom-color:#333;
+	   border-radius:10px;
+	   color:#333;
+	   width:auto;
+	   text-decoration:none;
+	   float:left;
+	   margin-right:10px;
+	   background-color: #DDE;
+	 }
+	 .figure {
+	   margin:0pt auto;
+	 }
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .floatnone{
+	   float:none;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .box{
+	   padding:5px;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:13px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<script type="application/javascript" src="higgspotential.js"></script>
+	<script type="application/javascript">
+	 $(document).delegate('#page0','pageinit',function(e) {
+	   init('maincanvas'); L4=0.00005;L=5;M=-3,M2=-0.3; mx=0.4*wx;GraphSetup(); drawGraph();
+	 });
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>第14講　ヒッグス粒子と質量の謎（ヒッグス粒子は何をするか）</H1><br>
+	  </div>
+	  <div data-role="content">
+		<h3>『場』はどれだけあるか？</h3>
+
+		<p>「ゲージ粒子」or「ゲージ場」の表 </p>
+		<br>
+		<table border="1">
+		  <tr>
+			<td>光子	</td><td>電磁力を媒介</td>
+		  </tr><tr>
+			<td>W粒子	</td><td>弱い力を媒介</td>
+		  </tr><tr>
+			<td>Z粒子	</td><td>弱い力を媒介</td>
+		  </tr><tr>
+			<td>グルーオン	</td><td>強い力を媒介</td>
+		  </tr><tr>
+			<td>重力子？	</td><td>重力を媒介</td>
+		  </tr>
+		</table>
+
+		<p>人類が一番最初に発見した『場』は電磁場でした。電磁場は「量子化」すると「光子」という粒子です。光子（電磁場）のように力を伝える役割をする粒子は、右の表に上げた分が知られていて<span class="footnote">最後の重力子については、「重力子」を記述するための「重力の量子力学バージョン」はまだできていません（現代物理に残る大きな謎の一つ）。</span>、ひっくるめて「ゲージ場」と呼ばれています（力にはそれぞれ対応する『場』があるわけです）。</p>
+
+		<p>電子や陽子・中性子（←我々が目にする物質のほとんどはこの３つでできている）も『場』です。実は陽子・中性子はそれ自体が素粒子ではなくて、３つの「クォーク」と呼ばれる素粒子でできていることが知られています。クォークは６種類あると言われていて、名前は「アップ」「ダウン」「チャーム」「ストレンジ」「トップ」「ボトム」です。そのほかも含めて表をみましょう。</p>
+
+		<br>
+		<p>「物質粒子」or「物質場」の表</p>
+
+		<br>
+		<table border="1">
+		  <tr>
+			<td>u（アップ）	</td><td>c（チャーム）	</td><td>t（トップ）</td>
+		  </tr>
+		  <tr>
+			<td>d（ダウン）	</td><td>s（ストレンジ）	</td><td>b（ボトム）</td>
+		  </tr>
+		  <tr>
+			<td>$e$（電子）	</td><td>$\mu$（ミュー粒子）	</td><td>$\tau$（タウ粒子）</td>
+		  </tr><tr>
+			<td>$\nu_e$（電子ニュートリノ）	</td><td>$\nu_\mu$（ミューニュートリノ）	</td><td>$\nu_\tau$（タウニュートリノ）</td>
+		  </tr>
+		</table>
+		<br>
+		<h3>ヒッグス場の真空期待値</h3>
+		
+		<p>ここまでで書いた「物質場」と「ゲージ場」以外に「ヒッグス場」というのがある、というのが1964年にピーター・ヒッグスが提唱した理論<span class="footnote">実際にはヒッグスとほぼ同時に同様の理論をブルーとアングレールも提唱しており、アングレールはヒッグスとともにノーベル賞受賞。</span>で、そのヒッグス場が「物質場」と「ゲージ場」に最初の質量をもたらすという役割を果たします<span class="footnote">勘違いしている人が多いのですが、全ての質量がヒッグス場によるわけではありません。</span>。</p>
+
+		<p>ヒッグス場が何をするのかというと、「●と原点を繋ぐバネ」の役割です。実際には、ヒッグス場は他の粒子たちと相互作用するのですが、その相互作用が、ちょうど「●と原点を繋ぐバネ」と同じ作用をして、結果として「ヒッグス場が他の粒子に質量を与える」という現象を起こします。</p>
+
+
+		<p>ヒッグス場も『場』であって、そのイメージは「空間の各点各点にバネ振り子が並んでいる」というイメージでいいのですが、ヒッグス場の「バネ」はちょっと変わったバネです。</p>
+
+		<p>次の図のような、とっても変な位置エネルギーを持った、「バネ」なのです。</p>
+		<div class="A">↓に図が出ない場合は、ページをリロードしてください。</div>
+		<p>
+		  <canvas width=500 height=500 id="maincanvas">ごめんなさい、あなたのブラウザはcanvasをサポートしてないようです。</canvas></p>
+		<br><button id="Mdown" data-inline="true" onClick="Mdown();document.getElementById('Mlabel').innerHTML=M2;">（←減）</button>M=<span id="Mlabel">-0.3</span><button id="Mup" data-inline="true" onClick="Mup();document.getElementById('Mlabel').innerHTML=M2;">（増→）</button>
+<br><button id="Ldown" data-inline="true" onClick="Ldown();document.getElementById('Llabel').innerHTML=L4;">（←減）</button>L=<span id="Llabel">0.00005</span><button id="Lup" data-inline="true" onClick="Lup();document.getElementById('Llabel').innerHTML=L4;">（増→）</button>
+　　　<button id="muN" data-inline="true" onClick="toggleMasatsu();">空気抵抗ON/OFF</button>
+<br><button id="reset" data-inline="true" onClick="modose();">原点に戻す</button>
+<hr>
+<p>　こちらも、実際の「場」にはない「空気抵抗」が入れてあるので、最後にはエネルギー最低点で止まります（<small>空気抵抗Offの時にエネルギーが保存しない場合がありますが、それはプログラムの欠陥のせいです</small>）。
+
+		<p>この『中心（原点）がエネルギー最低でない』というのがヒッグス場の最大の特徴です。逆にヒッグス場が「エネルギー最低の状態＝真空」になった時、まだ０ではない値を持っていることになります。</p>
+
+		<p>これを『ヒッグス場の真空期待値が０ではない』と言います。「期待値」というのは確率・統計での「期待値」と同じ言葉です。量子力学ではいろんな現象が確率的にしか予言できない（この辺の話もここでは省略してます）ので「０だ」と言わずに「真空期待値が０だ」と言うのです。</p>
+
+
+
+		<p>実際のヒッグス場はこの形の位置エネルギーを持っていると考えられます（ただ、実はヒッグスの場合「架空の運動方向」が一方向ではないというのがちょっとややこしいなのですが、ここも説明は省きます）。ω型であるために真ん中が最低エネルギーにならなくなるのですが、そのことは大きな意味を持ちます。</p>
+
+		<h3>ヒッグス場が起こす「対称性の自発的破れ」</h3>
+		<p>ヒッグス場がωの形の位置エネルギーを持っているので、エネルギーが低くなると、左か右かどちらかのエネルギー最低状態に落ちます（実際は落ちる方向は二つに一つではない）。</p>
+
+		<p>その時、</p>
+		  
+		<p><span class="box">・どちらに落ちるかは運任せ</span></p>
+
+		<p>であるという点と、</p>
+
+		<p><span class="box">・どちらに落ちてもヒッグス場の値は０（原点）ではない</span></p>
+
+		<p>というのが大きな問題なのです。この「どちらに落ちるかは運任せ」であると同時に「位置エネルギーの形は左右対称なのに、落ちた後の解は左右対称ではない」という事が「対称性の自発的破れ」（南部陽一郎先生はこれの発見でノーベル賞受賞）の一つの例なのですが、まずは「ヒッグス場が０でない値を持つ」ということについて考えてみましょう。</p>
+
+
+		<p>「電子場」と「電磁場」が相互作用して「電磁力」が伝わるのと同様に、ヒッグス場も、他の粒子と相互作用します。ヒッグス場と他の場との大きな違いは、</p>
+
+		<p><span class="box">他の場は真空では「場＝０」なのでもう相互作用できないが、ヒッグス場は真空でも「場≠０」なので、相互作用できる！</span></p>
+ 
+		<p>ことです。他の場は相互作用する為には≠0の状態、すなわち「励起状態」でなくてはならないので「ある場所で相互作用するが、励起してない場所では相互作用しない」ということになります。しかし、ヒッグス場は場所によらず一定になっているので、どこでも同じように相互作用します。つまり、宇宙のどこでも一定の値で存在しているヒッグス場は、他の場の「バネ振り子」である●に、どこでも同じような作用を与えることができる、ということなのです。</p>
+
+		<p>ヒッグス場は</p>
+
+		<p><span class="box"><span class="aka">×</span>「粒子」に力を与えている（これは普通の意味での力で、粒子を「普通の方向」に動かします）</span></p>
+		
+		<p>のではなく、</p>
+
+		<p><span class="box"><spna class="aka">○</spna>『場』である●に「架空の方向」への力を与える</span></p>
+
+
+		<p>ということ、この二つは全く違うことに注意してください。</p>
+
+		<p>と、注意するのは、ニュースなどの短い時間でヒッグス粒子について説明する時、この二つをちゃんと分けて説明せずに</p>
+
+		<p><span class="box"><span class="aka">×</span>ヒッグス粒子が他の粒子の邪魔をするせいで他の素粒子に質量が生まれる。</span></p>
+
+		<p>という説明をしている場合が（残念ながらとっても多く）あるからです。この文章は二箇所、間違っています。まず質量を与えるのは「ヒッグス粒子（＝ヒッグス場の励起状態）」ではなくて、「ヒッグス場の真空期待値」の方です。そしてもうひとつ、ヒッグス場の真空期待値は「他の粒子＝（他の場の励起状態）」の邪魔をしたりはしません。実際にヒッグス場がやっていることは、</p>
+
+		<p><span class="box"><span class="aka">○</span>　他の場が励起状態を作る邪魔をする（つまり、他の場が励起して粒子を作る時にmc2だけ余分にエネルギーが必要になるようにする</span></p>
+
+
+		<p>です。できあがった粒子はヒッグス場がないときとは全然違う飛び方をしますが、（ヒッグス場からは何の抵抗も受けることなく）飛んでいきます。他からも力を受けなければ、等速直線運動します（ヒッグス場は、ブレーキをかけるという意味での「邪魔」はしないのです）。</p>
+
+		<p>ここで「では素粒子の質量の違いはどこから来るのか？」という点を疑問に思うかもしれません。ある素粒子の場（●）と、ヒッグス場との相互作用が強い（つまり前に書いたようなエネルギーのやりとりがよく起こる）と、その素粒子は質量が大きくなります。</p>
+
+		<p>さて、ヒッグス場がやることは「素粒子に質量を与える」ことだけではありません。もう一つの重大な役割があります。それは上で述べたように、「落ちる真空を選ぶ」ことで対称性を破ることです。ヒッグス場が真空期待値を持つ時「左に落ちるか」「右に落ちるか」で粒子に違いが生まれるのです。 </p>
+
+		<p>これまでヒッグス場を１方向の（架空の方向への）振動のように話してきましたが、実はヒッグス場は「複素数２成分」の場で、もっと複雑です（複素数で２方向に振動している！）。 </p>
+
+
+		<h3>CERNで見つかったヒッグス粒子とは？</h3>
+
+		<p>ヒッグス場も立派な『場』で、モデルとしては今日見せたバネのつながりで考えられるものです。ということは、この『場』に十分なエネルギーを与えれば、場を振動させ、その振動が伝わっていく様子を確認することができるはずです。その「ヒッグス場」の振動こそ、「ヒッグス粒子」です。</p>
+
+		<p>ヒッグス粒子はだいたい、陽子の130倍ぐらいの質量があるようです。大きい質量の粒子を作るには、それだけエネルギーが必要なので、それだけの大きな施設が必要になります。</p>
+
+		<p>最終的にヒッグス粒子を発見したCERN（欧州原子核研究機構）の実験装置は円型の粒子加速器で、LHC(大型ハドロン衝突型加速器)と呼ばれます<span class="footnote">LHCの中身は<a href="https://www.google.com/maps/views/streetview/cern">googleストリートビュー</a>でも見れます。</span>。粒子を磁場を使って円運動させながら加速させて衝突させるものですが、この円の円周が約27 kmという巨大なものです。地下トンネルの中のチューブに陽子を走らせ、それに超伝導磁石で作られた磁場をかけつつ加速して、観測地点で陽子と陽子の衝突を起こして、新しい粒子を造るという実験装置です。</p>
+
+		<p>ヒッグス粒子発見にはどんな意味があったのでしょう？</p>
+
+		<p>いくらここまで話した「素粒子の質量がどこから来たか？」「対称性の自発的破れはどう起こったか？」のお話がうまくいったとしても、ヒッグス粒子（＝ヒッグス場の振動）がみつからなかったら、「ほんとにヒッグス場のせいで対称性が破れたり、粒子が質量持ったりするの？」という点には自信が持てないままだったでしょう。人類が</p>
+
+		<p><span class="box">粒子って何だ？---力って何だ？---真空って何だ？　</span></p>
+
+		<p>と考え続けた末にたどり着いた結論が今の「標準理論」と呼ばれる理論で、ヒッグス粒子はその標準理論が正しいことの証明なのです。「ここまでの物理学の進歩の方向は間違ってなかった！」と自信が持てるほどの確証が得られた、ということです。</p>
+
+とはいえ、ヒッグス粒子の発見は、人類が続けている宇宙の法則を知る旅の一里塚に過ぎません<span class="footnote">「これが何の役に立つのか？」という質問をよく受けますが、直接に役に立つにはまだまだだいぶ掛かるでしょう。</span>。
+
+		<p>人類はこれからも、この世界の法則は何なのか？　を探求し続けていくことでしょう。人類がそういう存在であり続けて欲しい、と思います。</p>
+	  </div>
+	  <div data-role="footer">
+		<a href="lec14_bane.html" data-icon="left">「場のイメージ」に戻る</a>　<a href="#pageqa" data-icon="right">感想・コメントへ</a>
+		<p align="center">
+		</p>
+	  </div>
+	</div>
+	<div data-role="page" id="pageqa">
+	  <div data-role="content">
+		<div class="setsumei">問題はありませんでした。</div>
+
+		<div class="box">
+		  「授業を休んだ時のレポートは後で提出してくれれば採点します」と言いましたが、何の説明も一言の断りもなく、いつものレポートに混ぜる格好で提出してくる人がいました。しかもこういうことをやる人に限って「何月何日分のレポートか」ということを書いていません（いったいいつのレポートなのか、私が答から推測し調べなくてはいけない）。授業中にも「そういうことをされても発見できないかもしれないから、一言断ってください」と言ってあります。<br>
+		  「休んだ分のレポートを後で提出して採点して欲しいのならば、一言ぐらい声を掛ける」という当たり前のこと（別に丁寧に言う必要すらありません、「これ先週のです」と横においておいてくれるだけでこちらは助かるんです）が注意されてもできない人がいるというのは、とても残念なことです。<br>
+		  既に注意した後ですので、この人達のレポートは採点しない（欠席あつかいとする）ことにしました（声を掛けて私に手渡してくれた人の分はもちろん、ちゃんと採点してます）。</div>
+		<div class="setsumei">感想・コメントなど</div> 
+		<p><span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+		<p></p>
+		<div class="Q">期待値は確率なのに０になるんですか。</div>
+		<div class="A">期待値は確率を使って計算されますが、確率そのものじゃないので0以外にもなります。</div>
+		<p></p>
+		<div class="Q">あるかないかわかってないものを提唱するのは言ったもん勝ちなのかなとも思いました。</div>
+		<div class="A">勝ちってことにはなかなかならないかなぁ。筋が通ってない当てずっぽうは後であたってても尊敬されないし、適当な事言ってもまず当たらないし。</div>
+		<p></p>
+		<div class="Q">提唱から発見まで５０年かかったりするんですね。</div>
+		<div class="A">ヒッグスさんが生きている間でまだよかったです。</div>
+		<p></p>
+		<div class="Q">難しかった（という感想が多かった）。</div>
+		<div class="A">ある意味最先端物理の世界（理論的には50年前だけど）なので本当はじっくり時間かけて話さないと駄目なんですが、この授業では雰囲気だけということで。</div>
+		<p></p>
+		<div class="Q">CERNってすごいお金持っているんですね。</div>
+		<div class="A">ヨーロッパのたくさんの国が合同で運営してます。日本の物理学者もたくさん参加してますよ。</div>
+		<p></p>
+		<div class="Q">全ての物質が場のさざ波だというのは驚きだった。</div>
+		<div class="A">実はそうなんです。</div>
+		<p></p>
+		<div class="Q">最近は内容も難しくなって「軽い気持ちで話を聴く」ができなくなってきました。</div>
+		<div class="A">とはいえ試験なんかはない（毎回の小レポのみ）ので、気楽にどうぞ。</div>
+		<p></p>
+		<div class="Q">ダークマターは粒子が動いてないから見えないんですか？</div>
+		<div class="A">ダークマターはいまんところどんな粒子かすらわかってませんが、動くとか動かないとかの問題より、他の粒子との相互作用がとても小さいから見えないのだろうと思われています。</div>
+		<p></p>
+		<div class="Q">ヒッグス粒子があるかないかわからない時代からその存在を仮定できるというのはすごいと思った。</div>
+		<div class="A">いろんな仮定を考えて試す、ということを繰り返しやってきたおかげです。</div>
+		<p></p>
+		<div class="Q">粒子でもあり、波でもあるというイメージがやっとつかめた。</div>
+		<div class="A">現実なんですが、なかなかイメージしにくい現実ですね。</div>
+		<p></p>
+		<div class="Q">ヒッグスの真空は「マイナスエネルギーの真空」ですか？</div>
+		<div class="A">どこがエネルギーの原点か、ということによって変わってしまうんですが、原点を0とするとマイナスになってしまいます。</div>
+		<p></p>
+		<div class="Q">ヒッグス場とか電場とかいろいろあるみたいですが、それぞれの場の位置関係はどうなっているのですか。</div>
+		<div class="A">場は空間の各点各点にいっせいに存在してます。だから位置関係としては「どの場所も複数個の場が重なって存在している」ということになります。</div>
+		<p></p>
+		<div class="Q">ヒッグス粒子が見つかったら便利なことって何かあるんですか。</div>
+		<div class="A">便利になることが見つかるまでにはまだまだ時間がかかると思います。</div>
+		<p></p>
+		<div class="Q">ヒッグス粒子を持っている粒子と持っていない粒子は何の違いがあるんですか？</div>
+		<div class="A">「持っている」というより「ヒッグス粒子と相互作用する」ですね。ほぼ全部の粒子が相互作用します（しない粒子は質量０のまま）。それはやはり粒子の種類によります。</div>
+		<p></p>
+		<div class="Q">もしヒッグス場が間違いだという実験結果が出ていたら５０年分の理論が無になっていたことはありえたのでしょうか。</div>
+		<div class="A">「無」にはならないけど、大きく方向転換は必要でしたね。もちろん、この50年の間には「ヒッグス場がなかった場合の理論」もたくさん作られていました。理論の発展というのはそういうものです。</div>
+		<p></p>
+		<div class="Q">マスコミの人はヒッグス粒子のこととかちゃんとわかって報道しているんでしょうか。</div>
+		<div class="A">ちゃんとわかっている人もいるし、いない人もいます。</div>
+		<p></p>
+		<div class="Q">世間に流れている嘘の情報に流されないようにしたい。</div>
+		<div class="A">そのためにも大学で勉強してください。</div>
+		<p></p>
+
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page0" data-icon="left">「ヒッグス粒子は何をするか」に戻る</a>
+		<p align="center"><a href="./lec13.html">←第13講に戻る</a>　<a href="./index.html">「時間と空間」講義録に戻る</a></p>
+	  </div>
+	</div>
+  </body>
+</html>

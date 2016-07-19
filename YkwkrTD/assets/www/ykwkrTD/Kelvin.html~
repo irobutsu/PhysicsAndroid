@@ -1,0 +1,48 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebText 動いてよくわかる熱力学</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config( {
+			tex2jax: {
+				inlineMath: [['$','$'], ["\\(","\\)"]]
+			},
+				TeX: {
+					extensions: ["color.js"],
+				}
+		});</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	</script>
+  </head> 
+  <body>
+	<div data-role="page" id="hajimeni">
+	  <div data-role="header">
+		  <h1>ケルビンの原理</h1>
+	  </div>
+	  <div data-role="content">
+		  <h3>Kelvinの原理</h3>
+		  <div class="box">　等温操作で$(T,X)$から$(T,X)$に戻る操作をしたとき、その系のする仕事を$W_{\rm cyc}$とすると、$W_{\rm cyc}\leq0$である。</div>
+		  <p>というのがKelvinの原理。</p>
+		  <p><img src="Kelvin.png" width="50%"></p>
+		  <p>　上の図のような「元に戻ってくる」状況で系のする仕事（$W,W',W''$）は0または負である、というのがKelvinの原理である。</p>
+		  <p>　上で例に出した気体でなく一般的にそうだ、と主張している。ただしこれは「要請」であって、（少なくとも熱力学の範囲では）何かによって証明されたりはしない。</p>
+		  <div class="A">　こういう「要請」は全ての学問にある。力学なら運動の三法則は証明されないが、「もっともな要請」として受け入れられている。</div>
+		  <p>　Kelvinの原理がある為、自分の状態を変えることなく仕事を生み出す、ということは誰にも（何にも）できない（Kelvinの原理の反例は見つかってない）。これはエネルギー保存則とは別の、新しい法則である。たとえば$W_{\rm cyc}>0$な物が見つかったとしても、エネルギー保存則は満たしている。しかし、Kelvinの原理を満たしてないから存在できない。</p>
+		  <p>　今考えているのは等温環境の中に置かれた系なので、周囲と熱のやりとりはできる。系が仕事Wをしても、熱Qを吸収して、その吸収した熱Qを仕事にしていると考えれば、エネルギーは保存していることに注意。つまりエネルギーが保存するだけでなく、Kelvinの原理が成り立つという法則も要求しないと、この世界の記述としては不十分なのである。</div>
+				<p>　地球上で、「仕事をし続ける」という現象が起きているときは、なんらかの形でKelvinの原理の前提が成り立っていない。たとえば植物は光合成をしてエネルギーを（ブドウ糖や澱粉を合成するという形で）作り出し続けている。これがなぜ許されるかというと、太陽というエネルギー源であると同時に地球（たとえば25度）よりも高温の状態（太陽の温度は6000度）があって、この温度差による熱の流れをエネルギーに変換できるからである。Kelvinの原理は等温環境の話だから、6000度の物体と25度の物体が共存しているところでは仕事をし続けることができる（その温度差が存在している限りは）。</p>
+				<div class="A">　要はエネルギーを取り出せるかどうかにとって重要なのは、そこに温度差があるか？ということ。</div>
+				<p>　たとえば水力発電なんてのも、太陽が水を温めて蒸発させ、雨として高いところに持ち上げてくれるからできる。</p>
+
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='#index'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+	  </div>
+	</div>
+  </body>
+</html>

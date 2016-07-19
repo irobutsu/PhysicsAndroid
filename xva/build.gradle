@@ -11,10 +11,10 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['lib','src']
-            resources.srcDirs = ['lib','src']
-            aidl.srcDirs = ['lib','src']
-            renderscript.srcDirs = ['lib','src']
+            java.srcDirs = ['../phys_lib/src','src']
+            resources.srcDirs = ['../phys_lib/src','src']
+            aidl.srcDirs = ['../phys_lib/src','src']
+            renderscript.srcDirs = ['../phys_lib/src','src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }

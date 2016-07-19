@@ -1,0 +1,35 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>テイラー展開</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="../jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+	<link href="../vg.css" rel="stylesheet" type="text/css"/>
+	<script src="../jquery.js" type="text/javascript"></script>
+	<script src="../jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+  </head>
+
+  <body>
+	  <div data-role="page" id="page">
+		  <div data-role="header">
+			  <h1>テイラー展開</h1>
+		  </div>
+		  <div data-role="content">
+			  <p>　テイラー展開をグラフで表現する。</p>
+			  <p><img src="taylor_sin.png" width="40%"></p>
+			  <button onclick="location.href='taylor_geo.html'">等比級数になるテイラー展開</button>
+			  <button onclick="location.href='taylor_exp.html'">expのテイラー展開</button>
+			  <button onclick="location.href='taylor_sin.html'">sinのテイラー展開</button>
+			  <button onclick="location.href='taylor_cos.html'">cosのテイラー展開</button>
+			  <button onclick="location.href='taylor_sqrt.html'">√のテイラー展開</button>
+			  <button onclick="location.href='taylor_log.html'">logのテイラー展開</button>
+		  </div>
+		  	<div data-role="footer" align=center>
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+  </body>
+</html>

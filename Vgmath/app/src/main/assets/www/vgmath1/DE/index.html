@@ -1,0 +1,339 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>微分方程式を図解する</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="../jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="../vg.css" rel="stylesheet" type="text/css"/>
+		<script src="../jquery.js" type="text/javascript"></script>
+		<script src="../jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<meta content="前野［いろもの物理学者］昌弘" name="author">
+		<script src="DE.js" type="text/javascript"></script>
+	</head> 
+	<body> 
+		<script>
+		var ct1,ct2,ct3,ct4,lastct;
+		$(document).delegate('#page1','pageinit',function(e) {
+			val=0;
+			init("canvas1");
+			ct1=graphics;
+		});
+		$(document).delegate('#page2','pageinit',function(e) {
+			val=1;
+			init("canvas2");
+			ct2=graphics;
+		});
+		$(document).delegate('#page3','pageinit',function(e) {
+			val=2;
+			init("canvas3");
+			ct3=graphics;
+		});
+		$(document).delegate('#page4','pageinit',function(e) {
+			val=5;
+			init("canvas4");
+			ct4=graphics;
+		});
+		$(document).delegate('#lastpage','pageinit',function(e) {
+			init("lastcanvas");
+			lastct=graphics;
+		});
+		$(document).delegate('#page1','pageshow',function() {
+			val=0;
+			mode=0;
+			a=1;
+			changeA();
+			anime_End=true;
+			graphics=ct1;
+			reset();
+		});
+		$(document).delegate('#page2','pageshow',function() {
+			val=1;
+			mode=0;
+			a=1;
+			anime_End=true;
+			changeA();
+			graphics=ct2;
+			reset();
+		});
+		$(document).delegate('#page3','pageshow',function() {
+			val=2;
+			mode=0;
+			a=1;
+			changeA();
+			anime_End=true;
+			graphics=ct3;
+			reset();
+		});
+		$(document).delegate('#page4','pageshow',function() {
+			val=5;
+			mode=0;
+			a=1;
+			changeA();
+			anime_End=true;
+			graphics=ct4;
+			reset();
+		});
+		$(document).delegate('#lastpage','pageshow',function() {
+			vol=0;
+			mode=0;
+			a=1;
+			changeA();
+			graphics=lastct;
+			reset();
+		});
+
+		function upA() {
+			a +=0.1;
+			if( a>5 ) { a=5; }
+			changeA();
+		}
+		function downA() {
+			a-=0.1;
+			if( a<=0 ) { a=0.1;}
+			changeA();
+		}
+
+		function changeA() {
+			var elements = document.getElementsByName('a_value');
+			a *=10;
+			a=Math.round(a);
+			a/=10;
+			var i;
+			for(i=0; i<elements.length ; i++ ) {
+				elements.item(i).innerHTML=a;
+			}
+			reset();
+		}
+		</script>
+		<div data-role="page" id="hajimeni">
+			<div data-role="header">
+				<h1>微分方程式を図解する</h1>
+				<h3>はじめに</h3>
+			</div>
+			<div data-role="content">
+      			<p>　微分方程式を解くには、積分という数学的技巧が必要になる。　なぜなら、物理法則のほとんどが「微分形」で書かれているからである。「微分形で書かれている」というのは「微小変化と微小変化の関係式で書かれている」と言ってもよい。物理の主な分野における基礎方程式は、運動方程式</p>
+      			<p>$$F=m{\mathrm d^2 x\over\mathrm dt^2}$$</p>
+      			<p>を初めとして、微分方程式だらけなのである。</p>
+      			<p>　計算ではなく図形で「微分方程式を解いて関数を求める」というのはどういうことなのかを感じていただけたらと思い、アニメーションプログラムを作った。ただ計算するのではなく、「何を計算しているのか」をわかった上で計算のテクニックを学んだ方が理解は深まると思う。</p>
+				<p>　ここでは微分方程式の中でも一番単純な「一階常微分方程式」を考える。「一階常微分方程式を解く」とはどういうことか、一言で言えば、</p>
+      			<hr>
+      			<p>$\mathrm dx$と $\mathrm dy$の関係が与えられた時、$x$と $y$ の関係を求める。</p>
+      			<hr>
+      			<p>ということになる。</p>
+				<p>　$\mathrm dx$と $\mathrm dy$の意味は、「$x$の微小な変化」と「$y$の微小な変化」である。</p>
+				<p><img src="dxdy.svg" width="70%"></p>
+				<p>　$y$は$x$の関数であるから、「$x$を一つ決めれば $y$が一つ決まる」という関係にある。そこで「$x$をほんの少し（$\mathrm dx$）動かすと$y$はどれだけ（$\mathrm dy$）動くか」という「変化と変化の関係」を考えることができる。関数が与えられた時に$\mathrm dy$と$\mathrm dx$の比(dy/dx）を計算するのが「微分する」もしくは「導関数を求める」という操作であった。</p>
+				<p>　微分という操作の逆を行い、「各点各点における$\mathrm dx$と$\mathrm dy$の比」を与えて「じゃあ今考えている関数はどういう関数なのか」を決めるのが「微分方程式を解く」ということなのである。一般には</p>
+				<p>$${\mathrm dy\over\mathrm dx}=f(x,y)$$</p>
+				<p>のように右辺は$x$と$y$の関数で書かれる。</p>
+				<p>　では、次のページから、非常に簡単な例で微分方程式を図解していこう。</p>
+				<h4>目次</h4>
+      			<p>はじめに（このページ）</p>
+				<button onclick="location.href='#page1'">一番簡単な例:${\mathrm dy\over\mathrm dx}=a$</button>
+				<button onclick="location.href='#page2'">少し方程式らしく:${\mathrm dy\over\mathrm dx}=ax$</button>
+				<button onclick="location.href='#page3'">${\mathrm dy\over\mathrm dx}=ay$ならどうなる？</button>
+				<button onclick="location.href='#page4'">直線になる例${\mathrm dy\over\mathrm dx}={y\over x}$</button>
+				<button onclick="location.href='#lastpage'">いろいろやってみよう</button>
+			</div>
+			<div data-role="footer" align=center>
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="一番簡単な例" data-icon="arrow-r"  onclick="location.href='#page1'">
+			</div>
+		</div>
+		<div data-role="page" id="page1">
+			<div data-role="header">
+				<h1>1 一番簡単な例:${\mathrm dy\over\mathrm dx}=a$</h1>
+			</div>
+			<div data-role="content">
+				<br>
+				<p>　一階微分方程式の中でも簡単とおもわれる、</p>
+				<p><img src="dydxa.svg" width="10%" alt="{\mathrm dy\over\mathrm dx}=a">　(aは定数)</p>
+				<p>から始めよう。$y$という関数は微分したら定数aになる、というのだから、答はもう</p>
+				<p>$$y=ax+C　(Cは積分定数）$$</p>
+				<p>となることはわかっているのだが、それをあえて図で表現してみたい。</p>
+				<p>　図で考えると、${\mathrm dy\over\mathrm dx}$（すなわち、導関数または微係数）というのはつまり、「グラフの傾き」である。</p>
+				<p>　$a=1$の場合を考えると、${\mathrm dy\over\mathrm dx}=1$つまり傾き1というのはx軸から45度の傾斜を持っている線だということになる。しかもこれは定数だから、どの点でも同じである。それを、次の図のように表す。</p>
+				<p>
+					<canvas width="400" height="400" id="canvas1"></canvas>
+				</p>
+				<p>　水平の黒線は$x$軸、鉛直の黒線は$y$軸である。</p>
+				<p>　図の中の<img src="45do.png" width="27" height="27" alt="45度の線">というマークは、${\mathrm dy\over\mathrm dx}=1$、つまり傾きが1であることを表現している。      </p>
+				<p>　$\mathrm dy$と$\mathrm dx$が同じ、つまり$x$が変化する時、$y$も同じだけ変化しなさい、というのは$x$軸に対して45度の方向に動け、ということと同じなのである。</p>
+				<p>　各場所で<img src="45do.png" width="27" height="27" alt="45度の線">の方向に動けば、どのような線（関数）ができるか？---どうなるかを予想した上で</p>
+				<p>
+					<button data-inline="true" onClick="mode=1; reset();">線引き開始</button>
+					
+					ボタンを押してみよう。</p>   <p>　<span class="redstring">赤い線―</span>で予想どおりの線が引かれたであろうか？ </p>
+					<p>アニメーションを止めたい時は、
+						<button data-inline="true" onClick="anime_End=true;">線引き停止</button>を押そう。
+					</p>
+					
+					<p>　下のボタンで、</p>
+					<p>$${\mathrm dy\over\mathrm dx}=a$$</p>
+					<p>の$a$（つまり傾き）の値を（0.1〜5の範囲で）変えることができるので、その変化を観察しよう。 </p>     
+					<p> <a href="#" data-role="button" data-inline="true" onClick="downA();">＜</a>a=<span name="a_value">1.0</span><a href="#" data-role="button" data-inline="true" onClick="upA(); ">＞</a>
+			</div>
+			<div data-role="footer" align=center>
+				<input type="button" value="はじめに" data-icon="arrow-l"  onclick="location.href='#hajimeni'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="少し方程式らしく" data-icon="arrow-r"  onclick="location.href='#page2'">
+			</div>
+		</div>
+
+		<div data-role="page" id="page2">
+			<div data-role="header">
+				<h1>少し方程式らしく${\mathrm dy\over\mathrm dx}=ax$</h1>
+			</div>
+			<div data-role="content">	
+				<p>&nbsp;</p>
+				<p>　少し問題を難しくして、</p>
+				<p><img src="dydxax.svg" alt="{\mathrm dy\over\mathrm dx}=ax" width="10%"></p>
+				<p>という微分方程式を考えよう。この場合の${\mathrm dy\over\mathrm dx}$を表す図は、</p>
+				<p>
+					<canvas width="400" height="400" id="canvas2"></canvas>
+				</p>
+				<p>である。つまり、傾きがxの１次式で変化する（右へ行くほど傾きが急になることを確認しよう）。y軸より左では傾きがマイナスなので、右下がりの傾きになっている。</p>
+				<p>　では、各場所でこの傾きにしたがって線を引いていくとどうなるか？</p>
+				<p>予想した後で、
+					<button data-inline="true" onClick="mode=1; reset();">線引き開始</button>
+					
+					ボタンを押してみよう。</p>   <p>　赤い線―で予想どおりの線が引かれたであろうか？（この線の形が予想できただろうか？）</p>
+					<p>アニメーションを止めたい時は、
+						<button data-inline="true" onClick="anime_End=true;">線引き停止</button>を押そう。
+					</p>     
+					<p>　下のボタンで、${\mathrm dy\over\mathrm dx}=a$の$a$の値を（0.1〜3の範囲で）変えることができるので、その変化を観察しよう。 </p>     
+					<p> <a href="#" data-role="button" data-inline="true" onClick="downA();">＜</a>$a=$<span name="a_value">1.0</span><a href="#" data-role="button" data-inline="true" onClick="upA(); ">＞</a>
+						<p>　計算により微分方程式を解く場合、この式は</p>
+						<p>$${\mathrm dy\over\mathrm dx}=ax$$</p>
+						<p>$$y= {ax^2\over2} +C$$</p>
+						<p>のように解かれる。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="一番簡単な例" data-icon="arrow-l"  onclick="location.href='#page1'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="(dy/dx)=ayならどうなる？" data-icon="arrow-r"  onclick="location.href='#page3'">
+			</div>
+		</div>
+
+		<div data-role="page" id="page3">
+			<div data-role="header">
+				<h1>${\mathrm dy\over\mathrm dx}=ay$ならどうなる？</h1>
+			</div>
+			<div data-role="content">	
+				<p>今度は</p>
+				<p><img src="dydxay.svg" width="10%" alt="{\mathrm dy\over\mathrm dx}=ay"></p>
+				<p>を考えてみよう。この式は「yが大きいほど傾きが大きくなる」を意味している。図を見て傾きがy座標に比例していることを確認した後、前頁までと同様にグラフを書かせてみよう。</p>
+				<canvas width="400" height="400" id="canvas3"></canvas>
+				<p>以下のボタン類の意味はこれまでと同様。</p>
+				<button data-inline="true" onClick="mode=1; reset();">線引き開始</button>
+				
+				
+				<button data-inline="true" onClick="anime_End=true;">線引き停止</button>
+					</p>     
+					<p> <a href="#btd3" data-role="button" data-inline="true" onClick="downA();">＜</a>$a=$<span name="a_value">1.0</span><a href="#btu3" data-role="button" data-inline="true" onClick="upA(); ">＞</a></p>
+					<p>　計算で答を出すのであれば、</p>
+					<p>${\mathrm dy\over\mathrm dx}=ay$</p>
+					<p>$y= C \exp(ax)$</p>
+					<p>となる。グラフが指数関数であることを確認しよう。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="一番簡単な例" data-icon="arrow-l"  onclick="location.href='#page1'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="直線になる例:(dy/dx)=y/x" data-icon="arrow-r"  onclick="location.href='#page4'">
+			</div>
+		</div>
+		<div data-role="page" id="page4">
+			<div data-role="header">
+				<h1>直線になる例：${\mathrm dy\over\mathrm dx}={y\over x}$</h1>
+			</div>
+			<div data-role="content">	
+				<p>今度は</p>
+				<p><img src="dydxyx.svg" width="10%" alt="{\mathrm dy\over\mathrm dx}=y/x"></p>
+				<p>を考えてみよう。</p>
+				<p>　この式の意味するところは「グラフの傾き（下の図の<span class="cyanstring">水色の直角三角形</span>の斜辺の傾き）と${y\over x}$（下の図の<span class="bluestring">青色の直角三角形</span>の斜辺の傾き）が等しい」である。</p>
+				<p><img src="chokusen.svg" width="70%"></p>
+				<p>　この下にこれまで同様の「動く図」がある。どのような関数になるか、だいたいわかると思うが、これまで同様に絵を書かせてみよう。</p>
+				<canvas width="400" height="400" id="canvas4"></canvas>
+				<p>以下のボタン類の意味はこれまでと同様（このページでは、aは変えられない）。</p>
+				<button data-inline="true" onClick="mode=1; reset();">線引き開始</button>
+				
+				
+				<button data-inline="true" onClick="anime_End=true;">線引き停止	  </button>
+				<p>　計算で答を出すのであれば、</p>
+				<p>$${\mathrm dy\over\mathrm dx}={y\over x}$$</p>
+				<p>から（ちょこちょこと計算することで）</p>
+				<p>$$y= C x$$</p>
+				<p>となる（この場合図で考えるより計算する方がむしろ難しい！）。</p>
+				<p>　これが</p>
+				<p>${\mathrm dy\over\mathrm dx}=a{y\over x}$</p>
+				<p>だとどうなるかもやってみるといいだろう。次に用意した最後のページでいろんな場合を試すことができる。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="(dy/dx)=ayならどうなる？" data-icon="arrow-l"  onclick="location.href='#page3'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="いろいろやってみよう" data-icon="arrow-r"  onclick="location.href='#lastpage'">
+			</div>
+		</div>
+
+		<div data-role="page" id="lastpage">
+			<div data-role="header">
+				<h1>いろいろやってみよう</h1>
+			</div>
+			
+			<div data-role="content">	
+				<p>　さて、最後のページではいろんな関数を表示できるようにしてあるので、自由に遊んでみて欲しい。 </p>
+				<p>　ゆっくりとアニメーションで図を書くのがまっていられない人の為に、一挙に線を引いてしまうこともできるようにした。下にある「描画モード」を選べばよい。</p>
+				<p>			　微分方程式を計算して解いていくのはもちろん大事だが、こういう図のイメージで「微分方程式を解いて関数を求める」というのは何をやっているのかを感じておくのも大事である。<br>
+					<br>
+					<canvas width="600" height="600" id="lastcanvas"></canvas>
+				</p>
+				<div data-role="fieldcontain">
+					<p> <a href="#btd3" data-role="button" data-inline="true" onClick="downA();">＜</a>a=<span name="a_value">1.0</span><a href="#btu3" data-role="button" data-inline="true" onClick="upA(); ">＞</a></p>	
+				</div>
+				<div class="ui-grid-a">
+					<div class="ui-block-a"><div data-role="fieldcontain">${\mathrm dy\over\mathrm dx}=$
+						<select name="selectmenu" id="selectmenu" data-inline="true" onChange="changefunc('#selectmenu');">
+							<option value="0">a</option>
+							<option value="1">ax</option>
+							<option value="2">ay</option>
+							<option value="3">a/x</option>
+							<option value="4">a/x^2</option>
+							<option value="5">ay/x</option>
+							<option value="6">-ax/y</option>
+							<option value="7">ax/y</option>
+							<option value="8">axy</option>
+							<option value="9">-axy</option>
+							<option value="10">sin 2ax</option>
+							<option value="11">ax+y</option>
+							<option value="12">ay(1-y)</option>
+						</select>
+					</div>
+					</div>
+					<div class="ui-block-b"><div data-role="fieldcontain">描画モード：
+						<select name="selectmenu2" id="selectmenu2" data-inline="true" onChange="changeMode('#selectmenu2');">
+							<option value="diffonly">微係数のみ</option>
+							<option value="solanime">解をアニメする</option>
+							<option value="solution">解を描く</option>
+						</select>
+					</div>
+					</div>
+				</div>
+				
+				
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="直線になる例：(dy/dx)=a(y/x)" data-icon="arrow-l"  onclick="location.href='#page4'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>

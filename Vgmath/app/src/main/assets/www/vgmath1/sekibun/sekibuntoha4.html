@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width; target-densityDpi=device-dpi; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"/>
+		<title>積分ってなあに？（その３）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="../jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="../vg.css" rel="stylesheet" type="text/css"/>
+		<script src="../jquery.js" type="text/javascript"></script>
+		<script src="../jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<style type="text/css">
+		body {
+			background-color: #FFFFFF;
+		}
+		img {
+			vertical-align:middle;
+		}
+		.centering{ text-align:center;}
+		.magenta { color:magenta; }
+		.red { color:red; }
+		.blue { color:blue; }
+		.cyan { color:cyan; }
+		.chuumoku {
+			text-align:center;
+			font-size: x-large;
+			color:red;
+		}
+		</style>
+		<script type="application/javascript" src="sekibuntoha.js"></script>
+		<script type="application/javascript">
+		$(document).delegate('#page4','pageinit',function(e) {
+			init(); c=0; b=0.5; N=5; autoUpFlg=0; nuriFlg=-1; f=linear; Intf=Intlinear; animationGO();
+		});
+		</script>
+	</head>
+	<body>
+		<div data-role="page" id="page4">
+			<div data-role="header">
+				<h1>積分ってなあに？（その４）</h1>
+			</div>
+			<div data-role="content">
+				　下の図は、分割数Nを変化させることができる。変化させて、実際の現象への近づき方を見てみよう。
+		<br><hr>
+		<canvas width=500 height=500 id="maincanvas"></canvas>
+		<br><button id="bdown"
+				onClick="bdown();document.getElementById('blabel').innerHTML=b;" data-inline="true">（←減）
+		</button>a=<span id="blabel">0.5</span><button id="bup"
+												   onClick="bup();document.getElementById('blabel').innerHTML=b;" data-inline="true">（増→）
+		</button><br>
+		<br><button id="Ndown"
+				onClick="Ndown();document.getElementById('Nlabel').innerHTML=N;" data-inline="true">（←減）
+		</button>N=<span id="Nlabel">5</span><button id="Nup"
+												 onClick="Nup();document.getElementById('Nlabel').innerHTML=N;" data-inline="true">（増→）
+		</button>
+		<hr>
+		<p><br>
+			　Nが十分大きくなれば、この現象は「連続的に流水量を増やしていった場合」と変わらない、ということがわかるだろう。N→∞の極限を取ることを考えれば、最終的結果はグラフの下の部分（三角形）の面積となる、ということである。
+			<br>
+			<br>　数式で示しておこう。時刻tが0〜Tまで経過したとして、その時間TをNに分割しているとすると、分割の一個はΔt=T/Nである。ここで計算している水色の長方形一個の面積は
+			<br><br>iaΔt×Δt<br><br>で、iを1からN-1まで足すことになる。
+			<br><br>$1+2+3+4+…+N-1={N(N-1)\over2}$<br><br>という公式があるのでこの答えは
+			<br><br>$${aN(N-1)(\Delta t)^2\over2}={aN\Delta t\times(N-1)\Delta t\over 2}$$<br><br>
+			であるが、$N\Delta t=T$で、$(N-1)\Delta t$は「$T=N\Delta t$より$\Delta t$だけ小さい」（<small>ということは、$N\to\infty$で$\Delta t\to0$となれば差はないも同然</small>）と考えれば、
+			<br><br>$${aN(N-1)(\Delta t)^2\over2}\to{aT^2\over2}$$<br><br>
+			となる。これは底辺Tで高さがaTの三角形の面積そのものである。 <br>　これを積分記号を使った式でかけば、
+			<br><br>$$\int_0^T at\mathrm dt={aT^2\over2}$$
+			<br><br>
+			　ということで、このように「刻一刻と変化していく量との掛算」に対応するのが積分なのである。</p>
+			<p>　積分は「単なる定数vとｔの掛け算ではなく、変化するvとtの掛け算である」という意味では<span class="chuumoku">「掛け算の進化系」</span>である。</p>
+			<p>　そして、ちょっとずつ変化する量×Δt（<span class="cyan">図の水色長方形</span>）をえんえんと（無限回！）足した結果だと思えば<span class="chuumoku">「足し算の化け物」</span>でもある。</p>
+			<p>　流量が直線的でない変化をする場合については、<input type="button" value="その５" data-inline="true" data-icon="arrow-r" onclick="location.href='./sekibuntoha5.html'">で考えよう。</p>
+			</div>
+			<div data-role="footer" align=center>
+				<input type="button" value="その３" data-icon="arrow-l" onclick="location.href='./sekibuntoha3.html'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="その５" data-icon="arrow-r" onclick="location.href='./sekibuntoha5.html'">
+			</div>
+		</div>
+	</body>
+</html>
+

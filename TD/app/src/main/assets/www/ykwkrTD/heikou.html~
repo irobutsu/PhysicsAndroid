@@ -1,0 +1,637 @@
+<!Doctype html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>熱力学2015年度第３回</title>
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css" />
+		<script src="jquery-1.11.1.min.js" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<script src="vector.js" type="text/javascript"></script>
+		<script src="yajirushi.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<link rel="STYLESHEET" href="ss.css" type="text/css">
+		<script type="text/javascript">
+		function rgb_temp(T,tmin,tmax,P,pmin,pmax) {
+			var tdiff=tmax-tmin;
+			var t=T;
+			var p=P;
+			if( P>pmax ) { p=pmax; }
+			if( P<pmin ) { p=pmin; }
+			if( T>tmax ) { t=tmax;}
+			if( T<tmin ) { t=tmin; }
+			var r=Math.ceil((t-tmin)/ tdiff*255);
+			var b=255-r;
+			var g=Math.ceil(b*0.8+50);
+			var a=(P-pmin)/(pmax-pmin);
+			return "rgba("+r+","+g+","+b+","+a+")";
+		}
+		var Piston=function(canvas_string,gFlg) {
+			this.speed=0.01;
+			if( gFlg ) {
+				this.gFlg=true;
+				h=12.5;
+			} else {
+				this.gFlg=false;
+				h=2.5;
+			}
+			this.sc=new RescaleScreen(canvas_string,16,h,0.95);
+			this.sc.setBottom(-0.25);
+			this.sc.setLeft(-1);
+			this.sc.gobackOriginalSize();
+			this.ct=this.sc.canvas.getContext("2d");
+			this.T=[]; // 各々ブロックの絶対温度
+			this.P=[]; // 各々ブロックの圧力
+			this.V=[];
+			this.KX=[]; 
+			this.BX=10;
+			this.BY=2
+			this.t=0;
+			this.stepX=0.8;
+			this.maxTemp=700;
+			this.minTemp=100;
+			this.minP=100;
+			this.maxP=700;
+			this.stopFlg=false;
+			this.isothermal=false;
+			this.init_blocks();
+			if( gFlg) {
+				this.initHistory();
+			}
+		};
+		Piston.prototype.initHistory=function() {
+			this.history=[];
+			this.history[0]=new Object;
+			this.history[0].v=8;
+			this.history[0].p=this.BY+6;
+		};
+		Piston.prototype.writeContents=function() {
+			this.write_blocks();
+		};
+		Piston.prototype.init_blocks=function() {
+			this.pushPiston=0;
+			this.pullPiston=0;
+			this.oldV=[];
+			var i,j;
+			for(i=0; i< this.BX; i++ ) {
+				this.T[i]=400;
+				this.P[i]=400/this.stepX; //  400/0.8=500;
+				this.V[i]=this.stepX;
+				this.oldV[i]=this.stepX;
+				this.KX[i]=(1+i)*this.stepX;
+			}
+		};
+		Piston.prototype.write_oneBlock=function(Temp,Pres,x1,x2) {
+			this.ct.fillStyle=rgb_temp(Temp,this.minTemp,this.maxTemp,Pres,this.minP,this.maxP);
+			this.ct.strokeStyle=rgb_temp(Temp,this.minTemp,this.maxTemp,Pres,this.minP,this.maxP);
+			this.ct.beginPath();
+			this.ct.moveTo(x1,0);
+			this.ct.lineTo(x1,this.BY);
+			this.ct.lineTo(x2+0.01,this.BY);
+			this.ct.lineTo(x2+0.01,0);
+			this.ct.closePath();
+			this.ct.fill();
+		};
+		Piston.prototype.write_blocks=function() {
+			var i;
+			this.ct.fillStyle="rgb(0,0,0)";
+			this.ct.beginPath();
+			this.ct.moveTo(-0.3,-0.3);
+			this.ct.lineTo(this.sc.rightwx,-0.3);
+			this.ct.lineTo(this.sc.rightwx,this.BY+0.3);
+			this.ct.lineTo(-0.3,this.BY+0.3);
+			this.ct.closePath();
+			this.ct.fill();
+			if( this.isothermal ) {
+				this.ct.fillStyle="rgb(169,187,169)";
+				this.ct.beginPath();
+				this.ct.moveTo(-0.25,0);
+				this.ct.lineTo(-0.04,0);
+				this.ct.lineTo(-0.04,this.BY);
+				this.ct.lineTo(-0.25,this.BY);
+				this.ct.closePath();
+				this.ct.fill();
+			}
+			this.ct.fillStyle="rgb(80,80,80)";
+			this.ct.beginPath();
+			this.ct.moveTo(this.BX*this.stepX,-0.3);
+			this.ct.lineTo(this.sc.rightwx,-0.3);
+			this.ct.lineTo(this.sc.rightwx,this.BY+0.3);
+			this.ct.lineTo(this.BX*this.stepX,this.BY+0.3);
+			this.ct.closePath();
+			this.ct.fill();
+			this.ct.fillStyle="rgb(255,255,255)";
+			this.ct.beginPath();
+			this.ct.moveTo(0,0);
+			this.ct.lineTo(0,this.BY);
+			this.ct.lineTo(this.sc.rightwx,this.BY);
+			this.ct.lineTo(this.sc.rightwx,0);
+			this.ct.closePath();
+			this.ct.fill();
+			
+			this.write_oneBlock(this.T[0],this.P[0],0,this.KX[0]);
+			for(i=1; i<this.BX ; i++ ) {
+				this.write_oneBlock(this.T[i],this.P[i],this.KX[i-1],this.KX[i]);
+			}
+			this.ct.fillStyle="rgb(0,40,40)";
+			this.ct.beginPath();
+			this.ct.moveTo(this.KX[this.BX-1],0);
+			this.ct.lineTo(this.KX[this.BX-1],this.BY);
+			this.ct.lineTo(this.KX[this.BX-1]+0.5,this.BY);
+			this.ct.lineTo(this.KX[this.BX-1]+0.5,0);
+			this.ct.closePath();
+			this.ct.fill();
+			this.ct.fillStyle="rgb(255,0,0)";
+			this.ct.strokeStyle="rgb(180,180,180)";
+			this.ct.beginPath();
+			if( this.pullPiston >0 ) {
+				this.ct.moveTo(this.KX[this.BX-1]+0.7,this.BY*0.5);
+				this.ct.lineTo(this.KX[this.BX-1]+0.5,this.BY*0.5+0.2);
+				this.ct.lineTo(this.KX[this.BX-1]+0.5,this.BY*0.5+0.1);
+				this.ct.lineTo(this.KX[this.BX-1]+0.2,this.BY*0.5+0.1);
+				this.ct.lineTo(this.KX[this.BX-1]+0.2,this.BY*0.5-0.1);
+				this.ct.lineTo(this.KX[this.BX-1]+0.5,this.BY*0.5-0.1);
+				this.ct.lineTo(this.KX[this.BX-1]+0.5,this.BY*0.5-0.2);
+				this.ct.closePath();
+				this.ct.fill();
+				this.ct.stroke();
+			} else if( this.pushPiston >0 ) {
+				this.ct.moveTo(this.KX[this.BX-1]+0.2,this.BY*0.5);
+				this.ct.lineTo(this.KX[this.BX-1]+0.4,this.BY*0.5+0.2);
+				this.ct.lineTo(this.KX[this.BX-1]+0.4,this.BY*0.5+0.1);
+				this.ct.lineTo(this.KX[this.BX-1]+0.7,this.BY*0.5+0.1);
+				this.ct.lineTo(this.KX[this.BX-1]+0.7,this.BY*0.5-0.1);
+				this.ct.lineTo(this.KX[this.BX-1]+0.4,this.BY*0.5-0.1);
+				this.ct.lineTo(this.KX[this.BX-1]+0.4,this.BY*0.5-0.2);
+				this.ct.closePath();
+				this.ct.fill();
+				this.ct.stroke();
+			}
+			var pp=this.P[this.BX-1]/200;
+
+			this.ct.fillStyle="rgb(0,100,255)";
+			this.ct.beginPath();
+			this.ct.moveTo(this.KX[this.BX-1]+0.7*pp,this.BY*0.2);
+			this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.2+0.2);
+			this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.2+0.1);
+			this.ct.lineTo(this.KX[this.BX-1],this.BY*0.2+0.1);
+			this.ct.lineTo(this.KX[this.BX-1],this.BY*0.2-0.1);
+			this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.2-0.1);
+			this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.2-0.2);
+			this.ct.closePath();
+			this.ct.fill();
+			this.ct.beginPath();
+			this.ct.moveTo(this.KX[this.BX-1]+0.7*pp,this.BY*0.8);
+			this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.8+0.2);
+			this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.8+0.1);
+			this.ct.lineTo(this.KX[this.BX-1],this.BY*0.8+0.1);
+			this.ct.lineTo(this.KX[this.BX-1],this.BY*0.8-0.1);
+			this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.8-0.1);
+			this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.8-0.2);
+			this.ct.closePath();
+			this.ct.fill();
+			if( this.gFlg ) {
+				this.ct.fillStyle="rgb(255,255,255)";
+				this.ct.beginPath();
+				this.ct.moveTo(this.sc.leftwx,this.sc.topy);
+				this.ct.lineTo(this.sc.rightwx,this.sc.topy);
+				this.ct.lineTo(this.sc.rightwx,this.BY+0.5);
+				this.ct.lineTo(this.sc.leftwx,this.BY+0.5);
+				this.ct.closePath();
+				this.ct.fill();
+				this.ct.strokeStyle="rgb(200,200,200)";
+				this.ct.beginPath();
+				this.ct.moveTo(this.sc.leftwx,this.BY+2);
+				this.ct.lineTo(this.sc.rightwx,this.BY+2);
+				this.ct.moveTo(0,this.BY+0.5);
+				this.ct.lineTo(0,this.BY+10);
+				this.ct.stroke();
+				this.ct.strokeStyle="rgb(0,0,200)";
+				this.ct.beginPath();
+				this.ct.moveTo(4,this.BY+10);
+				var i;
+				for( i=4; i< 16; i+=0.1 ) {
+					this.ct.lineTo(i,this.BY+2+32/i);
+				}
+				this.ct.stroke();
+				this.ct.strokeStyle="rgba(0,200,200,0.4)";
+				this.ct.beginPath();
+				var N=this.history.length;
+				var newV=this.KX[this.BX-1];
+				var newP=this.BY+2+this.P[this.BX-1]*0.008;
+				if( this.history[N-1].v == newV && this.history[N-1].p == newP ) {
+					// 前と同じデータだったら何もしない。
+				} else {
+					this.history[N]=new Object;
+					this.history[N].v=newV;
+					this.history[N].p=newP;
+				}
+				this.ct.moveTo(this.history[0].v,this.history[0].p);
+				for(i=1; i< this.history.length ; i++ ) {
+					this.ct.lineTo(this.history[i].v,this.history[i].p);
+				}
+				this.ct.stroke();
+			}
+		};
+		var gammaminusone=2.0/ 3.0;
+		var A=0.0001; // 断熱変化の時定数（大きくし過ぎると変化がおかしくなる）
+		var K=0.1; // 熱伝導の時定数
+		Piston.prototype.ad_phase=function() {
+			// this.KX[this.BX-1]は手で変更されている可能性があるので、これに関係する部分だけもう一回計算する。
+			var newV=this.KX[this.BX-1]-this.KX[this.BX-2];
+			if( newV <= 0 ) {
+				newV=0.1;
+				this.KX[this.BX-1]=this.KX[this.BX-2]+0.1;
+			}
+			this.T[this.BX-1]*=Math.pow(this.oldV[this.BX-1]/newV,gammaminusone);
+			this.P[this.BX-1]=this.T[this.BX-1]/newV;
+			
+			var i;
+			this.KX[0] +=(this.P[0]-this.P[1])*A;
+			if( this.KX[0]>=this.KX[1] ) {
+				this.KX[0]=this.KX[1]-0.001;
+			}
+			
+			for(i=1 ; i< this.BX-1 ; i++ ) { // this.KX[this.BX-1]は手で動かすのでこのループに入ってない。
+				this.KX[i] +=(this.P[i]-this.P[i+1])*A;
+				if( this.KX[i]<=this.KX[i-1] ) {
+					this.KX[i]=this.KX[i-1]+0.001;
+				}
+				if( this.KX[i]>=this.KX[i+1] ) {
+					this.KX[i]=this.KX[i+1]-0.001;
+				}
+			}
+			// 断熱変化による温度変化と、新しい圧力を計算
+			this.T[0] *= Math.pow(this.oldV[0]/ this.KX[0],gammaminusone);
+			this.P[0]=this.T[0]/this.KX[0];
+			for(i=1 ; i<this.BX ; i++ ) {
+				newV=this.KX[i]-this.KX[i-1];
+				this.T[i]*= Math.pow(this.oldV[i]/ newV,gammaminusone);
+				this.P[i]= this.T[i]/newV;
+			}
+			// 次回のために断熱変化前の体積をthis.oldVに保存
+			// この関数を抜けた後でthis.KX[this.BX-1]はインタラクティブに変更される可能性がある。
+			this.oldV=[];
+			this.oldV[0]=this.KX[0];
+			for(i=1 ; i<this.BX ; i++ ) {
+				this.oldV[i]=this.KX[i]-this.KX[i-1];
+			}
+		};
+		// 熱伝導を起こす。
+		Piston.prototype.heattr_phase=function() {
+			var i;
+			var newT=[];
+			newT[0]=this.T[0]+K*(this.T[1]-this.T[0]);
+			for(i=1; i<this.BX-1; i++ ) {
+				newT[i]=this.T[i]+K*(this.T[i+1]+this.T[i-1]-2*this.T[i]);
+			}
+			newT[this.BX-1]=this.T[this.BX-1]+K*(this.T[this.BX-2]-this.T[this.BX-1]);
+			for(i=0; i<this.BX; i++) {
+				this.T[i]=newT[i];
+			}
+			if( this.isothermal ) {
+				this.T[0]=400;
+			}
+		};
+		Piston.prototype.go=function() {
+			if( this.stopFlg ) {
+				return;
+			} else {
+				if( this.pushPiston >0 ) {
+					this.pullPiston=0;
+					this.pushPiston-=this.speed;
+					if( this.KX[this.BX-1]>this.BX*this.stepX) {
+						this.KX[this.BX-1] -= this.speed;
+					} else {
+						this.pushPiston=0;
+					}
+				}
+				if( this.pullPiston >0 ) {
+					this.pushPiston=0;
+					this.pullPiston -=this.speed;
+					if( this.KX[this.BX-1]<this.sc.rightwx-0.8) {
+						this.KX[this.BX-1] += this.speed;
+					} else {
+						this.pullPiston=0;
+					}
+				}
+				this.ad_phase();
+				this.heattr_phase();
+				this.ad_phase();
+				this.heattr_phase();
+				this.ad_phase();
+				this.heattr_phase();
+				this.write_blocks();
+				this.t++;
+			}
+		};
+		Piston.prototype.startstop=function() {
+			if( this.stopFlg ) {
+				this.stopFlg=false;
+				this.go();
+			} else {
+				this.stopFlg=true;
+			}
+		};
+		Piston.prototype.setspeed=function(v) {
+			this.speed=Number(v[0].value);
+		}
+		function piston_go() {
+			pistonA.go();
+			setTimeout("piston_go();",50);
+		}
+		function pistonB_go() {
+			pistonB.go();
+			setTimeout("pistonB_go();",50);
+		}
+		function pistonC_go() {
+			pistonC.go();
+			setTimeout("pistonC_go();",50);
+		}
+		Piston.prototype.startstop=function() {
+			if( this.stopFlg ) {
+				this.stopFlg=false;
+			} else {
+				this.stopFlg=true;
+			}		
+		};
+		function startstop() {
+			pistonA.startstop();
+		}
+		function startstopB() {
+			pistonB.startstop();
+		}
+		function startstopC() {
+			pistonC.startstop();
+		}
+		function adiabatic() {
+			pistonC.isothermal=false;
+		}
+		function isothermal() {
+			pistonC.isothermal=true;
+		}
+		var pistonA,pistonB,pistonC;
+		$(document).delegate('#adiabatic','pageinit',function(e) {
+			pistonA=new Piston("canvas1",false);
+			piston_go();
+		});  
+		$(document).delegate('#isothermal','pageinit',function(e) {
+			pistonB=new Piston("canvas2",false);
+			pistonB.isothermal=true;
+			pistonB_go();
+		});  
+		$(document).delegate('#withGraph','pageinit',function(e) {
+			pistonC=new Piston("canvas3",true);
+			pistonC.isothermal=true;
+			pistonC_go();
+		});
+		</script>
+	</head> 
+	<body>
+		<div data-role="page" id="heikou">
+			<div data-role="header">
+				<h2>熱力学2015年度第３回</h2>
+			</div>
+			<div data-role="content">
+				<p>　<input type="button" data-inline="true" value="前回の第２回" data-icon="arrow-l" onclick="location.href='./lec2.html'">では<span class="fukidasi">準静的操作</span>と<span class="fukidasi">最大仕事</span>というキーワードについて、アニメーションなどを見ながら説明した。</p>
+				<div class="box">まず聞いてみよう---準静的操作とはなんであったか？</div>
+				<div class="Q">じゅうぶんゆっくり動かすことです。</div>
+				<div class="A">ふむ。ではどうなったら「じゅうぶんゆっくり」なんだろう？---そして、どうしてそうしなきゃいけないんだろう？？</div>
+				<div class="Q">気体が変化についてこれると「じゅうぶんゆっくり」なのでは。</div>
+				<div class="A">「変化についてこれる」というのはどういう意味？？</div>
+				<div class="Q">ピストンを引いたときに、気体がピストンについてくると仕事をちゃんとしてくれるけど、そうじゃないとできる仕事が減ってしまう、ということです。</div>
+				<div class="A">うん、いいところをついている。「ちゃんと仕事をしてくれる場合」の仕事を「最大仕事」と言って、熱力学ではそういう状況が成立する理想的状況を考えていく。</div>
+				<div class="setsumei">　先週も使ったP-Vグラフを今週も使いつつ授業した。今日の講義録にも<input type="button" data-inline="true" value="P-Vグラフつきのページ" data-icon="arrow-r" onclick="location.href='#withGraph'">をつけてある。</div>
+				<div class="fukidasi">では、今日は教科書の第２章に沿って、平衡状態の記述について説明していこう。一部内容は３章や４章を先取りして話している。</div>
+				<h3>平衡状態</h3>
+				<p>　熱力学が考える理想的状況をピストンの場合で説明すると、</p>
+				<p><img src="heikoumae.png" width="50%" class="floatnone"></p>
+				<p>のように、ピストンを引いた直後の「左が高温・高圧で右が低温・低圧」という状況は「平衡状態」ではない。</p>
+				<p>　しばらく待つと、</p>
+				<p><img src="heikou.png" width="50%" class="floatnone"></p>
+				<p>のように全体の温度・圧力（密度も）が一様になり、「平衡状態」に達する。</p>
+				<p>　というわけで、ざっくり言えば「じゅうぶんゆっくり（つまり準静的に）変化するのであれば、途中の状態もすべて平衡状態を保ったまま変化していくと考えてよい」ということになる。</p>
+				<p>　平衡状態は温度・圧力などが一様なので、「温度は$T$です」「圧力は$P$です」と語ることで状態を指定できるが、平衡でない状態では「左の方の温度は$T_1$で、右に行くほどだんだん低くなって最後は$T_2$に」というふうに、場所の関数である温度変数$T(x)$を使わないと状態が指定できない。つまり、平衡状態の方が使う変数が少なくて済む。</p>
+				<p>　こう言うと、楽だからとズルをしているように思えるかもしれない。しかし大事なことは、「考える状態を平衡状態に限る」という（「ズル」に見えかねない）簡単化をしてもなお、熱力学という学問はとても役に立つということだ。たとえば力学における「摩擦がないとする」というのも「ズル」っぽいと言えば「ズル」なのだが、摩擦がないという簡単化をしてなお、力学は豊富な内容と実用性を持っている。</p>
+				<div class="fukidasi">　考えてみると、ミクロな視点で見れば気体は$6\times10^{23}$個ぐらいの分子の集まりだから、「状態を完全に指定」しようと思ったらこの分子一個一個の運動を指定しなくてはいけない。</div>
+
+				<h3>示量変数</h3>
+				<p>　気体の状態を指定する変数としては温度$T$、圧力$P$、体積$V$、物質量Nなどが思い浮かぶ。このうち体積$V$と物質量（モル数）Nは相加的（additive）であるという性質を持っている（たとえば体積$V'$の系と体積$V''$の系を合わせると$V'+V''$の系になる）。</p>
+				<div class="A">　体積の相加性は、同成分の物質なら疑うべくもないが、例えば『水1リットルとアルコール1リットルを混ぜると2リットルにならない』（この場合、気体と違って箱に閉じ込めているわけではないので体積は変化してしまう点に注意）のような現象もある（よりわかりやすい例は『大豆１升とゴマ１升を混ぜても２升にはならない』）。</div>
+				<p>　状態を指定する変数の中で、</p>
+				<div class="fukidasi">系全体の大きさを$\lambda$倍した時に同じように$\lambda$倍になる変数</div>
+				<p>を「示量変数」（extensive varijable）と呼ぶ（漢字の方が意味がわかりやすい）。</p>
+				<p>　気体の場合、体積$V$と物質量（モル数）$N$が示量変数である。</p>
+				<p>　この後「示量変数を変化させる」という操作を行うのだけど、たとえば体積変化を起こすとその手応えは圧力として出現する。</p>
+				<div class="Q">$N$を変化させるってのはどういう状況ですか？</div>
+				<div class="A">　気体が空気なら、シリンダーに空気を吹き込む、ってことになるね。それに応じてもちろん系のエネルギーは変化する（どう変化するんだ、というのはずっと後で）。</div>
+				<p>　系全体を大きくしても変化しない変数は「示強変数」（intensive variable）である。圧力$P$や温度$T$はこちらに属する（100度の水と100度の水を合わせたら200度になったらびっくりする）。</p>
+				<h3>熱力学の視点</h3>
+				<p>　熱力学は、「実際には$6\times10^{23}$程度の自由度がある系」をまじめに考えるという方向の学問ではなく、むしろ、「外部からする操作の種類」程度の数の変数だけで系を代表させて考えていく。</p>
+				<p><img src="macro.png" width="50%" class="floatnone"></p>
+				<p>　上の図の場合、操作できるのが二つのピストンがあり、それぞれを押したり引いたりするとどの程度仕事がされるか、ということは「手」の動きと「手応え」で計算できる。それに応じて系の<span class="fukidasi">エネルギーに対応するもの</span>が増えたり減ったりする（前に説明したようにこの時の仕事は変化のさせ方によって違うからエネルギーをちゃんと定義するには「準静的に」とか「最大仕事になるように」とか変化方法を指定する必要がある）。</p>
+				<h3>等温環境での平衡状態</h3>
+				<p>　実際に実験を行う時の状況として「実験装置（系）を周囲の温度と同じにする」という状況がある。この時（例によって準静的に変化が起こるとすれば）、系の温度は一定である（実際には変化の最初と最後以外では温度が変わっている可能性はある）。</p>
+				<div class="A">　ここで「温度って何？」をまだ定義してないのだが、ここでは教科書の要請2.1（ざっと言うならば、「示量変数を固定した状態で十分時間がたてば系は平衡状態に達する」ということ）と、教科書の要請2.2（ざっと言うならば「ある温度の環境の中で平衡に達した系の温度は環境温度と同じになる」といいうこと）を認めて、まわりの環境が「温度」なる量を一定にすべくいろんな影響を与えてくれているとだけ解釈する。</div>
+
+				<div class="Q">いつかは平衡に達するんだとすると、鉄を手で触るとひんやりするのはなぜですか？</div>
+				<div class="A">ひんやりするのはまだ平衡に達してない間だけだね。そのうち鉄が生暖かくなって平衡に達します。ちなみに人間の温度（体温）が気温と一緒にならないのは、人間が体温を36度ぐらいで一定になるように頑張っているからであって、その頑張りがなくなれば平衡に達します（「死んだら」ってことだけど）。死ぬまでは平衡に達しないよう頑張りましょう。</div>
+				<p>　このような系の状態を記述するには、まず「外部から操作できる示量変数」である$X$（$V,N$をまとめてこう書く）と、「外部環境が決める示強変数」である$T$が必要である。つまり、$(T;X)$（;で分けたのは（示強;示量）ということ）変数で系の平衡状態が定義できる（くどいようだがもう一度、こんなふうに少数の変数で系の状態が指定できてしまうのは、平衡状態だからである）。</p>
+				<p>　こういう系が等温に保たれる状態で系に仕事をさせると、その分系の『エネルギー』<span class="footnote">括弧つきで書いたのは、普通のエネルギーとはちょっと違うからである。</span>が変化する。</p>
+				<p><img src="touon.png" width="50%" class="floatnone"></p>
+				<div class="A">ここで、このように定義された『エネルギー』が「ヘルムホルツの自由エネルギー$F$」というものになるのだが、このエネルギーはバネのエネルギーと決定的に違うことが「準静的でないとダメ」という点以外にもう一つある。バネの場合「${1\over2}kx^2$というエネルギーは誰が持っているのか？」と言われたら答は間違いなく「バネ」であろう。しかしこの場合、『系』は『環境』と（熱という形で）エネルギーの出入りを行いつつ変化している。よってこの『エネルギー』（ヘルムホルツの自由エネルギー）は『系』と『環境』が持っていると考えるべきなのである。</div>
+				<div class="Q">系と環境と、二つのヘルムホルツの自由エネルギーがあるんですか？</div>
+				<div class="A">いや違う。『系＋環境』という複合系が一つの「ヘルムホルツの自由エネルギー」を持ってます。</div>
+				<div class="Q">環境からエネルギーの補給を受けているとすると、いくらでも仕事できたりしませんか？</div>
+				<div class="A">それは無理、「補給される」ということ無限に仕事できるということは別だから。実例として、等温環境で気体が膨張するケースを考えると、圧力がどんどん下がってピストンを押す力が弱くなり（やがて外気圧の方が高くなるだろうし）仕事はできなくなる。</div>
+				<h3>断熱された系の平衡状態</h3>
+				<p>　次に、周りとの接触を断って、「熱」（がまだ何なのかは説明していないが）が出入りしないという「断熱された系」を考える。今度は周りとの影響を遮断されているわけだから（たとえば魔法瓶では壁の中に真空を使うことでそれに似た状況を作っている）。</p>
+				<p>この時の仕事によって変化する量として、さっきのヘルムホルツの自由エネルギーとは別の『エネルギー』を定義することができる。</p>
+				<p><img src="dannetsu.png" width="50%" class="floatnone"></p>
+
+				<p>　こっちは内部エネルギー$U$と呼ばれる。環境と相互作用がないから、内部エネルギーは系が持っていると考えて良い（力学でのエネルギーに近いのはこっちだろう）。</p>
+				<p>　この場合外界との影響は断っているので、内部の温度$T$は環境の温度とは関係ない量である（そして、実際のところ体積を変化させると連動して変化する）。</p>
+				<p>　今回使っている教科書では「熱」というよくわからない、目に見えないものは後で定義することにして、上で述べたような「操作とそれに対する手応え」で計算できるところの（つまり「目に見えるものから計算できる量」であるところの）「ヘルムホルツの自由エネルギー」や「内部エネルギー」を先に定義していく。</p>
+				<p>　こうして等温操作と断熱操作を比較してみると、等温操作の時には$T$が「環境の温度」であって環境を決めれば決まる変数だったのにたいし、断熱操作では（ピストンを動かすという）操作によって$V$と連動して変化する変数になっているという違いが見て取れる。よって等温操作では$V$と独立な変数である$T$は、断熱操作においてはそうならない。</p>
+				<div class="warning">　このように「どの変数が他の変数と独立に動かせるか」が状況によって違うため、熱力学では偏微分計算が多用される。今後の熱力学の計算で偏微分を行う時は、「何を一定とした偏微分を行ったか」に注意する必要がある。</div>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="P-Vグラフ" data-icon="arrow-r" onclick="location.href='#withGraph'">
+			</div>
+		</div>
+		<div data-role="page" id="withGraph">
+			<div data-role="header">
+				<h2>P-Vグラフ</h2>
+			</div>
+			<div data-role="content">
+				<p>　先週も使った気体をシリンダーに閉じ込めてピストンを押し引きした時の変化をグラフとともに見せるプログラムである。</p>
+				<div class="A">ここでグラフにしている圧力Pとは、「気体全体の圧力」ではない（今考えている操作の途中では気体の圧力・温度は一様ではない）。グラフの縦軸であるPは、「ピストンに掛かる圧力」であり、いわば「ピストンに接している部分の気体の圧力」である。ピストンに接していない部分の気体の圧力は、もちろんこれとは違う。準静的ならば全体の状態が一様だから気体全体の圧力とピストンに接している部分の圧力は同じになる（ただし、このプログラムでは準静的な操作は起こせない）。</div>
+				<p>　下の図の青い線は、気体全体が常に等温を保った場合のP-Vの線である。等温操作でも断熱操作でも、実際の変化はこのようには起きない。</p>
+				<hr>
+				<p><canvas id="canvas3"></canvas></p>
+				<hr>
+				<button data-inline="true" onclick="pistonC.pushPiston +=0.2;" data-icon="arrow-l">ピストンを押す</button>
+				<select id="speedC" data-inline="true" onchange='pistonC.setspeed($("#speedC"));'>
+					<option value="0.001" selected="unselected">とっても遅く</option>
+					<option value="0.0025" selected="unselected">遅く</option>
+					<option value="0.005" selected="unselected">中くらい</option>
+					<option value="0.01" selected="selected">速く</option>
+				</select>
+
+				<button data-inline="true" onclick="pistonC.pullPiston +=0.2;" data-icon="arrow-r">ピストンを引く</button>
+				<fieldset data-role="controlgroup" data-type="horizontal">
+					<label><input type="radio" id="adiabatic" onclick="adiabatic();" name="katei"/>断熱操作</label>
+					<label><input type="radio" id="isothermal" onclick="isothermal();" name="katei" checked/>等温操作</label>
+				</fieldset>
+				<button id="stop" data-inline="true" onclick="startstopC();">停止／再開</button>
+				　<button id="restart" data-inline="true" onclick="pistonC.init_blocks(); pistonC.initHistory();">初期状態に戻す。</button></p>
+				<hr>
+				<div class="setsumei">上の「初期状態に戻す。」ボタンを押すとP-Vグラフの軌跡もクリアされるので、いろんな状況での変化の様子を描いてみよう。</div>
+				<div class="A">　ここのグラフのPは上にもピストンに接している部分の圧力であり、圧力が一様でない状態を経過している。一方、ここ以降に出てくるP-VグラフのP平衡状態に達して気体が一様になった後でのPである。よって以降のグラフに点を打つときはすべて平衡状態を表現しているし、線をひくときはすべて（平衡状態のまま変化していく）準静的操作を意味していることに注意。</div>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="平衡状態" data-icon="arrow-l" onclick="location.href='#heikou'">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+				<input type="button" value="受講者の感想・コメント" data-icon="arrow-r" onclick="location.href='#qa'">
+            </div>
+		</div>
+		<div data-role="page" id="qa">
+			<div data-role="header">
+				<h1>受講者の感想・コメント</h1>
+			</div>
+			<div data-role="content">
+				<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+				<div class="Q">温度が一様な場合でなく、平衡状態で全部考えるのは最初は変な感じがしました。</div>
+				<div class="A">ちょっと「ズル」っぽいのですが、それでちゃんといろんな計算ができるのならいいのです。</div>
+				<p></p>
+				<div class="Q">準静的→平衡状態、また示量変数(V,N)、示強変数(T,P)がわかった。ヘルムホルツの自由エネルギーは化学の授業で聞いたことがあるが、理解してないので、理解したいと思う。</div>
+				<div class="A">次でじっくりとヘルムホルツ自由エネルギーの意味を考えましょう。</div>
+				<p></p>
+				<div class="Q">系をマクロな視点から考えていくことが熱力学において大事だということがわかりました。等温か断熱かを考えていく上で独立変数が違ってくることから、偏微分を扱っていく点についても非常に納得できました。</div>
+				<div class="A">熱力学では偏微分を使った計算が必要になり「ややこしいなぁ」と思ってしまいがちなのですが、偏微分を使う理由があるからこそ使っているわけです。</div>
+				<p></p>
+				<div class="Q">最初の授業で「熱」とは何か、という問いに対する答えが、これから等温変化断熱変化の違いを学ぶことによって見えてくるので、その答えが出たときに、しっかりと自分の言葉で「熱」とは何かを答えられるようにしたい。</div>
+				<div class="A">ここから先の授業をよく聞いて自分の解釈を作っていってください。</div>
+				<p></p>
+				<div class="Q">「準静的」というのは平衡状態を保つというのとほぼ同じであることがわかった。<br>同じ量のアルコールと水を足しても単純に２倍にならないということは知らなかった。</div>
+				<div class="A">「準静的」「平衡状態」の意味はしっかり理解しておきましょう。アルコールと水の話は、分子の実在について話すときにちょうどいい例です。</div>
+				<p></p>
+				<div class="Q">効率よくエネルギーを取り出すのはとても難しいんだと思った。地球上にあるものでエネルギーを取り出そうとすると資源には限りがある。はやく宇宙から膨大なエネルギーが取り出せるといいな（太陽パネルは地球上だと場所とるし）。</div>
+				<div class="A">エネルギーはただでは出てこないものです。</div>
+				<p></p>
+				<div class="Q">等温環境と断熱されたときのエネルギーの流れについてわかった。両者では何がエネルギーを得ているかが違うので異なる定義をしなけれあならないことがわかった。</div>
+				<div class="A">次から具体的に計算しながらより納得していきましょう。</div>
+				<p></p>
+				<div class="Q">断熱操作のときと等温操作のときのエネルギーの違いを利用して熱のことを知ろうと思うことがすごいと思った。</div>
+				<div class="A">熱の定義の仕方はいろいろあって面白いですね。</div>
+				<p></p>
+				<div class="Q">等温環境下と断熱環境下での仕事をしたやつが違うということがなっとくできた。</div>
+				<div class="A">ではエネルギーがどのように変化していくのか、じっくり見て行きましょう。</div>
+				<p></p>
+				<div class="Q">等温環境下と断熱環境下では仕事されたときのエネルギーの行先（持ち主）が変わっていくことを学べた。</div>
+				<div class="A">その違いがエネルギーにどう現れるか、次からよく見ておいてください。</div>
+				<p></p>
+				<div class="Q">力学とは違い、熱力学は環境もエネルギーに含まれているということがわかりました。断熱の場合は$T$は独立ではなく$V$に影響されるというのは、前回のプログラムを見るとわかりやすかったです。</div>
+				<div class="A">たとえば電磁気でも、電場や磁場もエネルギーを持っている、みたいな話もあるので、周りを含めてエネルギーを定義することはあります。</div>
+				<p></p>
+				<div class="Q">人間は生きているだけでがんばっているってことですね（熱力学もがんばります）。</div>
+				<div class="A">がんばって生きてください。</div>
+				<p></p>
+				<div class="Q">系に対し準静的に仕事をすることを考える際に、「等温」と「断熱」という２種類の周りの環境を考える。そのエネルギーのやりとりの違いが熱になるということがとてもわかりやすくなっとくできた。</div>
+				<div class="A">次から具体的計算で確認していきましょう。</div>
+				<p></p>
+				<div class="Q">初回にやったヘルムホルツの自由エネルギーと内部エネルギーについて理解できた。ヘルムホルツはホルツヘルムと間違いそうになりますね。</div>
+				<div class="A">その間違い（ホルツヘルム）は聞いたことないな。</div>
+				<p></p>
+				<div class="Q">大学受験のとき、周りの環境によってうまくいくかどうかが決まると教わったことを等温環境の解説を聞いて思い出しました。</div>
+				<div class="A">それはだいぶ違う話だと思うぞ。</div>
+				<p></p>
+				<div class="Q">示量変数は体積Vとモル数Nで、これらは人間が操作しやすいものだと言われましたが、モル数はピストンの場合でも操作、調整するにはどうしたらいいんでしょうか。</div>
+				<div class="A">穴をあけて空気吹き込みましょう。</div>
+				<p></p>
+				<div class="Q">先に教科書を読んでいたので、話が頭に入りやすかった。</div>
+				<div class="A">予習復習、よろしく。</div>
+				<p></p>
+				<div class="Q">『ヘルムホルツの自由エネルギー』という単語が難しそうなオーラを放っていたけど、大丈夫でした（分かった感じ）。次が楽しみ。</div>
+				<div class="A">大丈夫大丈夫。</div>
+				<p></p>
+				<div class="Q">断熱壁はどういう原理で断熱していますか。真空で断熱ってよくききますが、その真空の温度を測ると温度を持っていますよね？　何故熱が移動しないんですか。断熱壁も熱を得て温度が上がっていきますよね？</div>
+				<div class="A">はい、実際にはほんとに「断熱」できる壁はありません。準静的と同じで「理想的なもの（現実には存在しないもの」として定義されてます。</div>
+				<p></p>
+				<div class="Q">断熱変化は準静的に行われるのに定温ではない（TはVにより変化する）事について疑問が残った。</div>
+				<div class="A">ゆっくりと動かすけど、仕事はするんで、エネルギーは減るわけです（そして断熱しているから周りからエネルギーの補給は得られない）。</div>
+				<p></p>
+				<div class="Q">まわりの環境によってエネルギーの定義を変えないといけないことを知ることができた。</div>
+				<div class="A">定義も変わるし、中身も変わる。</div>
+				<p></p>
+				<div class="Q">一番さいごのPVグラフの説明にとても納得しました。</div>
+				<div class="A">納得してもらえてよかった。</div>
+				<p></p>
+				<div class="Q">ヘルムホルツの自由エネルギーや環境などの新しい考えが出てきて少し混乱しているので、復習いたします。</div>
+				<div class="A">じっくり復習してくれれば、新しいといってもそんなに難しい話じゃないとわかると思います。</div>
+				<p></p>
+				<div class="Q">ヘルムホルツの自由エネルギー、内部エネルギーの違いをしっかり理解できたと思います。</div>
+				<div class="A">次週から具体的計算です。</div>
+				<p></p>
+				<div class="Q">示量変数と示強変数がわかった。熱の移動の有無でエネルギーに違いが出ることがわかった。</div>
+				<div class="A">次でさらにじっくりやります。</div>
+				<p></p>
+				<div class="Q">準静的、最大仕事を再確認して、示量変数・示強変数や等温・断熱環境がどういったものであるからということを詳しくやってくれたのでわかりやすかった。理解したと思っても忘れるかもしれないので、再度確認したい。</div>
+				<div class="A">予習復習、やっていきましょう。</div>
+				<p></p>
+				<div class="Q">図解が多くてすごく分かりやすかったです。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">熱力学において等温環境の元で熱を考えるのと断熱によって考えるのと熱の変化がどのような違いになっていくのか気になった。</div>
+				<div class="A">ここから先でじっくり考えていってください。</div>
+				<p></p>
+				<div class="Q">先週の最後で言ってた「断熱操作と等温操作では違うタイプのエネルギーが定義されている」と言ってた意味がわかった。</div>
+				<div class="A">わかりましたか。</div>
+				<p></p>
+				<div class="Q">ヘルムホルツの自由エネルギーと内部エネルギーをイメージとして理解し、区別することができました。</div>
+				<div class="A">では、そのイメージを持って次回から計算していきましょう。</div>
+				<p></p>
+				<div class="Q">ヘルムホルツの自由エネルギーが怖いです。</div>
+				<div class="A">怖くない怖くない。問題を簡単にしてくれる味方です。</div>
+				<p></p>
+				<div class="Q">力学と熱力学では、まず変数の数が多く、環境によって独立であったりなかったり、熱力学はすごく繊細なんだなぁとkなじました。だから熱力学を考えるときは準静的であることを第一に考えなくてはいけないと思いました。</div>
+				<div class="A">熱力学は確かに繊細かも。。</div>
+				<p></p>
+				<div class="Q">第１講で出てきた変数の自由エネルギーについて理解した。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">ヘルムホルツの自由エネルギーが系と環境の両方が共有してもっているということがわかったのはいろいろスッキリした。</div>
+				<div class="A">いろいろな視点から二つのエネルギーを考えてみてください。</div>
+				<p></p>
+				<div class="Q">今日の内容もとても面白かった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">内部エネルギーとヘルムホルツの自由エネルギーの違いがよくわかりました。</div>
+				<div class="A">そこをきっちり理解しておきましょう。</div>
+				<p></p>
+				<div class="Q">等温環境下と断熱過程では、状況をわけて考えていく必要性がわかりました。</div>
+				<div class="A">そうです。全然違うのです。</div>
+				<p></p>
+				<div class="Q">色々な過程の後にヘルムホルツの自由エネルギー、内部エネルギーを出して「熱」の正体に迫っていくのがわかりやすかったです。</div>
+				<div class="A">これから先で具体的計算でさらに「熱」に迫りましょう。</div>
+				<p></p>
+
+				<div class="Q">等温過程と断熱過程の違いがよくわかった。P-Vグラフの一点が平衡状態の一つを指定するという話が位相空間みたいだと感じた。</div>
+				<div class="A">うん、位相空間とは似ているところもありますね。</div>
+				<p></p>
+
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="P-Vグラフ" data-icon="arrow-l" onclick="location.href='#withGraph'">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>

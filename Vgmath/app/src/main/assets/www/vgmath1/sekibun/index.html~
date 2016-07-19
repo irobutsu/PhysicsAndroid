@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width; target-densityDpi=device-dpi; initial-scale=1.0; maximum-scale=1.0; user-scalable=1"/>
+<title>積分ってなあに？</title>
+<style type="text/css">
+	body {
+		background-color: #FFFFFF;
+	}
+	img {
+	vertical-align:middle;
+	}
+	.centering{ text-align:center;}
+	.magenta { color:magenta; }
+	.red { color:red; }
+	.blue { color:blue; }
+	.chuumoku {
+		text-align:center;
+		font-size: x-large;
+		color:red;
+	}
+</style>
+</head>
+<body onload="init(); autoUpFlg=-1; a=0.3; c=0; b=0.1; N=10; nuriFlg=-1; f=houbutsu; Intf=Inthoubutsu; animationGO();">
+<script type="application/javascript" src="sekibuntoha.js"></script>
+<h1>積分ってなあに？</h1>
+<br>
+<hr>
+　ここでは「積分」（特に定積分）という計算の意味をアニメーションで語ってみたいと思う。
+<hr>
+<canvas width=500 height=500 id="maincanvas"></canvas>
+<hr>
+<br>　あくまで「意味を語る」ものなので、これで計算ができるようになったりはしません(^_^;)。
+<br>　では、<a href="sekibuntoha1.html">その１</a>からどうぞ。
+<hr>
+<div class=centering><a href="sekibuntoha1.html">その１</a></div>
+<div class=centering><a href="sekibuntoha2.html">その２</a></div>
+<div class=centering><a href="sekibuntoha3.html">その３</a></div>
+<div class=centering><a href="sekibuntoha4.html">その４</a></div>
+<div class=centering><a href="sekibuntoha5.html">その５</a></div>
+<div class=centering><a href="sekibuntoha6.html">その６</a></div><br>
+</body>
+</html>
+

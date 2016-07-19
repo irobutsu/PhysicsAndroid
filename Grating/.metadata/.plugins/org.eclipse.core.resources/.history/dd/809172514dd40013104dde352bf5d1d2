@@ -1,0 +1,197 @@
+package jp.ac.u_ryukyu.phys.funccomposite;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
+
+import android.opengl.GLSurfaceView.Renderer;
+import android.util.FloatMath;
+import jp.ac.u_ryukyu.phys.lib.Vec2;
+import jp.ac.u_ryukyu.phys.lib.Vec3;
+import jp.ac.u_ryukyu.phys.tool3D.DraggableRenderer;
+import jp.ac.u_ryukyu.phys.tool3D.Lines3D;
+import jp.ac.u_ryukyu.phys.tool3D.Matrix3x3;
+import jp.ac.u_ryukyu.phys.tool3D.Plane;
+import jp.ac.u_ryukyu.phys.tool3D.Sphere;
+import jp.ac.u_ryukyu.phys.tool3D.Yajirushi3DFixedR;
+
+public class FuncCompositeRenderer extends DraggableRenderer implements Renderer {
+
+	Yajirushi3DFixedR vecE;
+	Yajirushi3DFixedR vecS;
+	
+	Plane planexy;
+	Plane planeyz;
+	Plane planezx;
+	Yajirushi3DFixedR xjikuy,xjikuz;
+	Yajirushi3DFixedR yjikux,yjikuz;
+	Yajirushi3DFixedR zjikux,zjikuy;
+	Lines3D linexy;
+	Lines3D lineyz;
+	Lines3D linezx;
+	int fnoF=1;
+	int fnoG=1;
+	float a=1;
+	float b=1;
+	public void seta(float aa) { a=aa;}
+	public void setb(float bb) { b=bb;}
+	public void setfnox(int f) { fnoF=f;}
+	public void setfnoy(int f) { fnoG=f;}
+	
+	
+	float t=0f;
+
+	
+	public FuncCompositeRenderer() {
+		setTranslationDefault(new Vec3(0f,0f,-5.8f));
+		// setRotationDefault(new Matrix3x3(0f,1f,0f,-1f,0f,0f,0f,0f,1f));
+		// setRotationDefault(new Matrix3x3(0.8f,-0.6f,0f,0.6f,0.8f,0f,0f,0f,1f));
+		setRotationDefault(new Matrix3x3(0f,1f,0f,
+										 0f,0f,1f,
+										 1f,0f,0f));
+		// this.defaultExpRate=0.05f;
+		setRotation(new Vec2(1f,1f));
+		saveMatrix();
+		
+		linexy=new Lines3D(0f,0.8f,0f,1f);
+		lineyz=new Lines3D(0.5f,0.5f,0f,1f);
+		linezx=new Lines3D(0f,0f,0f,1f);
+		planexy=new Plane(
+				new Vec3(-2,-2,-2),
+				new Vec3(-2,2,-2),
+				new Vec3(2,2,-2),
+				new Vec3(2,-2,-2),
+				1f,1f,0f,0.5f);
+		
+		planeyz=new Plane(
+				new Vec3(-2,-2,-2),
+				new Vec3(-2,-2,2),
+				new Vec3(-2,2,2),
+				new Vec3(-2,2,-2),
+				0f,1f,1f,0.5f);
+		
+		planezx=new Plane(
+				new Vec3(-2,-2,-2),
+				new Vec3(2,-2,-2),
+				new Vec3(2,-2,2),
+				new Vec3(-2,-2,2),
+				1f,0f,1f,0.5f);
+	
+		
+		xjikuy=new Yajirushi3DFixedR(4f,0.02f,6,0.8f,0f,0f,1f);
+		xjikuy.setThetaPhiPts((float)Math.PI*0.5f,(float)Math.PI*0.5f);
+		xjikuy.translatePts(new Vec3(0f,-2f,-2f));
+		xjikuz=new Yajirushi3DFixedR(4f,0.02f,6,0.8f,0f,0f,1f);
+		xjikuz.setThetaPhiPts((float)Math.PI*0.5f,(float)Math.PI*0.5f);
+		xjikuz.translatePts(new Vec3(-2f,-2f,0f));
+		yjikux=new Yajirushi3DFixedR(4f,0.02f,6,0f,0f,0.8f,1f);
+		yjikux.setThetaPts((float)Math.PI*(-0.5f));
+		yjikux.translatePts(new Vec3(2f,0f,-2f));
+		yjikuz=new Yajirushi3DFixedR(4f,0.02f,6,0f,0f,0.8f,1f);
+		yjikuz.setThetaPts((float)Math.PI*(-0.5f));
+		yjikuz.translatePts(new Vec3(2f,-2f,0f));
+		zjikux=new Yajirushi3DFixedR(4f,0.02f,6,0.6f,0f,0.6f,1f);
+		zjikux.translatePts(new Vec3(0f,-2f,-2f));
+		zjikuy=new Yajirushi3DFixedR(4f,0.02f,6,0.6f,0f,0.6f,1f);
+		zjikuy.translatePts(new Vec3(-2f,0f,-2f));
+		funcsetXY();
+		funcsetYZ();
+		funcsetZX();
+	}
+	void funcsetXY() {
+		linexy.clear();
+		float i;
+		for( i=-2; i<= 2; i += 0.02f) {
+			linexy.setPoint(i,Func(fnoF,a,i),-2);
+		}
+	}
+	void funcsetYZ() {
+		lineyz.clear();
+		float i;
+		for( i=-2; i<= 2; i += 0.02f) {
+			lineyz.setPoint(-2,i,Func(fnoG,b,i));
+		}
+	}
+	void funcsetZX() {
+		linezx.clear();
+		float i;
+		for( i=-2; i<= 2; i += 0.02f) {
+			lineyz.setPoint(i,-2,Func(fnoG,b,Func(fnoF,a,i)));
+		}
+	}
+	float Func(int funcNo,float aa,float x) {
+		float ans=0f;
+		switch( funcNo ) {
+		case 0:
+			ans= aa*x;
+			break;
+		case 1:
+			ans= aa/ x;
+			break;
+		case 2:
+			ans= aa*x*x;
+			break;
+		case 3:
+			ans= FloatMath.sqrt(Math.abs(x/ aa));
+			break;
+		case 4:
+			ans= FloatMath.sin(aa*x);
+			break;
+		case 5:
+			ans= (float)Math.asin(x)/aa;
+			break;
+		case 6:
+			ans= (float)Math.exp(aa*x);
+			break;
+		case 7:
+			ans= (float)Math.log(Math.abs(x))/ aa;
+			break;
+		}
+		return ans;
+	}
+	
+	public void setT(float tt) {t=tt;}
+	
+	
+	protected FloatBuffer vBuffer;
+	float vertices[];
+	float vertices2[];
+	float vertices3[];
+	@Override
+	protected void drawContent(GL10 gl) {
+		xjikuy.draw(gl);
+		xjikuz.draw(gl);
+		yjikux.draw(gl);
+		yjikuz.draw(gl);
+		zjikux.draw(gl);
+		zjikuy.draw(gl);
+		planexy.draw(gl);
+		planeyz.draw(gl);
+		planezx.draw(gl);
+		
+		
+		
+		linexy.draw(gl);
+		lineyz.draw(gl);
+		linezx.draw(gl);
+	}
+	
+	public void setVecE(Vec3 p) {
+		float th=p.Theta();
+		float ph=p.Phi();
+		float len=p.Norm();
+		vecE=new Yajirushi3DFixedR(len,1.2f,10,1f,0f,0f,1f,true);
+		vecE.translatePts(new Vec3(0,0,len*0.5f));
+		vecE.setThetaPhi(th, ph);
+	}
+	public void setVecS(Vec3 p) {
+		float th=p.Theta();
+		float ph=p.Phi();
+		float len=p.Norm();
+		vecS=new Yajirushi3DFixedR(len,1.2f,10,0f,0f,1f,1f,true);
+		vecS.translatePts(new Vec3(0,0,len*0.5f));
+		vecS.setThetaPhi(th, ph);
+	}	
+}

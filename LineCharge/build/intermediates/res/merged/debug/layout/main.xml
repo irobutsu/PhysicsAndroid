@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+      >
+
+	    <Button
+	        android:id="@+id/btResetScreen"
+	        android:layout_width="62dp"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="0.2"
+	        android:text="@string/resetScreen"
+	        android:textSize="9dp" />
+
+        <LinearLayout
+            android:id="@+id/Layout33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+	    
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+               android:layout_width="fill_parent"
+                
+                android:layout_height="36dp" >
+
+                <TextView
+                    android:id="@+id/textZ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Z=0.0 "
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="14dp" />
+
+                <SeekBar
+                    android:id="@+id/sbZ"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:max="30"
+                    android:progress="0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout5"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/textX"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="X=2.0 "
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="14dp" />
+
+                <SeekBar
+                    android:id="@+id/sbX"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:max="30"
+                    android:progress="20" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/Layout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            
+            android:orientation="vertical" >
+            
+            <LinearLayout
+                android:id="@+id/linearLayout8"
+                android:layout_weight="1" 
+                android:layout_width="fill_parent"
+                android:layout_height="36dp" >
+
+                <TextView
+                    android:id="@+id/textR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="R=1.0 "
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="14dp" />
+
+                <SeekBar
+                    android:id="@+id/sbR"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:max="48"
+                    android:progress="8" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout9"
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/textN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="N=10 "
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="14dp" />
+
+                <SeekBar
+                    android:id="@+id/sbN"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:max="95"
+                    android:progress="5" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.35"
+            android:orientation="vertical" >
+
+			<LinearLayout
+			    android:layout_width="fill_parent"
+			    android:layout_height="0dp"
+			    android:layout_weight="1" >
+
+ 	        	<ToggleButton
+ 	        	    android:id="@+id/tbl"
+ 	        	    android:layout_width="60dp"
+ 	        	    android:layout_height="36dp"
+ 	        	    android:layout_weight="0.3"
+ 	        	    android:checked="true"
+ 	        	    android:text="ToggleButton"
+ 	        	    android:textOff="@string/circleMode"
+ 	        	    android:textOn="@string/lineMode"
+ 	        	    android:textSize="9dp" />
+
+			    <ToggleButton
+			        android:id="@+id/tba"
+			        android:layout_width="58dp"
+			        android:layout_height="36dp"
+			        android:layout_weight="0.3"
+			        android:text="ToggleButton"
+			        android:textOff="@string/totalE"
+			        android:textOn="@string/totalEon"
+			        android:textSize="9dp" />
+ 	        	
+   				<ToggleButton
+   				    android:id="@+id/tbStop"
+   				    android:layout_width="wrap_content"
+   				    android:layout_height="36dp"
+   				    android:layout_weight="0.3"
+   				    android:checked="true"
+   				    android:text="ToggleButton"
+   				    android:textOff="@string/stop"
+   				    android:textOn="@string/move"
+   				    android:textSize="9dp" />
+
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+			    android:layout_height="wrap_content">
+
+        		<ToggleButton
+        		    android:id="@+id/tbx"
+        		    android:layout_width="wrap_content"
+        		    android:layout_height="36dp"
+        		    android:layout_weight="0.3"
+        		    android:textOff="@string/x_off"
+        		    android:textOn="@string/x_on"
+        		    android:textSize="9dp" />
+
+        		<ToggleButton
+        		    android:id="@+id/tby"
+        		    android:layout_width="wrap_content"
+        		    android:layout_height="36dp"
+        		    android:layout_weight="0.3"
+        		    android:textOff="@string/y_off"
+        		    android:textOn="@string/y_on"
+        		    android:textSize="9dp" />
+
+	        	<ToggleButton
+	        	    android:id="@+id/tbz"
+	        	    android:layout_width="wrap_content"
+	        	    android:layout_height="36dp"
+	        	    android:layout_weight="0.3"
+	        	    android:textOff="@string/z_off"
+	        	    android:textOn="@string/z_on"
+	        	    android:textSize="9dp" />
+
+			</LinearLayout>
+		</LinearLayout>
+ 	</LinearLayout>
+
+	<LinearLayout
+	    android:id="@+id/mainscreen"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_gravity="fill"
+        android:orientation="horizontal">
+	</LinearLayout>
+</LinearLayout>
+        
+ 

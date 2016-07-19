@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;BiotSavartGraphView.java&apos; to &apos;WaveGraph/src/jp.ac.u_ryukyu.phys.wavegraph&apos;&#x0A;- Original project: &apos;BiotSavart&apos;&#x0A;- Destination element: &apos;WaveGraph/src/jp.ac.u_ryukyu.phys.wavegraph&apos;&#x0A;- Original element: &apos;jp.ac.u_ryukyu.phys.BiotSavart.BiotSavartGraphView.java&apos;" description="Copy compilation unit" destination="=WaveGraph/src&lt;jp.ac.u_ryukyu.phys.wavegraph" element1="/src&lt;jp.ac.u_ryukyu.phys.BiotSavart{BiotSavartGraphView.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1388107992089" units="1" version="1.0"/>
+</session>

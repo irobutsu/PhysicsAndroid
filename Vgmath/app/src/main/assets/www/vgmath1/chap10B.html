@@ -1,0 +1,251 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+	<link href="vg.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="vector.js"></script>
+	<script type="text/javascript" src="yajirushi.js"></script>
+	<script type="text/javascript" src="rescalecanvas.js"></script>
+	<script type="text/javascript" src="graphcanvas.js"></script>
+	<script type="text/javascript" src="phystem.js"></script>
+	<script type="text/javascript" src="phystemwithtygraph.js"></script>
+	<script type="text/javascript" src="connector.js"></script>
+	<script type="text/javascript" src="bane.js"></script>
+  </head> 
+  <body>
+	<div data-role="page" id="gensuimove">
+	  <div data-role="header">
+		<h2>空気抵抗を受ける振動子（運動の様子）</h2>
+	  </div>
+	  <div data-role="content">
+		<script>
+		 var gs;
+		 var omori;
+		 var k5=4;
+		 var bane;
+		 var M;
+		 var v05=4;
+		 var x05=0;
+		 $(document).delegate('#gensuimove','pageinit',function(e) {
+		   gs=new PhystemWithTYGraph("canvas8","gcanvas",0.5,10,6,0.7);
+		   M=new NonDynamicalObject(gs,0,-3,"rgb(0,0,0)");
+		   M.r=0.1;
+		   omori=new DynamicalObject(gs,0,x05,0,v05,1,"rgba(255,0,0,0.5)");
+		   omori.r=0.1;
+		   bane=new Bane(gs,M,omori,k5,3,"rgba(0,100,0,0.5)");
+		   gs.makeAir();
+		   gs.start();
+		 });
+		 function changey0() {
+		   x05=Number(document.getElementById('slx05').value);
+		   document.getElementById('y0').innerHTML=x05;
+		 }
+		 function changevy0() {
+		   v05=Number(document.getElementById('slv05').value);
+		   document.getElementById('vy0').innerHTML=v05;
+		 }
+		 function changek() {
+		   bane.k=Number(document.getElementById('slk').value);
+		   document.getElementById('k5').innerHTML=bane.k;
+		 }
+		 function changeK() {
+		   gs.airResist=Number(document.getElementById('slLargeK').value);
+		   document.getElementById('K').innerHTML=gs.airResist;
+		 }
+		</script>
+		<p>　運動方程式に<span class="box">復元力$F=-k{x}$</span>（${x}=0$に向けて戻そうとする力<span class="footnote">${x}>0$なら負の向きの力、${x}<0$なら正の向きの力が加わる。つまりどっちにしても、${x}=0$に向かうような力である。よってこれを「復元力」と呼ぶ。</span>）を加えた、
+		  \begin{equation}
+		  m\left({\mathrm d\over\mathrm dt}\right)^2 {x}= -K{\mathrm d\over\mathrm dt}{x}-k{x}\label{Fkvkx}
+		  \end{equation}
+		  を解いてみよう（重力は考えないことにする）。</p>
+		<p>　この運動方程式があらわす現象は「空気抵抗を受けながら運動するバネ振り子」である。</p>
+		<p>　下のプログラムを動かして運動の様子を見よう。</p>
+		<div class="setsumei">下の図はさまざまな初速度と位置に対応する運動の様子である。パラメータを変えた後で「再スタート」ボタンを押していろんな運動を見てみよう。</div>
+		<div class="A">　空気抵抗の比例係数$K$とバネ定数$k$を変化させることをできるので、いろいろ変えてみてほしい。すると、「振動しながらだんだん遅くなる」という<strong>以外</strong>の運動を見つけることができるはずだ。</div>
+		<div align="center">
+		  <canvas id="canvas8" style="-ms-touch-action:none;"></canvas>
+		  <canvas id="gcanvas" style="-ms-touch-action:none;"></canvas>
+		</div>
+		<p>
+		  初期位置:y<sub>0</sub>=<span id="y0">0</span>　<input id="slx05" type="range" value="0" step="0.1" min="-3" max="3" onchange="changey0();"></p>
+		<p>
+		  初速度:v<sub>y0</sub>=<span id="vy0">4</span>　<input id="slv05" type="range" value="4" step="0.1" min="-8" max="8" onchange="changevy0();"><button onClick="gs.graphRestart(x05,v05);">再スタート</button></p>
+		<hr>
+		<p>
+		  バネ定数:k=<span id="k5">4</span>　<input id="slk" type="range" value="4" step="0.1" min="0.1" max="10" onchange="changek();"></p>
+		<p>
+		  空気抵抗:K=<span id="K">1</span>　<input id="slLargeK" type="range" value="1" step="0.1" min="0" max="10" onchange="changeK();"></p>
+
+		<hr>
+		<p>　バネ定数$k=4$、空気抵抗の係数$K=6$で初速度0、初期位置2で運動させると、</p>
+		<p align="center"><img src="gensin.png" width="60%" class="floatnone"></p>
+		<p>のような運動が起こる。これは確かに「振動しながらどんどん遅くなる」（ちなみに「減衰振動」と呼ぶ）。</p>
+		<p>　バネ定数$k=4$、空気抵抗の係数$K=2$で初速度0、初期位置2で運動させると、</p>
+		<p align="center"><img src="gensui.png" width="60%" class="floatnone"></p>
+		<p>のように、全く「振動」ではない、ただ「原点に止まる」という運動になる（これは「過減衰」と呼ぶ）。</p>
+		<p class="A">「どのあたりに二つの境目があるか？」とやってみるのも面白い。</p>
+		<p>　この違いがどのように出るのか？</p>
+		<p>　もちろん、空気抵抗が大きくなれば振動できなくなるというのは気持ちとしてはわかるだろうが、そこを微分方程式から納得したい。また、実はこの方程式の解は２種類ではなく３種類にわかることが、実際に方程式を解いてみるとわかる。</p>
+		<p>　では、方程式を解きながら考えてみよう。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<a href="#teikousindou" data-icon="arrow-r">空気抵抗を受ける振動子（計算により）</a>
+	  </div>
+	</div>
+	<div data-role="page" id="teikousindou">
+	  <div data-role="header">
+		<h2>空気抵抗を受ける振動子（計算により）</h2>
+	  </div>
+	  <div data-role="content">
+		<script type="application/javascript">
+		 var g1,g2,g3;
+		 $(document).delegate('#teikousindou','pageinit',function(e) {
+		   g1=new GraphCanvas("graph1",10,7,0.8,-1,-2);
+		   writeGraph1();
+		 });
+		 function writeGraph1() {
+		   $('#LaregeK1').html(K1);
+		   $('#k1').html(k1);
+		   g1.clearALL();
+		   g1.writeBackGround();
+		   if( 4*k1>K1*K1 ) {
+			 $('#C1_1').html("A="+C1_1);
+			 $('#C1_2').html("B="+C1_2);
+			 g1.setFunction(f1_1);
+			 g1.writeFunction("rgba(255,0,0,0.5)",500);
+			 g1.setFunction(cf1_1);
+			 g1.writeFunction("rgb(255,0,0)",500);
+			 g1.setFunction(f1_2);
+			 g1.writeFunction("rgba(0,0,255,0.5)",500);
+			 g1.setFunction(cf1_2);
+			 g1.writeFunction("rgb(0,0,255)",500);
+			 g1.setFunction(f1);
+			 g1.writeFunction("rgb(0,0,0)",500);
+		   } else if( 4*k1 == K1*K1 ) {
+			 $('#C1_1').html("C<sub>0</sub>="+C1_1);
+			 $('#C1_2').html("C<sub>1</sub>="+C1_2);
+			 g1.setFunction(f2_1);
+			 g1.writeFunction("rgba(255,0,0,0.5)");
+			 g1.setFunction(cf2_1);
+			 g1.writeFunction("rgb(255,0,0)");
+			 g1.setFunction(f2_2);
+			 g1.writeFunction("rgba(0,0,255,0.5)");
+			 g1.setFunction(cf2_2);
+			 g1.writeFunction("rgb(0,0,255)");
+			 g1.setFunction(f2);
+			 g1.writeFunction("rgb(0,0,0)");
+		   } else {
+			 $('#C1_1').html("C<sub>+</sub>="+C1_1);
+			 $('#C1_2').html("C<sub>-</sub>="+C1_2);	 
+			 g1.setFunction(f3_1);
+			 g1.writeFunction("rgba(255,0,0,0.5)");
+			 g1.setFunction(cf3_1);
+			 g1.writeFunction("rgb(255,0,0)");
+			 g1.setFunction(f3_2);
+			 g1.writeFunction("rgba(255,0,0,0.5)");
+			 g1.setFunction(cf3_2);
+			 g1.writeFunction("rgb(0,0,255)");
+			 g1.setFunction(f3);
+			 g1.writeFunction("rgb(0,0,0)");
+		   }
+		 }
+		 var C1_1=1;
+		 var C1_2=1;
+		 var K1=1;
+		 var k1=1;
+		 
+		 function f1_1(x) { return Math.exp(-(K1/2)*x)*Math.cos(Math.sqrt(4*k1-K1*K1)/2*x);}
+		 function cf1_1(x) { return C1_1*f1_1(x);}
+		 function f1_2(x) { return Math.exp(-(K1/2)*x)*Math.sin(Math.sqrt(4*k1-K1*K1)/2*x);}
+		 function cf1_2(x) { return C1_2*f1_2(x);}
+		 function f2_1(x) { return Math.exp(-(K1/2)*x);}
+		 function cf2_1(x) { return C1_1*f2_1(x);}
+		 function f2_2(x) { return x*Math.exp(-(K1/2)*x);}
+		 function cf2_2(x) { return C1_2*f1_2(x);}
+		 function f3_1(x) { return Math.exp((-K1-Math.sqrt(K1*K1-4*k1))/2*x);}
+		 function cf3_1(x) { return C1_1*f3_1(x);}
+		 function f3_2(x) { return Math.exp((-K1+Math.sqrt(K1*K1-4*k1))/2*x);}
+		 function cf3_2(x) { return C1_2*f3_2(x);}
+		 function f1(x) { return f1_1(x)*C1_1+f1_2(x)*C1_2; }
+		 function f2(x) { return f2_1(x)*C1_1+f2_2(x)*C1_2; }
+		 function f3(x) { return f3_1(x)*C1_1+f3_2(x)*C1_2; }
+		</script>
+		<p>運動方程式
+		  \begin{equation}
+		  m\left({\mathrm d\over\mathrm dt}\right)^2 {x}= -K{\mathrm d\over\mathrm dt}{x}-k{x}
+		  \end{equation}
+		  から、例によって特性方程式を作ると、<span class="box">$m\lambda^2 +K\lambda +k=0$</span>となる。これの解は（二次方程式の解の公式を用いて）
+		  \begin{equation}
+		  \lambda_\pm={-K\pm\sqrt{K^2-4mk}\over 2m}=-{K\over 2m}\mp{{\sqrt{K^2-4mk}}\over 2m}
+		  \end{equation}
+		  となる。ここから、$K^2-4mk$が負の場合、0の場合、正の場合の三つに分けて考える。</p>
+		<p class="A">　このように「場合分け」をしなければいけないというのが、運動に種類がある（予想では２種類だったが実は３種類だった）理由である。</p>
+		<p><span class="box">$K^2-4mk<0$の場合</span>この場合は$\lambda$は複素数になる。<span class="box">$\omega={\sqrt{4mk-K^2}\over 2m}$</span>という定数（$\omega$は実数である）を定義し、 <span class="box">$\lambda_\pm=-{K\over 2m}\mp\mathrm i\omega$</span>と書くことにする。</p>
+		<p>　こうして解を
+		  \begin{equation}
+		  {x}=
+		  C_+ \mathrm e^{-{K\over 2m}{t}+\mathrm i\omega{t}}
+		  +C_- \mathrm e^{-{K\over 2m}{t}-\mathrm i\omega{t}}\label{gensuisindou}
+		  \end{equation}
+		  と表すことができる。一見複素数であるが例によって係数を操作して、<span class="box">$C_+=C,C_-=C^*$</span>とすることで
+		  \begin{equation}
+		  {x}=
+		  \mathrm e^{-{K\over 2m}{t}}\left(
+		  C\mathrm e^{\mathrm i\omega{t}}
+		  +C^* \mathrm e^{-\mathrm i\omega{t}}\right)
+		  \end{equation}
+		  が実数解となる。</p>
+		<p class="A">　つまり、この式をちゃんと計算すると、実は虚数$\mathrm i$はどこにもいないのだ！</p>
+		<p>　そのことを確認するために、$C=A+\mathrm iB,C^*=A-\mathrm iB$などと置いて計算をしてみる。</p>
+		<p>　オイラーの公式$\mathrm e^{\mathrm i\theta}=\cos\theta+\mathrm i\sin\theta$などを使って、結果を三角関数で表現すると以下のようになる（$A,B,D,\alpha$は実数の定数）。
+		  \begin{equation}
+		  {x}=2
+		  \mathrm e^{-{K\over 2m}{t}}\left(
+		  A\cos \omega{t}
+		  +B\sin\omega{t}\right)
+		  =
+		  D\mathrm e^{-{K\over 2m}{t}}
+		  \cos \left(
+		  \omega{t}+\alpha\right)\label{gensui}
+		  \end{equation}
+		</p>
+		<p class="A">　下の動くグラフに$K^2-4mk<0$になる値（ちなみに$m=1$で固定であるから、$K^2<4k$ということ）を代入してみよう。二つの解（青と赤）がプロットされる。線形結合を取ることでいろんな解が出ることもわかる。</p>
+		<p><span class="box">$K^2-4mk=0$の場合</span>この場合、<span class="box">$\lambda_+=\lambda_-$</span>となる。よって添字は取って、<span class="box">$\lambda=-{K\over 2m}$</span>と書こう。重解が出る場合であるから、解は以下の通り。
+		  \begin{equation}
+		  {x}=\left(C_1{t}+C_0\right)\mathrm e^{\lambda{t}}\label{rinkai}
+		  \end{equation}
+		  この解「臨界振動」は、<span class="box">$K^2-4mk<0$</span>と<span class="box">$K^2-4mk>0$</span>のちょうど境目にあたる。</p>
+		<p class="A">　下の動くグラフに$K^2-4mk=0$になる値（$K^2=4k$ということ）を代入してみよう。</p>
+		<p><span class="box">$K^2-4mk>0$の場合</span>この場合は単純に、
+		  \begin{equation}
+		  {x}=
+		  C_+ \mathrm e^{\lambda_+{t}}
+		  +C_- \mathrm e^{\lambda_-{t}}\label{kagensui}
+		  \end{equation}
+		  が解である。$\lambda_\pm$はどちらも負の数になるから、この二つの解のどちらも「指数関数的に減衰する解」である。</p>
+
+		<p class="A">　これも下のグラフにいろんな数値を入れてみよう。</p>
+		<p align="center"><canvas id="graph1"></canvas></p>
+		<p><span id="C1_1">A=1</span><input id="c1sl" type="range" value="1" min="-3" max="3" step="0.1" onchange="C1_1=this.value; writeGraph1();"></p>
+		<p><span id="C1_2">B=1</span><input id="c2sl" type="range" value="1" min="-3" max="3" step="0.1" onchange="C1_2=this.value; writeGraph1();"></p>
+		<p>K=<span id="LaregeK1">1</span><input id="LaregeKsl" type="range" value="1" min="0" max="6" step="0.1" onchange="K1=this.value; writeGraph1();"></p>
+		<p>k=<span id="k1">1</span><input id="ksl" type="range" value="1" min="0" max="6" step="0.1" onchange="k1=this.value; writeGraph1();"></p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#gensuimove" data-icon="arrow-l">運動の様子</a>
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+	  </div>
+	</div>
+  </body>
+</html>
+

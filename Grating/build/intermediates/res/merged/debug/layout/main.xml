@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/setting"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/rbInitial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/first_and_next"
+                android:textSize="10sp" />
+
+            <RadioButton
+                android:id="@+id/rbAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/first_and_end"
+                android:textSize="10sp" />
+
+            <RadioButton
+                android:id="@+id/rbManual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/manual"
+                android:textSize="10sp" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="g=1"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <SeekBar
+            android:id="@+id/sbG"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="40"
+            android:progress="10" />
+    </LinearLayout>
+	<LinearLayout android:id="@+id/ll" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+	</LinearLayout>
+</LinearLayout>
+<!-- From: file:/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Grating/res/layout/main.xml -->

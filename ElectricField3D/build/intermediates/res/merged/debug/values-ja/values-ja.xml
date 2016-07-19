@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/ElectricField3D/res/values-ja/strings.xml -->
-    <eat-comment/>
     <string name="E1_off">（E1）</string>
     <string name="E1_on">【E1】</string>
     <string name="E2_off">（E2）</string>

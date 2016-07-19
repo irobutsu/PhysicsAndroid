@@ -1,0 +1,265 @@
+<!Doctype html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>傾きの極限（どんどんΔxを小さく：sin）</title>
+	<script src="zoominggraph.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	 function marume6(x) {
+	   var xx=x*1000000;
+	   xx=Math.round(xx);
+	   xx  /= 1000000;
+       if( x- xx == 0 ) {
+         return xx;
+       } else {
+         return xx+"…";
+       }
+	 }
+	 function marume4(x) {
+	   x*=10000;
+	   x=Math.round(x);
+	   x /= 10000;
+     return x;
+	 }
+	 var DraggablePoint=function(xx,yy,rr,c) {
+	   this.x=xx; this.y=yy;
+	   this.r=rr; this.col=c;
+	   this.shiftx=0;
+	   this.shifty=0;
+	 };
+	 DraggablePoint.prototype={
+	   nowDrag:false,
+	   canDrag:true,
+	   ID:-1,
+	   inP:function(xx,yy) {
+		 if( this.canDrag ) {
+		   return this.r*this.r > (xx-this.x)*(xx-this.x) +(yy-this.y)*(yy-this.y);
+		 } else {
+		   return false;
+		 }
+	   },
+	   setNowDrag:function(x,y) { this.nowDrag=true; this.shiftx=x-this.x; this.shifty=y-this.y;},
+	   resetNowDrag:function() { this.nowDrag=false;},
+	   setID:function(j) { this.ID=j;},
+	   moveByDrag:function(xx,yy,x0,y0,x1,y1) {
+		 xx -= this.shiftx;
+		 yy -= this.shifty;
+		 this.setXY(xx,yy,x0,y0,x1,y1);
+	   },
+	   // x,y座標をセットする。軸上など、場所が特定される場合は、この関数をオーバーライドする。
+	   setXY:function(xx,yy,x0,y0,x1,y1) {
+		 if( xx < x0 ) {
+		   this.x=x0;
+		 } else if( xx > x1 ) {
+		   this.x=x1;
+		 } else {
+		   this.x=xx;
+		 }
+		 if( yy< y0 ) {
+		   this.y=y0;
+		 } else if( yy >y1 ) {
+		   this.y=y1;
+		 } else {
+		   this.y=yy;
+		 }
+	   },
+	   // ●で書くのをスタブにしておく↓
+	   write:function(ct) {
+		 ct.fillStyle=this.col;
+		 ct.beginPath();
+		 ct.arc(this.x,this.y,this.r,0,2*Math.PI,false);
+		 ct.fill();
+	   },
+	   getID:function() { return this.ID;},
+	   disableDrag:function() { this.canDrag=false;}
+	 };
+	</script>
+	<link rel="STYLESHEET" href="kakudai.css" type="text/css">
+  </head> 
+  <body onload="init();" > 
+	<script type="text/javascript">
+	 var gs;
+	 var x0=0;
+	 var deltax=1;
+	 var pointx;
+	 function init() {
+	   gs=new ZoomingGraph("canvas",4,4,0.9,1);
+	   gs.setCenter(0,0);
+	   gs.gobackOriginalSize();
+	   gs.setFunction(function(x) { return Math.sin(x);},"rgb(255,0,0)");
+	   gs.setFunction(function(x) { return Math.cos(x0)*(x-x0)+Math.sin(x0);},"rgba(0,0,255,0.3)");
+	   gs.setFunction(function(x) { 
+		 var xdeltax=x0+deltax;
+		 return (Math.sin(xdeltax)-Math.sin(x0))/ deltax*(x-x0)+Math.sin(x0);
+	   },"rgba(255,0,255,0.3)");
+	   gs.writeContents=function() {
+		 this.writeCoordinate();
+		 this.writeFunction(100);
+		 this.ctx.strokeStyle="rgb(200,0,0)";
+		 var ct=this.ctx;
+		 ct.beginPath();
+		 ct.moveTo(x0,0);
+		 ct.lineTo(x0,Math.sin(x0));
+		 var xdeltax=x0+deltax;
+		 ct.moveTo(xdeltax,0);
+		 ct.lineTo(xdeltax,Math.sin(xdeltax));
+		 ct.stroke();
+		 ct.beginPath();
+		 ct.fillStyle="rgba(200,0,0,0.2)";
+		 ct.moveTo(x0,Math.sin(x0));
+		 ct.lineTo(xdeltax,Math.sin(x0));
+		 ct.lineTo(xdeltax,Math.sin(xdeltax));
+		 ct.fill();
+		 ct.beginPath();
+		 ct.fillStyle="rgba(0,0,200,0.2)";
+		 ct.moveTo(x0,Math.sin(x0));
+		 ct.lineTo(x0+this.zf,Math.sin(x0));
+		 ct.lineTo(x0+this.zf,Math.sin(x0)+Math.cos(x0)*this.zf);
+		 ct.fill();
+		 pointx.write(gs.ctx);
+	   };
+	   pointx=new PointX(0,0,0.3,"rgba(255,0,0,0.5)",gs.leftwx,gs.rightwx);
+	   gs.pushDragObjList(pointx);
+	   gs.writeGraph();
+	 };
+	 function changeA_XSQZ() {
+	   x0 *=100;
+	   x0=Math.round(x0);
+	   x0 = x0/ 100;
+	   $('#x0_value').html(x0);
+	   gs.writeGraph();
+	   setXSQZ();
+	 }
+	 var animeFlg=false;
+	 function go_anime() {
+	   if( animeFlg ) {
+		 animeFlg =false;
+	   } else {
+		 animeFlg =true;
+		 anime();
+	   }
+	 }
+	 function anime() {
+	   if( animeFlg ) {
+		 deltax -= 0.05*gs.zf;
+		 if( deltax <=  0 ) {
+		   deltax = gs.zf;
+		 }
+		 setTimeout("anime();",300);
+	   } else {
+		 deltax=gs.zf;
+	   }
+	   setXSQZ();
+	   gs.writeGraph();
+	 }
+	 function func(x) { return Math.sin(x); }
+	 function difffunc(x) { return Math.cos(x); }
+	 function setXSQZ() {
+	   document.getElementById("x0").innerHTML=(marume4(x0));
+//	   document.getElementById("x02").innerHTML=(marume4(func(x0)));
+//	   document.getElementById("x0").innerHTML=(marume4(x0));
+	   document.getElementById("deltax").innerHTML=(marume4(deltax));
+	   var x=x0+deltax;
+//	   document.getElementById("x0dx2").innerHTML=(marume4(func(x)));
+//	   document.getElementById("deltay").innerHTML=(marume4(func(x)-func(x0)));
+	   document.getElementById("deltaydeltax").innerHTML=(marume4((func(x)-func(x0))/ deltax));
+	   document.getElementById("dydx").innerHTML=(marume4(Math.cos(x0)));
+	 }
+	 function zoom2() {
+	   if( gs.zf > 0.02 ) {
+		 gs.zoom2();
+		 deltax=gs.zf;
+		 gs.writeGraph();
+		 setXSQZ();
+	   }
+	 }
+	 function zoomout2() {
+	   if( gs.zf < 2 ) {
+		 gs.zoomout2();
+		 deltax=gs.zf;
+		 gs.writeGraph();
+		 setXSQZ();
+	   }
+	 }
+	 function zoomback() {
+	   gs.zoomback();
+	   deltax=1;
+	   gs.writeGraph();
+	   setXSQZ();
+	 }
+	 var moveCenterCall=-1;
+	 function moveCenter() {
+	   if( moveCenterCall>=0 ) {
+		 // 既に呼ばれていたら何もしない。
+	   } else {
+		 moveCenterCall=10;
+		 cx_go=x0;
+		 cy_go=func(x0);
+		 cx_st=gs.cx;
+		 cy_st=gs.cy;
+		 setTimeout("moveCenterGO();",100);
+	   }
+	 }
+	 function moveCenterGO() {
+	   gs.moveCenter(0.1*moveCenterCall*(cx_st-cx_go)+cx_go,0.1*moveCenterCall*(cy_st-cy_go)+cy_go);
+	   gs.writeGraph();
+	   moveCenterCall -= 1;
+	   if( moveCenterCall <0 ) {
+
+	   } else {
+		 setTimeout("moveCenterGO();",100);
+	   }
+	 }
+	 var PointX=function(xx,yy,rr,c,x0x,x1x) {
+	   this.y=0;
+	   DraggablePoint.call(this,xx,yy,rr,c); // 親クラスのコンストラクタを呼ぶ。
+	   this.setRange=function(xx0,xx1) {
+		 this.rangex0=xx0;
+		 this.rangex1=xx1;
+	   };
+	   this.setRange(x0x,x1x);
+	   this.setXY=function(xx,yy) {
+		 // y座標を動かす必要はないので上書き。
+		 if( xx < this.rangex0 ) {
+		   this.x =this.rangex0;
+		 } else if( xx > this.rangex1 ) {
+		   this.x = this.rangex1;
+		 } else {
+		   this.x=xx;
+		 }
+		 x0=this.x;
+		 this.y=func(x0);
+		 setXSQZ();
+	   };
+	   this.write=function(ct) {
+		 ct.fillStyle=this.col;
+		 ct.beginPath();
+		 ct.moveTo(this.x,this.y+this.r*0.5*gs.zf);
+		 ct.lineTo(this.x+0.5*this.r*gs.zf,this.y);
+		 ct.lineTo(this.x,this.y-this.r*0.5*gs.zf);
+		 ct.lineTo(this.x-0.5*this.r*gs.zf,this.y);
+		 ct.closePath();
+		 ct.fill();
+	   };
+	 }
+	 PointX.prototype=Object.create(DraggablePoint.prototype);
+	 PointX.prototype.constructor=PointX;
+	</script>
+	  <h1>極限としての接線の傾き</h1>
+	  <h3>接線の傾き：y=sin(x)の場合（Δxを小さく）</h3>
+	  <p>　今度はy=sin(x)のグラフである。</p>
+	  <div align="center"><canvas id="canvas" width="100" height="100" ></canvas></div>
+	  <div>x<sub>0</sub>=<span id="x0">0</span></div>
+	  <div>Δx=<span id="deltax">1</span></div>
+	  <div><table cellpadding="2" cellspacing="0"><tbody><tr><td align="center" nowrap="nowrap">Δy<hr noshade="noshade" size="1">Δx</td><td>=<span id="deltaydeltax">0.8415</span></td></tr></tbody></table></div>
+	  <div><table cellpadding="2" cellspacing="0"><tbody><tr><td align="center" nowrap="nowrap">dy<hr noshade="noshade" size="1">dx</td><td>=<span id="dydx">1</span></td></tr></tbody></table></div>
+	  <div class="setsumei">　グラフを↓のボタンで拡大／縮小できるようになっている。◆が画面の外に出てしまった時は、「◆がグラフの中心に」ボタンを押すこと。</div>
+	  <input type="button" onclick="go_anime();" value="アニメーションスタート／ストップ"/>
+	  <input type="button" onclick="moveCenter();" value="◆がグラフの中心に"/>
+	  <input type="button" onclick="zoom2();" value="２倍拡大"/>
+	  <input type="button" onclick="zoomout2();" value="２倍縮小"/>
+	  <input type="button" onclick="zoomback();" value="元の縮尺に戻す"/>
+	  <a href="kakudai2.html">y=x<sup>2</sup>のグラフへ</a>
+  </body>
+</html>

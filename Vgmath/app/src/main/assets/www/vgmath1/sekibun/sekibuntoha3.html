@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width; target-densityDpi=device-dpi; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"/>
+		<title>積分ってなあに？（その３）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="../jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="../vg.css" rel="stylesheet" type="text/css"/>
+		<script src="../jquery.js" type="text/javascript"></script>
+		<script src="../jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<style type="text/css">
+		body {
+			background-color: #FFFFFF;
+		}
+		img {
+			vertical-align:middle;
+		}
+		.centering{ text-align:center;}
+		.magenta { color:magenta; }
+		.cyan { color:cyan; }
+		.red { color:red; }
+		.blue { color:blue; }
+		.chuumoku {
+			text-align:center;
+			font-size: x-large;
+			color:red;
+		}
+		</style>
+		<script type="application/javascript" src="sekibuntoha.js"></script>
+		<script type="application/javascript">
+		$(document).delegate('#page3','pageinit',function(e) {
+			init(); c=0; b=0.5; N=5; autoUpFlg=0; nuriFlg=-1; f=linear; Intf=Intlinear; animationGO();
+		});
+		</script>
+	</head>
+	<body>
+		<div data-role="page" id="page3">
+			<div data-role="header">
+				<h1>積分ってなあに？（その３）</h1>
+			</div>
+			<div data-role="content">
+				　いっきに連続的に蛇口を開く状況の計算はできないので、まずはこれに近い状況を考える。すなわち、蛇口を「徐々に」開くのではなく、段階的に開く。下のグラフの階段状の部分で表されるような過程を踏んで、流れ込む水の量を階段状に変化させる（このグラフでは５段階に分けて変化させている）。
+				<br>　この場合の水槽に溜まる水の量は、各段階ごとにvtで計算すればよい（vが段階的に増えていっているわけである）。つまり、<span class="cyan">水色で表現されている部分</span>の面積が、今入っている水の量である。
+				<br><hr>
+				<canvas width=500 height=500 id="maincanvas"></canvas>
+				<br><button id="bdown"
+						onClick="bdown();document.getElementById('blabel').innerHTML=b;" data-inline="true">（←減）
+				</button>a=<span id="blabel">0.5</span><button id="bup"
+														   onClick="bup();document.getElementById('blabel').innerHTML=b;" data-inline="true">（増→）
+				</button>
+				<hr><br>　vの増える割合であるaを変化させることができるようになっているので、いろいろ変化させてみてほしい。<br><span class="red">赤で示した直線グラフ</span>の表す水の入れ方と階段状グラフで示した水の入れ方はもちろん同じではない。実際に計算したいのは直線の方なので、「階段状に流量が増えていく」を「少しずつ流量が増えていく」に近づけていくことを考える。そのためにはここで書いたような５分割ではなく、もっと分割数を増やしていくべきだ、ということになるだろう。分割数を増やしていくグラフは次の<input type="button" value="その４" data-inline="true" data-icon="arrow-r" onclick="location.href='./sekibuntoha4.html'">にある。
+			</div>
+			<div data-role="footer" align=center>
+				<input type="button" value="その２" data-icon="arrow-l" onclick="location.href='./sekibuntoha2.html'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="その４" data-icon="arrow-r" onclick="location.href='./sekibuntoha4.html'">
+			</div>
+		</div>
+	</body>
+</html>
+

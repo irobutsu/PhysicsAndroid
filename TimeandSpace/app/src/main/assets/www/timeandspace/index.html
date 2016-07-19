@@ -1,0 +1,54 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>時間と空間の物理学</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config( {
+			tex2jax: {
+				inlineMath: [['$','$'], ["\\(","\\)"]]
+			},
+				TeX: {
+					extensions: ["color.js"],
+				}
+		});</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.2.min.css" />
+	<script src="jquery.js"></script>
+	<script src="jquery.mobile-1.4.2.min.js"></script>
+	<script type="text/javascript" src="../jquery.footnotes.js"></script>
+	<script language="JavaScript" type="text/javascript">
+	 $(function() {
+	   $("#hajimeni").footnotes(); 
+	 });
+	</script>
+  </head> 
+  <body>
+	<div data-role="page" id="hajimeni">
+	  <div data-role="header">
+		  <h1>時間と空間の物理学</h1>
+	  </div>
+	  <div data-role="content">
+		  <h2>目次</h2>
+		  <h3></h3>
+		  <ul>
+			  <li>人類の宇宙観の変遷</li>
+			  <ul>
+				  <li><input type="button" onclick="location.href='./size.html#page1'" value="地球の大きさを実感する"></li>
+				  <li><input type="button" onclick="location.href='./size.html#page2'" value="太陽・地球・月の位置関係"></li>
+				  <li><input type="button" onclick="location.href='./size.html#page3'" value="太陽・地球・月のサイズ"></li>
+				  <li><input type="button" onclick="location.href='./planets.html#page1'" value="地球中心に見た太陽と月の動き"></li>
+				  <li><input type="button" onclick="location.href='./planets.html#page2'" value="太陽中心に見た太陽と月の動き"></li>
+				  <li><input type="button" onclick="location.href='./planets.html#page3'" value="太陽と地球・金星・火星の動き"></li>
+			  </ul>
+
+		  </ul>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+	  </div>
+	</div>
+  </body>
+</html>

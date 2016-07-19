@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,target-densityDpi=device-dpi,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>第14講　ヒッグス粒子と質量の謎</title>
+  <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="http://www.phys.u-ryukyu.ac.jp/~maeno/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery-1.8.2.min.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.2.0.min.js" type="text/javascript"></script>
+	<style type="text/css">
+	 button {
+	   font-weight:bold;
+	   border:3px solid #999;
+	   border-right-color:#333;
+	   border-bottom-color:#333;
+	   border-radius:10px;
+	   color:#333;
+	   width:auto;
+	   text-decoration:none;
+	   float:left;
+	   margin-right:10px;
+	   background-color: #DDE;
+	 }
+	 .figure {
+	   margin:0pt auto;
+	 }
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .floatnone{
+	   float:none;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .box{
+	   padding:5px;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:13px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<script type="application/javascript" src="denba.js"></script>
+	<script type="application/javascript" src="denba.js"></script>
+	<script type="application/javascript">
+	 $(document).delegate('#page0','pageshow',function(e) {
+	   init();
+	 });
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>第14講　ヒッグス粒子と質量の謎</H1><br>
+	  </div>
+	  <div data-role="content">
+		<div class="box">2013年に、「ヒッグス粒子が発見された！」というニュースが世界を駆け巡りました。ではヒッグス粒子って何で、いったいそれが見つかることにどんな意味があるのでしょうか？</div>
+
+		<h3>ヒッグス粒子ってなあに？---まず「場」から</h3>
+
+		<p>その説明のために、まず 「ヒッグス場」というものを説明して、 「『場』と『粒子』ってどういう関係なの？」ってところから話を始めてみようかと思います。 </p>
+
+
+		<p>『場』で最も有名なのは「電場」と「磁場」です<span class="footnote">教科書によっては「電界」「磁界」になっていることもあるけど、方言のようなもので、同じ言葉です。</span>。電荷があると、その電荷の回りの空間が「他の電荷に力を及ぼすような性質」を持ちます。</p>
+
+		<p>単純な考え方では「電荷があると他の電荷と反発したり（同符号電荷の場合）、引き合ったり（異符号電荷の場合）する。」と考えますが、現代物理（といっても、１９世紀以降はって意味なんですが）では、「まず電荷が回りの『場』に影響を与え、その影響が伝わって『場』が変化していくことで力が伝えられる」と考えます。</p>
+
+		<hr>
+		<br>
+		　「場」の考え方になれるために、ちょっと下の図（動きます！）で遊んでみましょう。 <br>
+		<hr> <br>
+		<canvas width="500" height="500" id="maincanvas">ごめんなさい、あなたのブラウザはcanvasをサポートしてないようです。</canvas> <br>
+		<br>
+		<button id="q1down" data-inline="true" onclick="q1down();">（←減）</button>Q1=<span id="q1label">3</span><button
+		  id="q1up" data-inline="true"  onclick="q1up();">（増→）</button> <br>
+		<button id="q2down" data-inline="true" onclick="q2down();">（←減）</button><span class="red">Q2=<span
+          id="q2label">-3</span></span><button id="q2up" data-inline="true" onclick="q2up();">（増→）</button>
+		<hr><br>
+		<br>
+		　図の中●と<span class="red">●</span>は電荷で、指（<small>またはマウス</small>）で動かせます。青色の矢印は「もしその場所に正電荷をもう一つ置いたら、どっち向きにどれだけの大きさの力を受けるか？」を表したものです。これが「電場」です。 <br>電荷の大きさは下にあるボタンで変えることができます。 <br>電荷を動かしたり電荷の大きさを変えることで、各点各点の「電場」も変化します。いろいろ動かして、そのことを実感してみてください。<br>
+		<br>
+		　なお、<small>（このプログラムはそうなってないけど）</small>実際の「電場」は電荷の変化に応じてすぐに変化するのではなく、少し遅れて変化します。ただ、その変化が伝わる速度は光の速度と同じなので、目で見てそれに気づくことはできないでしょう。 <br>
+		<br>
+		<hr>
+
+		<p>「電場」の図で感じて欲しいことは「電荷の回りにできる『何か』が伝わることで力が伝わる」という概念です。実は現代物理においては、全ての力がこんなふうに『場』を介して伝わることがわかってます。もともと『場』という考え方を物理に導入したのは、電磁誘導を発見したりして電磁気学の発展に大きな役割を果たした、ファラデーだと言われています。ファラデーはそれまで「遠隔力」（二つの物体の間に直接働く力）だと思われていた電磁力を「電場」「磁場」という『場』の変化が伝えているという「近接作用」で考えたのです。 </p>
+
+
+		<p>この考え方は、その後この電場や磁場の振動が空間を伝わるという「電磁波」が発見されたことで「正しい」ことが認められます。そして、電磁波が真空中も伝わることから、電場や磁場は何かの物質の状態じゃなく、真空の空間そのものの性質だと思われるようになりました<span class="footnote">前回話したことですが、この電磁波は「光」そのものです。電磁波の波長が$4\times10^{-7}$ mから$8\times10^{-7}$ mである時、我々はその電磁波を「光」と呼ぶのです（ちなみに、携帯電話などに使われている電波は波長が数10センチ程度）。</span>。</p>
+	  </div>
+	  <div data-role="footer">
+		<a href="lec14_bane.html">「場」のイメージ</a>
+	  </div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Grating</string>
+    <string name="first_and_next">initial and 2nd.</string>
+    <string name="first_and_end">initial and final</string>
+    <string name="manual">manually</string>
+    <string name="velocity_off">(velocity)</string>
+    <string name="velocity_on">[velocity]</string>
+    <string name="accel_off">(accel.)</string>
+    <string name="accel_on">[accel.]</string>
+    <string name="int_U">BLUE:integral of potential energy</string>
+    <string name="int_K">GREEN:integral of kinetic energy</string>
+    <string name="int_L">RED:action</string>
+    <string name="g_equal"> g=</string>
+
+</resources>

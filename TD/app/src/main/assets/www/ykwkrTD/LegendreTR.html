@@ -1,0 +1,281 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>動く！熱力学付録：ルジャンドル変換</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<script src="jquery-1.11.1.min.js" type="text/javascript"></script>
+		<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="td.css" rel="stylesheet" type="text/css"/>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="draggablescreen.js" type="text/javascript"></script>
+		<script src="graphscreen.js" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+	</head> 
+	<body> 
+		<script src="LegendreTR.js" type="application/javascript"></script>
+		<div data-role="page" id="page0">
+			<div data-role="header">
+				<h1>動く！熱力学付録：ルジャンドル変換</h1>
+			</div>
+			<div data-role="content">
+				<p>　物理において、</p>
+				<div class="fukidasi">いくつかの変数$x,y,\cdots$を決めると、ある量$f$がそれらに応じて決まる。</div>
+				<p>という状況を考えることは非常に多い。解析力学では、変数$x,y,\cdots$は座標であったり速度であったり運動量であったりするが、他にもたとえば熱力学では体積$V$や温度$T$のような変数を考える。いろんな状況を考えるとき、この変数の決め方を変えたくなる。特に</p>
+				<div class="fukidasi">関数の独立変数を$x$から${\partial F\over \partial x}$に変えたい。</div>
+				<p>という状況がよくあるのだが、この変数の変換をうっかりとやると、その関数から得られる情報が失われてしまったり、変える前と変えた後で方程式の形が（意図せぬ形に）変化してしまったりする。そうならないように関数の形を調整しつつ独立変数を変える方法を「ルジャンドル変換(Legendre transfomation)」と言う。</p>
+				<p>　以下では、このルジャンドル変換について説明する。</p>
+				<nav>
+					<h3>・目次</h3>
+					<p><a href="#page1" data-role="button">もしルジャンドル変換をしなかったら（１変数の例）</a></p>
+					<p><a href="#page2" data-role="button">もしルジャンドル変換をしなかったら（２変数の例）</a></p>
+					<p><a href="#page3" data-role="button">ルジャンドル変換とは</a></p>
+					<p><a href="#page4" data-role="button">ルジャンドル変換に関する注意</a></p>
+					<p><a href="#page5" data-role="button">凸でない関数のルジャンドル変換</a></p>
+				</nav>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">　
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">　				
+				<a href="#page1" data-icon="arrow-r">もしルジャンドル変換をしなかったら（１変数の例）</a>
+			</div>
+		</div>
+		<div data-role="page" id="page1">
+			<div data-role="header">
+				<h1>ルジャンドル変換とはなにか？(動画バージョン)</h1>
+				<h1>もしルジャンドル変換をしなかったら（１変数の例）</h1>
+			</div>
+			<div data-role="content">
+				<h3>必要性―もしルジャンドル変換をしなかったら</h3>
+				<div class="setsumei">「なぜこんなことをする必要があるんですか？」という質問がよく出る（こういう疑問を持つのは悪いことではない。むしろ「何のために必要か」ということを考えもせずに「本に書いてあるから自分もやろう」とやってしまう人の方が<strong>危険</strong>である）ので、ここで「失敗例」を書いておく。</div>
+				<h4>1変数の例：情報が消える</h4>
+				<p>　$a$を定数として
+					\begin{equation} f(x)=(x-a)^2\label{fxa} \hskip{200pt}(1)\end{equation}
+					という関数を考えよう。今は$x\to f$という関数になっているわけだが、新しい変数として$f$の$x$による微分
+					\begin{equation} p_x={\partial f\over \partial x}=2(x-a) \end{equation}
+					を取りたいとする。逆に、$x-a={p_x\over 2}$である。$p_x$を変数として$f$を表現すると、
+					\begin{equation} f={(p_x)^2\over 4}\label{fpfour} \end{equation}
+					となる。結果は$a$によらない式になったが、ここで「簡単な式になった」と喜んではいけない。「$a$という情報を失ってしまった」と嘆くべき状況である。$x\to f$という対応関係の中には$a$の情報があるが、$p_x\to f$という対応関係の中には$a$がどこにも入っていない。つまり、「$p_x\to f$という対応関係だけを知っている人」は「$x\to f$という対応関係だけを知っている人」より情報が少ない（たとえば$p_x=2(x-a)$という式を出せるのは、後者のみ）。</p>
+				<p>　なぜ情報が消えてしまったかを考えよう。以下に、$x,f$のグラフと$p_x,f$のグラフを描く。</p>
+				<div><canvas id="canvas1" width=200 height=200></canvas>　<canvas id="canvas2" width=200 height=200></canvas></div>
+				<div data-role="fieldcontain">
+					<label for="slider">a:</label>
+					<input type="range" name="slider" id="slider" value="0" min="-2" max="2" step="0.1" onChange="a=Number($('#slider').val());if( animCount<0 ) {graphWrite();}" />
+				</div>
+				<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup" data-type="horizontal">
+						<legend>表示</legend>
+						<input type="checkbox" name="checkboxpxzero" id="checkboxpxzero_0" class="custom" value="" onChange="onpx0change();"/>
+						<label for="checkboxpxzero_0">$p_x=0$の点</label>
+						<input type="checkbox" name="checkboxpxone" id="checkboxpxone_0" class="custom" value="" onChange="onpx1change();"/>
+						<label for="checkboxpxone_0">$p_x=1$の点</label>
+					</fieldset>
+				</div>
+				
+				<p>　上の左側のグラフはaを変化させた時の$f=(x-a)^2$を描いたものだ。この時表示されている接線の傾きが$p_x$である。</p>
+				<p>　右側のグラフは$p_x$と$f$の関係で、式で表現すれば$f={(p_x)^2\over 4}$である。その対応関係は、$a$をずらしても（グラフを平行移動しても変わりがない（スライダーでaの値を変えることができるので、変えてみても右のグラフが変わらないことを実感せよ）。</p>
+				<p>　たとえば、</p>
+				<div class="setsumei">$p_x=0$なら$f=0$、$p_x=1$なら$f={1\over4}$</div>
+				<p>という関係（グラフの下のボタンを押すとグラフ上に表示できる）は、$a$をどう変えても同じである。ゆえに「$x\to f$という関数関係」は「$p_x\to f$という関数関係」に移行させることができない。必ず情報が失われる。そこで$f$ではない新しい関数$\tilde f$を作って、情報が正しく移行されるようにしなくてはいけない。</p>
+				<p>　ではどんな$\tilde f$を持ってくれば「$x\to f$という関数関係」の持っている情報を全て「$p_x\to\tilde f$という関数関係」に移行させることができるのか？---その答えがルジャンドル変換である。</p>
+				<p>　次にもう一つの「失敗例」を述べよう。 </p>
+			</div>
+			<div data-role="footer" align="center">         
+				<a href="#page0" data-icon="arrow-l">「ルジャンドル変換」の目次</a>
+				<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">　
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">　				
+				<a href="#page2" data-icon="arrow-r">もしルジャンドル変換をしなかったら（２変数の例）</a>
+			</div>
+		</div>
+		<div data-role="page" id="page2">
+			<div data-role="header">
+				<h1>ルジャンドル変換とはなにか？(動画バージョン)</h1>
+				<h1>もしルジャンドル変換をしなかったら（２変数の例）</h1>
+			</div>
+			<div data-role="content">
+				<h4>2変数の例：変換しなかった変数の微分の答が変わる</h4>
+				<p>　二つの変数$x,y$の関数$f(x,y)$を考えよう。
+					\begin{equation}
+					p_x={\partial f(x,y)\over \partial x}\biggr|_y,~~~
+					p_y={\partial f(x,y)\over \partial y}\biggr|_x
+					\end{equation}
+					のように新しい量$p_x,p_y$を定義したとする。ここで「$x,y$を変数にするんじゃなくて、$p_x,y$を変数にして問題を解きたい」と考えたとしよう。そのために、$x=x(p_x,y)$のように元々の変数$x$を新しい変数$p_x$と$y$の関数として表すことができたとしよう。</p>
+				<p>　ここで単純に
+					\begin{equation}
+					F(p_x,y)=f(x(p_x,y),y)\label{Fpxy}
+					\end{equation}
+					と置いて、この関数を使っていろんなことを考えることにしたとしよう。</p>
+				<p>　上の式では$p_x,y$が独立変数だと考えた式だが、これを$x,y$が独立変数だということを強調して書くと、
+					\begin{equation}
+					F(p_x(x,y),y)=f(x,y)\label{Fpxxyy}
+					\end{equation}
+					となる。問題は</p>
+				<div class="fukidasi">$F(p_x,y)$から$p_y$は求められるか？</div>
+				<p>ということである。$p_y$は「$x$を一定にして$f$を$y$で微分」することで得られる$\left(p_y={\partial f\over \partial y}\biggr|_x\right)$。この「$x$を一定にして$y$を微分」という操作を上の式の両辺に対して行うと、$F(p_x(x,y),y)$には$y$が２箇所に入っていることが反映されて、
+					\begin{equation}
+					\begin{array}{rl}
+					\underbrace{ {\partial F(p_x(x,y),y)\over \partial p_x}}_{第1引数を微分}\biggr|_y{\partial p_x(x,y)\over \partial y}\biggr|_y
+					+\underbrace{  {\partial F(p_x(x,y),y)\over \partial y}\biggr|_{p_x}
+					}_{第2引数のみを微分}
+					=&{\partial f(x,y)\over \partial y}\biggr|_x
+					\end{array}
+					\end{equation}
+					となる。つまり、$y$で微分する時の左辺の$F$の中にある$p_x(x,y)$の中の$y$も微分される分、左辺第2項${\partial F\over \partial y}\biggr|_{p_x}$は、右辺${\partial f\over \partial y}\biggr|_x=p_y$とは違うものになる。</p>
+				<div class="setsumei">　ここで述べたのと同種の間違いを力学の問題でおかした例を、「よくわかる解析力学」p118の5.1.4節で紹介している。</div>
+				<p>　二つの失敗例を述べたが、この二つは別々の問題ではない。第二の例も第一の例と同じく、同じ関数を使っていたのでは対応関係の情報が失われる（破壊される）ということを述べている。第一の例で$a$が消えたが、それを$a$を定数ではなく系を特徴づける変数の一つだったと思えば、$x$から$p_x$への変換において$a$という情報が失われたことになる。同様に、第二の問題では$y$で微分した結果どうなるか、という情報が破壊された。
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page1" data-icon="arrow-l">もしルジャンドル変換をしなかったら（１変数の例）</a>
+				<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">　
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">　				
+
+				<a href="#page3" data-icon="arrow-r">ルジャンドル変換とは</a>
+			</div>
+		</div>
+		<div data-role="page" id="page3">
+			<div data-role="header">
+				<h1>ルジャンドル変換とはなにか？(動画バージョン)</h1>
+				<h1>ルジャンドル変換とは</h1>
+			</div>
+			<div data-role="content">
+				　　	<p>この二つの問題に対する対応策を述べよう。
+				\begin{equation}
+				\tilde f (p_x)=f(x)-xp_x
+				\end{equation}
+				で新しい関数を定義する。$f=(x-a)^2$の場合の$\tilde f$の意味をグラフで表現したのが次の図である。<br>
+				<br>
+				<div><canvas id="canvas3" width=200 height=200></canvas>　<canvas id="canvas4" width=200 height=200></canvas></div>
+				<div data-role="fieldcontain">
+					<label for="slider_a">a:</label>
+					<input type="range" name="slider_a" id="slider_a" value="0" min="-2" max="2" step="0.1" onChange="a=Number($('#slider_a').val());graphWrite3();" />
+					<label for="slider_x">x:</label>
+					<input type="range" name="slider_x" id="slider_x" value="1" min="-3" max="3" step="0.1" onChange="x=Number($('#slider_x').val());graphWrite3();" />
+				</div>
+				<p>　$p_x$はグラフの接線の傾きであり、$-xp_x$という量はすなわち、接線を$f$軸まで伸ばしていった時の$f$座標の変化である。スライダで$a,x$を変えてみて欲しい。$a$の違いが$\tilde f$の違いに反映することがわかるだろう。
+					<div class="setsumei">この図は自動では動かないので、自分で動かしてみること。</div>		
+					
+					<p>　前節の例について実際に計算してみると、
+						\begin{equation}
+						\begin{array}{rl}
+						\tilde f = (x-a)^2- xp_x=&{(p_x)^2\over 4}- \left({(p_x)\over 2}+a\right)p_x
+						= -{(p_x)^2\over 4}-ap_x
+						\end{array}
+						\end{equation}
+						となる。情報を失っていない変換なので「元に戻す」こともできる。
+						\begin{equation}
+						x=- {\partial \tilde f\over \partial p_x}={p_x\over 2}+a
+						\end{equation}
+						で$x$を定義して$f=\tilde f + xp_x$というのが逆変換である。</p>
+					<p>　ここで$x$の定義と符号が逆になっているように見えるが、微分の形で書くと
+						\begin{equation}
+						\underbrace{\tilde f(p_x)=f(x)-x{\partial f\over \partial x}~~\left(p_x={\partial f\over \partial x}\right)}_{ルジャンドル変換}
+						,~~~~~\underbrace{ f(x)=\tilde f(p_x) - p_x {\partial \tilde f\over \partial p_x} ~~\left(x=-{\partial \tilde f\over \partial p_x}\right)}_{逆ルジャンドル変換}
+						\end{equation}
+						と同じ形（$x\leftrightarrow p_x,f\leftrightarrow \tilde f$と取り替えた形）になっている。すなわち、同じ形の変換を2回やると元に戻る。例の場合は
+						\begin{equation}
+						f=-{(p_x)^2\over 4}-ap_x +x p_x
+						=-(x-a)^2+(x-a)\times 2(x-a)=(x-a)^2
+						\end{equation}
+						で元に戻る。まとめると、以下のとおりとなる。</p>
+					<div class="setsumei">ルジャンドル変換
+						<p>　関数$f(x)$、すなわち$x\to f$という対応関係の入力変数を$x$ではなく$p_x={\partial f\over \partial x}$に変えたい時は
+							\begin{equation}
+							\tilde f(p_x)=f(x)-xp_x\label{seiLegendre}
+							\end{equation}
+							と定義すると、元の対応関係が持っていた情報を失うことなく新しい対応関係$p_x\to \tilde f$を作ることができる。</p>
+					</div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page2" data-icon="arrow-l">もしルジャンドル変換をしなかったら（２変数の例）</a>
+				<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">　
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">　				
+				<a href="#page4" data-icon="arrow-r">ルジャンドル変換に関する注意</a>
+			</div>
+		</div>
+		<div data-role="page" id="page4">
+			<div data-role="header">
+				<h1>ルジャンドル変換に関する注意</h1>
+			</div>
+			<div data-role="content">
+				<p>　前ページの図はある意味「危なくない状況」を選んで描いてあるが、目ざとい人ならば</p>
+				<div class="fukidasi">同じ$p_x$に対して二つ以上$\tilde f$の値があったりしないのか？</div>
+				<p>という点が心配になるのではないかと思う。</p>
+				<p>　たとえば</p>
+				<img src="nottotsu.png" alt="凸関数でない関数グラフ">
+				<p>のような状況では、$\tilde f$が一つに決まらない。</p>
+				<p>　こうならないためには、グラフは常に「凸関数」でなくてはならない。すなわち、${\mathrm d^2f\over \mathrm d x ^2}={\mathrm d p \over \mathrm d x }$が符号を変えてはいけない。そのような関数であれば、$p$を決めれば$x$が決まり、ひいては$f$も$\tilde f$も決まる。
+
+
+					<p>　もう一つ問題になるのは次の図のように、区分的に凸関数であっても、微分が連続ではない場合である。</p>
+					<div><canvas id="canvas5" width=200 height=200></canvas>　<canvas id="canvas6" width=200 height=200></canvas></div>
+					<p>　その場合は変数$p_x$すなわち傾きが変化しても$f$が変化しない領域ができる。上のグラフの右側は$p_x$を横軸としているが、<span class="red">赤が$f$</span>、<span class="blue">青が$\tilde f$</span>のグラフである。途中で$f$のグラフが平坦になっている場所があることを確認しよう。</p>
+					<p>　次に、2変数の例で説明しよう。
+						$\tilde f(p_x,y)=f(x,y)-xp_x(x,y)$という量を定義する。これを$p_x$と$y$の関数として両辺を表現すると、
+						\begin{equation}
+						\tilde f(p_x,y)=f(x(p_x,y),y)-x(p_x,y)p_x
+						\end{equation}
+						これを$p_x$を一定にして$y$で微分すると、
+						\begin{equation}
+						{\partial \tilde f(p_x,y)\over \partial y }\biggr|_{p_x}=
+						{\partial f\over \partial x}\biggr|_{y}{\partial x(p_x,y)\over \partial y}\biggr|_{p_x}
+						+{\partial f\over \partial y}\biggr|_{x}
+						-{\partial x(p_x,y)\over \partial y}\biggr|_{p_x}p_x
+						\end{equation}
+						となるが、第1項の${\partial f\over \partial x}\biggr|_{y}$は$p_x$そのものだから、第1項と第3項は相殺して、
+						\begin{equation}
+						{\partial \tilde f(p_x,y)\over \partial y }\biggr|_{p_x}=
+						{\partial f(x,y)\over \partial y}\biggr|_{x}
+						\end{equation}
+						となる。つまり、$\tilde f= f-xp_x$なる量に変更した事で「$f(x,y)$の$y$による偏微分（当然、$x$は一定）」と「$\tilde f(p_x,y)$の$y$による偏微分（こっちは$p_x$が一定）」が同じ量になる。</p>
+
+					<p>　このようにして、「変数を変換したことで偏微分の``何を固定するか''という条件が変化するのに対応して、関数の方を変えて偏微分の答が変わらないようにする変換」を作ることができた。これも「ルジャンドル変換」の意義である。</p>
+
+					<P>　なぜルジャンドル変換でうまく独立変数の変換ができるのかを全微分の式を書いて示しておこう。ふたたび$f(x,y)$を考える。$x$が$\mathrm d x$、$y$が$\mathrm d y$変化した時の$f$の変化量は
+						\begin{equation}
+						\mathrm d f ={\partial f\over \partial x}\mathrm d x  + {\partial f\over \partial y}\mathrm d y 
+						\end{equation}
+						と書ける。一方、$\tilde f=f-p_x x$の微分を考えると、
+						\begin{equation}
+						\mathrm d \tilde f  = \underbrace{{\partial f\over \partial x}\mathrm d x  + {\partial f\over \partial y}\mathrm d y }_{\mathrm d f } -\underbrace{(\mathrm d p \!_x x + p_x\mathrm d x )}_{\mathrm d  (p_x x)}
+						\end{equation}
+						となって、第1項と第4項がちょうど消えて、
+						\begin{equation}
+						\mathrm d \tilde f  = {\partial f\over \partial y}\mathrm d y  - \mathrm d p \!_x x
+						\end{equation}
+						となる。こうして、$p_x$を一定として$\tilde f$を$y$微分した時の値と、$x$を一定として$\tilde f$を$y$微分した時の値が等しくなるように変数の変換ができた。</P>
+
+					<p>　なお、ラグランジアンとハミルトニアンを相互に変換するときのルジャンドル変換は、以下のように、上とは符号を変えた定義になっている。</p>
+					<div class="setsumei">符号が反転するルジャンドル変換
+						\begin{equation}
+						ルジャンドル変換~~~~ \tilde f(p_x) = xp_x -f(x)~~~ただし、p_x={\partial f(x)\over \partial x}\label{minusLegendre}
+						\end{equation}
+						\begin{equation}
+						逆ルジャンドル変換~~~~ f(x) = xp_x -\tilde f(p_x)~~~ただし、x={\partial \tilde f(p_x)\over \partial p_x}\label{minusLegendretwo}
+						\end{equation}
+					</div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page3" data-icon="arrow-l">ルジャンドル変換とは</a>
+				<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">　
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">　				
+				<a href="#page5" data-icon="arrow-l">凸でない関数のルジャンドル変換</a>
+			</div>
+		</div>
+		<div data-role="page" id="page5">
+			<div data-role="header">
+				<h1>凸でない関数のルジャンドル変換</h1>
+			</div>
+			<div data-role="content">
+				<p>　凸ではない関数を（ある意味、無理矢理）ルジャンドル変換するとどうなるのか、というのを以下のグラフで示そう。</p>
+				<div><canvas id="canvas7" width=200 height=200></canvas>　<canvas id="canvas8" width=200 height=200></canvas></div>
+				<p>　左のグラフの関数は上に凸な部分と下に凸な部分を含んでいる。このような関数をルジャンドル変換すると、「上に凸」である部分では接線にあたる線が「蓋」になったように動かなくなり、$x$が変化しているのに$\tilde f$（ルジャンドル変換後の関数）が変化しない（このあいだ、$p={\partial f\over\partial x}$は一定値（図の場合は0）を保つ。このような状況がどういう物理現象に対応するかは、相転移のところで述べよう。</p>
+				<p>　なお右の図→左の図への変換（逆ルジャンドル変換）においては、$x=-{\partial \tilde f\over\partial p_x}$が成立していることに注意。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page4" data-icon="arrow-l"">ルジャンドル変換に関する注意</a>
+				<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back" onclick="history.back();">　								</div>
+		</div>
+	</body>
+</html>

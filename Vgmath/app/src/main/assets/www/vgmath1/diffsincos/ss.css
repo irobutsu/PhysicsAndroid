@@ -1,0 +1,156 @@
+.ki{
+	color:#880;
+}
+.teihen {
+	color: #D00;
+}
+.takasa {
+	color: #00D;
+}
+.shahen {
+	color: #880;
+}
+.warning{
+	padding:5px;
+	color:#F00;
+	background-color: #FF0;
+	border: solid #333 thin;
+	border-radius:10px;
+}
+img {float:left;}
+img.withb{border: 2px #880 solid;}
+h2{
+	color:#300;
+	background-color: #9CC;
+	border: solid #333 thin;
+	border-radius:10px;
+}
+h3{
+	color:#300;
+	background-color: #CC9;
+	border: solid #333 thin;
+	border-radius:10px;
+}
+.footnote {
+	font-size:50%;
+	padding:5px;
+	background-color: #FEE;
+	color:#009;
+	border: solid #008 double;
+	border-radius:8px;
+}
+.floatright{
+	float:right;
+}
+.floatleft{
+	float:left;
+}
+.floatcenter{
+	float:center;
+}
+.floatnone{
+	float:none;
+}
+.case{
+	color:#000;
+	background-color: #FCC;
+	border: solid #800 thin;
+	border-radius:10px;
+}
+.fukidasi{
+	padding:5px;
+	color:#000;
+	background-color: #DDF;
+	border: solid #800 thin;
+	border-radius:10px;
+}
+.faq{
+	padding:5px;
+	color:#400;
+	background-color: #CCF;
+	border: solid #333 thin;
+	border-radius:10px;
+}
+.setsumei{
+	padding:5px;
+	color:#008;
+	background-color: #CFC;
+	border: solid #333 thin;
+	border-radius:10px;
+}
+.box{
+	padding:5px;
+	color:#000;
+	border: solid #333 thin;
+	border-radius:10px;
+}
+.question{
+	padding:5px;
+	color:#003;
+	background-color: #CCF;
+	border: solid #333 double;
+	border-radius:13px;
+}
+.keyword{
+	padding:3px;
+	color:#050;
+	background-color:#FCF;
+	border: solid #FF8 double;
+	border-radius:8px;
+}
+.akansetsumei{
+	padding:5px;
+	color:#080;
+	background-color: #FCC;
+	border: solid #333 thin;
+	border-radius:10px;
+}
+.gray{
+	color:#888;
+}
+.magenta{
+	color: #D0D;
+}
+.kussetsukaku{
+	color: #D00;
+}
+.aka{
+	color: #F00;
+}
+.A{
+	color: #F00;
+}
+.red{
+	color: #D00;
+}
+.green{
+	color: #0D0;
+}
+.yellow{
+	color: #DD0;
+}
+.Q { 
+	padding:5px;
+	background-color: #CCC;
+	color: #00F; 
+	border: solid #333 thin;
+	border-radius:10px;
+}
+.ao {
+	color: #00F;
+}
+.blue{
+	color: #00D;
+}
+.usuao {
+	color: #8DD;
+}
+.twostatebutton{
+	background-color: #F99;
+	border-width: thick;
+	border-radius: 10px;
+	border-radius: 10px;
+	padding-bottom: 10px;
+}
+pre {background-color:#FCA;}
+canvas {ms-touch-action:none;}

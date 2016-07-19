@@ -42,7 +42,7 @@
 		    		android:layout_gravity="right"
 		    		android:orientation="horizontal" >
 		          	<TextView android:id="@+id/textView2" android:layout_height="wrap_content" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium" android:text="M/m=1" /> 
-           		<SeekBar android:id="@+id/sbG" android:textSize="12dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:max="200" android:progress="0" />
+           		<SeekBar android:id="@+id/sbG" android:textSize="12dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="0dp" android:max="200" android:progress="0" />
            		<ToggleButton
               			android:id="@+id/tbStop"
                		android:layout_width="55dp"
@@ -123,4 +123,4 @@
 			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>
-</LinearLayout><!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Kepler/res/layout/main.xml -->
+</LinearLayout>

@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    <LinearLayout android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+<LinearLayout android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+  
+        <Button
+            android:id="@+id/btResetScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0.1"
+            android:text="画面初期化" />
+
+<TextView
+            android:id="@+id/textDelM"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0.1"
+            android:text="∂M/∂x=0"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+<SeekBar
+            android:id="@+id/sbDelM"
+            android:progress="2"
+            android:max="4"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0.2" />
+
+<TextView
+    android:id="@+id/textView1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="0.1"
+    android:text="(-2〜2)" />
+
+</LinearLayout>
+        <LinearLayout
+            android:id="@+id/mainscreen"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="fill" >
+        </LinearLayout>
+
+</LinearLayout>
+</RelativeLayout>

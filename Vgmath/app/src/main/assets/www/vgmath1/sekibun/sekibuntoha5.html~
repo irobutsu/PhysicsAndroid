@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width; target-densityDpi=device-dpi; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"/>
+<title>積分ってなあに？（その５）</title>
+<style type="text/css">
+	body {
+		background-color: #FFFFFF;
+	}
+	img {
+	vertical-align:middle;
+	}
+	.centering{ text-align:center;}
+	.magenta { color:magenta; }
+	.red { color:red; }
+	.blue { color:blue; }
+	.chuumoku {
+		text-align:center;
+		font-size: x-large;
+		color:red;
+	}
+</style>
+</head>
+<body onload="init(); a=0.2; c=0.1; b=0.3; N=5; nuriFlg=-1; f=houbutsu; Intf=Inthoubutsu; animationGO();">
+<script type="application/javascript" src="sekibuntoha.js"></script>
+<h1>積分ってなあに？（その５）</h1>
+<br>
+<div class=centering><a href="sekibuntoha4.html">その４へ戻る</a></div>
+<br>
+<hr>
+　では最後に、流量が
+<br><br>v(t)=at<sup>2</sup>+bt+c
+<br><br>のような２次式で表現できる場合のアニメーションを見よう。a,b,cも変化させることができる。
+<br>　いろいろな場合を観察して、「積分している」イメージをつかんでください。
+<br><hr>
+<canvas width=500 height=500 id="maincanvas"></canvas>
+<br><button id="adown"
+onClick="adown();document.getElementById('alabel').innerHTML=a;">（←減）
+</button>a=<span id="alabel">0.2</span><button id="aup"
+onClick="aup();document.getElementById('alabel').innerHTML=a;">（増→）
+</button>
+<br><br><button id="bdown"
+onClick="bdown();document.getElementById('blabel').innerHTML=b;">（←減）
+</button>b=<span id="blabel">0.3</span><button id="bup"
+onClick="bup();document.getElementById('blabel').innerHTML=b;">（増→）
+</button>
+<br><br><button id="cdown"
+onClick="cdown();document.getElementById('clabel').innerHTML=c;">（←減）
+</button>c=<span id="clabel">0.1</span><button id="cup"
+onClick="cup();document.getElementById('clabel').innerHTML=c;">（増→）
+</button>
+<br>
+<br><button id="Ndown"
+onClick="Ndown();document.getElementById('Nlabel').innerHTML=N;">（←減）
+</button>N=<span id="Nlabel">5</span><button id="Nup"
+onClick="Nup();document.getElementById('Nlabel').innerHTML=N;">（増→）
+</button>
+<hr>
+　いずれ書き足すかもしれませんが、とりあえず、これにておしまい。
+<br><br><br>
+　さっきの極限を取るところで「どうもあの余っていた三角形が気になる」という人だけは、<a href="sekibuntoha6.html">その６</a>も見て下さい。
+<hr>
+<div class=centering><a href="sekibuntoha6.html">その６へ進む</a></div>
+<div class=centering><a href="index.html">表紙に戻る</a></div>
+</body>
+</html>
+

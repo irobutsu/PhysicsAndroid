@@ -24,6 +24,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.downx2();
 				((TextView) findViewById(R.id.textViewx2)).setText(view3d.getCX2String());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttonupx2).setOnClickListener(new Button.OnClickListener() {
@@ -31,6 +32,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.upx2();
 				((TextView) findViewById(R.id.textViewx2)).setText(view3d.getCX2String());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttondownx1).setOnClickListener(new Button.OnClickListener() {
@@ -38,6 +40,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.downx1();
 				((TextView) findViewById(R.id.textViewx1)).setText(view3d.getCX1String());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttonupx1).setOnClickListener(new Button.OnClickListener() {
@@ -45,6 +48,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.upx1();
 				((TextView) findViewById(R.id.textViewx1)).setText(view3d.getCX1String());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttondowny2).setOnClickListener(new Button.OnClickListener() {
@@ -52,6 +56,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.downy2();
 				((TextView) findViewById(R.id.textViewy2)).setText(view3d.getCY2String());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttonupy2).setOnClickListener(new Button.OnClickListener() {
@@ -59,6 +64,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.upy2();
 				((TextView) findViewById(R.id.textViewy2)).setText(view3d.getCY2String());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttondowny1).setOnClickListener(new Button.OnClickListener() {
@@ -66,6 +72,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.downy1();
 				((TextView) findViewById(R.id.textViewy1)).setText(view3d.getCY1String());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttonupy1).setOnClickListener(new Button.OnClickListener() {
@@ -73,6 +80,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.upy1();
 				((TextView) findViewById(R.id.textViewy1)).setText(view3d.getCY1String());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttondownxy).setOnClickListener(new Button.OnClickListener() {
@@ -80,6 +88,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.downxy();
 				((TextView) findViewById(R.id.textViewxy)).setText(view3d.getCXYString());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttonupxy).setOnClickListener(new Button.OnClickListener() {
@@ -87,6 +96,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.upxy();
 				((TextView) findViewById(R.id.textViewxy)).setText(view3d.getCXYString());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttondown0).setOnClickListener(new Button.OnClickListener() {
@@ -94,6 +104,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.down0();
 				((TextView) findViewById(R.id.textView0)).setText(view3d.getC0String());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 		findViewById(R.id.buttonup0).setOnClickListener(new Button.OnClickListener() {
@@ -101,6 +112,7 @@ public class NihensuuActivity extends Activity {
 			public void onClick(View v) {
 				view3d.up0();
 				((TextView) findViewById(R.id.textView0)).setText(view3d.getC0String());
+				((TextView) findViewById(R.id.textViewS)).setText(view3d.getFString());
 			}
 		});	
 	}

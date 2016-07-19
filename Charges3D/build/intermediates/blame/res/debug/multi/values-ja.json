@@ -1,0 +1,292 @@
+[
+    {
+        "outputFile": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/build/intermediates/res/merged/debug/values-ja/values-ja.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 45,
+                    "endOffset": 96
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 2,
+                        "startOffset": 227,
+                        "endColumn": 43,
+                        "endOffset": 268
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 101,
+                    "endColumn": 44,
+                    "endOffset": 141
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 273,
+                        "endColumn": 44,
+                        "endOffset": 313
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 146,
+                    "endColumn": 45,
+                    "endOffset": 187
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 6,
+                        "startOffset": 320,
+                        "endColumn": 47,
+                        "endOffset": 361
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 192,
+                    "endColumn": 44,
+                    "endOffset": 232
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 366,
+                        "endColumn": 44,
+                        "endOffset": 406
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 237,
+                    "endColumn": 45,
+                    "endOffset": 278
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 14,
+                        "startColumn": 4,
+                        "startOffset": 584,
+                        "endColumn": 45,
+                        "endOffset": 625
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 283,
+                    "endColumn": 44,
+                    "endOffset": 323
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 13,
+                        "startColumn": 6,
+                        "startOffset": 539,
+                        "endColumn": 46,
+                        "endOffset": 579
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 328,
+                    "endColumn": 42,
+                    "endOffset": 366
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 16,
+                        "startColumn": 4,
+                        "startOffset": 674,
+                        "endColumn": 42,
+                        "endOffset": 712
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 371,
+                    "endColumn": 45,
+                    "endOffset": 412
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 45,
+                        "endOffset": 96
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 417,
+                    "endColumn": 43,
+                    "endOffset": 456
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 6,
+                        "startOffset": 413,
+                        "endColumn": 45,
+                        "endOffset": 452
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 461,
+                    "endColumn": 39,
+                    "endOffset": 496
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 11,
+                        "startColumn": 4,
+                        "startOffset": 457,
+                        "endColumn": 39,
+                        "endOffset": 492
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 12,
+                    "startColumn": 4,
+                    "startOffset": 501,
+                    "endColumn": 39,
+                    "endOffset": 536
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 12,
+                        "startColumn": 4,
+                        "startOffset": 497,
+                        "endColumn": 39,
+                        "endOffset": 532
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 13,
+                    "startColumn": 4,
+                    "startOffset": 541,
+                    "endColumn": 40,
+                    "endOffset": 577
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 101,
+                        "endColumn": 40,
+                        "endOffset": 137
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 14,
+                    "startColumn": 4,
+                    "startOffset": 582,
+                    "endColumn": 40,
+                    "endOffset": 618
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 142,
+                        "endColumn": 40,
+                        "endOffset": 178
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 15,
+                    "startColumn": 4,
+                    "startOffset": 623,
+                    "endColumn": 45,
+                    "endOffset": 664
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 183,
+                        "endColumn": 45,
+                        "endOffset": 224
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 16,
+                    "startColumn": 4,
+                    "startOffset": 669,
+                    "endColumn": 43,
+                    "endOffset": 708
+                },
+                "from": {
+                    "file": "/Users/maeno/Dropbox/gitHub/PhysicsAndroid/Charges3D/res/values-ja/strings.xml",
+                    "position": {
+                        "startLine": 15,
+                        "startColumn": 4,
+                        "startOffset": 630,
+                        "endColumn": 43,
+                        "endOffset": 669
+                    }
+                }
+            }
+        ]
+    }
+]

@@ -1,0 +1,427 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>第４章　いろいろな関数の微分</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+	<link href="vg.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+<!Doctype html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../sizensuugaku/../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="ss.css" rel="stylesheet" type="text/css"/>
+		<link href="jquery.mobile-1.4.2.min.css?lec=4" rel="stylesheet" type="text/css"/>
+		<script src="../sizensuugaku/jquery.js" type="text/javascript"></script>
+		<script src="../sizensuugaku/jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+		<script src="../sizensuugaku/rescalescreen.js" type="text/javascript"></script>
+		<script src="../sizensuugaku/dragmanscreen.js" type="text/javascript"></script>
+		<script src="../sizensuugaku/draggablepoint.js" type="text/javascript"></script>
+		<title>自然科学のための数学2015年度第10講</title>
+	</head> 
+	<body>
+		<div data-role="page" id="koukai">
+			<div data-role="header">
+				<h1>高階微分</h1>
+			</div>
+			<div data-role="content">
+				<h3>導関数の導関数</h3>
+				<p>導関数$f'({x})=\lim_{{\Delta x}\to0}{f({x}+{\Delta x})-f({x})\over {\Delta x}}$の導関数、つまり</p>
+				\begin{equation}
+				f''({x})=\lim_{{\Delta x}\to0}{f'({x}+{\Delta x})-f'({x})\over {\Delta x}}
+				\end{equation}
+				<p>を作ってみよう。これを「二階微分」<span class="footnote">非常に頻繁に「二回微分」と書く人がいるが、これは誤字である（しかし発音では区別がつかないから安心だ）。</span>と呼び、記号としては$'$を重ねて$f''({x})$と表現することにしよう（$f({x})\to f'({x})$が「一階微分」、$f({x})\to f'({x})\to f''({x})$が「二階微分」である）。また、一階微分を${\mathrm d  \over \mathrm dx }f({x})$と書いたように、二階微分は</p>
+				\begin{equation}
+				f''({x})= {\mathrm d  \over \mathrm dx }\left(
+				{\mathrm d  \over \mathrm dx }f({x})
+				\right)= {\mathrm d  ^2\over \mathrm dx ^2} f({x})={\mathrm d^2 f\over \mathrm dx ^2}({x})\label{nikai}
+				\end{equation}
+				<p>と表現してもよい。</p>
+
+				<p>同様に三階微分や四階微分も定義されるが、数が大きくなった時は（十階微分を$f^{\prime\prime\prime\prime\prime\prime\prime\prime\prime\prime}({x})$などと書くのは不経済なので）$n$階微分は$f^{(n)}({x})$と表現する$\left(f''({x})={\mathrm d  ^2\over \mathrm dx ^2}f({x})=f^{(2)}({x})\right)$。</p>
+
+				<p>二階微分がどんな意味を持つかを考えよう。二次関数や三次関数の形を考えたときに、1次の項${x}$の係数が原点における傾きを、2次の項${x}^2$の係数が原点における「曲がり具合」を表現していたのを覚えているだろうか。その考え方からすると、二階微分の値は「曲線の曲がり具合」を表現することになる。</p>
+
+				<p>定義式から二階微分を計算することで、確かに「曲がり具合」であることを確認しよう。まず、$ f''({x})=\lim_{{\Delta x}\to0}{f'({x}+{\Delta x})-f'({x})\over {\Delta x}}$という二階微分の意味を表した式そのものに、一階微分の式$\lim_{{\Delta x}\to0}{f({x}+{\Delta x})-f({x})\over {\Delta x}}$を代入する。</p>
+				\begin{equation}
+				\begin{array}{rll}
+				f''({x})
+				=&\lim_{{\Delta x}\to0}{\overbrace{
+				{f({x}+{\Delta x}+{\Delta x})-f({x}+{\Delta x})\over {\Delta x}}}^{f'({x}+{\Delta x})に対応}
+				-\overbrace{{f({x}+{\Delta x})-f({x})\over {\Delta x}}}^{f'({x})に対応}
+				\over {\Delta x}
+				}
+				\\[3mm]
+				=&\lim_{{\Delta x}\to0}
+				{\left(
+				f({x}+{\Delta x}+{\Delta x})-f({x}+{\Delta x})\right)
+				-\left(
+				f({x}+{\Delta x})-f({x})\right)
+				\over {\Delta x}{\Delta x}
+				}
+				\end{array}
+				\end{equation}
+				<p>という式が出る。</p>
+				\begin{equation}
+				\begin{array}{rll}
+				f''({x})
+				=&\lim_{{\Delta x}\to0}{\left(
+				f({x}+2{\Delta x})-f({x}+{\Delta x})\right)
+				-\left(
+				f({x}+{\Delta x})-f({x})\right)
+				\over ({\Delta x})^2
+				}
+				\\
+				=&\lim_{{\Delta x}\to0}{
+				f({x}+2{\Delta x})-2f({x}+{\Delta x})
+				+f({x})
+				\over ({\Delta x})^2
+				}\\
+				=&2\lim_{{\Delta x}\to0}{
+				{ f({x}+2{\Delta x})
+				+f({x})\over 2}
+				-f({x}+{\Delta x})
+				\over ({\Delta x})^2
+				}
+				\end{array}\label{nikaibibunteigi}
+				\end{equation}
+				<p>という計算になる。最後で2を前に出したのは、分子の${f({x}+2{\Delta x})+f({x})\over 2}-f({x}+{\Delta x})$に図形的意味があるからである。</p>
+
+				<p>その意味するところを説明しよう。下のグラフを見て欲しい。</p>
+				<p><img src="../sizensuugaku/nikaibibun.png" width="50%" class="floatnone"></p>
+				<p>図の点Pは点A$({x},f({x}))$と点B$({x}+2{\Delta x},f({x}+2{\Delta x}))$の中点であり、その高さが${f({x}+2{\Delta x})+f({x})\over 2}$である。</p>
+				<p>一方$f({x}+{\Delta x})$は点Qの高さである。つまり、点Aと点Bの中点に比べて、点Qがどれだけ下がっているか、という量であり、これは「線の曲がり具合」を表現している。二階微分の値は「両隣の平均に比べて自分がどれだけ下がっているか」を示す量だとも言える。</p>
+
+				<p><img src="../sizensuugaku/nikaibibun2.png" width="60%" class="floatnone"></p>
+
+				<p>それは上の図に示したように「上に凸か下に凸か」を表す量にもなっている。</p>
+
+				<p>　自然において、<span class="fukidasi">二階微分が正なら増加し、二階微分が負なら減る</span>という傾向を持つ現象がたくさんある（後で、微分方程式でこれを表現するとどうなるか、ということを示そう）。これはつまり、<span class="fukidasi">下に凸なら増加、上に凸なら減少</span>であり、すなわち<span class="fukidasi">平坦に戻そう</span>という傾向のある現象なのである（たとえば水面・温度分布・濃度分布などにこういう傾向がある）。</p>
+				<p>　実のところ、自然法則の多くには二階微分までしか現れない。よって二階微分までをきっちりと理解していけば、自然法則のほとんどが理解できることになる。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#diffchu" data-icon="arrow-r">微分に関する注意</a>
+			</div>
+		</div>
+		<div data-role="page" id="diffchu">
+			<div data-role="header">
+				<h1>微分に関するいくつかの注意</h1>
+			</div>
+			<div data-role="content">
+				<h3>微分できない関数</h3>
+				<p>微分ができない関数の例をいくつかあげよう。</p>
+
+				<p>　まずすぐにわかるのは連続でない関数で、この場合不連続な点（右の図の${x}=x_0$）で極限を取ると${\Delta x}\to0$にしても${\Delta y}\to0$にならないから、$\lim_{{\Delta x}\to0}{{\Delta y}\over {\Delta x}}$という式に意味がなくなる。「連続」という言葉の定義は厳密にしなければいけないところであるが、ここでは直観的な「グラフがつながっている」ということで理解しておこう。</p>
+				<p><img src="../sizensuugaku/furenzoku.png" width="25%" class="floatnone"></p>
+
+				<p>このような関数の例は、前に出た階段関数$\theta({x})$や符号関数$\epsilon({x})$などがある。</p>
+
+
+				<img src="../sizensuugaku/hanpireig.png" width="15%">
+				<p>たとえば${y}={1\over {x}}$で${x}=0$の時は値がない（定義されてない）上、${x}>0$の範囲で${x}=0$に近づくと$+\infty$へ、${x}<0$の範囲で${x}=0$に近づくと$-\infty$に近づく（これを数式では、$\lim_{{x}\to +0}{1\over {x}}=\infty,\lim_{{x}\to -0}{1\over {x}}=-\infty$と表現することもある）という状況で、極限での値も違う（$\tan{\theta}$の${\theta}={\pi\over 2}+n\pi$（$n$は整数）なども同様の意味で微分不可能である）。</p>
+				
+				<p>また、たとえ連続でも「とがっている」つまり傾きが連続に変化してない場合、その点での微分は定義できない。</p>
+				
+				<p><img src="../sizensuugaku/furenzoku2.png" width="25%" class="floatnone"></p>
+				
+				<p>上の図のような場合、${x}=x_0$の左側（${x} < x_0$）で考えた微係数（接線の傾き）は正の値を取り、${x}=x_0$の右側（${x}>x_0$）で考えた微係数（接線の傾き）は負の値を取る。つまり同じ点に対して二つの傾きが計算できてしまうので、微分不可能になる。</p>
+				<div class="Q">　そういう関数も拡大していったら角が丸くなっているってことはないんですか？</div>
+				<div class="A">　もちろん、そういう場合もありますが、その場合は「微分可能」です。今考えているのは拡大しても拡大してもやっぱりとがっている場合。</div>
+				<p>　このような例で有名なのは、絶対値記号を含む関数${y}=|{x}|$などである。</p>
+
+				<p>自然現象を考えている時はこのような「つながってない（連続でない）」点や「とがっている（一階微分が連続でない）」点が出てくることは少ないので、多くの場合は「安心して微分してよい」ということになる（ただ、そうでない場合も有り得るのだと心に留めておいた方がよい）。</p>
+
+
+
+				<p>下は、$\sin{1\over {x}}$のグラフである（左から順に、範囲が$-1<{x}<1,-0.1<{x}<0.1,-0.01<{x}<0.01$と狭くなっている）。</p>
+
+
+				<p><img src="../sizensuugaku/sin1overx.png" width="80%" class="floatnone"></p>
+
+
+				<p>この関数は無限大に発散することはない（$-1\leq \sin {\theta}\leq 1$だから）が、${x}=0$での値は全くわからないし、原点付近では${\Delta x}\to0$にしていくと振動がどんどん激しくなっていく<span class="footnote">$\sin {\theta}$の${\theta}$が$\infty$になっていく、と考えれば「これはえらいこっちゃ」と実感できるだろう。}ので${x}=0$では微分することもできない。</span></p>
+
+				<p>さらに、これに${x}$を掛けた$f({x})={x}\sin{1\over {x}}$という関数を考えてみよう。この関数も$f(0)$をそのまま計算しようとすると$\sin{1\over 0}$が出てきて困ってしまうのだが、幸い${x}=0$の極限での値はちゃんとある$\left(\lim_{{x}\to0}{x}\sin{1\over {x}}=0\right)$ので<span class="footnote">真面目にやるなら、$-1\leq \sin{x}\leq 1$より、$-|{x}|\leq{x}\sin{1\over{x}}\leq |{x}|$としてから極限を取ってはさみうちにする。</span>、$f(0)=0$としておくと連続な関数になる。グラフは以下のようになる。</p>
+
+
+				<p><img src="../sizensuugaku/xsin1overx.png" width="80%" class="floatnone"></p>
+
+
+				<p>では微分はどうかというと、</p>
+				\begin{equation}
+				{\mathrm d \over \mathrm dx}\left({x}\sin{1\over {x}}\right)=\sin{1\over {x}}+{x}\times \left(-{1\over {x}^2}\right)\cos{1\over {x}}=\sin{1\over {x}}-{1\over {x}}\cos{1\over {x}}
+				\end{equation}
+				<p>となるが、この式は${x}=0$においては意味のない式になっている（第1項は$-1$から1までどんな値かわからないし、第2項も分母に${x}$がある）し、さっき定義した$f(0)=0$を使っても、やっぱり微分は定義できない。この関数は連続であるにもかかわらず微分不可能になっている。</p>
+
+				<h3>陰関数の微分</h3>
+				<p>関数というとここまでは${y}=f({x})$のように「従属変数が左辺に、独立変数が右辺に」とまとまった形で書いてきたが、そう書けない場合もある。このような関数の表示の仕方を「陰関数」と呼ぶ（「陰関数として表示する」のように使う）。この「陰」は「陽」の反対で、${y}=f({x})$の形は「陽に書けている」と言う。</p>
+
+				<p>陰関数の形でしか書けていない関数も、微分することはできる（ここまででも似たような計算はやっているので、それほど不思議には思わないだろう）。</p>
+				<div class="fukidasi">円の方程式${x}^2+{y}^2=1$から${\mathrm dy\over\mathrm dx}$を計算せよ。</div>
+				<p>という問題を考えよう。これを見て、微分${\mathrm dy\over \mathrm dx}$を計算するために${y}=\pm\sqrt{1-{x}^2}$の形にして微分する、ということをしたくなる人も多いかと思うが、これはかえってややこしくなる。</p>
+				<p>　この式の場合も、${x}^2+{y}^2=1$のまま微分した方が計算が楽である。</p>
+				\begin{equation}
+				\begin{array}{rll}
+				{x}^2+{y}^2 &=1 &\\
+				2{x}{\mathrm d}x + 2{y}{\mathrm d}y&=0&\\
+				{{\mathrm d}y\over {\mathrm d}x}=-{{x}\over {y}}
+				\end{array}
+				\end{equation}
+				<p>こういう微分のやり方も慣れておくと便利である。</p>
+				<div class="Q">　最後、$y$は残したままでいいんですか？</div>
+				<div class="A">　それでいいかどうかは今何を求めるために微分をしているかによって違いますね。これで十分な場合もあるし、このあと$y=\pm\sqrt{1-x^2}$を代入して計算すべき場合もあるでしょう。</div>
+				<p>　こうして、$x^2+y^2=1$から${\mathrm dy\over \mathrm dx}=-{x\over y}$が出てきたわけですが、しばらくするとこの逆をやります。</p>
+				<div class="Q">　でも、$x^2+y^2=1$から${\mathrm dy\over \mathrm dx}=-{x\over y}$はいいけど、逆に${\mathrm dy\over \mathrm dx}=-{x\over y}$から出発すると$x^2+y^2=1$とは限らないんではないですか？</div>
+				<div class="A">　その通りです！　$x^2+y^2=2$でも$x^2+y^2=3$でもいいですからね（負の数はさすがに困る）。実はこのような計算（${\mathrm dy\over \mathrm dx}=-{x\over y}$から$x^2+y^2=1$を求める）を「微分方程式を解く」と言うんですが、微分方程式は解いても答は１つに決まらないんです。このあたりは微分方程式の話まで行ったらまたやります。</div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#koukai" data-icon="arrow-l">高階微分</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#minimax" data-icon="arrow-r">微分と極大・極小</a>
+			</div>
+		</div>
+		<div data-role="page" id="minimax">
+			<div data-role="header">
+				<h1>微分と極大・極小</h1>
+			</div>
+			<div data-role="content">
+				<p>微分のもう一つの使い途は「<strong>極大値や極小値がどこであるかを求める</strong>」ことにある。</p>
+				<h3>極大・極小</h3>
+				<img src="../sizensuugaku/kyokudaikyokushou0.png" width="25%">
+				<p>「極大(maximal)」と「極小(minimal)」は「最大・最小」に似た言葉である。違いは「最大・最小」は関数の定義域全体において最も大きい（あるいは小さい）値を取る場合を意味するが、「極大・極小」は定義域全体ではなく、今考えている「ある点」の近傍<span class="footnote">「ある点の近傍」はその点を内部に含むような領域のこと。</span>においてのみ最も大きい（あるいは小さい）値をとっていればよい<span class="footnote">「極大」「極小」はつまり「局所的最大」「局所的最小」である。英語でそれぞれ「local maximum」「local minimum」と呼ぶこともある。</span>。図に簡単な例で極大・極小となっている点と、考えている定義域内で最大・最小である点を示した<span class="footnote">図で「最小」とのみマークした点（定義域の下限になっている）はその点が考えている領域の端点であって領域の内部にはないから、最小にはなっているが「極小」ではない。</span>。極大または極小である状況でかつ関数がその点で微分可能であるならば、その点では一階微分$f'({x})$が0になっていなくてはいけない<span class="footnote">微分不可能な、「尖った」点が極大・極小になっていることもあり得る。</span>。</p>
+
+
+				<p>連続で、しかも少なくとも二階微分可能であるような関数を考える。この関数$f({x})$がある点${x}=x_0$において一階微分が0になった（$f'({x})=0$）とする。</p>
+
+				<p><img src="../sizensuugaku/kyokudaikyokushou.png" class="floatnone" width="80%"></p>
+
+				<p>もしこの点で二階微分が正（上図の左側）ならば、この場合この点では極大である。逆に負（上図の中央）ならば、この点では極小である。</p>
+
+				<p>二階微分が0である場合<span class="footnote">二階微分が0であり、かつその点の前後で二階微分が符号を変える場合、その点を「変曲点」と呼ぶ。変曲点は極大・極小とはまた別の概念である。</span>は、極小である場合と極大である場合とどちらでもない場合があり得る（上図の右側ではどちらでもない場合のみを描いている）<span class="footnote">二階微分が0で極小である例としては${y}={x}^n$（$n>2$）kの${x}=0$がある。</span>。</p>
+
+				<h3>等周問題</h3>
+
+				<p>辺の長さの和が同じ長方形の中で、もっとも面積が大きいのはどんな形だろう？---このような問題を「等周問題」と言う。これのもっとも簡単な問題である「等しい周の長方形の中で一番面積が大きいものはなにか？」を微分を使って考えてみる。</p>
+				<p><img src="../sizensuugaku/seihoukei.png" width="30%" class="floatnone"></p>
+				<p>長方形の辺の長さの和を$4L$とする（一辺が$L$の正方形ならちょうど周の長さは$4L$であり、図に示したように横が$0.9L$になったら、縦は$1.1L$にならなくてはいけない）。縦の長さを${x}$とすると、横の長さは$2L-{x}$となる。面積は$S={x}(2L-{x})$となる。${x}$は$0<{x}<2L$の範囲で意味があるから、それを定義域としてグラフを描いてみると右のようにになる（もちろん、グラフを描かなくても以下の話はわかる）。</p>
+
+				<p>微分を実行すると、</p>
+				\begin{equation}
+				{\mathrm dS\over \mathrm dx}= 2L - 2{x}
+				\end{equation}
+				<p>が0になるのは${x}=L$の時、つまり正方形の時である。</p>
+
+				<div class="box"><p align="center"><strong>今日の小テスト問題</strong></p><br>
+					　今度は長方形の面積$S$を最初に決めて、逆に「一周の長さが最小になるのはどんな時か」を微分を使って考えよう。<br>
+					　なお、面積を$S$としてある辺を$x$とすれば、もう１つの辺は${S\over x}$になる（ここまでは問題を解く前に与えた）<br>
+					（ちなみにヒント：結果は上の場合と同じになる）
+				</div>
+
+				<br>
+				<p>　一周の長さを計算すると、$2x+2{S\over x}$になる。これを$x$で微分すると$2-2{S\over x^2}$で、これが0になるのは$S=x^2$のとき。つまりは正方形になるときである。</p>
+				<h3>スケール変化と最適なサイズ</h3>
+				
+				<img src="../sizensuugaku/scales.png" width="50%">
+				<p>物体のサイズを変えていったとき、いろんな量がサイズの関数として表現される。たとえば人間の身長を$h$とすると、体重はだいたい$h^3$に比例する（直方体で考えた時に体積が縦・横・高さの積で表されることを考えれば、まず体積が$h^3$に比例することはわかるだろう）。また、骨が支えることができる重さは面積に比例するだろうから、$h^2$に比例する。</p>
+
+				<p>そこで、身長を$h$として体重を$W=wh^3$と書き、その人の足が支えることができる重さを$B=bh^2$と書こう（つまり、これよりも足に掛かる力が強くなったら足の骨が折れる、とする）。すると、持つことができる荷物の重さは（自分の体重の分は引いておかなくてはいけないので）$S=B-W=bh^2-wh^3$となる。</p>
+
+
+				<p>ここで、体重は三乗に比例し、支えることのできる重さは二乗に比例し、と冪が違うこと、つまり「スケール変化による変数の変化の仕方に違いがあること」に注意しておこう。$h$が小さい領域では二乗と三乗では二乗の方が大きいが、$h$が大きい領域では逆転する。つまり、$h$があまり大きすぎると、足が支えられる体重よりも自分の体重の方が重い（立っていられない）という状況が出現するのである。自然現象の起こるスケールというのは、このように異なるスケール変化をする変数の間の「せめぎあい」で決まる。</p>
+
+				<p>実例として人間の身長が妥当なものかどうかを検討しよう。簡単の為、「標準人間」として「身長2 mで体重100 kg、200 kgの荷物を持って立つことができる人」（通常の３倍までの重力がかかったと仮定しても耐えられる人、と考えてもよい）を設定しよう。すると、$100=8w$より、$w=12.5$であり、$200=4b-100$より、$b=75$である。他の人間は全て標準人間のサイズ変化させたものだとしよう（もちろんこの仮定はむちゃくちゃであるが、「第一近似」としてよいことにしよう）。</p>
+
+				<p>標準人間および標準人間をスケール変化させた人間に対しては、持つことができる荷物の重さは$C=75h^2-12.5h^3$という式で書ける。これからすると、もっとも重い荷物が持てるのは、</p>
+				\begin{equation}
+				{\mathrm dC\over \mathrm dh}=150h-37.5h^2=0~~~より~~~h={150\over 37.5}=4
+				\end{equation}
+				<p>で、$h=4$（身長4 m）の人である（下のグラフも参照せよ）。</p>
+				<p><img src="../sizensuugaku/kyojin.png" width="60%" class="floatnone"></p>
+				<p>つまり、どんどん巨大になれば持てる荷物も増えるのかというとそうではない。右でグラフで示したように、体重の増加（三乗比例）はいずれ支えることができる重さ（二乗比例）に勝ってしまう。だからある身長（$h=6$）より高いとそもそも立っていられない。そして、保持できる荷物の重さには最大値がある（それが$h$の最適値であるとも言える）。</p>
+				<div class="A">だから「進撃の巨人」に出てくる10mの巨人なんて存在できないんだ…と言いたいところなのだが、実は「進撃の巨人」は劇中で「巨人は想像よりもずっと質量が小さい」という描写がある。</div>
+				<p>実際二足歩行する動物のサイズがせいぜい2 mぐらいなのは、ここで行った計算がだいたい正しいことを示している（立って荷物を持つだけでなく、走ったりして動きまわらなくてはいけないのだから、ある程度余裕を持たせておかないといけないわけである）。</p>
+
+				<div class="A">よく昆虫図鑑などに「蟻は力持ちで、自分の体重より重いものを運べる」などと書いてあるが、あれはこのスケール変化の考え方からするとあたりまえのこと。もし蟻が人間サイズになったら、もちろん力持ちではいられない。</div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#diffchu" data-icon="arrow-l">微分に関する注意</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#qa" data-icon="arrow-r">受講者の感想・コメント</a>
+			</div>
+		</div>
+		<div data-role="page" id="qa">
+			<div data-role="header">
+				<h1>受講者の感想・コメント</h1>
+			</div>
+			<div data-role="content">
+				<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+				<div class="Q">スケール変化の話が面白かった。簡単な微分でいろいろ考えることができて。微分の実用性を感じた。</div>
+				<div class="A">微分はいろんなところで使える、便利なやつです。</div>
+				<p></p>
+				<div class="Q">最後の人の話は面白かった。もっと微分が好きになれるようがんばります。</div>
+				<div class="A">微分を知ると、もっと面白い話がいろいろできるようになります。</div>
+				<p></p>
+				<div class="Q">等周問題を一辺として考えているので、円も考えてみたい。</div>
+				<div class="A">全ての図形の中で一番面積が大きくなるのは円です。計算で出すのはまだ少し難しいかもしれない。</div>
+				<p></p>
+				<div class="Q">二階微分の正負がグラフの形だけではなく、どちら向きの力が働くかを表しているというのが目からうろこだった。</div>
+				<div class="A">だから、二階微分は自然を記述する方程式のあちこちに現れます。</div>
+				<p></p>
+				<div class="Q">イメージとして背が高いと結構力があるのかと思ったが、それを計算で変えれた。</div>
+				<div class="A">力は実は面積に比例（だから、スケールの自乗に比例）なのです。</div>
+				<p></p>
+				<div class="Q">最後の人間の体重とかの話めっちゃおもしろかったです！！　二階微分の水の説明もすっかり納得でした。</div>
+				<div class="A">この世界の生物のサイズがどのように決っているか、がスケール変換の話には隠れています。</div>
+				<p></p>
+				<div class="Q">まさか身長と体重が増えると荷物さえもてなくなるというのが、パッとは信じられないけど、数学的に考えると納得できて面白かったです。あと物理では二階微分がほとんどっていうのも「あぁ！」となりました。</div>
+				<div class="A">自然というのはうまくできているもんなのですよ。</div>
+				<p></p>
+				<div class="Q">最後の身長と体重の関係について、身長1cmについて体重1kgだちおうイメージがあったが、そのような原理があることに驚いたし、耐えれる力についてはもっと意外だった。</div>
+				<div class="A">スケールが変わったとき、それぞれの量（身長や体重や）がどのように変化していくか、というところが大事です。</div>
+				<p></p>
+				<div class="Q">スケール変換面白っ！</div>
+				<div class="A">面白いでしょ。</div>
+				<p></p>
+				<div class="Q">面積と体積が増えていく関係を人間の身長と体重の話と合わせて説明していただいてとても分かりやすかったです。</div>
+				<div class="A">いろんな量のスケール変換を考えてみてください。</div>
+				<p></p>
+				<div class="Q">$x^2+y^2=1$の微分を考えるとき、両辺の微小変化を考えるというやりかたは新鮮でした。</div>
+				<div class="A">あのやり方はこれからもけっこう使います。</div>
+				<p></p>
+				<div class="Q">二階微分の時の分子の${1\over2}={f(x+2\Delta x)-f(x)\over2}-f(x+\Delta x)$の${f(x+2\Delta x)-f(x)\over2}$のグラフの位置が少しわからなかった。$x\sin{1\over x}$のグラフを見て、$f(0)=0$は存在して、微分不可ということがわかった。</div>
+				<div class="A">引き算じゃなくて足算ですよ。足して２で割るから、ちょうど中間。</div>
+				<p></p>
+				<div class="Q">「人が持ち上げる物体の重さは面積に比例しているても身長が倍になっても持てる荷物の重さは減っていく」という話が面白かった。</div>
+				<div class="A">二次関数と三次関数の戦いで持てる荷物の重さが決まります。</div>
+				<p></p>
+				<div class="Q">今日の問題はなんか簡単なミスをして解けなかったから、残念に思った。</div>
+				<div class="A">どんまい。</div>
+				<p></p>
+				<div class="Q">スケール変換とクイズのことを詳しく考えたことがなかったのでおもしろかった。</div>
+				<div class="A">スケールの変化を考えることは、物理では重要ですよ。</div>
+				<p></p>
+				<div class="Q">身長6mの人がいたら優しく接してあげたいと思います。</div>
+				<div class="A">そうですね（もし、いたら）。</div>
+				<p></p>
+				<div class="Q">今日の小テストはあまりできませんでした。先生の解説を聞いて納得しました。</div>
+				<div class="A">どんまい。次がんばってください。</div>
+				<p></p>
+				<div class="Q">二階微分が中間値の考えを使えるとわかって驚いたけど、よくよく考えるとなるほどと思った。</div>
+				<div class="A">そうなんです。よく考えれば当たり前。</div>
+				<p></p>
+				<div class="Q">すごくよく話に興味がもてる。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">身長と体重、おもりの話。とても興味深いです。</div>
+				<div class="A">微分はいろいろ面白い話に使えます。</div>
+				<p></p>
+				<div class="Q">テストで微分と積分を間違えてしまった。悔しい。実は昨日進撃の巨人を見ていたので、最後の話は興味がわいた。</div>
+				<div class="A">それは残念。積分してしまうとえらく難しい式になっちゃったでしょう。</div>
+				<p></p>
+				<div class="Q">今日の授業を受けて、微分の大切さを改めて認識した。</div>
+				<div class="A">そうなんです、微分は大事なんです。</div>
+				<p></p>
+				<div class="Q">演習でやった問題がよく分からなかった。面積が一番大きいときと何が一緒なのかよく分からなかった。先生の解説を聞いて$S=x^2$から正方形となるとわかって理解することができた。</div>
+				<div class="A">ヒントとして「答は正方形ですよ〜〜」と何度か言ったんだけどなぁ。</div>
+				<p></p>
+				<div class="Q">微分を使うと、最小の長さとか、色々なことが調べられる！！　最後の体重の話はなるほど、ってなった。進撃の巨人の設定すげー！ </div>
+				<div class="A">微分は便利でしょ。</div>
+				<p></p>
+				<div class="Q">体重と耐えられる重さの話が面白かった。</div>
+				<div class="A">いろんな量のスケール変換を考えてみてください。</div>
+				<p></p>
+				<div class="Q">体が大きくなったからといって持てる重さが大きくなるわけではないという話が面白かった。</div>
+				<div class="A">スケールというのは面白いものです。</div>
+				<p></p>
+				<div class="Q">体重と身長の話がとても楽しかったです。この授業で世の中の不思議が１つわかった気がしました。巨人が全然強く無さそうに感じてきて、ウルトラマンは実際弱いんじゃないかと。でもウルトラマンの体が筋肉や骨でなくもっと軽い物質でできいたとすれば強いんじゃないかと思いました。</div>
+				<div class="A">一度、ウルトラマンの身長と体重を調べて計算してみてください（彼らが地球の生物でないことが確実にわかります）。</div>
+				<p></p>
+				<div class="Q">戦いというのはスケールではなく技術だと思います。</div>
+				<div class="A">でも重くなりすぎて動くこともできない人は、技術を磨くこともできないからなぁ。</div>
+				<p></p>
+				<div class="Q">微分の極大・極小の使い方がわかった。陰関数の微分で微小変化で計算する方が速かったから活用したいと思った。</div>
+				<div class="A">極大・極小を考えるのはいろんなところで役立ちます。</div>
+				<p></p>
+				<div class="Q">身長と体重と耐えられる重さの関係がとてもおもしろかったです。二階微分もよくわかりました。</div>
+				<div class="A">単純な式でいろんなことがわかります。</div>
+				<p></p>
+				<div class="Q">二階微分のやり方は知っていたが、今日の授業でその意味がよくわかった。また、体積と支えられる体重の話は、非常に興味深かった。</div>
+				<div class="A">二階微分の考え方は大事ですよ。</div>
+				<p></p>
+				<div class="Q">スケール変換と最適なサイズについて考える話がとてもおもしろかった。</div>
+				<div class="A">いろいろ考えてみてください。</div>
+				<p></p>
+				<div class="Q">巨人を例にあげて説明するのはわかりやすかった。</div>
+				<div class="A">仮想的なものでも、考察していくと数学を理解するタネにできます。</div>
+				<p></p>
+				<div class="Q">人や図形を使って面積と体積の関係を説明してもらってわかりやすかったです。小テスト最後まで解けなかったので、次は最後まで解けるようにしたいです。</div>
+				<div class="A">まぁだいたいのやり方がわかっていればよいのです。</div>
+				<p></p>
+				<div class="Q">理論上は６ｍの人間は何も持てないというのが面白かったです。</div>
+				<div class="A">なぜそうなるのか、理解しておいてください。</div>
+				<p></p>
+				<div class="Q">ある意味全方向から支えられている巨大生物（鯨）とかはいてもいいことになりますよね。仮に水よりも物が浮きやすい（支えやすい）水銀とかの海だとしたらそこに生息可能な生物ははんぱなく大きくなるということになりますかね？</div>
+				<div class="A">水中だとちょうど重力と浮力がつりあうので、水が一番具合がいいと思います。</div>
+				<p></p>
+				<div class="Q">微分の計算とかは高校のころからやってきたのでできるけど大学では「微分のイメージ」が大事になり、イメージすることで理解が深まるということがわかった。前野先生はよくイメージの話をしてくれるのでこれからもっと話を聞こうと思いいます。</div>
+				<div class="A">何より「意味がわかってこその計算」で、そのためにはイメージです。</div>
+				<p></p>
+				<div class="Q">体重と身長の話が楽しかった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">私達生物は無意識で（進化の中で）生活するのに適応していると思った。これから人間はどんな進化をするのだろう。</div>
+				<div class="A">結局、ちょうどよいサイズの生物が生き残っているわけです。</div>
+				<p></p>
+				<div class="Q">起きるのが辛くなってきた。これ以上休まないようリズムを整えたい。</div>
+				<div class="A">しっかりして〜〜。</div>
+				<p></p>
+				<div class="Q">スケール変化の話がおもしろいなと思った。二階微分を図で見るとわかりやすかった。</div>
+				<div class="A">二階微分のイメージはつけておきましょう。</div>
+				<p></p>
+				<div class="Q">身長６ｍの人が自分の体重で精一杯と聞いておもしろかった。</div>
+				<div class="A">巨人が存在しないことの物理的理由です。</div>
+				<p></p>
+				<div class="Q">$x\sin{1\over x}$のグラフの形は面白かった。体積は３乗比例で支えることのできる重さは２乗比例で、例に出てきた身長が３倍の人は何も持てないというのは驚きだった。</div>
+				<div class="A">生物のサイズには意味があるんですよ。</div>
+				<p></p>
+				<div class="Q">最後の話は面白かったです。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">小テストの答が同じということに惑わされてしまった…。</div>
+				<div class="A">「同じ正方形という答が出るよ」と何回も言ったんですけどねぇ。</div>
+				<p></p>
+				<div class="Q">最後のスケール変化の話はとても興味深くてなるほどと思った。</div>
+				<div class="A">いろんなところで効いてくる話です。</div>
+				<p></p>
+				<div class="Q">専門家によると恐竜もジュラシックパークのように走れないというのを聞いたことがありますが、今日の講義でよくわかりました。</div>
+				<div class="A">恐竜が巨体で敏捷に動きまわってたりすると、ちょっとびっくりですね。</div>
+				<p></p>
+				<div class="Q">今日のスケールの話をきいて思ったことはウルトラマンはめちゃめちゃ弱いんだなということです。</div>
+				<div class="A">ウルトラマンはたぶん、身体の組成から違いますからね〜。</div>
+				<p></p>
+				<div class="Q">微分で面積を出す計画はわりかし好きだったので、とてもおもしろかった。あと標準人間の考えとかそういう話がとても好きなので今後も出して欲しい。</div>
+				<div class="A">似たような話はまたそのうちに。</div>
+				<p></p>
+				<div class="Q">二階微分ー導関数の導関数。例えば$x^2+y^2=1$を微分すると${\mathrm dy\over\mathrm dx}=-{x\over y}$になるがこの微分したものを元の式に戻すとき右辺（定数項）が定まらないが、これは不定積分を計算したときに出てくる積分定数についても同じような現象（？）が起きていると考えた。</div>
+				<div class="A">まさにその通りの現象です。</div>
+				<p></p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#minimax" data-icon="arrow-l">微分と極大・極小</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,47 +1,49 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:2:1-24:12
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:2:1-24:12
 	package
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:3:5-45
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:3:5-45
 	android:versionName
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:5:5-30
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:5:5-30
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml
 	android:versionCode
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:4:5-28
-		INJECTED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml
-		INJECTED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:4:5-28
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:2:11-69
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:2:11-69
 uses-sdk
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:7:5-43
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:7:5-43
 	android:minSdkVersion
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:7:15-40
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:7:15-40
 uses-permission#android.permission.VIBRATE
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:8:5-65
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:8:5-65
 	android:name
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:8:22-63
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:8:22-63
 application
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:10:5-22:19
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:10:5-22:19
 	android:label
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:12:9-41
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:12:9-41
 	android:icon
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:11:9-45
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:11:9-45
 activity#jp.ac.u_ryukyu.phys.BiotSavart.BiotSavartActivity
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:13:9-21:20
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:13:9-21:20
 	android:screenOrientation
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:15:48-85
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:15:48-85
 	android:label
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:14:13-45
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:14:13-45
 	android:configChanges
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:15:86-136
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:15:86-136
 	android:name
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:15:13-47
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:15:13-47
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:16:13-20:29
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:16:13-20:29
 action#android.intent.action.MAIN
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:17:17-69
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:17:17-69
 	android:name
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:17:25-66
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:17:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:19:17-77
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:19:17-77
 	android:name
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/BiotSavart/AndroidManifest.xml:19:27-74
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/BiotSavart/AndroidManifest.xml:19:27-74

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RelativisticTrain</string>
+    <string name="percent">c</string>
+    <string name="v_equal">velocity 0.</string>
+</resources>

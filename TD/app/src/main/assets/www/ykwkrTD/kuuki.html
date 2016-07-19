@@ -1,0 +1,116 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<title>空気抵抗によるエネルギー非保存</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    <link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script src="rescalecanvas.js" type="text/javascript"></script>
+	<script src="vector.js" type="text/javascript"></script>
+	<script src="yajirushi.js" type="text/javascript"></script>
+	<script src="phystem.js" type="text/javascript"></script>
+	<script src="bane.js" type="text/javascript"></script>
+	<script type="application/javascript">
+	var ps;
+	function init(aFlg,n) {
+		if( ps != null ) {
+			ps.stop();
+		}
+		ps=new Phystem("canvas1",20,20,0.5,-10,-10);
+		ps.makeEdge();
+		initBunsi(n,aFlg);
+		ps.start();
+	}
+	var Molecule=function (ps,x,y,vx,vy,m,c) {
+		DynamicalObject.call(this,ps,x,y,vx,vy,m,c);
+	};
+	Molecule.prototype=Object.create(DynamicalObject.prototype);
+	Molecule.prototype.constructor=Molecule;
+	Molecule.prototype.interactionForce=function (to) {
+		var r=to.npos.diff(this.npos);
+		var rlen=r.length();
+		if (rlen > this.r+to.r) {
+			return new Vector(0,0);
+		} else {
+			return r.prod(1200*(this.r+to.r-rlen)*(this.r+to.r-rlen));
+		}
+	};
+	var m;
+	var N;
+	function initBunsi(n,aFlg) {
+		N=n;
+		var j;
+		ps.cleardyLists();
+		var w1=ps.w-3;
+		var h1=ps.h-3;
+		var maxv=1;
+		m=[];
+		if( vFlg ) {
+			col="rgb(0,0,0)";
+		} else {
+			col="rgba(0,0,0,0)";
+		}
+		for (j=0; j < n ; j++) {
+			m[j]=new Molecule(ps,w1*Math.random()-w1*0.5,h1*Math.random()-h1*0.5,0,0,0.1,col);
+			m[j].r=0.2;
+		}
+		ps.drawVFlg=false;
+		var x,y;
+		if( !aFlg ) {
+			x=Math.random()*5+0.5;
+			y=Math.random()*1.5+0.5;
+		} else {
+			x=3.1; y=2;
+		}
+		var M=new Molecule(ps,x,y,6,6,10,"rgb(0,0,255)");
+		M.r=1;
+	}
+
+
+	 var vFlg=true;
+	 function showMolecule() {
+	   vFlg=true;
+	   var i;
+	   for(i=0; i<N; i++ ) {
+		 m[i].col="rgb(0,0,0)";
+	   }
+	 }
+	 function hideMolecule() {
+	   vFlg=false;
+	   var i;
+	   for(i=0; i<N; i++ ) {
+		 m[i].col="rgba(0,0,0,0)";
+	   }
+	 }
+
+		
+
+	</script>
+  </head>
+  <body onload='init(true,100);'>
+	  <div data-role="page" id="kuuki">
+		  <div data-role="header">
+			  <h1>地面に落下する物体のエネルギーの損失</h1>
+		  </div>
+		  <div data-role="content">
+			  <p class="A">たくさんの分子を計算させているので、かなりCPUパワーがあるパソコンでないと重いと思います、すみません。</p>
+			  <div align="center">
+				  <canvas id="canvas1" style="-ms-touch-action:none;"></canvas>
+			  </div>
+			  <button data-inline="true" onclick="init(true,100);">再スタート</button>
+			  <button data-inline="true" onclick="init(false,100);">初期位置乱数で再スタート</button>
+			  <button data-inline="true" onclick="init(true,0)";>真空でスタート</button>
+			  <button data-inline="true" onclick="showMolecule();">空気分子を見せる</button>
+			  <button data-inline="true" onclick="hideMolecule();">空気分子を透明にする</button>
+			  <p>　各ボタンの意味はわかると思います。空気分子を見せた状態で、物体の速度が遅くなっていくに従って空気分子の運動が活発になる様子を確認してください。</p>
+		  </div>
+		  <div data-role="footer" align="center">
+			  <input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+			  <input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		  </div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>流行の方程式</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+	<link href="vg.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="graphscreen.js" type="text/javascript"></script>
+	<script src="yajirushi.js" type="text/javascript"></script>
+	<script src="vector.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	 var gs0;
+	 var gs;
+	 var gsg;
+	 $(document).delegate('#rocket','pageinit',function(e) {
+	   gs0=new RescaleScreen("rocketcanvas0",20,2.4,0.9);
+	   gs0.setLeft(-2);
+	   gs0.setBottom(-1.2);
+	   gs0.gobackOriginalSize();
+	   gs=new RescaleScreen("rocketcanvas",20,2.4,0.9);
+	   gs.setLeft(-2);
+	   gs.setBottom(-1.2);
+	   gs.gobackOriginalSize();
+	   gsg=new RescaleScreen("graphcanvas",11,5,0.5);
+	   gsg.setLeft(0);
+	   gsg.setBottom(0);
+	   gsg.gobackOriginalSize();
+	   gsg0=new RescaleScreen("graphcanvas0",11,5,0.5);
+	   gsg0.setLeft(0);
+	   gsg0.setBottom(0);
+	   gsg0.gobackOriginalSize();
+	   
+	   writeRocket(0,gs0.ct());
+	   writeProp0(0,gs0.ct());
+	   writeRocket(0,gs.ct());
+	   writeProp(0,gs.ct());
+	   calcV0();
+	   calcVW();
+	   writeGraph0();
+	   writeGraph();
+	 });
+	 var F0=1;
+	 var F=1;
+	 function writeRocket(x,ct) {
+	   ct.strokeStyle="rgb(0,0,0)";
+	   ct.beginPath();
+	   ct.moveTo(x+5,0);
+	   ct.lineTo(x+4,1);
+	   ct.lineTo(x,1);
+	   ct.lineTo(x,-1);
+	   ct.lineTo(x+4,-1);
+	   ct.closePath();
+	   ct.stroke();
+	 }
+	 function writeProp0(x,ct) {
+	   ct.fillStyle="rgb(255,0,0)";
+	   ct.beginPath();
+	   ct.moveTo(x,-0.6);
+	   ct.lineTo(x,0.6);
+	   ct.lineTo(x+F0,0.6);
+	   ct.lineTo(x+F0,-0.6);
+	   ct.closePath();
+	   ct.fill();
+	 }
+	 function writeProp(x,ct) {
+	   var i;
+	   ct.fillStyle="rgba(255,0,0,0.7)";
+	   for(i=0;i<10;i++) {
+		 ct.beginPath();
+		 ct.moveTo(x+i*0.1*F,-0.6);
+		 ct.lineTo(x+i*0.1*F,0.6);
+		 ct.lineTo(x+(i+1)*0.1*F,0.6);
+		 ct.lineTo(x+(i+1)*0.1*F,-0.6);
+		 ct.closePath();
+		 ct.fill();
+	   }
+	 }
+	 function writeProp1(x,ct) {
+	   ct.fillStyle="rgba(255,0,0,0.7)";
+	   ct.beginPath();
+	   ct.moveTo(x,-0.6);
+	   ct.lineTo(x,0.6);
+	   ct.lineTo(x+0.1*F,0.6);
+	   ct.lineTo(x+0.1*F,-0.6);
+	   ct.closePath();
+	   ct.fill();
+	 }
+	 var w=1;
+	 var w0=1;
+	 var v;
+	 var x;
+	 var w1;
+	 var v0;
+	 var t;
+	 var t0;
+	 
+	 function calcV0() {
+	   v0=w0*F0;
+	   t0=0;
+	 }
+	 function rocketstart0() {
+	   calcV0();
+	   writeGraph0();
+	   move0();
+	 }
+	 function calcVW() {
+	   var i;
+	   v=new Array();
+	   x=new Array();
+	   w1=new Array();
+	   v[0]=0;
+	   x[0]=0;
+	   w1[0]=w;
+	   // v[1]は１段加速後の速度
+	   // x[1]は２段加速前での移動距離
+	   for(i=1; i<11 ; i++ ) {
+		 v[i]=v[i-1]+ F*0.1*w/ (1+F*0.1*(10-i));
+		 w1[i]=w1[i-1]- F*0.1*w/ (1+F*0.1*(10-i));
+		 x[i]=x[i-1]+v[i];
+	   }
+	   writeGraph();
+	 }
+	 function writeGraph0() {
+	   writeGraph0sub("rgba(0,0,255,0.3)");
+	 }
+	 function writeGraph0on() {
+	   writeGraph0sub("rgba(0,0,255,0.5)");
+	 }
+	 function writeGraph0sub(s) {
+	   gsg0.ctx.fillStyle="rgb(0,255,255)";
+	   gsg0.ctx.fillRect(gsg0.leftwx,gsg0.bottomy,gsg0.w,gsg0.h);
+	   gsg0.ctx.fillStyle=s;
+	   gsg0.ctx.fillRect(5.5,0,5.5,v0);
+	 }
+	 function writeGraphN(i) {
+	   writeGraph();
+	   gsg.ctx.fillStyle="rgba(0,0,255,0.5)";
+	   gsg.ctx.fillRect(i,0,1,v[i]);
+	 }
+	 function writeGraph() {
+	   var i;
+	   gsg.ctx.fillStyle="rgb(0,255,255)";
+	   gsg.ctx.fillRect(gsg.leftwx,gsg.bottomy,gsg.w,gsg.h);
+	   for(i=0; i<11; i++ ) {
+		 gsg.ctx.fillStyle="rgba(0,0,255,0.3)";
+		 gsg.ctx.fillRect(i,0,1,v[i]);
+	   }
+	 }
+	 function rocketstart() {
+	   calcVW();
+	   t=0;
+	   move();
+	 }
+	 function move0() {
+	   gs0.clearALL();
+	   var ya=new Yajirushi("rgba(0,0,255,0.3)");
+	   writeGraph0on();
+	   writeRocket(v0*t0,gs0.ct());
+	   writeProp0(-w0*t0,gs0.ct());
+	   ya.setVXY(v0,0);
+	   ya.setXY(v0*t0+5,0);
+	   ya.draw(gs0.ct());
+	   ya.setVXY(-w0,0);
+	   ya.setXY(-w0*t0,0);
+	   ya.draw(gs0.ct());
+	   
+	   t0+=0.1;
+	   if( w0*t0 -F0 > 4 && v0*t0 >18.5 ) {
+		 motohe0();
+	   } else {
+		 setTimeout("move0();",100);
+	   }
+	 }
+	 function move() {
+	   gs.clearALL();
+	   var t0=Math.floor(t); // tの整数部分
+	   var N;
+	   if( t0 > 9 ) {
+		 N=9;
+	   } else {
+		 N=t0;
+	   }
+	   writeGraphN(N+1);
+
+	   var t1=t-N; // tの0~9までの整数からはみ出した部分
+	   
+	   var ya=new Yajirushi("rgba(0,0,255,0.3)");
+	   var xR=x[N]+v[N+1]*t1;
+	   writeRocket(xR,gs.ct());
+	   ya.setVXY(v[N],0);
+	   ya.setXY(xR+5,0);
+	   ya.draw(gs.ct());
+	   
+	   var i;
+	   for(i=0; i<=N ; i++ ) {
+		 var xi=x[i]+0.1*F*i-w1[i]*(t-i);
+		 writeProp1(xi,gs.ct());
+		 ya.setXY(xi,0);
+		 ya.setVXY(-w1[i],0);
+		 ya.draw(gs.ct());
+	   }
+	   for(i=N+1; i<10 ; i++ ) {
+		 writeProp1(xR+0.1*F*i,gs.ct());
+	   }
+
+	   t+=0.1;
+	   
+	   if( t>20 ) {
+		 motohe();
+	   } else {
+		 setTimeout("move();",100);
+	   }
+	 }
+	 function motohe0() {
+	   t0=100000000;
+	   gs0.clearALL();
+	   writeRocket(0,gs0.ct());
+	   writeProp0(0,gs0.ct());
+	   calcV0();
+	   writeGraph0();
+	 }
+	 function motohe() {
+	   t=100000000;
+	   gs.clearALL();
+	   writeRocket(0,gs.ct());
+	   writeProp(0,gs.ct());
+	   calcVW();
+	   writeGraph();
+	 }
+	</script>
+  </head> 
+  <body>
+	<div data-role="page" id="rocket">
+	  <div data-role="header">
+		<h1>ロケットの到達速度</h1>
+	  </div>
+	  <div data-role="content">
+		<h3>ロケットの到達速度を計算するのに微分方程式が必要な理由</h3>
+		<p>　燃料を噴射して飛ぶロケットの噴射した燃料の量と速度変化の関係は微分方程式から求めることができる。というより、微分方程式を使って求めなくてはならない。</p>
+		<p>　我々が微分方程式というものを知らずにいいかげんな考え方をすると、次の動画のように考えてしまう。</p>
+		<hr>
+		<p><canvas width="50%" height="200" class="floatnone" id="rocketcanvas0"></canvas></p>
+		<p><canvas width="50%" height="200" class="floatnone" id="graphcanvas0"></canvas></p>
+		<input type="range" id="massRatio0" value="1" min="0.1" max="4" step="0.1" onchange="F0=this.valueAsNumber; motohe0();"></p>
+		<p>右のボタンを押すと噴射が行われる→<input type="button" data-inline="true" value="噴射！" id="rocketstart0" onClick="rocketstart0();">
+		  　右のボタンを押すと最初に戻る→<input type="button" data-inline="true" value="最初に戻る" id="rocketmotohe0" onClick="motohe0();"></p>
+		<hr>
+		<div class="setsumei">　噴射！ボタンを押すといっきに燃料が噴射され、ロケットが加速する。どれだけの燃料を噴射するかはスライダーで変えられるので、変えて噴射して、を繰り返してみよう。<br>
+		  　下のグラフは速度変化だが、燃料の量を大きくすればどんどん噴射後の速度も大きくなることがわかる。</div>
+		<p>　↑このプロセスを数式で考えると、「静止していた質量$m_0$のロケットが質量$m'$の推進剤（燃料を燃焼させた結果であるガスなど）を速さ$w$で後方に噴射した。噴射後のロケットが速さ$V$になる」という場合の運動量保存則から、</p>
+		\begin{equation}
+		0=(m_0-m')V +m'\times (-w)
+		\end{equation}
+		<p>が成り立つ。結果として、$V={m'\over m_0-m'}w$となるが、これは「大間違い」なのだ。</p>
+		<p>　上の「大間違い」は何が間違いなのかというと、ロケットの質量も速度も連続的に少しずつ変化していく量なのに、まるで一気に変わったかのように考えてしまったことである</p>
+		<p class="A">　次の動画で、10段階に分けて噴射した場合を実感しよう。</p>
+		<hr>
+		<p><canvas width="50%" height="200" class="floatnone" id="rocketcanvas"></canvas></p>
+		<p><canvas width="50%" height="200" class="floatnone" id="graphcanvas"></canvas></p>
+		<p>噴射した量は、ロケット本体の何倍か？を、↓のスライダで決定する。</p>
+		<input type="range" id="massRatio" value="1" min="0.1" max="4" step="0.1" onchange="F=this.valueAsNumber; motohe();"></p>
+		<p>右のボタンを押すと噴射が行われる→<input type="button" data-inline="true" value="噴射！" id="rocketstart" onClick="rocketstart();">
+		  　右のボタンを押すと最初に戻る→<input type="button" data-inline="true" value="最初に戻る" id="rocketmotohe" onClick="motohe();"></p>
+		<hr>
+		<p>　いっきに噴射することは現実にはできないので、現実的状況に近いのは10段階に分けた方だと言える。いや、実はそれでもまだ現実ではなく、∞段階に分けるべきだ。それがつまり「積分する（微分方程式を解く）」ということなのである。</p>
+		<div class="A">微分方程式のありがたいところは、上に書いたような「どうしてこうなるのか」というややこしい考察をしなくても「狭い範囲の（localな）現象を考えて式をつくり、後は積分する」という方法で答えが出るところである。「localな式」を作るのは上のような考察をえんえんやるよりかなり楽である。</div>
+		<h3>ロケットの微分方程式</h3>
+		<p>　運動量保存則を考えると、</p>
+		\begin{equation}
+		{m} {V} = ({m}+\mathrm dm)({V}+\mathrm dV) -\mathrm dm ({V}-w)
+		\end{equation}
+		<p>となる。</p>
+		<p class="A">↑これが「localな情報から得られる式」</p>
+		<p>この式を整理すると、</p>
+		\begin{equation}
+		\begin{array}{rl}
+		\underbrace{{m}{V}}_{相殺→}=&\underbrace{{m}{V}}_{←相殺} + \underbrace{\mathrm dm {V}}_{相殺\atop →}+ {m}\mathrm dV +\underbrace{\mathrm dm\mathrm dV}_{高次の微小量}
+		\underbrace{-\mathrm dm {V}}_{相殺\atop ←}+ \mathrm dm w  \\
+		-{m}\mathrm dV=&\mathrm dm w  \\
+		\mathrm dV=& -w {\mathrm dm \over {m}}
+		\end{array}
+		\end{equation}
+		<p>となる。この積分結果は${V}=-w\log {m} +C$である。</p>
+
+		<p>　${m}=m_0$（初期値）の時に${V}=V_0$という初期条件を使うと、$C=w\log m_0+V_0$となるので、</p>
+		\begin{equation}
+		{V}=-w\log {m} +\overbrace{w\log m_0+V_0}^C = w\log\left({m_0\over {m}}\right)+V_0
+		\end{equation}
+		<p>となり、速度変化${\Delta V}$に関して</p>
+		\begin{equation}
+		\underbrace{{V}-V_0}_{{\Delta V}}=w\log\left({m_0\over {m}}\right)
+		\end{equation}
+		<p>が成立する。最終的にロケット全体の質量が$m_1$になったところで推進剤が尽きたとすると、最終的な速度変化は$\Delta V=w\log\left({m_0\over m_1}\right)$となる。</p>
+		<p class="A">というような式を、積分さえ頑張れば得られるのが、微分方程式というもののありがたさなのだ。</p>
+
+	  </div>
+	  
+	  <div data-role="footer" align="center">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+	  </div>
+	</div>
+  </body>
+</html>
+

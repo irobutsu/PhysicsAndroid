@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width; target-densityDpi=device-dpi; initial-scale=1.0; maximum-scale=1.0; user-scalable=0"/>
+		<title>積分ってなあに？（その１）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="../jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="../vg.css" rel="stylesheet" type="text/css"/>
+		<script src="../jquery.js" type="text/javascript"></script>
+		<script src="../jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<style type="text/css">
+		body {
+			background-color: #FFFFFF;
+		}
+		img {
+			vertical-align:middle;
+		}
+		.centering{ text-align:center;}
+		.magenta { color:magenta; }
+		.red { color:red; }
+		.cyan { color:cyan; }
+		.blue { color:blue; }
+		.chuumoku {
+			text-align:center;
+			font-size: x-large;
+			color:red;
+		}
+		</style>
+		<script type="application/javascript" src="sekibuntoha.js"></script>
+		<script type="application/javascript">
+		$(document).delegate('#page1','pageinit',function(e) {
+			init(); c=0.3; N=1; f=constant; autoUpFlg=0; nuriFlg=-1; Intf=Intconstant; animationGO();
+		});
+		</script>
+	</head>
+	<body>
+		<div data-role="page" id="page1">
+			<div data-role="header">
+				<h1>積分ってなあに？（その１）</h1>
+			</div>
+			<div data-role="content">
+				<p>﻿　積分は「微分の逆の計算である」という紹介のされかたをすることが多い。確かにそうなのだが、ここでは物理での積分の利用方法に沿った形で積分を導入しよう。</p>
+			<p>　物理における積分という操作の本質は、  </p>
+			<p><span class="chuumoku">ある物理量の変化量から、その物理量が「今」どれだけあるかを考える。</span><br>
+  </p>
+  <p>ということにある。微分が「二つの関連した物理量の変化の割合」であったことの“逆”となるわけである。</p>
+  <p> 　変化の割合が一定であるような物理量ならば、最初の値（初期値）と単位時間あたりの増加量を知っていれば、現在の値も簡単に計算できる。たとえば、</p>
+  <span class="blue"><br>
+  </span>
+  <p class="blue">「水がたまっていなかった水槽に、１秒あたりvリットルの水を流し込んだら、t秒後には何リットルの水がたまっているか？」</p>
+  <br><p>という問題の答は、たまっている水の量をV(t)とすると</p>
+  <p class="centering">$$V(t)=vt$$</p>
+<p>と表せる。その計算を図で表現したのが次のアニメーションである﻿<small>（実際問題のところ、この程度のことはグラフで表す必要なんてないのだが、後でやる計算との対比のためである）</small>。
+<br>
+</p>
+<hr>
+<canvas width=500 height=500 id="maincanvas"></canvas>
+<br>
+<br><button id="cdown" onClick="cdown();document.getElementById('clabel').innerHTML=c;" data-inline="true">（←減）</button>$v=$<span id="clabel">0.3</span><button id="cup" onClick="cup();document.getElementById('clabel').innerHTML=c;" data-inline="true">（増→）</button>
+<hr>
+<p><br>
+　絵の右にあるのが浴槽で、上にある蛇口から水が注ぎ込まれている。右の方にあるレバー<img src="lever.png">をひねることで水が出ると思って欲しい（レバーは<span class="red">赤い印</span>のところで水が止まり、時計回りに回すことで出る水の量が増えていく）。<br>
+<br>　グラフの横軸は時間であり、縦軸は$v$すなわち「1秒あたりに流し込んでいる水の量」である。（１秒あたりに流し込んでいる量）×（秒数）で「流れ込んできた水の量」が計算できるが、それはちょうどグラフの<span class="cyan">水色の長方形の面積</span>になっている。
+<br>　つまり、溜まっている水の量が、グラフの面積（<span class="cyan">水色に塗ったところ</span>）で表現されているのがわかるかと思う。</p>
+<p>　図の下にあるボタンで、$v$（水の流量）を変えることができるので、いろいろ変えながら「単位時間あたり一定の水が流れ込んでいる時の浴槽の状態」を眺めてみてください。飽きてきたら<input type="button" value="その２" data-inline="true" data-icon="arrow-r" onclick="location.href='./sekibuntoha2.html'">へどうぞ。
+			</div>
+			<div data-role="footer" align=center>
+				<input type="button" value="はじめに" data-icon="arrow-l" onclick="location.href='./index.html'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="その２" data-icon="arrow-r" onclick="location.href='./sekibuntoha2.html'">
+			</div>
+		</div>
+	</body>
+</html>
+

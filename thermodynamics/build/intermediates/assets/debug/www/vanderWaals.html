@@ -223,7 +223,7 @@
 		<p><span id="now"></span></p>
 		  <p>a[10<sup>-3</sup>Pa・m<sup>6</sup>・mol<sup>-2</sup>]<input type="range" id="a" min="0" max="1000" value="141" step="1" data-inline="true" onchange="changeA();"></p>
 		  <p>b[10<sup>-6</sup>m<sup>3</sup>・mol<sup>-1</sup>]<span id="bvalue"></span>:<input type="range" id="b" min="0" max="100" value="39" step="0.0001" onchange="changeB();"></p>
-		  <p>T[K]<span id="tvalue"></span>:<input type="range" id="temp" min="20" max="1000" value="300" step="1"" onchange="Temp=Number($('#temp').val()); write_func();";"></p>
+		  <p>T[K]<span id="tvalue"></span>:<input type="range" id="temp" min="20" max="1000" value="300" step="1" onchange="Temp=Number($('#temp').val()); write_func();";"></p>
 		  <p>　体積（横軸）は1目盛が　<select id="unitV" value="oneL" onchange="selectV();" data-inline="true">
 			<option value="dotzerotwoL">0.02リットル（0.00002 m^<sup>3</sup>）</option>
 			<option value="dotzerofiveL">0.05リットル（0.00005 m^<sup>3</sup>）</option>

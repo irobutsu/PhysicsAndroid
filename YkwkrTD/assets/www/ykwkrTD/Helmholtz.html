@@ -1,0 +1,427 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebText 動く！熱力学（ヘルムホルツの自由エネルギー）</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="dragmanscreen.js" type="text/javascript"></script>
+    <script src="draggablepoint.js" type="text/javascript"></script>
+	<script src="vector.js" type="text/javascript"></script>
+	<script src="yajirushi.js" type="text/javascript"></script>
+    <script type="text/javascript">
+	 var point1;
+	 var piston;
+	 var pTemp;
+	 var fgc,ftc;
+	 var ctf,ctft;
+	 $(document).delegate('#graphF','pageinit',function(e) {
+	   fgc=new DragmanScreen("Fgraphcanvas",11,11,0.5);
+	   ftc=new DragmanScreen("Ftempcanvas",10,1,0.4);
+	   fgc.setBottom(-4);
+	   fgc.setLeft(-1);
+	   ftc.setBottom(0);
+	   ftc.setLeft(0);
+	   fgc.gobackOriginalSize();
+	   ftc.gobackOriginalSize();
+	   ctf=fgc.canvas.getContext("2d");
+	   ctft=ftc.canvas.getContext("2d");
+	   fgc.writeContents=function() {
+		 write_fg();
+	   };
+	   ftc.writeContents=function() {
+		 write_tempF();
+	   };
+	   fpTemp=new DraggablePoint(10*(Tf-minTF)/(maxTF-minTF),0,0.4,"rgba(0,0,0,0.5)");
+	   fpTemp.setXY=function(xx,yy,x0,y0,x1,y1) {
+		 if( xx >10 ) { xx=10;}
+		 if( xx <0 ) {xx=0;}
+		 this.x=xx;
+		 this.y=0.5;
+		 Tf=0.1*xx*(maxT-minT)+minT;
+		 ftc.writeContents();
+		 fgc.writeContents();
+	   };
+	   ftc.pushDragObjList(fpTemp);
+	 });
+	 $(document).delegate('#graphF','pageshow',function(e) {
+	   fgc.writeContents();
+	   ftc.writeContents();
+	 });
+	 $(document).delegate('#isothermal','pageshow',function(e) {
+	   sc.writeContents();
+	   scp.writeContents();
+	   sct.writeContents();
+	 });
+	 $(document).delegate('#isothermal','pageinit',function(e) {
+	   sc=new DragmanScreen("graphcanvas",11,7,0.7);
+	   scp=new DragmanScreen("pistoncanvas",11,4,0.7);
+	   sct=new DragmanScreen("tempcanvas",10,1,0.4);
+	   sc.setBottom(-1);
+	   sc.setLeft(-1);
+	   scp.setBottom(-1);
+	   scp.setLeft(-1);
+	   sct.setBottom(0);
+	   sct.setLeft(0);
+	   sc.gobackOriginalSize();
+	   scp.gobackOriginalSize();
+	   sct.gobackOriginalSize();
+	   yaP=new Yajirushi("rgba(200,200,100,0.9)");
+	   ct=sc.canvas.getContext("2d");
+	   ctp=scp.canvas.getContext("2d");
+	   ctt=sct.canvas.getContext("2d");
+	   sc.writeContents=function() {
+		 write_func();
+		 point1.write(ct);
+	   }
+	   scp.writeContents=function() {
+		 write_piston(point1.x,Ta/point1.x,Ta,minT,maxT);
+	   }
+	   sct.writeContents=function() {
+		 write_temp();
+	   }
+	   piston=new DraggablePoint(Va,0,0.4,"rgba(255,0,0,0.5)");
+	   point1=new DraggablePoint(Va,Ta/Va,0.4,"rgba(255,0,0,0.5)");
+	   pTemp=new DraggablePoint(10*(Ta-minT)/(maxT-minT),0,0.4,"rgba(0,0,0,0.5)");
+	   pTemp.setXY=function(xx,yy,x0,y0,x1,y1) {
+		 if( xx >10 ) { xx=10;}
+		 if( xx <0 ) {xx=0;}
+		 this.x=xx;
+		 this.y=0.5;
+		 Ta=0.1*xx*(maxT-minT)+minT;
+		 point1.setXY(point1.x,0,0,0,0,0);
+		 sc.writeContents();
+		 scp.writeContents();
+		 // sct.writeContents();
+	   };
+	   piston.setXY=function(xx,yy,x0,y0,x1,y1) {
+		 point1.setXY0(xx,0,0,0,0,0);
+		 this.setXY0(point1.x,0,0,0,0,0);
+		 sc.writeContents();
+		 // scp.writeContents();
+		 sct.writeContents();
+	   };
+	   piston.inP=function(xx,yy) {
+		 if( this.canDrag ) {
+		   return (xx > this.x && xx < 0.3+this.x);
+		 } else {
+		   return false;
+		 }
+	   };
+	   piston.write=function() {};
+	   piston.setXY0=function(xx,yy,x0,y0,x1,y1) {
+		 this.x=xx;
+		 this.y=1;
+	   };
+	   point1.setXY=function(xx,yy,x0,y0,x1,y1) {
+		 this.setXY0(xx,yy,x0,y0,x1,y1);
+		 piston.setXY0(this.x,0,0,0,0,0);
+		 //		 sc.writeContents();
+		 scp.writeContents();
+		 sct.writeContents();
+	   };
+	   point1.setXY0=function(xx,yy,x0,y0,x1,y1) {
+		 this.x=xx;
+		 this.y=Ta/xx;
+		 if( this.y > sc.topy || this.x <0 ) {
+		   this.y=sc.topy;
+		   this.x=Ta/this.y;
+		 }
+	   };
+	   scp.pushDragObjList(piston);
+	   sc.pushDragObjList(point1);
+	   sct.pushDragObjList(pTemp);
+	   reset();
+     });
+	 function reset() {
+	   point1.setXY(Va,0,0,0,0,0);
+	 }
+	 var minT=4;
+	 var maxT=35;
+	 var minTF=4;
+	 var maxTF=35;
+	 var N=50;
+	 function writeC() {
+	   sc.writeContents();
+	   scp.writeContents();
+	 }
+	 function marume(x) {
+	   var xx=100*x;
+	   return Math.round(xx)/100;
+	 }
+	 var gamma=5.0/ 3.0;
+	 var gammamone=2.0/ 3.0;
+	 var Tf=10;
+	 var Ta=10;
+	 var Va=5;
+	 var Vf=5;
+	 function write_fg() {
+	   fgc.clearALL();
+	   fgc.writeCoordinate();
+	   var T1=Tf;
+
+	   var minV=T1/fgc.topy;
+	   var maxV=fgc.rightwx;
+
+	   var stepV=(maxV-minV)/ N;
+
+	   ctf.strokeStyle=rgb_temp(T1,minT,maxT-minT);
+	   ctf.beginPath();
+	   ctf.moveTo(minV,T1/minV);
+	   for(i=1; i<=N ; i++ ) {
+         ctf.lineTo(minV+stepV*i,T1/(minV+stepV*i));
+       }
+	   ctf.stroke();
+	   ctf.strokeStyle="rgb(200,0,200)";
+	   minV=5.0/Math.exp(fgc.topy/(0.3*T1));
+	   stepV=(maxV-minV)/ N;
+	   ctf.beginPath();
+	   ctf.moveTo(minV,0.3*T1*Math.log(5.0/minV));
+	   for(i=1; i<=N ; i++ ) {
+         ctf.lineTo(minV+stepV*i,0.3*T1*Math.log(5.0/(minV+stepV*i)));
+       }
+	   ctf.stroke();
+     }
+
+     function write_func() {
+	   sc.clearALL();
+	   sc.writeCoordinate();
+	   var T1=Ta;
+	   ct.strokeStyle="rgba(255,0,50,0.5)";
+
+	   var minV=T1/sc.topy;
+	   var maxV=sc.rightwx;
+
+	   var stepV=(maxV-minV)/ N;
+
+	   ct.strokeStyle=rgb_temp(T1,minT,maxT-minT);
+
+	   ct.beginPath();
+	   ct.moveTo(minV,T1/minV);
+	   for(i=1; i<=N ; i++ ) {
+         ct.lineTo(minV+stepV*i,T1/(minV+stepV*i));
+       }
+	   ct.stroke();
+     }
+	 var yaP;
+	 function write_piston(v,p,T,tmin,tmax){
+	   ctp.fillStyle="rgb(255,255,255)";
+	   ctp.fillRect(scp.leftwx,scp.bottomy,scp.w,scp.h);
+	   ctp.fillStyle="rgb(0,0,0)";
+	   ctp.fillRect(0,0,scp.w,2);
+	   ctp.fillStyle="rgb(255,255,255)";
+	   ctp.fillRect(0.1,0.1,scp.w,1.8);
+	   ctp.fillStyle="rgb(50,50,50)";
+	   ctp.fillRect(v,0.1,0.3,1.8);
+	   var tdiff=tmax-tmin;
+	   if( tdiff <0 ) {
+		 tdiff = -tdiff;
+		 tmin=tmax;
+	   }
+	   
+	   var i;
+	   for(i=0; i<4; i++ ) {
+		 yaP.setXY(v+0.04,0.5*i+0.25,p*0.5);
+		 yaP.setTheta(-0.5*Math.PI);
+		 yaP.setL(p*0.25);
+		 yaP.draw(ctp);
+	   }
+	   ctp.fillStyle=rgb_temp(T,tmin,tdiff);
+	   ctp.fillRect(0.1,0.1,v-0.1,1.8);
+	   var ofset=0;
+
+	   ctp.fillStyle=rgb_temp(T,tmin,tdiff);
+	   ofset *= 0.1;
+	   ctp.beginPath();
+	   ctp.moveTo(scp.leftwx,scp.topy);
+	   ctp.lineTo(scp.rightwx,scp.topy);
+	   ctp.lineTo(scp.rightwx,scp.topy-1+ofset);
+	   ctp.lineTo(-ofset,scp.topy-1+ofset);
+	   ctp.lineTo(-ofset,scp.bottomy+1-ofset);
+	   ctp.lineTo(scp.rightwx,scp.bottomy+1-ofset);
+	   ctp.lineTo(scp.rightwx,scp.bottomy);
+	   ctp.lineTo(scp.leftwx,scp.bottomy);
+	   ctp.closePath();
+	   ctp.fill();
+	 }
+	 function rgb_temp(T,tmin,tdiff) {
+	   var r=Math.ceil((T-tmin)/ tdiff*255);
+	   var b=255-r;
+	   var g=Math.ceil(b*0.8+50);
+	   return "rgb("+r+","+g+","+b+")";
+	 }
+	 function write_temp0() {
+	   write_temp01(ctt,sct);
+	 }
+	 function write_temp01(ct,sc) {
+	   var i;
+	   var step=sc.w/ N;
+	   for(i=0; i<N; i++ ) {
+		 ct.fillStyle=rgb_temp(i,0,N);
+		 ct.beginPath();
+		 ct.moveTo(i*step,1);
+		 ct.lineTo(i*step,0.5);
+		 ct.lineTo((i+1.1)*step,0.5);
+		 ct.lineTo((i+1.1)*step,1);
+		 ct.closePath();
+		 ct.fill();
+	   }
+	 }
+	 function write_tempF() {
+	   write_temp1(ctft,ftc,Tf,minTF,maxTF);
+	 }
+	 function write_temp() {
+	   write_temp1(ctt,sct,Ta,minT,maxT);
+	 }
+	 function write_temp1(ct,sc,T,min,max) {
+	   write_temp01(ct,sc);
+	   ct.fillStyle="rgb(200,200,200)";
+	   ct.fillRect(0,0,sc.w,0.5);
+	   var x=10*(T-min)/ (max-min);
+
+	   ct.fillStyle="rgb(0,0,0)";
+	   ct.beginPath();
+	   ct.moveTo(x,0.5);
+	   ct.lineTo(x+0.3,0);
+	   ct.lineTo(x-0.3,0);
+	   ct.closePath();
+	   ct.fill();
+	 }
+    </script>
+  </head> 
+  <body>
+	<div data-role="page" id="energy">
+	  <div data-role="header">
+		<h2>ヘルムホルツの自由エネルギー</h2>
+	  </div>
+	  <div data-role="content">
+		<h3>力学におけるポテンシャルエネルギー</h3>
+		<p>　さて、仕事とエネルギーの関係を振り返っておこう。</p>
+		<p><img src="rikigakuEne.png" width="50%" class="floatnone"></p>
+		<p>　ポテンシャルエネルギーを決めるには、図のようにまず「エネルギーの基準点」（ポテンシャルエネルギーが0の点）を決め、「エネルギーを求めたい状態」から定めた基準点まで物体を移動させた時、物体のする仕事を求める。<span class="fukidasi">物体のエネルギーはした仕事の分だけ減る</span>というエネルギーの定義から、この時</p>
+		<p>（物体のする仕事）＝（最初の場所で持っていたエネルギー）ー（基準点のエネルギー）</p>
+		<p>となる。基準点のエネルギーを0と置くから、（物体のする仕事）は（最初の場所で持っていたエネルギー）そのものになる。</p>
+		<h3>二つのブラックボックス</h3>
+		<p>　熱力学的対象に対して力学の場合と同じように「した仕事の分エネルギーが減る」ということからエネルギーを求めたい。</p>
+		<p>　我々はブラックボックスの中身を知らなくても、そのブラックボックスを押したり引いたりして仕事をすることで、そのブラックボックスの持つエネルギーを計算することができる。まず（ブラックボックスと言いつつ）よく知っている「フックの法則に従うバネ」の場合で仕事を計算してみる。</p>
+		<p><img src="baneBB.png" width="50%" class="floatnone"></p>
+		<p>大事なのは「ある場所$x$でブラックボックス（実はバネ）の出す力は$-kx$である」ということで、これだけ知っていればブラックボックスのする仕事を</p>
+		<p>$\overbrace{\int_a^b (-kx) \mathrm dx}^{バネがした仕事} = \left[-{1\over2}kx^2\right]_a^b=\overbrace{{1\over2}ka^2}^{最初のエネルギー}-\overbrace{{1\over2}kb^2}^{最後のエネルギー}$</p>
+		<p>と計算できる（$-kx$にマイナスがついているのは$x$軸負方向の力だから）。</p>
+		<p>　この仕事はマイナスであるが、その結果として、ブラックボックス（バネ）のエネルギーが${1\over2}ka^2$から${1\over2}kb^2$へと「増えた」と考えられる。つまりバネのエネルギーが${1\over2}kx^2$であることがわかる。</p>
+		<p>　次にブラックボックスの中にあるのが「等温環境に置かれた理想気体」だとしてみよう。</p>
+		<p><img src="airBB.png" width="50%" class="floatnone"></p>
+		<p>　この時気体のする仕事は</p>
+		<p>$\int_{V_1}^{V_2} P\mathrm dV$</p>
+		<p>である。理想気体だとすれば$P={nRT\over V}$であり、等温準静操作だとすれば$T$は定数だから$nRT$を積分の外に出して、</p>
+		<p>$\overbrace{\int_{V_1}^{V_2} P\mathrm dV}^{気体のした仕事}=nRT\int_{V_1}^{V_2}{\mathrm dV\over V}=nRT\left[\log V\right]_{V_1}^{V_2}=\overbrace{-nRT\log V_1}^{最初のエネルギー} -\overbrace{(- nRT \log V_2)}^{最後のエネルギー}$</p>
+		<p>となる。$V_1>V_2$だからこれは負の量である（気体は仕事をされているからこれでよい）。</p>
+		<p>　この式から<span class="fukidasi">気体の持つエネルギーのようなもの</span>は$-nRT\log V_1$から$-nRT\log V_2$へと減った、と解釈できる。</p>
+		<p class="A"y>　ここで「のようなもの」をつけた理由は二つある。</p>
+		<p>　一つは「準静的」を仮定したこと（具体的には、$nRT$を「定数」として積分の外に出したところでこの仮定を使った）。よって実際にされる仕事はこれより小さい。</p>
+		<p>　もう１つは、これは確かに「気体のした仕事」であるが、エネルギーは気体だけが供給していると考えるのはおかしい。等温操作だから気体と環境の間に「熱」という形でエネルギーの移動があるから、ここで変化しているのは「気体＋環境」のエネルギーだと解釈しなくてはいけない。</p>
+		<div class="A">　このように「仕事」ではなく「最大仕事」をもって定義し、かつ実は計算の仮定で「環境」の持つエネルギーも一緒に計算している「エネルギーのようなもの」が「ヘルムホルツの自由エネルギー」なのである。</div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="ケルビンの原理" data-icon="arrow-l" onclick="location.href='./touonsousa.html#Kelvin'">
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<input type="button" value="理想気体の等温操作での変化" data-icon="arrow-r" onclick="location.href='#isothermal'">
+	  </div>
+	</div>
+	<div data-role="page" id="isothermal">
+	  <div data-role="header">
+		<h3>理想気体の等温操作での変化</h3>
+	  </div>
+	  <div data-role="content">
+		<div class="setsumei">
+		  下のグラフは理想気体に対して等温操作を行うときの体積$V$と圧力$P$のグラフである。ピストンの図に矢印で気体の圧力の大きさを示した。ピストンまたはグラフの<span class="aka">●</span>を動かすことができるので、圧力の変化を見よう。また、下にある「温度計」で温度を変化させることもできる。温度を変化させると体積と圧力の関係がどう変わるかを実感しよう。
+		</div>
+		<hr>
+		<canvas id="graphcanvas"></canvas></p>
+		<p><span id="now"></span></p>
+		<p><canvas id="pistoncanvas"></canvas></p>
+		<p>温度計→（低温）<canvas id="tempcanvas"></canvas>（高温）</p>
+		<hr>
+		<p>　理想気体に対する$W_{\rm max}$は
+		  $$
+		  W_{\rm max}(V_0\to V)=-NRT\left[\log V\right]_{V_0}^V=-NRT \log\left({V\over V_0}\right)
+		  $$
+		  と求められる（$V$に依存しない部分は後で考えよう）。</p>
+		<p>　グラフで表現すると、</p>
+		<p><img src="Wmax2.png" width="50%"></p>
+		<p><img src="Wmax1.png" width="50%"></p>
+		<p>のように描ける。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="力学におけるポテンシャルエネルギー" data-icon="arrow-l" onclick="location.href='#energy'">
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<input type="button" value="ヘルムホルツの自由エネルギー" data-icon="arrow-r" onclick="location.href='#Helmholtz'">
+	  </div>
+	</div>
+	<div data-role="page" id="Helmholtz">
+	  <div data-role="header">
+		<h3>ヘルムホルツの自由エネルギー</h3>
+	  </div>
+	  <div data-role="content">
+  		<h3>ヘルムホルツの自由エネルギー</h3>
+		<p>　力学的エネルギーを決めるとき「基準点」を考えて「その基準点に持っていくまでにできる仕事」でエネルギーを決めた。同様に、「等温操作をしつつある基準点まで変化させるときの最大仕事」で「ヘルムホルツの自由エネルギー」を定義する。</p>
+		<p>$F[T;V]=W_{\rm max}(T;V\to V_0(T))$</p>
+		<p>である。ただしこのエネルギーの基準点$V_0(T)$は温度によって変わっていい（まだ基準点は決めない。６章で決める）。</p>
+		<p><img src="defF.png" width="70%"></p>
+		<p>　よってヘルムホルツ自由エネルギーは、基準点からエネルギーを求めたい場所までの$P$-$V$グラフの面積（右側ではマイナスにして計算する）で表されることになる（上の図参照）。</p>
+		<p>　さらに、$W_{\rm max}(V\to V+\Delta V)=P\Delta V$と書けるから、
+		  $$
+		  \left({\partial F(T;V,N)\over\partial V}\right)_{T,N}=-p(T,V,N)
+		  $$
+		  （$p(T,V,N)$は圧力）がわかる。</p>
+		<p>　理想気体に対して計算すると、$p={NRT\over V}$を代入して、</p>
+		<p>$\left({\partial F(T;V,N)\over\partial V}\right)_{T,N}=-{NRT\over V}$を積分して、
+		  $$
+		  F(T;V,N)=-NRT\log V+(Vに依らない部分)
+		  $$
+		  となる。<span class="box">$V$に依らない部分</span>は、基準点の決め方で決まるが、その基準点$V_0$は温度により違う値を取ってもよい。
+		</p>
+		<p>　なぜ「基準点は温度によって変わっていい」ということになるかというと、ここでは「等温操作」でヘルムホルツの自由エネルギーを定義していて、まだ「温度が変わると$F$がどう変わるか」は何にもわからないのである。ここまでで理解しておくべきことは、温度を１つ決めた時に「最大仕事」を使って$F$が定義（計算）できるということだけである。</p>
+		<p><img src="eachF.png" width="60%"></p>
+		<p>　ヘルムホルツの自由エネルギーは、エネルギーが持っているべき条件を満たしている。具体的には、示量的であることと、独立な二つの、示量変数が$V_1,N_1$の系１と示量変数が$V_2,N_2$の系２がそれぞれ$F_1(T;V_1,N_1),F_2(T;V_2,N_2)$のヘルムホルツの自由エネルギーを持っていたら、合成系のヘルムホルツの自由エネルギーは$F_1(T;V_1,N_2)+F_2(T;V_2,N_2)$になる。</p>
+		<p>　ただし、この定義では「一定温度$T$」の場合しか述べてないので、温度が変わったとき（というのは「環境の温度を変えて操作をやり直したとき」という意味）にヘルムホルツの自由エネルギーがどう変わるかについては何も述べてないことに注意（もちろん、変わる）。</p>
+		<div class="setsumei">次のページでヘルムホルツの自由エネルギーと圧力のグラフを見よう。</div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="理想気体の等温操作での変化" data-icon="arrow-l" onclick="location.href='#isothermal'">
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<input type="button" value="ヘルムホルツ自由エネルギーのグラフ" data-icon="arrow-r" onclick="location.href='#graphF'">
+	  </div>
+	</div>
+	<div data-role="page" id="graphF">
+	  <div data-role="header">
+		<h3>ヘルムホルツ自由エネルギーのグラフ</h3>
+	  </div>
+	  <div data-role="content">
+		<div class="setsumei">　下のグラフの横軸は体積$V$、縦軸は圧力$P$とヘルムホルツの自由エネルギー$F$（温度により色が変わるのが$P$のグラフ、紫色が$F$のグラフ）。</div>
+		<hr>
+		<canvas id="Fgraphcanvas"></canvas></p>
+		<canvas id="Ftempcanvas"></canvas></p>
+		<hr>
+		<div class="A">↑のグラフでは$F$の基準点は$V=5$のところに置いていることに注意（実際はこうしなくてはいけないというものではない）。</div>
+		<div class="setsumei">　以上では等温操作で「（最大）仕事とエネルギー」を考えた。次に、断熱操作での「仕事とエネルギー」について考えることにしょう。</div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="ヘルムホルツ自由エネルギー" data-icon="arrow-l" onclick="location.href='#isothermal'">
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<input type="button" value="断熱操作" data-icon="arrow-r" onclick="location.href='dannetsu.html'">
+	  </div>
+	</div>
+  </body>
+</html>

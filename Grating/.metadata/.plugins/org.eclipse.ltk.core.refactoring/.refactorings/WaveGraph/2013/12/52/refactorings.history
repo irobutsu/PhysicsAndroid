@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;jp.ac.u_ryukyu.phys.wavegraph.BiotSavartGraphView&apos; to &apos;WaveGraphView&apos;&#x0A;- Original project: &apos;WaveGraph&apos;&#x0A;- Original element: &apos;jp.ac.u_ryukyu.phys.wavegraph.BiotSavartGraphView&apos;&#x0A;- Renamed element: &apos;jp.ac.u_ryukyu.phys.wavegraph.WaveGraphView&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;BiotSavartGraphView&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;jp.ac.u_ryukyu.phys.wavegraph{BiotSavartGraphView.java[BiotSavartGraphView" matchStrategy="1" name="WaveGraphView" qualified="false" references="true" similarDeclarations="false" stamp="1388108006488" textual="false" version="1.0"/>
+</session>

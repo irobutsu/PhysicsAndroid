@@ -1,0 +1,164 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>テイラー展開(等比級数になる例)</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="../jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="../vg.css" rel="stylesheet" type="text/css"/>
+		<script src="../jquery.js" type="text/javascript"></script>
+		<script src="../jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="draggablepoint.js" type="text/javascript"></script>
+		<script src="multigraphscreen.js" type="text/javascript"></script>
+		<style type="text/css">
+		.ao { color:#00F;}
+		.aka1 { color:#F00;}
+		.aka2 { color:#F21;}
+		.aka3 { color:#F42;}
+		.aka4 { color:#F63;}
+		.aka5 { color:#F84;}
+		.aka6 { color:#FA5;}
+		.aka7 { color:#FC6;}
+		.aka8 { color:#FE7;}
+		button {
+			padding:10px 20px;
+			text-shadow: 1px 1px 2px #FFF;
+			border-radius: 10px;
+			width:30%;
+		}
+		button.next {
+			background: -moz-linear-gradient(bottom, #987, #CAA 50%, #987);
+			background: -webkit-gradient(linear, left bottom, left top, from(#FBB), color-stop(0.5, #CAA), to(#FBB));
+		}
+		button.clear {
+			background: -moz-linear-gradient(bottom, #789, #AAC 50%, #789);
+			background: -webkit-gradient(linear, left bottom, left top, from(#789), color-stop(0.5, #AAC), to(#789));
+		}
+		</style>
+		<script src="taylor.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		var pointx;
+		function init(canvas_string) {
+			gs=new MultiGraphScreen(canvas_string,6,6,0.9,1);
+			gs.setLeft(-2);
+			gs.setBottom(-3);
+			gs.gobackOriginalSize();
+			gs.setFunction(function(x) { return 1/ (1-x);},"rgb(0,0,255)");
+			gs.samples=200;
+			pointx=new PointX(0,0,0.3,"rgba(255,0,0,0.5)",gs.leftwx,gs.rightwx);
+			gs.pushDragObjList(pointx);
+			gs.writeContents=function() {
+				this.writeCoordinate();
+				this.writeFunction(this.samples);
+				pointx.write(gs.ctx);
+				gs.ctx.strokeStyle="rgba(0,0,0,0.3)";
+				gs.ctx.moveTo(pointx.x,0);
+				gs.ctx.lineTo(pointx.x,geo_funcN(pointx.x,0));
+				gs.ctx.stroke();
+				setFuncStrings(geo_funcString);
+				document.getElementById("x0").innerHTML=pointx.x;
+			};
+			gs.writeGraph();
+		}
+		function geo_funcString(n) {
+			if( n==0 ) {
+				return "1/(1-x)";
+			}
+			var x0=pointx.x;
+			var s;
+			if( x0 == 1 ) {
+				s="";
+			} else {
+				s=marume6(1/ (1-x0));
+			}
+			var ai=1/ (1-x0);
+			for( i=0 ; i < n ; i++ ) {
+				var supstring="";
+				if( i!=0 ) {
+					supstring="<sup>"+ (i+1) +"</sup>";
+				}
+				if( ai==1 ) {
+					aistring="+";
+				} else if( ai == -1 ) {
+					aistring="-"
+				} else if(ai==0 ) {
+					aistring="";
+				} else if(ai >0 ) {
+					aistring="+"+marume6(ai);
+				} else {
+					aistring=marume6(ai);
+				}
+				var s1;
+				if( x0 == 0 ){
+					s1="";
+				} else if( x0 > 0 ) {
+					s1="-"+marume6(x0);
+				} else {
+					s1="+"+marume6(-x0);
+				}
+				s = s+aistring+"(x"+s1+")"+supstring;
+				ai *= 1/ (1-x0);
+			}
+			return s;
+		}
+		function geo_funcN(x,n) {
+			var x0=pointx.x;
+			var i;
+			var f= 1/ (1-x0);
+			var xx=(x-x0)/ ((1-x0)*(1-x0));
+			if( n==0 ) {
+				return 1/ (1-x);
+			}
+			for( i=1 ; i <= n ; i++ ) {
+				f+= xx;
+				xx *= (x-x0)/ (1-x0);
+			}
+			return f;
+		}
+		$(document).delegate('#page','pageinit',function(e) {
+			init('canvas');
+		});
+		</script>
+	</head> 
+	<body>
+		<div data-role="page" id="page">
+			<div data-role="header">
+				<h1>テイラー展開（${1\over 1-x}$）</h1>
+			</div>
+			<div data-role="content">
+				<p>関数$f(x)={1\over 1-x}$をテイラー展開する。この展開は、$|x|<1$の場合は</p>
+				<p>$${1\over 1-x}=1+x+x^2+x^3x^4+\cdots$$</p>
+				<p>という形になることを既に知っている。</p>
+				<hr>
+				<div><canvas id="canvas" width="100" height="100" ></canvas></div>
+				<hr>
+				<div class="setsumei">ここでは、<span class="ao">${1\over 1-x}$</span>の$x=$<span id="x0">0</span>を中心とした展開を行っている。現在<span id="now">0</span>番目の項のグラフまでを見せている。
+					<br>下の「次のステップへ」というボタンを押すと、テイラー展開の低い次数から順に、展開結果の関数が表示される。
+				</div>
+				<div>
+					<button class="next" id="nextbutton" onClick="next(geo_funcN,geo_funcString);" data-inline="true">次のステップへ</button>
+					<button class="clear" onClick="clearf(geo_funcN,geo_funcString);" data-inline="true">クリアしてやり直し</button>
+				</div>
+				<div class="box">表示している関数
+					<br><span id="funcString" class="ao">1/(1-x)</span>
+					<br><span id="funcString1" class="aka1"></span>
+					<br><span id="funcString2" class="aka2"></span>
+					<br><span id="funcString3" class="aka3"></span>
+					<br><span id="funcString4" class="aka4"></span>
+					<br><span id="funcString5" class="aka5"></span>
+					<br><span id="funcString6" class="aka6"></span>
+					<br><span id="funcString7" class="aka7"></span>
+					<br><span id="funcString8" class="aka8"></span>
+				</div>
+				<div data-role="footer" align=center>
+		  			<input type="button" value="テイラー展開の目次" data-icon="arrow-u" onclick="location.href='./index.html'">
+		  			<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+					<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+					<input type="button" value="テイラー展開(exp)" data-icon="arrow-r" onclick="location.href='./taylor_exp.html'">
+				</div>
+			</div>
+	</body>
+</html>

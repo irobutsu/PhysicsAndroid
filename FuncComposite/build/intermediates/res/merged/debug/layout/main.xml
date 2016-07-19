@@ -1,0 +1,119 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context="jp.ac.u_ryukyu.phys.funccomposite.MainActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/TextViewFx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="y=x"
+                android:textSize="20sp" />
+
+            <Spinner
+                android:id="@+id/setFx"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/buttonDownA"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="＜" />
+
+                <TextView
+                    android:id="@+id/TextViewA"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="a=1.0"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/buttonUpA"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="＞" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/TextViewGy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="z=y"
+                android:textSize="20sp" />
+
+            <Spinner
+                android:id="@+id/setGy"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+                
+                 <Button
+                    android:id="@+id/buttonDownB"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="＜" />
+
+                <TextView
+                    android:id="@+id/TextViewB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="b=1.0"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/buttonUpB"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="＞" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="合成関数" />
+
+            <TextView
+                android:id="@+id/textViewGF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="z=x" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

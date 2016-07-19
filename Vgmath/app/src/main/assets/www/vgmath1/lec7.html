@@ -1,0 +1,483 @@
+<!Doctype html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="ss.css" rel="stylesheet" type="text/css"/>
+		<link href="jquery.mobile-1.4.2.min.css?lec=4" rel="stylesheet" type="text/css"/>
+		<script src="jquery.js" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="dragmanscreen.js" type="text/javascript"></script>
+		<script src="draggablepoint.js" type="text/javascript"></script>
+		<style type="text/css">
+		/* 通常時 */
+		button {
+			font-weight:bold;
+			border:3px solid #999;
+			border-right-color:#333;
+			border-bottom-color:#333;
+			border-radius:10px;
+			color:#333;
+			width:auto;
+			text-decoration:none;
+			float:left;
+			margin-right:10px;
+			background-color: #DDE;
+		}
+		</style>
+		<title>自然科学のための数学2015年度第７講</title>
+	</head> 
+	<body>
+		<div data-role="page" id="diff">
+			<div data-role="header">
+				<h1>微分という演算</h1>
+			</div>
+			<div data-role="content">
+				<h3>$\mathrm d $という記号</h3>
+				<p>　${\Delta x}$や${\Delta y}$は「変化量」という意味があった。微分を行う時は、${\Delta x}$を0に近づける（連動して、${\Delta y}$も0に近づく）。このようにここから先の計算ではしばしば、${\Delta x}$や${\Delta y}$に「変化量」という意味に加えて「0に近づく」という属性が加わる。この「0に近づけていく変化量」という量を表すために、新しい記号として$\mathrm dx,\mathrm dy $を導入しよう。つまり、$\Delta$の替りに$\mathrm d $という記号を使って<span class="fukidasi">後で$\to0$という極限を取ることが約束されている変化量</span>を示すことにする。本講義で$\mathrm dx $とか$\mathrm dy$ のように$\mathrm d $のついた量は、すべて「微小変化」を表現する量である。</p>
+
+				<p>$\mathrm dx$や$\mathrm dy$を「微小変化」と呼ぶが、この呼び方は少し説明が不足していて、単に「微小」ではなく「0になる極限を取る」という点が重要である。</p>
+
+
+				<p>あるいは「微小」という考え方がしっくりこない、という人は以下のように考えてもよい。</p>
+
+				<img src="../sizensuugaku/fdelta2.png" width="70%" class="floatnone">
+
+
+
+				<p>上の図にも示したように、$\mathrm dx$や$\mathrm dy$はあくまで、<img src="../sizensuugaku/dydxsankaku.png" width="7%" class="floatnone">のような「接線と同じ傾きを斜辺とした直角三角形」の底辺と高さだと考える（この考え方なら微小である必要はない）。そして、$\mathrm dx$ や$\mathrm dy $そのものの大きさは重要ではなく、<img src="../sizensuugaku/dydxsankaku.png" width="7%" class="floatnone">という形（どんな直角三角形か？）、あるいは「$\mathrm dx$ と$\mathrm dy $の比」が重要であって、$\mathrm dx$ や$\mathrm dy $そのものは大きさを考えてはいけない（考えても意味はない）量とする。いわば、「接線上で定義された長さのようなもの」が$\mathrm dx$ と$\mathrm dy$ であり、それぞれ一つだけでは意味がなく、「$\mathrm dx$ と$\mathrm dy $の二つで向きを表現する量」なのである。</p>
+
+				<p>　${\mathrm dy\over \mathrm dx}$は普通の数（大きさを考える意味がある）だし、$\mathrm dy=a\mathrm dx$と書いた時の$a$も普通の数である。だから${\mathrm dy\over \mathrm dx}=2$や$\mathrm dy = 0.7\mathrm dx$は意味のある式である。しかし、$\mathrm dx=1$とか$\mathrm dy=0.02$などという式には全く意味がない<span class="footnote">=0だけは、「$\mathrm dx=0$の極限をとって」のように使うこともあるが、本来はあまりよい使い方ではない。</span>。$\mathrm dy$ や$\mathrm dx $は、二つがペアになって接線の向きを表現している量であって、$\mathrm dx$ のみの大小を云々してはいけない。</p>
+
+				<p>　新しい記号を使えば、接線の傾きは${\mathrm dy\over \mathrm dx}$になる<span class="footnote">$\mathrm dx$や$\mathrm dy$は、接線という直線の上での長さを表現しているという考え方もできる。</span>。この${\mathrm dy\over\mathrm dx}$、厳密に書けば</p>
+				\begin{equation}
+				{\mathrm dy\over\mathrm dx}=\lim_{{\Delta x}\to0}{{\Delta y}\over {\Delta x}}
+				\end{equation}
+				<p>が導関数（もしくは微係数）である。$\mathrm dy$ と$\mathrm dx $は微小量、すなわち0になる極限を取るべき量だが${\mathrm dy\over \mathrm dx}$は有限な量である。</p>
+
+
+				<p>　こうして「傾き」という量を$x$の関数として表現する方法を我々は得た。最初に書いた${{\Delta y}\over {\Delta x}}$という量は、ある「幅」${\Delta x}$があって（その「幅」の間での変化の割合として）初めて定義できる量だったが、${\mathrm dy\over \mathrm dx}$の方は、「一点」$x$で決まる量であることに注意しよう。</p>
+
+				<p>　これで${\mathrm dy\over \mathrm dx}$という量が「接線の傾き」という数字として意味のある量となったので、${\mathrm dy\over \mathrm dx}$で一つの量、として扱うことにする。この量もまた$x$の関数であることを表現するため、${\mathrm dy\over \mathrm dx}(x)$のように$(x)$という引数を付けて書く。この書き方はf(x)の$f$のところに${\mathrm dy\over \mathrm dx}$が入った形で、${\mathrm dy\over \mathrm dx}$が「関数名」として機能している（だから、${\mathrm dy\over \mathrm dx}$で1文字であるかのごとく扱う）<span class="footnote">${\mathrm dy\over \mathrm dx}$は「でぃーわいでぃーえっくす」と分子・分母の順にいっきに（「これで一文字だよ」って感じで）読む。分数のようなものではあるが、「でぃーえっくす、ぶんの、でぃーわい」とは読まない。</span>。</p>
+				<div class="A">　当然だが、${\mathrm dy\over \mathrm dx}={y\over x}$などと「約分」することはできない。これは${分子\over 分母}$を${子\over 母}$と書くようなものである。<br><br>
+					　余談ながら、${\sin x\over x}=\sin$なんてやる人もたまにいるが気をつけよう。<br>
+					たぶんネタ（作った話）だと思うが、${\sin x\over n}=six=6$という式もある。
+				</div>
+				<p>　これが導関数（もしくは微係数）を${\mathrm dy\over \mathrm dx}(x)$のように書く理由である。f'(x)の方はニュートンによる記号で、$f$という関数から$f'$を作ったということをよく表現できている記号である。一方${\mathrm dy\over \mathrm dx}$はライプニッツの記号で、何の変化と何の変化の比を考えているのかがよく表現できている記号である。これらの記号は使いどころによって一長一短がある。</p>
+
+				<p>　$\mathrm dy=f'(x)\mathrm dx$とした時、$f'(x)={\mathrm dy\over \mathrm dx}(x)$であるが、これを${\mathrm df\over \mathrm dx}(x)$と書くこともある（関数を意味する$f$を変数の意味にも使っている）。$\mathrm dy={\mathrm df\over \mathrm dx}(x)\mathrm dx$と書いた場合、導関数を求めるという計算$f(x)\to f'(x)$は、$f(x)\to {\mathrm df\over \mathrm dx}(x)$となる。この計算は、あたかも、「f(x)に${\mathrm d \over \mathrm dx}$が掛かった」ように見える。そこで、同じ式を$f(x)\to {\mathrm d \over \mathrm dx}f(x)$と書くこともある。</p>
+
+				<p>　この${\mathrm d \over \mathrm dx}$のような記号<span class="footnote">$y$で微分する${\mathrm d \over \mathrm dy}$などもあるし、ずっと後では偏微分${\partial\over \partial x}$などのような微分演算子も出てくる。</span>を「微分演算子(differential operator)」と呼ぶ<span class="footnote">さらには${\mathrm d \over \mathrm dx}$と書くのも面倒臭がって$D$一文字で表すこともある。</span>。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#vt" data-icon="arrow-r">速度と微分の関係</a>
+			</div>
+		</div>
+		<div data-role="page" id="vt">
+			<div data-role="header">
+				<h1>速度と微分の関係</h1>
+			</div>
+			<script src="../sizensuugaku/xtgraph.js" type="application/javascript"></script>
+			<script>
+			$(document).delegate('#vt','pageinit',function(e) {
+				init_xtgraph("canvas1");
+			});
+			</script>
+			<div data-role="content">
+				<h3>速度と微分の関係</h3>
+				<p><img src="../sizensuugaku/ugoitemasu.png" width="60%" class="floatnone"></p>
+				<p>　微分の最も重要な応用（ニュートンはまさにこのために微分を作った）は速度の定義である。速度は時間<span class="magenta">t</span>を独立変数にして、座標（物体の位置）<span class="aka">x</span>を従属変数とした微分</p>
+				$$
+				v(t)=\lim_{{\Delta t}\to0}{{\Delta x}\over {\Delta t}} = {\mathrm dx\over \mathrm dt}
+				$$
+				<p>　${{\Delta x}\over {\Delta t}}$で定義される速度は${\Delta t}\neq0$でないと意味がないから、「有限の時間だけ待って、その間に進んだ距離を使って計算される量」だということになる。しかしでは例えば車のスピードメータが指している「時速60キロ（60 km/h）」は別に1時間待ってから測定するものではない<span class="footnote">具体的には車輪に連動している発電機から流れる電流などで測定されているだろう。</span>。むしろ「瞬間の速度」というものが物理的には存在している。速度を座標と関連付けて計算する操作が微分である。</p>
+
+				<div class="box">　物理の世界で有名な小話に、スピード違反で捕まった人が警官に「時速100キロだ」と言われて、「いや、おれはまだ1時間も走ってない！」と答える、というのがある。時速100キロ（100 km/h）を「1時間で100キロ走る」と単純に解釈すれば「まだ1時間走ってないから時速100キロじゃない」ということになるが、速度はグラフの傾きで表現できるものなのだから、1時間走るのを待つまでもなく、（理論的には、$\Delta t\to0$でも！）「時速100キロ」は測定もしくは定義できるのである。</div>
+
+				<p>　では、下のグラフで速度と微分の関係を直感しよう。</p>
+
+				<div class="setsumei">　以下のグラフは、横軸時間で、縦軸が物体の位置および物体の速度である。<br>
+					　ボタンを押すだけでなく、●は全てドラッグして動かすことができるので、任意の運動を作ることができる。いろいろとこの図で物体を動かして「速度」と「微分」の関係をつかんで欲しい。
+					<br>
+					<label><input style="WIDTH:30%; color:#F00" type="checkbox" id="checkV" value="速度を描く" data-inline="true" onclick="checkCB();"/>速度を描く</label>↑ここをチェックすると、緑の棒グラフで速度が表示される。
+				</div>
+				<div><canvas id="canvas1" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+				<div>
+					<button style="WIDTH:24%"  onclick="houbutsu();">放物線にする</button>
+					<button style="WIDTH:24%" onclick="kasoku();">加速運動にする</button>
+					<button style="WIDTH:24%" onclick="makeLinear();">等速運動にする</button>
+					<button style="WIDTH:24%" onClick="makeRandom();">ランダムな運動にする</button>
+				</div>
+				<div>
+					<button style="WIDTH:30%; color:#F00" onclick="animeGo();">アニメーション開始</button>
+				</div>
+				<br>
+				<div>
+				</div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#diff" data-icon="arrow-l">微分という演算</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#diffex" data-icon="arrow-r">微分演算の簡単な例</a>
+			</div>
+		</div>
+		<div data-role="page" id="diffex">
+			<div data-role="header">
+				<h1>微分演算の簡単な例</h1>
+			</div>
+			<div data-role="content">
+				<p>　新しい記号$\mathrm d$を使って微分の計算を行ってみよう。</p>
+				<p>前に行った$f(x)=x^2$の微分を例としよう。まず、$ {\Delta y}=2{x\Delta x}+({\Delta x})^2$を</p>
+				\begin{equation}
+				\mathrm dy=2x\mathrm dx+(\mathrm dx)^2
+				\end{equation}
+				<p>と書きなおす。この式の$\mathrm dx\to0,\mathrm dy\to0$の極限を考えると</p>
+				\begin{equation}
+				\underbrace{ \mathrm dy}_{\to0} = \underbrace{2x\mathrm dx}_{\to0} + \underbrace{(\mathrm dx)^2}_{\to0}
+				\end{equation}
+				<p>となって0=0という「当たり前すぎてつまんない（trivialな）式」が出る。何の情報も引き出せない。$\mathrm dy$と$\mathrm dx$の比のみが重要なのだから、まず両辺を$\mathrm dx$で割って</p>
+				\begin{equation}
+				{\mathrm dy\over\mathrm dx} = 2x + \mathrm dx
+				\end{equation}
+				<p>とした後に$\mathrm dx\to0$という極限を取ることで、以下の式を得る。</p>
+				\begin{equation}
+				{\mathrm dy\over\mathrm dx} = 2x
+				\end{equation}
+
+				<p>「$\mathrm dx$というのは$\mathrm dx\to0$という極限を取られることを運命づけられている量であることを考えると、右辺第二項の$(\mathrm dx)^2$をこれ以上計算する必要はない」と考えて</p>
+				\begin{equation}
+				\mathrm dy= 2x\mathrm dx
+				\end{equation}
+				<p>として${\mathrm dy\over\mathrm dx}=2x$を出してもよい。というより慣れてきたらそうするべきである。</p>
+
+				<p><span class="box">$2x\mathrm dx$も$(\mathrm dx)^2$も、$\mathrm dx\to0$とすれば$0$になるのは同じなのに、$(\mathrm dx)^2$の方だけを消す理由は何ですか？</span> </p>
+
+				<p>　$2x\mathrm dx$と$(\mathrm dx)^2$を比較して、「$(\mathrm dx)^2$の方が速く0になる」という判断で消す。具体的には$\mathrm dx$の次数を考える。$2x\mathrm dx$は$\mathrm dx$の1次、$(\mathrm dx)^2$は$\mathrm dx$の2次である。</p>
+
+				<p>　あくまで「小さい物＋もっと小さい物」という形になっている時に「もっと小さい物」の方が消せるのだ、ということに注意しよう。</p>
+
+				<div class="A">「何が小さいか」、つまり「何が消せるか」はあくまで「全体との比較」で決まることに注意しよう。たとえば国家予算の話をしている時には100円なんて無視していいが、今日の昼御飯何を食べるか考えている時には、100円の差は大きい。<br>
+					上で$x^2 + 2x\Delta x + (\Delta x)^2$という三つの項を考えたが、これはそれぞれ10000円、100円、1円だと思っておけばよい。「10000円あるなら100円を忘れてもいいんじゃないのか？」と思うかもしれないが、この計算において$x^2$は「いずれ左辺と右辺で打ち消し合って消える量」である。つまり「友達に借金があって、明日10000円返さなくてはいけない」という状況で10000円と100円と1円を持っている。このときは100円すなわち$2x\Delta x$は重要である（明日ジュース1本ぐらいなら飲める）。一方その状況でも1円の意味は少ない。</div>
+
+
+				<p>　$y=x^2$の両辺を微小変化させると</p>
+				\begin{equation}
+				y+\mathrm dy = (x+\mathrm dx)(x+\mathrm dx)
+				\end{equation}
+				<p>になる。そして「あ、この中には$x\mathrm dx$が2個あるな」と考えれば、右辺は$x^2+2x\mathrm dx$となる。</p>
+
+				<p>用語が少し混乱しているのだが、</p>
+				<p><ul>
+					<li>式$y=x^2$から、その微小変化の式$\mathrm dy=2x\mathrm dx$を作る（「$y=x^2$の両辺を微分すると、$\mathrm dy=2x\mathrm dx$」）。</li>
+					<li>関数$y=x^2$から、$y$の導関数${y'}=2x$を導く（「$x^2$を$x$で微分すると$2x$」）。</li>
+				</ul></p>
+				<p>のどちらも「微分する」と表現するので注意しよう。</p>
+
+				<p>　次に図解で考えよう。一辺$x$の正方形の面積Sは$S=x^2$という式で表現できる<span class="footnote">$y=x^2$ではなく${S}=x^2$としたが、これはこの図の場合$x^2$に「面積」という意味があるからである。どんな文字を使うかは本質とは関係ない。</span>。この式を微分した結果の導関数が${\mathrm dS\over \mathrm dx}(x)=2x$であることは、</p>
+
+				<img src="../sizensuugaku/x2.png" width="70%" class="floatnone">
+				
+				<p>という図から理解できる。この場合、正方形の「縦」の変化による面積変化$x\mathrm dx$と、「横」の変化による面積変化$x\mathrm dx$の足算が面積変化$2x\mathrm dx$となっている。$\mathrm dx^2$の部分は無視されている。</p>
+
+				<p>　$y=x^3$の微分を図で考えるとすると立方体が大きくなるところを想像するとよい（やってみよう）。</p>
+				<p>　式で考えるならば、</p>
+				\begin{equation}
+				y+\mathrm dy = (x+\mathrm dx)(x+\mathrm dx)(x+\mathrm dx)
+				\end{equation}
+				<p>として、右辺に$x^2\mathrm dx$が三つある、ということを数えれば、</p>
+				\begin{equation}
+				\mathrm dy = 3x^2 \mathrm dx
+				\end{equation}
+				<p>となる。そしてこれから$y'={\mathrm dy\over \mathrm dx}=3x^2$である。</p>
+				
+				<h3>冪の微分</h3>
+				<p>$x^2,x^3$の場合をここまで考えたが、$x^n$の微分も同様に</p>
+				\begin{equation}
+				{y}+\mathrm dy=\underbrace{({x}+\mathrm dx)({x}+\mathrm dx)({x}+\mathrm dx)({x}+\mathrm dx)\cdots
+				}_{n個} 
+				\end{equation}
+				<p>の中にある$\mathrm dx$の1次は$n$個の${x}^{n-1}\mathrm dx$であろうと考えるか、もしくは</p>
+				\begin{equation}
+				\underbrace{{y}}_{これが変化すると}=\underbrace{\overbrace{
+				{x}\times{x}\times{x}\times{x}\times{x}\times{x}\times{x}\times\cdots }^{n個}}_{\tiny このうち一つが\mathrm dx 変化したもの\atop が全部でn種類出てくる}
+				\end{equation}
+				<p>と考える（二つ以上の${x}$が変化して$\mathrm dx$になったものは、${\cal O}(\mathrm dx^2)$となって出てこない）と、</p>
+				\begin{equation}
+				\mathrm dy = n{x}^{n-1}\mathrm dx~~~すなわち、{\mathrm dy\over \mathrm dx}= n{x}^{n-1}
+				\end{equation}
+				<p>と分かる。</p>
+
+
+
+				<p>上の式は$n$が自然数なら正しい。では、指数が負の整数ならどうなるだろうか。その場合は、${y}={x}^{-n}$をまず、${x}^n {y}=1$に直してから、その微小変化を考えると、</p>
+				\begin{equation}
+				\begin{array}{rll}
+				\underbrace{({x}+\mathrm dx)({x}+\mathrm dx)({x}+\mathrm dx)({x}+\mathrm dx)\cdots
+				}_{n個}\times({y}+\mathrm dy)=&1\\
+				\underbrace{{x}^n {y}}_1 + n{x}^{n-1}\mathrm dx{y} + {x}^n \mathrm dy =&1\\
+				{x}^n \mathrm dy =&-n{x}^{n-1}\mathrm dx \underbrace{{x}^{-n}}_{{y}} \\
+				\mathrm dy =& -n {x}^{-n-1}\mathrm dx\\
+				\end{array}\label{fubekibibun}
+				\end{equation}
+				<p>となる<span class="footnote">慣れてきたら、「${x}^n {y}=1$の両辺を微分する」の一言で$n{x}^{n-1}\mathrm dx {y}+ {x}^n \mathrm dy =0$を出してよい。</span>（結果${\mathrm dy\over \mathrm dx}= -n x^{-n-1}$を上の${\mathrm dy\over \mathrm dx}=nx^{n-1}$と見比べると、単に$n\to -n$と置き換えただけの式になっている）。</p>
+
+				<p>指数が整数でない場合についても考えよう。たとえば${y}={x}^{1\over n}$については、これをまず${y}^n = {x}$になおしてから、</p>
+				\begin{equation}
+				\underbrace{({y}+\mathrm dy)({y}+\mathrm dy)({y}+\mathrm dy)({y}+\mathrm dy)\cdots
+				}_{n個}= {x}+\mathrm dx
+				\end{equation}
+				<p>とすれば（これまで同様、1次のオーダーを取り出すことで）<span class="footnote">こちらも慣れてくれば、${y}^n = {x}$からすぐに$n {y}^{n-1}\mathrm dy = \mathrm dx$が出せるだろう。</span>、</p>
+				\begin{equation}
+				\begin{array}{rl}
+				n {y}^{n-1}\mathrm dy =& \mathrm dx\\
+				{\mathrm dy\over  \mathrm dx} =&
+				{1\over  n {y}^{n-1}}={1\over n}{x}^{{1\over n}-1}\\
+				\end{array}
+				\end{equation}
+				<p>がわかる。同様に、${y}={x}^{m\over n}$に関しても${y}^n={x}^m$としてから</p>
+				\begin{equation}
+				\begin{array}{rl}
+				\underbrace{({y}+\mathrm dy)({y}+\mathrm dy)({y}+\mathrm dy)({y}+\mathrm dy)\cdots
+				}_{n個}=&  \underbrace{({x}+\mathrm dx)({x}+\mathrm dx)({x}+\mathrm dx)({x}+\mathrm dx)\cdots
+				}_{m個}\\
+				n{y}^{n-1}\mathrm dy =& m {x}^{m-1}\mathrm dx
+				\end{array}
+				\end{equation}
+				<p>のように考えれば、</p>
+				\begin{equation}
+				{\mathrm dy \over \mathrm dx}= {m\over n} {x}^{{m\over n}-1}
+				\end{equation}
+				<p>が示せるから、一般の有理数$\alpha={m\over n}$に対して${y}={x}^\alpha$の微分は</p>
+				\begin{equation}
+				{\mathrm dy\over \mathrm dx}= \alpha {x}^{\alpha-1}
+				\end{equation}
+				<p>としてよい。ここまでくれば、「無理数に対しても極限操作で定義すればよさそうだ」とわかる（たとえば、$y=x^\pi$の微分を計算したければ、それは$y=x^{3.14}$の微分に近く、こちらは$y'=3.14x^{2.14}$のように微分できる）で、$\alpha$は任意の実数でよい。この式を見ると微分により${x}$の冪を1ずつ下がることが言える。例外は定数（すなわち$x^0$の時）で、この時だけは$(定数)\times x^{-1}$とはならず、0となる<span class="footnote">では微分すると$x^{-1}={1\over x}$になる関数はないのかというと、ちゃんとある。</span>。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#vt" data-icon="arrow-l">速度と微分の関係</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#linear" data-icon="arrow-r">線型性</a>
+			</div>
+		</div>
+		<div data-role="page" id="linear">
+			<div data-role="header">
+				<h1>微分という演算の持つ性質：線型性</h1>
+			</div>
+			<div data-role="content">
+				<p>　よく使う微分の性質について説明しておこう。まず、</p>
+				<ul>
+					<li>線型性：$\alpha,\beta$は定数として、<br>
+						${\mathrm{d} \over \mathrm dx}\left(\alpha f({x})+\beta g({x})\right)=\alpha {\mathrm{d} \over \mathrm dx}f({x})+\beta{\mathrm{d} \over \mathrm dx}g({x})$
+						<br>または<br>
+						$(\alpha f({x})+\beta g({x}))'=\alpha f'({x})+\beta g'({x})$</li>
+				</ul>
+				<p>という言葉はこの後もよく出てくる。これは
+					<ul>
+						<li>足算と微分の順番はどちらが先でもよい$\left({\mathrm{d} \over \mathrm dx}(f({x})+g({x}))={\mathrm{d} \over \mathrm dx}f({x})+{\mathrm{d} \over \mathrm dx}g({x})\right)$。</li>
+						<li>定数を掛けるという計算と微分の順番はどちらが先でもよい$\left({\mathrm{d} \over \mathrm dx}(\alpha f({x}))=\alpha{\mathrm{d} \over \mathrm dx}f({x})\right)$。</li>
+					</ul></p>
+				<p>の二つの性質を合わせ持っているということである。</p>
+				<div class="A">　「線型性」とか聞くと「難しい話が始まった」「線型性怖い」と構えてしまう人が時々いるが、上に書いた二つの性質を表現しているだけの言葉だから、心配することはない。自然科学ではこういう性質を持っている計算がたくさん現れるので、名前をつけているだけのことで、たいして難しい内容ではない。<br>
+					　また、ここまで微分の計算をやってきたのだから、以上の性質も納得できるはず。</div>
+				
+				<p>確認するには、$\alpha f({x})+\beta g({x})$を微小変化させてみればよい。</p>
+				\begin{equation}
+				\begin{array}{rl}
+				\alpha f({x}+\mathrm dx)+\beta g({x}+\mathrm dx) 
+				=&
+				\alpha \underbrace{(f({x})+f'({x})\mathrm dx)}_{\small f({x}+\mathrm dx)}+\beta \underbrace{(g({x})+g'({x})\mathrm dx)}_{\small g({x}+\mathrm dx)}
+				\\
+				=&\alpha f({x})+\beta g({x})
+				+\underbrace{(\alpha f'({x})+\beta g'({x}))}_{\left(\alpha f({x})+\beta g({x})\right)'}\mathrm dx
+				\\
+				\end{array}
+				\end{equation}
+				<p>となって線型性が確認できる（ここ以後しばらくの計算では${\cal O}((\mathrm dx)^2)$には興味がないので、常に省略する）。この式をあえて図で表現しておくと以下のようになる。</p>
+
+				<p><img src="../sizensuugaku/alphafbetag.png" width="65%" class="floatnone"></p>
+				<p>微分が線型性を持つことがわかったので、</p>
+				\begin{equation}
+				{\mathrm{d} \over \mathrm dx}\left(
+				a {x}^\alpha + b {x}^\beta + c{x}^\gamma+\cdots\right)
+				= a\alpha {x}^{\alpha-1}+ b\beta {x}^{\beta-1}+ c\gamma {x}^{\gamma-1}+\cdots
+				\end{equation}
+				<p>のように冪の和の微分も簡単にできるようになった。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#diffex" data-icon="arrow-l">簡単な微分の計算</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#qa" data-icon="arrow-r">受講者の感想・コメント</a>
+			</div>
+		</div>
+		<div data-role="page" id="qa">
+			<div data-role="header">
+				<h1>受講者の感想・コメント</h1>
+			</div>
+			<div data-role="content">
+				<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+				<div class="Q">今までの復習のような内容だった。</div>
+				<div class="A">もう一回、まとめなおしておきましょう。</div>
+				<p></p>
+				<div class="Q">今回は前回の内容と重なっているところもあって、理解しやすかった。</div>
+				<div class="A">微分の中身をよく理解しておいてください。</div>
+				<p></p>
+				<div class="Q">梅雨が嫌です。</div>
+				<div class="A">嫌だといっても天気はどうしようもないので、がんばっていきましょう。</div>
+				<p></p>
+				<div class="Q">前回、寝坊して授業にいけませんでした。すみません。</div>
+				<div class="A">先週の分は自力で勉強してくださいね。</div>
+				<p></p>
+				<div class="Q">微分の基礎がおさらいできてよかった。先週は寝坊しました…</div>
+				<div class="A">先週の分は自分で勉強しておいてください。</div>
+				<p></p>
+				<div class="Q">＜大＞と比較した時に＜小＞を消去するという考え方に、なるほどと思いました。</div>
+				<div class="A">＜小＞だけしかないときに消してしまわないように気をつけましょう。</div>
+				<p></p>
+				<div class="Q">いろいろな微分をしたときに、なぜ$f'(x)=nx^{n-1}$の形になるのかということが見えてきました。$x^3$までは図形を使ってみることができたけど、４次以上になると図形で書くことはできないが、考えてみると、底面が$x^{n-1}$で、それに高さ$\mathrm dx$があって$n$方向に広がるので$n$倍するイメージかなと思いました。</div>
+				<div class="A">そのイメージでいけば、$n$次元も考えられます。</div>
+				<p></p>
+				<div class="Q">微分するのが楽しくなってきた。$\mathrm dx$と$\mathrm dy$の大きさを気にしてたけど、あまり意味がないことを知れたのが今日の収穫でした。</div>
+				<div class="A">「どうせ0になるやつ」あるいは「大きさには意味がなくて比だけが大事なやつ」と考えておいてください。</div>
+				<p></p>
+				<div class="Q">例え方が面白くてわかりやすいです。</div>
+				<div class="A">わかってもらえてよかったです。</div>
+				<p></p>
+				<div class="Q">当たり前ではあるが、様々な微分の公式が定義から導かれることが確認できてよかった。詳しく計算して意味がわかった。</div>
+				<div class="A">微分の意味を理解して、計算していきましょう。</div>
+				<p></p>
+				<div class="Q">高校でならった公式意外にも、0に近い$\mathrm dx$を使って微分できた。$\lim_{h\to0}$みたい。</div>
+				<div class="A">limを取る部分の計算を「暗黙の了解」で済ませているのが今日の計算方法です。</div>
+				<p></p>
+				<div class="Q">今回微分の性質を理解できた。</div>
+				<div class="A">素晴らしい。</div>
+				<p></p>
+				<div class="Q">$\mathrm dx$と$\mathrm dx^2$の違い：高次の微小量（オーダーが違う）を理解した。</div>
+				<div class="A">これからもどんどん使っていきます。</div>
+				<p></p>
+				<div class="Q">お金で２次以降の切り捨ての説明がわかりやすかった。</div>
+				<div class="A">やっぱりお金は大事だからね。</div>
+				<p></p>
+				<div class="Q">微分の計算など、高校ではやってない考え方でできてよかったです。</div>
+				<div class="A">大学では今日のようなやり方も大事です。</div>
+				<p></p>
+				<div class="Q">今日の内容はよくわかりました。しっかり復習したいです。</div>
+				<div class="A">復習よろしく。</div>
+				<p></p>
+				<div class="Q">微分が、今日習ったようにして公式とかできたことがわかってスゴイと思った。</div>
+				<div class="A">全部こうやって公式作っていきます。</div>
+				<p></p>
+				<div class="Q">$y+\mathrm dy=(x+\mathrm dx)^2=x^2+2x\mathrm dx$で後を省ける！</div>
+				<div class="A">どうせ消えるものはさっさと省くという考え方です。</div>
+				<p></p>
+				<div class="Q">極限を取る以外のやりかたで微分ができることに驚きました。$f(x+\mathrm dx)=f(x)+f'(x)\mathrm dx$のありがたみをとても感じました。線形性の説明もとてもわかりやすかったです。</div>
+				<div class="A">今日やった計算も、極限取っているのと理屈は同じです。</div>
+				<p></p>
+				<div class="Q">$f(x+\Delta xx)$と$f(x)$の差をとることによって微分が求められることがわかった。$(x+\Delta x)^n$の時、$x^n+{}_nC_1x^{n-1}\Delta x+\cdots+{}_nC_n(\Delta x)^n$という考え方が二項定理ですか。</div>
+				<div class="A">二項定理で、最初の方だけ使っている感じです。</div>
+				<p></p>
+				<div class="Q">先生のお金のたとえがすごくわかりやすかったです！　微分めっちゃ楽しいです！</div>
+				<div class="A">楽しんでくれて何より。</div>
+				<p></p>
+				<div class="Q">前回、0でない数字を限りなく0にするのに納得がいかなかったが、今日の$\mathrm dx^2$を0にしたりする微分法が面白かった。</div>
+				<div class="A">小さいものを消していく、という計算もなかなか面白いでしょ。</div>
+				<p></p>
+				<div class="Q">微分の特徴について学ぶことができた。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">微分がわかってきた気がします。もっと好きになれるようがんばります。</div>
+				<div class="A">好きになっていきましょう。</div>
+				<p></p>
+				<div class="Q">${\mathrm dy\over \mathrm dx}={x\over y},{\sin\theta\over\theta}=\sin,{\sin x\over n}=six=6$。なるほど。</div>
+				<div class="A">いや、そこ納得しちゃいけないところだからね。</div>
+				<p></p>
+				<div class="Q">微分の演算でしくみがわかって、微分の計算がしやすかった。</div>
+				<div class="A">仕組みを理解した上で計算をしていきましょう。</div>
+				<p></p>
+				<div class="Q">微分の奥深さが分かって楽しい授業だった。</div>
+				<div class="A">まだまだ奥の奥があります。</div>
+				<p></p>
+				<div class="Q">注目する値によって略することのできる値に違いが出ることがわかった。</div>
+				<div class="A">「何が消せるか」の理屈を理解しておきましょう。</div>
+				<p></p>
+				<div class="Q">ふと思ったけど、先生はどんなアニソンを聞きますか。</div>
+				<div class="A">いろいろ聞くけど、最近はKalafina,ALI PROJECTぐらいかな。</div>
+				<p></p>
+				<div class="Q">$x+h$を$\lim_{h\to0}$を使って求めた高校のやり方ではなく、$\mathrm dx$を使ってのやりかたを勉強できて、おもしろかった。</div>
+				<div class="A">結局は同じ計算なんですが、こういう計算の方が後々は使いやすいです。</div>
+				<p></p>
+				<div class="Q">前の授業休んでしまったので、ついていけるか不安でしたが、結局、微分は変化の割合であると主ました。なぜ中学校の先生は教えてくれない…。こんがらがるのかなー。</div>
+				<div class="A">微分を教えるのは高校でしょう。高校でも変化の割合だということは教えてますよ。</div>
+				<p></p>
+				<div class="Q">なかなかこのように微分について深く考えたことがなかったので、すごく興味深く授業を受けることができました。</div>
+				<div class="A">深く考えながら、勉強していきましょ。</div>
+				<p></p>
+				<div class="Q">単純に$y=x^{m\over n}$の微分が$y'={m\over n}x^{{m\over n}-1}$であると計算するのではなく、$y^n=x^m$の形に直して$\underbrace{(y+\mathrm dy)\cdots(y+\mathrm dy)}_{n個}=\underbrace{(x+\mathrm dx)\cdots(x+\mathr dx)}_{m個}$として$y^n+ny^{n-1}\mathrm dy=x^m+mx^{m-1}\mathrm dx$で導いた考え方がおもしろかった。面積や体積の変化量で$\mathrm dx^2$が小さく省くことができるという例えが分かりやすかった。</div>
+				<div class="A">いろんなやり方を理解していきましょう。</div>
+				<p></p>
+				<div class="Q">どのようにして$y=x^a$→$y'=xx^{a-1}$の公式が成り立っているのか知ることができて、嬉しかった。</div>
+				<div class="A">どんな式にも成り立ちというものがあります。</div>
+				<p></p>
+				<div class="Q">様々な形の式が微分をするとどのような動きをするのか改めて確認することができた。これからの問題を解く上で、今回学んだ事象を考えながら解いていくことを心がける。</div>
+				<div class="A">中身をつかんでいきましょう。</div>
+				<p></p>
+				<div class="Q">微分の意味や本質がわかってきた。$f(x)+f'(x)\mathrm dx$と$f(x+\mathrm dx)$の値が同じという考え方はまさに微分だなと思った。</div>
+				<div class="A">微分の考えをつかんでいきましょう。</div>
+				<p></p>
+				<div class="Q">微分がよく分かった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">高校でやった${\mathrm dy\over \mathrm dx}=f'(x)$、いわゆる「$y$を$x$で微分する」というものが$\mathrm dy=f'(x)\mathrm dx$となり、$\mathrm dy$と$\mathrm dx$の比というふうにつながったことがすごいと思った。</div>
+				<div class="A">同じことを書き方を変えただけなんですが、この書き方の方が後で使う時も便利です。</div>
+				<p></p>
+				<div class="Q">微分が楽しくなってきました。</div>
+				<div class="A">楽しんでいきましょう。</div>
+				<p></p>
+				<div class="Q">微分のしくみについて理解が深まりました。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">今まではずっと導関数の定義にひたすら当てはめるか公式っぽく計算していきましたが、微小の意味をちゃんと考えるととてもおもしろかったです。最初$\mathrm dy=$○$\mathrm dx$の形で出てきたときには？となったけど、${\mathrm dy\over \mathrm dx}=$○の形になった瞬間に！！となってスゲーと思いました。</div>
+				<div class="A">実は、$\mathrm dy=$ $\mathrm dx$の形の方が（物理なんかで使う時には）本質的なんですよ。</div>
+				<p></p>
+				<div class="Q">$\mathrm dx^2$や$\mathrm dy^2$が消えるのは＜大＞＋＜小＞のような大小関係が成り立っている時だとわかった。</div>
+				<div class="A">はい。だから状況によっては、$\mathrm dx^2$を消してはいけないこともあります。</div>
+				<p></p>
+				<div class="Q">正方形や立方体で考えると、微分したときに無視する場所がわかりやすかった。</div>
+				<div class="A">いろいろ、図形で考えてみてください。</div>
+				<p></p>
+				<div class="Q">線形性・・こわくない（そう思うようにします）。</div>
+				<div class="A">こわくないよ〜〜。</div>
+				<p></p>
+				<div class="Q">記号がたくさんでてきて難しい〜。</div>
+				<div class="A">いやいや、まだまだ「たくさん」までは行ってないぞ〜。</div>
+				<p></p>
+				<div class="Q">線型性をこわがっていた自分がばかばかしく思えました。</div>
+				<div class="A">全然、こわいものじゃないでしょ。</div>
+				<p></p>
+				<div class="Q">高校のとき$(f(x)+g(x))'=f'(x)+g'(x)$になるのがいまいち納得できていなかったが、今日の講義で線型性とともに理解できたので非常によかったです。</div>
+				<div class="A">納得できてよかった。</div>
+				<p></p>
+				<div class="Q">線型性ありがたい。</div>
+				<div class="A">そうです、ありがたい性質なんです。</div>
+				<p></p>
+				<div class="Q">前回は先生の威圧感により体調くずし休んでしまったが、今回は先生に加え線型性も威圧感を出してきて、もう怖い。</div>
+				<div class="A">とりあえず線型性の方は全然怖くないし、威圧感もないはず。</div>
+				<p></p>
+				<div class="Q">漫画「刃牙」を読んでいて、全ての生物を同じ大きさにした場合、最強はカマキリと聞いたんですけど、どう思います？</div>
+				<div class="A">その話は実は何週か後でやることになっているのでお楽しみに。結論先に言っておくと、人間と同じ大きさになったカマキリは弱いです。</div>
+				<p></p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#linear" data-icon="arrow-l">線型性</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>

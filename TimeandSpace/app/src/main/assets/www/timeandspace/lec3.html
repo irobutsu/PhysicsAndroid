@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,target-densityDpi=device-dpi,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>第３講　静止しているのは誰？</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery-1.8.2.min.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.2.0.min.js" type="text/javascript"></script>
+	<script src="Vector.js" type="text/javascript"></script>
+	<script src="Yajirushi.js" type="text/javascript"></script>
+	<script src="MovingObject.js" type="text/javascript"></script>
+	<script src="train.js" type="text/javascript"></script>
+	<style type="text/css">
+	 .figure {
+	   margin:0pt auto;
+	 }
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .floatnone{
+	   float:none;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:13px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<title>第３講　静止しているのは誰？</title>
+	<script type="text/javascript">
+	 var ct1,ct2,ct3,ct4,lastct;
+	 var tcanvas1,wcanvas1,tcanvas2,wcanvas2;
+	 var firstCall=true;
+	 function initImages() {
+	   if( sky == undefined ) {
+		 sky=new Image();
+		 sky.src="sky.jpg";
+	   }
+	 }
+	 $(document).delegate('#page1','pageinit',function(e) {
+	   initImages();
+	   a=0;
+	   v=0.5;
+	   t=0;
+       tcanvas1 = document.getElementById("traincanvas");
+	   wcanvas1 = document.getElementById("worldcanvas");
+	   tcanvas=tcanvas1;
+	   wcanvas=wcanvas1;
+	   init();
+	   if( firstCall ) {
+		 anime();
+		 firstCall=false;
+	   }
+	 });
+	 $(document).delegate('#page1','pageshow',function(e) {
+	   a=0;
+	   t=0;
+	   tcanvas=tcanvas1;
+	   wcanvas=wcanvas1;
+	   v=Number($('#slider').val());
+	   init();
+	 });
+	 $(document).delegate('#page2','pageinit',function(e) {
+	   initImages();
+	   a=0.5;
+	   v=0;
+	   tcanvas2 = document.getElementById("traincanvas2");
+	   wcanvas2 = document.getElementById("worldcanvas2");
+	   tcanvas=tcanvas2;
+	   wcanvas=wcanvas2;
+	   t=0;
+	   init();
+	   if( firstCall ) {
+		 anime();
+		 firstCall=false;
+	   }
+	 });
+	 $(document).delegate("#page2",'pageshow',function(e) {
+	   t=0;
+	   tcanvas=tcanvas2;
+	   wcanvas=wcanvas2;
+	   v=Number($('#sliderv').val());
+	   a=Number($('#slidera').val());
+	   init();
+	 });
+	 function throwUp() {
+	   t=0;
+	   box.setXY(0,-0.25);
+	   box.setVXY(0,-0.92);
+	 }
+	 function fallFromTop() {
+	   t=0;
+	   box.setXY(0,-1.35);
+	   box.setVXY(0,0);	
+	 }
+	 function fallFromTop2() {
+	   t=0;
+	   box.setXY(0,-1.35);
+	   box.setVXY(0,0);	
+	 }
+	 var zanzouFlg=0;
+	 var zanzouList;
+	 function zanzou() {
+	   if( zanzouFlg==0 ) {
+		 zanzouList=new Array();
+		 zanzouFlg=1;
+		 $("#zanzou1").siblings('.ui-btn-inner').children('.ui-btn-text').text("残像記録停止");
+		 $("#zanzou2").siblings('.ui-btn-inner').children('.ui-btn-text').text("残像記録停止");
+	   } else if( zanzouFlg==1 ){
+		 zanzouFlg=2;
+		 $("#zanzou1").siblings('.ui-btn-inner').children('.ui-btn-text').text("残像記録消去");
+		 $("#zanzou2").siblings('.ui-btn-inner').children('.ui-btn-text').text("残像記録消去");
+	   } else {
+		 zanzouFlg=0;
+		 $("#zanzou1").siblings('.ui-btn-inner').children('.ui-btn-text').text("残像記録開始");
+		 $("#zanzou2").siblings('.ui-btn-inner').children('.ui-btn-text').text("残像記録開始");
+	   }
+	 }
+	 function startstop() {
+	   if( moveFlg ) {
+		 moveFlg=false;
+		 $("#startstop").siblings('.ui-btn-inner').children('.ui-btn-text').text("一時停止解除");
+	   } else {
+		 moveFlg=true;
+		 $("#startstop").siblings('.ui-btn-inner').children('.ui-btn-text').text("一時停止する");
+		 anime();
+	   }		
+	 }
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>第３講　静止しているのは誰？</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　前回は「地球が止まっているのか、それとも太陽が止まっているのか」という話をしました。そういうことを考えていくと「止まっているとはそもそもどういうことか」というところまで考えてなくてはいけなくなります。</p>
+		<h3>素朴な疑問ほど答えにくいものはない</h3>
+		<p>　さて、まずひとつの「そぼくなぎもん」から始めましょう。</p>
+
+		<div class="setsumei">
+		  　漫画家の西原理恵子さんが、週刊紙にエッセイを連載していて、これがなかなか面白い。麻雀ばっかりしている独身の変な女性漫画家の頭の中が、あまりにとてつもなく奇妙で笑ってしまうのだ。<br>
+		  その、西原さんのエッセイの中に、次のような疑問を投げかけたものがあった。<br>
+		  実は私にはずーーっと不思議だったのだが、バカにされるかもしれないので人前では言えなかった疑問がある。こっそりきいて、何度教えてもらってもわからんのだ。思いきって言う。<br>
+		  走っている電車の中で飛びあがった時、どうして飛び上がったその、同じ地点におりてくるのだ。変じゃないか。<br>
+		</div>
+		<p align="right">―「おもしろくても理科」（清水義範著）より</p>
+		<p></p>
+		<p>　西原さんの疑問にあなたは答えられるでしょうか？---引用した「おもしろくても理科」の中では、著者の清水義範氏が、この説明に悪戦苦闘しています。</p>
+		<p>　さて、実際この疑問に納得いくように答えることは非常に難しいのですが、ではなぜ難しいのか、というところを考えてみましょう。なぜこんな話から始めたかというと、ここまでで話してきた「地球が動いているのか、太陽が動いているのか？」ということを考えるうえでとても重要な疑問だからです。</p>
+
+		<p>というのは、コペルニクスやガリレオなど、中世において地動説（太陽が止まっていて地球が動いている）を唱えた人が多く投げかけれられる疑問が</p>
+
+		<div class="setsumei">地球が動いているというのなら、我々は振り落とされてしまうはずだ。</div>
+
+		<p>というものだったからです。この点我々現代人はガリレオよりも楽な状況にいます。だって「電車や飛行機に乗った時のことを考えてごらん」と言えるので（ガリレオは船で説明しています）。</p>
+
+
+		<img src="oiteiku.png" width="30%">
+		<p>　地球が動いているとすれば振り落とされるだろう、という考え方は、自分が乗っている物体（昔なら馬車とかなのでしょうか）が動き出した時に放り出されるイメージが残っているからでしょうか。「自分」は「この場所」に静止していて、地球だけが動いていってしまう、というイメージを持ってしまうからでしょう。</p>
+
+		<p>　では、「動き出した馬車」から振り落とされることはあっても、「動いている地球」からは振り落とされないのはなぜでしょう？？（違いがわかりますか？）</p>
+
+
+		<h3>アリストテレス的考え---素朴な直感をそのまま法則化する</h3>
+
+		<p>　ここで重要になってくるのが、物体の運動に関してのアリストテレス的な考え方とニュートン的な考え方、その違いです。アリストテレスは「哲学者」と呼ばれます。「物理学者」とはあまり呼ばれません。しかし、アリストテレスの生きていた時代には、この二つの区別はないといっていいでしょう。「自然を考える」ことも「人間を考える」ことも、全部哲学者の仕事だったのです。</p>
+
+		<p>　アリストテレスとニュートン、二つの考え方の、もっとも重要な違いは、アリストテレスが「運動するものは何であれ他のものによって運動させられる」と考えたことです。さらに「運動を引き起こすものは運動しているものと接触している」とも考えています。この考え方は実にもっともに聞こえます。それは我々の日常的経験からくる「ものは外から力を加えなければ動かない」という<strong>`直感'</strong>と一致しているからです。しかし、この実にもっともな<strong>'直感'</strong>が実は誤っているのです（そしてそれが、上の疑問につながってきます）。では、どこがおかしいのか。</p>
+
+		<p>　アリストテレスの考え方の根底には何があったかというと、「目的論的秩序」という言葉で表されています。たとえば物体が落下するのは、物体の本来いるべき位置が地球の中心だから、そこを目的として運動するから、と説明します。そして目的地に到達すると、そこで静止すると考えていました。つまり「動く」ことには何か原因がなくてはいけないと考えたのです。</p>
+
+		<p>　これを読んで「それでいいじゃないか」と思ったとしたら、あなたもアリストテレス同様、<strong>`直感'</strong>の罠に落ちていることになります。というのは、この「運動するには理由がいるはずだ」という<strong>`直感'</strong>が（おそらくは）次のようにつながることが、「電車でジャンプしたら後ろに降りるような気がする」という間違いに導くからです。</p>
+
+		<img src="densha.png" width="70%" class="floatnone">
+
+		<p>　なんとなく「電車と足が接しているから人間は電車に運ばれている」と考えていませんか。これはある程度は（実は、電車が発車したり停車したりする時に関しては）正しいのですが、電車が等速で走っている時については正しくないのです。このアリストテレス的考え方の強みは、見た目からくる<strong>`常識'</strong>に即しているということです。これが改変されるまで、アリストテレスの時代である紀元前４世紀からガリレオが登場する17世紀まで待たなくてはいけなかったのも、この「<strong>`常識'</strong>を味方につけた」強みゆえでしょう。</p>
+
+		<p>　もう一つのアリストテレスの自然観の特徴は、自然現象を天体などの「天上の世界」と地球表面の「地上の世界」に分け、別の法則に従っていると考えていることです。天体（月とか太陽とか）は誰にも押されることなく、地球の回りを回っている<span class="footnote">もちろん実際には太陽の回りを地球が回っている（地動説）んですが、アリストテレスは地動説ではなく天動説で考えています。</span>のに対して、地球上では力を加えない限り運動は起きません（というのが<strong>`常識'</strong>です）。天上の世界は変化することなく同じ運動（円運動）を行い、地上の世界では物体はさまざまに動き回り、刻一刻と変化していく、という考え方をします。アリストテレスが天動説にこだわったのは、まさにこの天上と地上の分離という考え方に固執したからだ、と言っていいでしょう。ガリレオやニュートンは逆に「天も地上も同じ法則で動いている」ということを見つけていくことになります。</p>
+		<div class="A">　ここで、授業では、台車の上に乗って、動かしてもらいながら（ジャンプは危ないので）真上にボールを投げる、という実験をしてみせたが、いまいちわかりにくかった様子。そこで、こういう時にはコンピュータに頼ることにした。</div>
+		<div class="setsumei">　では、次のページで電車の中で起こることをアニメーションで見ましょう。</div>
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page1" data-icon="arrow-r">「電車の中で起こること」へ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page1">
+	  <div data-role="header">
+		<h1>電車の中で起こること</h1>
+	  </div>
+	  <div data-role="content">
+		<div class="figure"><canvas id="traincanvas" width="200" height="80" ></canvas></div>
+		<br>
+		<div>　上の図は、電車の中での運動の様子を表しています。物体をつかんで投げることができます。</div>
+		<br>
+		<div class="figure"><canvas id="worldcanvas" width="600" height="300" ></canvas></div>
+		<div>
+		  <button data-inline="true" onClick="t=0; zanzouList=new Array();">電車を出発点に戻す</button>
+		  <button data-inline="true" onClick="fallFromTop(); zanzouList=new Array();">天井から初速度０で落とす</button>
+		  <button data-inline="true" onClick="throwUp(); zanzouList=new Array();">床から投げ上げる</button>
+		  <button data-inline="true" onClick="zanzou();" id="zanzou1">残像記録開始</button>
+		  <button data-inline="true" onClick="startstop();" id="startstop">一時停止する</button>
+		</div>
+		<div data-role="fieldcontain">
+		  <label for="slider">電車の速度（一定） :</label>
+		  <input type="range" name="slider" id="slider" value="0.5" min="0" max="1" step="0.01" onChange="v=Number($('#slider').val()); t=0;" />
+		</div>
+		<p>　電車の中での放物運動を、外から見てみる、というプログラムです。上の図が電車内部の視点での運動の様子を、下の図は電車外部の視点での運動の様子を示しています。</p>
+		<p>　上の図の中にある白い□で表された物体は、マウスなどでつかんで動かすことができます。持ち上げて離せば落ちます。電車の中で真下に落ちる運動が、外から見ると放物線運動になっていることがわかります。</p>
+		<p>　物体から生えている、<img src="Fyajirushi.png">のような矢印は力を表現しています。<img src="Vyajirushi.png">のような矢印は速度です。速度の矢印の先から生えている<img src="Ayajirushi.png">のような矢印は加速度です。</p>
+		<p>　どんなふうに運動しているかをよく見たい、という人は、上の「残像記録開始」というボタンを押すと、物体の動いた後が<span class="red">○</span>で表現されます。ある程度の数(800ぐらい)の残像を記録するか、バタン「残像記録停止」を押すと記録を停止します。その後「残像記録消去」を押すと残像を消します。</p>
+		<p>　電車内での運動が電車外からはどのように見えるのか、を実感してください。</p>
+		<div class="setsumei">
+		  　　プログラムについて御質問、御要望、バグ報告などございましたら、<a href="mailto:maeno@sci.u-ryukyu.ac.jp">前野昌弘へメール</a>くださるか、または、twitterにて<a href="https://twitter.com/irobutsu">irobutsu</a>までメンションしてください。
+		</div>
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page0" data-icon="arrow-r">講義前半のページへ</a>
+		<a href="#page0" data-icon="back">第３講最初に戻る</a>
+		<a href="#lastpage" data-icon="arrow-r">講義後半のページへ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="lastpage">
+	  <div data-role="header">
+		<h1>ガリレオが見つけたこと---周到な観察が法則を導く</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　「それでも地球は回っている」という言葉で有名なガリレオ・ガリレイですが、彼は次に続くニュートンとともに、アリストテレス的考え方を否定し改革していくうえで重要な役割を果たしました。</p>
+		<p>　その業績としては、天動説から地動説への転換がよく言われますが、実はより重要なのは、前節で述べた「ものは外から力を加えなければ動かない」という<strong>`常識'</strong>を再検討し、本当の法則を導き出した、という業績です。それが後にニュートンが運動の法則という形で取り入れる、慣性の法則、すなわち、「ものは外から力を加えなければ動かないか、同じ速さで一定方向に運動を続ける」という法則です。「同じ速さで一定方向に運動を続ける」という可能性を含むところが、もっとも大きな違いです。</p>
+		<p>　ガリレオが慣性の法則を説明するために行った実験は以下の図のようなものです。</p>
+		<p><img src="shamen.png" class="floatnone" width="80%"></p>
+		<p>　ガリレオは実際に斜面の上で物体を転がす実験を何度も行い、つるつるした（摩擦の少ない）面では、斜面の形に限らず、元とほぼ同じ高さまで物体が登ってくることを確かめました。では、図の右側にあるのが斜面ではなく、平面だったら物体はどこまで行くでしょう？</p>
+		<p>　実際にやってみたとしたらもちろん、ある程度進めば物体は止まるでしょう。でも、床がつるつるしていればつるつるしているほど、物体は遠くまで進みます。もし、摩擦の影響を完全に排除できるのであれば、物体は無限の彼方まで進んでいくことになるだろう、というのがガリレオの考え方です。</p>
+		<p>　以上のように実験をしながら一つずつ確かめていくと、アリストテレス的な「物体は力を受けなければ止まっている」という考え方<span class="footnote">この逆「物体が止まっているなら力を受けてない」は間違いではありません。逆もまた真ならず。</span>は実は間違っているのではないか、という考えに至ります。実際には「力を受けなければ止まっているか、まっすぐに進み続ける」というのが本当なのです。ただ、我々は摩擦という力が常に働く世界に住んでいるので、そのことが<strong>`常識'</strong>とならないのです。</p>
+		<p>　ガリレオは摩擦なども含めていっさいの外因を取り去らない限り「力を受けなければ」という条件が達成できないので、運動の法則を考える時には外因を取り去った理想的な世界（実際には実現できない）を考える必要がある、と述べています。</p>
+		<p>　この考えからすると、ジャンプした人は自分の持っていた速さを（電車から離れた後も）失うことなく運動し続けることになります。だから、ジャンプの後も元に戻ってくるわけです。</p>
+		<img src="densha2.png" width="70%" class="floatnone">
+		<p>　物体は、たとえ他から力を受けなかったとしても、速度がなくなってしまったりはしない、というのがガリレオの導いた結論であり、これが</p>
+		<p align="center"><span class="fukidasi">慣性の法則</span></p>
+		<div class="setsumei"> ある物体に力が働いていないならば、その物体は静止するもしくは等速直線運動を続ける。</div>
+		<p>です。この法則は日常の感覚にはあいません（ガリレオの実験のようにボールを転がすと、いつか止まります）が、それは日常生活においては「力が働いていない」ことは（ほぼ）ありえないからです。</p>
+		<p>　ガリレオは実験を繰り返すことで「摩擦」や「空気抵抗」など、「運動を邪魔する力」がない場合に何が起こるかをイメージすることができ、それから「法則」を見つけることができました。我々の<strong>`常識'</strong>は「摩擦」「空気の抵抗」などの「邪魔」によって隠された世界の中で作られたものです。その「邪魔」の部分を注意深く取り除いていくことで、本当の法則が見えてきます。<strong>`常識'</strong>を<strong>`法則'</strong>にすることの難しさを、この歴史が証明しています。</p>
+		<p>　こうしてガリレオらのおかげで人類は物体の速度というものが（アリストテレス的に考えるとそうであるように）「誰か（何か）が力を及ぼしてないとなくなってしまうもの」ではなく「力が働いていなければ一定のままでとどまるもの」であることを知りました。</p>
+		<p>　この慣性の法則があるおかげで電車でジャンプすると「元の場所」に降りるし、人類が動いている地球から放り出されることもありません<span class="footnote">なお、ここで「でも地球や太陽は円運動しているのでは？？」と疑問を持った人もいるでしょう。円運動は厳密には「等速直線運動」ではないので話は少し違ってきます。しかし幸いなことに、円運動と言っても十分大きな半径の円ならば、直線運動と考えても大きな差は出ません（小さな差なら出ます！）。</span>。</p>
+		<p>　さて、この第３講のタイトルを「静止しているのは誰？」の答えを出しておきましょう。等速運動している電車の中では、人が経験する現象は全く地上と同じです。そして、その地上（地球）もすごい速度<span class="footnote">自転は、秒速0.46キロ、公転は秒速30キロ。</span>で動いているのですが、それを感じることができないのは、この慣性の法則のおかげです。地動説を唱えたガリレオが慣性の法則の発見者でもあるのは、もちろん偶然ではないのです。</p>
+		<p>　この法則のおかげで我々は「今私は止まっているのか、それとも回りの物体と一緒に等速直線運動しているのか？」を判定することができません。</p>
+		<p>　「止まっているのは地球か太陽か」と悩んだ末に得た結論が（等速直線運動に限るとはいえ）「止まっているのは誰か判定できないのが宇宙の法則だ」とは、なかなか愉快なことではないですか。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#lastpage" data-icon="arrow-l">講義後半に戻る</a>
+		<a href="#page0" data-icon="back">第３講最初に戻る</a>
+		<a href="#pageqa" data-icon="arrow-r">問題の解答と感想・コメントへ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="pageqa">
+	  <div data-role="header">
+		<h1>問題の解答と感想・コメント</h1>
+	  </div>
+	  <div data-role="content">
+		<div class="setsumei">今日の問題<br>
+		  　バスが急発車して状況を思い浮かべてください。<br>
+		  <img src="hassha.png" width="30%" class="floatnone">
+		  <br>バス内にいると、突然後ろに力がかかって後ろにこけた、というふうに感じます。では、同じ状況をバスの外から見るとどういうふうに見えるでしょうか？
+		  <br><br>↓の状態までは黒板に絵が書いてありました。
+		</div>
+		<img src="hasshaQ.png" class="floatnone" width="32%">
+		<p>
+		  　正解は次の通りです。人間の身体（特に頭の部分）は慣性の法則により動かないのに、バスと接している足の部分はバスと一緒に前進するので、結果としてこけるわけです。
+		</p>
+		<img src="hasshaA.png" class="floatnone" width="32%">
+		<p>　今回多かった間違いは、逆に前につんのめっているもの。</p>
+		<img src="hassha1.png" class="floatnone" width="32%">
+		<p>　これは、発射直後でなくその後少したった後でならありえるかもしれません。しかし、バスから見て「後ろにこけている」時の絵なので、外から見ても人間の傾きは同じのはずですね。</p>
+		<div class="setsumei">感想・コメントなど</div>
+		<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+		<p></p>
+		<div class="Q">素朴な疑問に答えるのは難しいなぁ、と思った。</div>
+		<div class="A">全くそのとおりですね。</div>
+		<p></p>
+		<div class="Q">私は電車の中でジャンプしたら後ろに落ちると思ってました。</div>
+		<div class="A">一度（注意しながら）試してみてください。</div>
+		<p></p>
+		<div class="Q">電車の中を飛んでいる虫にとってはどうなのだろう？</div>
+		<div class="A">その場合、電車の中の空気が電車と一緒に動いている、という点を考えなくてはいけませんね。</div>
+		<p></p>
+		<div class="Q">ボールを投げた後に急ブレーキをかけてもボールは自分の元に戻りますか？</div>
+		<div class="A">そりゃ駄目です。等速運動じゃなくなってますから</div>
+		<p></p>
+		<div class="Q">電車から手を出した場合はどうなのだろう？？</div>
+		<div class="A">これも「風」というもう一つの力が関係してきますね。</div>
+		<p></p>
+		<div class="Q">地球が秒速30kmで動いているという公式がありますか？</div>
+		<div class="A">この速度は万有引力の法則から導けます。あと、観測により地球の軌道などはわかっていて、１年で一周ということもわかってますから、計算できます。</div>
+		<p></p>
+		<div class="Q">今日の実験は二人で押せばよかったのでは？</div>
+		<div class="A">来年はそうやってみましょうか。</div>
+		<p></p>
+		<div class="Q">宇宙に中心はありますか？</div>
+		<div class="A">ありません。どれが止まっているかと決められないのように、どこが中心かも決められないと思います。</div>
+		<p></p>
+		<div class="Q">銀河中心には太陽よりも大きい星があるんですか？</div>
+		<div class="A">太陽より大きい星はそこらじゅうにあります。銀河中心が重いのは、星が集まっているからという理由が一つです（真ん中にブラックホールがいるという話もある）。</div>
+		<p></p>
+		<div class="Q">グレートアトラクターについて知りたいです。</div>
+		<div class="A">そこまで授業できるかなぁ。</div>
+		<p></p>
+		<div class="Q">「テラフォーマーズ」という漫画で、人類が火星に住むには寒すぎるということで、黒いゴキブリを火星に大量に放ち、太陽の光を吸収させて地表を温めるという話がありました。これは理論的に可能なんですか？</div>
+		<div class="A">ゴキブリかどうかはともかく黒いもので覆う程度ではまだまだ火星は寒いでしょう。</div>
+		<p></p>
+		<div class="Q">地球の自転や公転が止まるとどうなるのでしょうか？　人はふっとびますか？</div>
+		<div class="A">地球の公転が止まってもその瞬間に人が止まらないとすると、人は地球から見ると秒速30キロで飛んでいきますね。</div>
+		<p></p>
+		<div class="Q">摩擦が無視できる理想的な乗り物があったら、東京→横浜の移動も東京→大阪の移動も必要なエネルギーは等しくなるんですか？</div>
+		<div class="A">もし摩擦がないなら、そうなります。</div>
+		<p></p>
+		<div class="Q">もし止まっている物体があるとするとそれは私たちからみるとものすごい速さである方向に動いているように見えると思ったのですが…。</div>
+		<div class="A">その「止まっている」ってのは誰からみて（何に対して）止まっているのか、それが問題だ。</div>
+		<p></p>
+		<div class="Q">ガリレオの実験はかしこいと思った。物理学者すごい。</div>
+		<div class="A">先人の知恵ってのはたいしたものです。</div>
+		<p></p>
+		<div class="Q">直感を信じずに自分を客観視するって大切だなぁ、と思った。</div>
+		<div class="A">物理に限らず、大事な姿勢ですね。</div>
+		<p></p>
+		<div class="Q">「動いてないものはなんなんだろう」と思っていたが、まさかなかったとは。</div>
+		<div class="A">「なかった」というよりは「動いてない」ということを定義することができない。</div>
+		<p></p>
+		<div class="Q">テレビで走っている車から後ろにボールを投げると止まるというのをやっていた。</div>
+		<div class="A">まさに今日の話ですね。</div>
+		<p></p>
+		<div class="Q">「重力はどうやって伝わっているのか」と疑問に思いました。</div>
+		<div class="A">それはできたら、授業の最後の方でやりましょう。</div>
+		<p></p>
+		<div class="Q">どうして惑星は球体なんですか？</div>
+		<div class="A">重力で固まると、その形が安定だからです。</div>
+		<p></p>
+		<div class="Q">上昇するエレベータが急停止したら中の人は上に飛び上がるのだろうか？</div>
+		<div class="A">ほんとに「急」停止ならそうなりますが、たいていのエレベータはそんなに速くないので、そんなすごい急停止はできません。</div>
+		<p></p>
+		<div class="Q">日常の「なぜ？」を考えるのは科学というよりは哲学のような気がしました。</div>
+		<div class="A">だから、昔は哲学と科学って同じものだったんですよ。</div>
+		<p></p>
+		<div class="Q">ブラックホールはあるそうですが、ホワイトホールはあるのですか？</div>
+		<div class="A">ホワイトホールは理論上の存在で、実在しているかどうかはまったくわかりません。</div>
+		<p></p>
+		<div class="Q">先生が一番おどろいた、今までの常識をひっくり返す科学のできごとはなんですか？</div>
+		<div class="A">最近だとBICEP2という実験がビックバンの時の重力波の名残を観測したというニュースがありましたが、これがほんとだったらすごいことだなぁ、と思います。</div>
+		<p></p>
+		<div class="Q">電車の中の光の速さは変わりますか？</div>
+		<div class="A">それは相対性理論の話をする時に、くわしくやります。</div>
+		<p></p>
+		<div class="Q">月からつり革をつるして地表まで下ろしてきて、それにつかまっていれば移動可能ですか？</div>
+		<div class="A">月は地球の周りを一月に１度公転していて、地球は１日に１度自転しているわけですから、速度があいません。同じことを静止衛星からやることは理論的には可能ですが、今知られている材料ではどんな材料を使っても、「つり革」が切れてしまいます。</div>
+		<p></p>
+		<div class="Q">宇宙は膨張しているといいますが、膨張する與儀があるということですか？宇宙の外はどうなっているのですか？</div>
+		<div class="A">「外」なんて考えてはいけません。宇宙は体積を増加させてはいますが、それは「外」に向かって広がっているのではないので。</div>
+		<p></p>
+		<div class="Q">現代において考えられる次元はどこまでですか？（１次元は点、２次元は線、３次元は立体、４次元は時間移動？）</div>
+		<div class="A">正確には１次元が線、２次元は面で、３次元が立体。これに時間を合わせると４次元です。それより先があるかも、という話もありますが、あくまで今のところは理論上のお話。　</div>
+		<p></p>
+		<div class="Q">慣性の法則を使った機械にはどんなものがありますか？</div>
+		<div class="A">この世に「慣性の法則を使ってない機械」は存在しません。物理法則というのは全ての物体に対して成立するものなので、どんなふうに物体が動いていても、常に慣性の法則に従って動いているのです。</div>
+		<p></p>
+		<div class="Q">原子が動いて熱が発生すると聞いたことがあるのですが、その熱はどうなるのでしょうか？</div>
+		<div class="A">周りに伝わって、周りの温度があがります（ということはつまり、周りの原子の運動が激しくなるということです）</div>
+		<p></p>
+		<div class="Q">宇宙が膨張すると太陽と地球の距離も伸びますか？</div>
+		<div class="A">太陽と地球の距離は万有引力の法則と運動の状態で決まっているからなぁ。</div>
+		<p></p>
+		<hr>
+		<p align="center"><a href="./lec2.html">←第２講に戻る</a>　<a href="./index.html">「時間と空間」講義録に戻る</a>　<a href="./lec4.html">第４講に進む→</a></p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#lastpage" data-icon="arrow-l">講義後半に戻る</a>
+		<a href="#page0" data-icon="back">第３講最初に戻る</a>
+	  </div>
+	</div>
+  </body>
+</html>

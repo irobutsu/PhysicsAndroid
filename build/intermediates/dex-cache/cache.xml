@@ -2,39 +2,18 @@
 <items version="2" >
 
     <item
-        jar="/Users/maeno/Dropbox/AndroidStudioProjects/constDE/libs/android-support-v4.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="3b20dc871d179ba476082efe543dc1b38db46e30">
-        <dex dex="/Users/maeno/Dropbox/AndroidStudioProjects/constDE/build/intermediates/pre-dexed/debug/android-support-v4-2bab11a1f6aa0b45d4cad01aaac105aebcfd4b0c.jar" />
-    </item>
-    <item
-        jar="/Users/maeno/Dropbox/AndroidStudioProjects/Magnets/libs/android-support-v4.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="307c1cc532eabbf1d135b43e5c983c9da700449d">
-        <dex dex="/Users/maeno/Dropbox/AndroidStudioProjects/Magnets/build/intermediates/pre-dexed/debug/android-support-v4-f056b2a79217d5abf8aff485d3f90162fcfe7aa8.jar" />
-    </item>
-    <item
-        jar="/Users/maeno/Dropbox/AndroidStudioProjects/pde/libs/android-support-v4.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="3b20dc871d179ba476082efe543dc1b38db46e30">
-        <dex dex="/Users/maeno/Dropbox/AndroidStudioProjects/pde/build/intermediates/pre-dexed/debug/android-support-v4-2b2cdd59cd1e954b13d6a6a81d511cc8dfbf1edf.jar" />
-    </item>
-    <item
-        jar="/Users/maeno/Dropbox/AndroidStudioProjects/pde/libs/cordova-3.1.0.jar"
+        jar="/Users/maeno/Dropbox/gitHub/PhysicsAndroid/YkwkrTD/libs/cordova-3.1.0.jar"
         jumboMode="false"
         revision="23.0.2"
         sha1="3e9938fb17cf1a413f42cf92b3988a5b8d1f3d54">
-        <dex dex="/Users/maeno/Dropbox/AndroidStudioProjects/pde/build/intermediates/pre-dexed/debug/cordova-3.1.0-b1792adad94686935bb78e867e6e6cd1aac78e22.jar" />
+        <dex dex="/Users/maeno/Dropbox/gitHub/PhysicsAndroid/YkwkrTD/build/intermediates/pre-dexed/debug/cordova-3.1.0_f90520e588959184dfc44916fb116ab46bf34964.jar" />
     </item>
     <item
-        jar="/Users/maeno/Dropbox/AndroidStudioProjects/constDE/libs/cordova-3.1.0.jar"
+        jar="/Users/maeno/Dropbox/gitHub/PhysicsAndroid/YkwkrTD/libs/android-support-v4.jar"
         jumboMode="false"
         revision="23.0.2"
-        sha1="3e9938fb17cf1a413f42cf92b3988a5b8d1f3d54">
-        <dex dex="/Users/maeno/Dropbox/AndroidStudioProjects/constDE/build/intermediates/pre-dexed/debug/cordova-3.1.0-52dbf9264769f1f806a5ad2ae91503321a17043b.jar" />
+        sha1="3b20dc871d179ba476082efe543dc1b38db46e30">
+        <dex dex="/Users/maeno/Dropbox/gitHub/PhysicsAndroid/YkwkrTD/build/intermediates/pre-dexed/debug/android-support-v4_e60ca28c6c99978ef96e077543a5cdbe8e1002d8.jar" />
     </item>
 
 </items>

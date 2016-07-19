@@ -1,0 +1,604 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebText 動いてよくわかる熱力学（カルノーサイクル）</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="dragmanscreen.js" type="text/javascript"></script>
+    <script src="draggablepoint.js" type="text/javascript"></script>
+	<script src="vector.js" type="text/javascript"></script>
+	<script src="yajirushi.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    $(document).delegate('#carnot','pageinit',function(e) {
+		sc=new DragmanScreen("carnotcanvas",14,10,0.7);
+		scp=new RescaleScreen("pistoncanvas",14,4,0.7);
+		sct=new RescaleScreen("tempcanvas",10,1,0.4);
+		sc.setBottom(-0.5);
+		sc.setLeft(-1);
+		scp.setBottom(-1);
+		scp.setLeft(-1);
+		sct.setBottom(0);
+		sct.setLeft(0);
+		sc.gobackOriginalSize();
+		scp.gobackOriginalSize();
+		sct.gobackOriginalSize();
+		yaP=new Yajirushi("rgba(200,200,100,0.9)");
+		yaQ=new Yajirushi("rgba(200,200,200,0.9)");
+		ct=sc.canvas.getContext("2d");
+		ctp=scp.canvas.getContext("2d");
+		ctt=sct.canvas.getContext("2d");
+		sc.writeContents=function() {
+			write_func();
+		}
+	   write_temp0();
+	   point1=new DraggablePoint(7,3,0.4,"rgba(255,0,0,0.5)");
+	   point2=new DraggablePoint(6,2,0.4,"rgba(0,0,255,0.5)");
+	   point1.setXY=function(xx,yy,x0,y0,x1,y1) {
+		 this.x=xx;
+		 this.y=Ta/xx;
+		 if( this.y > sc.topy ) {
+		   this.y=sc.topy;
+		   this.x=Ta/this.y;
+		 }
+		 report();
+	   };
+	   point2.setXY=function(xx,yy,x0,y0,x1,y1) {
+		 this.x=xx;
+		 this.y=Tb/xx;
+		 if( this.y > sc.topy ) {
+		   this.y=sc.topy;
+		   this.x=Tb/this.y;
+		 }
+		 report();
+	   };
+	   sc.pushDragObjList(point1);
+	   sc.pushDragObjList(point2);
+	   reset();
+	   report();
+	   go();
+     });
+	 function reset() {
+	   point1.x=2;
+	   point1.y=8;
+	   point2.x=10;
+	   point2.y=1;
+	 }
+	 var minT=4;
+	 var maxT=25;
+	 var N=50;
+	 function report() {
+	   var V1=point1.x;
+	   var P1=point1.y;
+	   var T1=Ta;
+	   var V2=point2.x;
+	   var P2=point2.y;
+	   var T2=Tb;
+	   //point3は、温度がT2で、断熱過程によりpoint1から到着できる点
+	   var V3=V1*Math.pow(T1/ T2, 1.0/ gammamone);
+	   var P3=T2/ V3;
+	   //point4は、温度がT1で、断熱過程によりpoint2から到着できる点
+	   var V4=V2*Math.pow(T2/ T1,1.0/ gammamone);
+	   var P4=T1/ V4;
+	   // サイクルは1→4→2→3→1と回る。
+
+	   
+	   $("#akaondo").html(marume(T1));
+	   $("#aoondo").html(marume(T2));
+	   var ratio;
+	   var tokeimawari;
+	   ratio=1-T2/T1;
+	   if( V3<V2 ) {
+		   tokeimawari=true;
+	   } else {
+		   tokeimawari=false;
+	   }
+	   $("#ratio").html(ratio);
+
+	   // 等温操作での熱量の計算は仕事でいいから、RT∫dV/V = RT log(V)
+	   var Qin,Qout;
+	   Qin=T1*Math.log(V4/V1);
+	   Qout=T2*Math.log(V2/V3);
+	   $("#Qin").html(marume(Qin));
+	   $("#Qout").html(marume(Qout));
+	   $("#Work").html(marume(Qin-Qout));
+	   
+	   
+	 }
+	 function marume(x) {
+	   var xx=100*x;
+	   return Math.round(xx)/100;
+	 }
+	 var gamma=5.0/ 3.0;
+	 var gammamone=2.0/ 3.0;
+
+     function write_func() {
+	   sc.clearALL();
+	   sc.writeCoordinate();
+	   point1.write(ct);
+	   point2.write(ct);
+	   
+	   var V1=point1.x;
+	   var P1=point1.y;
+	   var T1=Ta;
+	   var V2=point2.x;
+	   var P2=point2.y;
+	   var T2=Tb;
+
+	   // T1≧T2は保証されている。
+
+	   ct.strokeStyle="rgba(255,0,50,0.5)";
+
+	   //point3は、温度がT2で、断熱過程によりpoint1から到着できる点
+	   var V3=V1*Math.pow(T1/ T2, 1.0/ gammamone);
+	   var P3=T2/ V3;
+	   //point4は、温度がT1で、断熱過程によりpoint2から到着できる点
+	   var V4=V2*Math.pow(T2/ T1,1.0/ gammamone);
+	   var P4=T1/ V4;
+
+	   //point1→point4への等温過程
+	   var minV=T1/sc.topy;
+	   var maxV=sc.rightwx;
+
+	   var stepV41=(V4-V1)/ N;
+	   var stepV=(maxV-minV)/ N;
+	   ct.strokeStyle=rgb_temp(T1,minT,maxT-minT);
+
+	   ct.beginPath();
+	   ct.moveTo(minV,T1/minV);
+	   for(i=1; i<=N ; i++ ) {
+         ct.lineTo(minV+stepV*i,T1/(minV+stepV*i));
+       }
+	   ct.stroke();
+
+	   
+	   // point4→point2への断熱過程
+       ct.strokeStyle="rgba(100,0,100,0.5)";
+	   ct.beginPath();
+	   ct.moveTo(V4,P4);
+	   var stepV24=(V2-V4)/ N;
+	   for(i=1; i<=N ; i++ ) {
+         ct.lineTo(V4+stepV24*i,P4*Math.pow((V4/ (V4+stepV24*i)),gamma));
+       }
+	   ct.stroke();
+	   if( T1<T2 ) {
+		 ct.strokeStyle="rgba(255,0,50,0.5)";
+	   } else {
+		 ct.strokeStyle="rgba(0,255,255,0.5)";
+	   }
+	   // point2→point3への等温過程
+	   minV=T2/sc.topy;
+	   stepV=(maxV-minV)/N;
+	   var stepV32=(V3-V2)/ N;
+	   ct.strokeStyle=rgb_temp(T2,minT,maxT-minT);
+	   ct.beginPath();
+	   ct.moveTo(minV,T2/minV);
+	   for(i=1; i<=N; i++ ) {
+		 ct.lineTo(minV+stepV*i,T2/ (minV+stepV*i));
+	   }
+	   ct.stroke();
+       ct.strokeStyle="rgba(100,0,100,0.5)";
+	   ct.beginPath();
+	   ct.moveTo(V3,P3);
+	   // point3→point1への断熱過程
+	   var stepV13=(V1-V3)/ N;
+	   for(i=1; i<=N; i++ ) {
+         ct.lineTo(V3+stepV13*i,P3*Math.pow((V3/ (V3+stepV13*i)),gamma));
+	   }
+       ct.stroke();
+	   //if( t<=0 ) {
+		 //t=N*4+41;
+	   if( t>=N*4+40 ) {
+		   t=0;
+	   }
+	   var p,v;
+	   if( t<N ) {
+		 v=V1+stepV41*t;
+		 p=P1*V1/ v;
+	   } else if( t<N+10 ) {
+		 v=V4;
+		 p=P4;
+	   } else if( t<N*2+10 ) {
+		 v=V4+stepV24*(t-N-10);
+		 p=P4*Math.pow((V4/ v),gamma);
+	   } else if( t<N*2+20 ) {
+		 v=V2;
+		 p=P2;
+	   } else if( t<N*3+20 ) {
+		 v=V2+stepV32*(t-N*2-20);
+		 p=P2*V2/ v;
+	   } else if( t< N*3+30 ) {
+		 v=V3;
+		 p=P3;
+	   } else if( t< N*4+30){
+		 v=V3+stepV13*(t-N*3-30);
+		 p=P3*Math.pow((V3/ v),gamma);
+	   } else {
+		 v=V1;
+		 p=P1;
+	   }
+	   ct.fillStyle="rgb(0,0,0)";
+	   ct.beginPath();
+	   ct.arc(v,p,0.1,0,2*Math.PI,false);
+	   ct.fill();
+	   // write_piston(v,p,p*v,P1*V1,P2*V2,V4-V1,V2-V4);
+	   write_piston(v,p,p*v,maxT,minT,V1-V4,V4-V2);
+     }
+	 var yaP,yaQ;
+	 function write_piston(v,p,T,tmax,tmin,firstBouchou,secondBouchou) {
+	   // tmax > tminとは限らないことに注意。
+	   ctp.fillStyle="rgb(255,255,255)";
+	   ctp.fillRect(scp.leftwx,scp.bottomy,scp.w,scp.h);
+	   ctp.fillStyle="rgb(0,0,0)";
+	   ctp.fillRect(0,0,scp.w,2);
+	   ctp.fillStyle="rgb(255,255,255)";
+	   ctp.fillRect(0.1,0.1,scp.w,1.8);
+	   ctp.fillStyle="rgb(50,50,50)";
+	   ctp.fillRect(v,0.1,0.3,1.8);
+	   var tdiff=tmax-tmin;
+	   if( tdiff <0 ) {
+		 tdiff = -tdiff;
+		 tmin=tmax;
+	   }
+	   
+	   var i;
+	   for(i=0; i<4; i++ ) {
+		 yaP.setXY(v+0.04,0.5*i+0.25,p*0.5);
+		 yaP.setTheta(-0.5*Math.PI);
+		 yaP.setL(p*0.25);
+		 yaP.draw(ctp);
+	   }
+	   write_temp(T,tmin,tdiff);
+	   ctp.fillStyle=rgb_temp(T,tmin,tdiff);
+	   ctp.fillRect(0.1,0.1,v-0.1,1.8);
+	   var ofset=0;
+	   var firstS,secondS,thirdS,forthS;
+	   if( firstBouchou>0 ) {
+		 firstS="圧縮";
+		 thirdS="膨張";
+	   } else {
+		 firstS="膨張";
+		 thirdS="圧縮";
+	   }
+	   if( secondBouchou>0 ) {
+		 secondS="圧縮";
+		 forthS="膨張";
+	   } else {
+		 secondS="膨張";
+		 forthS="圧縮";
+	   }
+	   if( t<N ) {
+		 ofset=0;
+		   $("#now").html(
+			   "<span class='aka'>等温"+firstS+"</span>→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+	   } else if( t<N+10 ) {
+		   ofset = t-N;
+		   $("#now").html("等温"+firstS+"→<span class='aka'>熱浴を取り去る</span>→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+	   } else if( t<N*2+10 ) {
+		 ofset = 10;
+		   $("#now").html("等温"+firstS+"→熱浴を取り去る→"+"<span class='aka'>断熱"+secondS+"</span>→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+	   } else if( t<N*2+20 ) {
+		 ofset = N*2+20-t;
+		   $("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→<span class='aka'>熱浴で包む</span>→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+	   } else if( t<N*3+20 ) {
+		 ofset=0;
+		   $("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→<span class='aka'>等温"+thirdS+"</span>→熱浴を取り去る→断熱"+forthS+"→熱浴で包む→");
+
+	   } else if( t< N*3+30 ) {
+		 ofset = t-N*3-20;
+		   $("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→<span class='aka'>熱浴を取り去る</span>→断熱"+forthS+"→熱浴で包む→");
+
+	   } else if( t< N*4+30 ){
+		 ofset=10;
+		   $("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→<span class='aka'>断熱"+forthS+"</span>→熱浴で包む→");
+
+	   } else {
+		 ofset = 4*N+40-t;
+		   $("#now").html("等温"+firstS+"→熱浴を取り去る→"+"断熱"+secondS+"→熱浴で包む→等温"+thirdS+"→熱浴を取り去る→断熱"+forthS+"→<span class='aka'>熱浴で包む→</span>");
+
+	   }
+	   ctp.fillStyle=rgb_temp(T,tmin,tdiff);
+	   ofset *= 0.1;
+	   ctp.beginPath();
+	   ctp.moveTo(scp.leftwx,scp.topy);
+	   ctp.lineTo(scp.rightwx,scp.topy);
+	   ctp.lineTo(scp.rightwx,scp.topy-1+ofset);
+	   ctp.lineTo(-ofset,scp.topy-1+ofset);
+	   ctp.lineTo(-ofset,scp.bottomy+1-ofset);
+	   ctp.lineTo(scp.rightwx,scp.bottomy+1-ofset);
+	   ctp.lineTo(scp.rightwx,scp.bottomy);
+	   ctp.lineTo(scp.leftwx,scp.bottomy);
+	   ctp.closePath();
+	   ctp.fill();
+	   if( t< N) {
+		 writeQ(firstBouchou,p,v);
+	   } else if( t<N*3+20 && t> N*2+20 ) {
+		 writeQ(-firstBouchou,p,v);
+	   }
+	 }
+	 function writeQ(firstBouchou,p,v) {
+	   var xx;
+	   if( firstBouchou>0 ) {
+		 xx=0.125*p+0.05;
+		 yaQ.setTheta(0.5*Math.PI);	
+	   } else {
+		 xx=-0.125*p+0.05;
+		 yaQ.setTheta(-0.5*Math.PI);
+	   }
+	   yaQ.setL(0.25*p);
+	   yaQ.setXY(xx,1);
+	   yaQ.draw(ctp);
+	   var x1;
+	   x1=v/ 3;
+	   if( firstBouchou>0 ) {
+		 yaQ.setTheta(Math.PI);
+	   } else {
+		 yaQ.setTheta(0);
+	   }
+	   yaQ.setXY(x1,xx);
+	   yaQ.draw(ctp);
+	   x1 *= 2;
+	   yaQ.setXY(x1,xx);
+	   yaQ.draw(ctp);
+	   x1= v/ 3;
+		 if( firstBouchou>0 ) {
+			 yaQ.setTheta(0);
+		 } else {
+			 yaQ.setTheta(Math.PI);
+		 }
+	   yaQ.setXY(x1,2-xx);
+	   yaQ.draw(ctp);
+	   x1 *= 2;
+	   yaQ.setXY(x1,2-xx);
+	   yaQ.draw(ctp);
+	   x1= v/ 3;
+	 }
+	 function rgb_temp(T,tmin,tdiff) {
+	   var r=Math.ceil((T-tmin)/ tdiff*255);
+	   var b=255-r;
+	   var g=Math.ceil(b*0.8+50);
+	   return "rgb("+r+","+g+","+b+")";
+	 }
+	 function write_temp0() {
+	   var i;
+	   var step=sct.w/ N;
+	   for(i=0; i<N; i++ ) {
+		 ctt.fillStyle=rgb_temp(i,0,N);
+		 ctt.beginPath();
+		 ctt.moveTo(i*step,1);
+		 ctt.lineTo(i*step,0.5);
+		 ctt.lineTo((i+1.1)*step,0.5);
+		 ctt.lineTo((i+1.1)*step,1);
+		 ctt.closePath();
+		 ctt.fill();
+	   }
+	 }
+	 function write_temp(T,tmin,tdiff) {
+	   ctt.fillStyle="rgb(200,200,200)";
+	   ctt.fillRect(0,0,sct.w,0.5);
+	   var x;
+	   x=((T-tmin)/ tdiff);
+	   ctt.fillStyle="rgb(0,0,0)";
+	   ctt.beginPath();
+	   ctt.moveTo(x*sct.w,0.5);
+	   ctt.lineTo(x*sct.w+0.3,0);
+	   ctt.lineTo(x*sct.w-0.3,0);
+	   ctt.closePath();
+	   ctt.fill();
+	 }
+	 var t=0;
+	 var stopFlg=false;
+     function startstop() {
+       if( stopFlg ) {
+         stopFlg=false;
+         go();
+       } else {
+         stopFlg=true;
+       }
+     }
+     function go() {
+       if( stopFlg ) {
+         return;
+       } else {
+         write_func();
+         t++;
+         setTimeout("go();",200);
+       }
+     }
+	 var Ta=16;
+	 var Tb=10;
+	 function changeTA() {
+	   var t=Number($('#Ta').val());
+	   if( t<Tb ) {
+		 Ta=Tb;
+	   } else {
+		 Ta=t;
+	   }
+	   var Pa=Ta/point1.x;
+	   if( Pa > sc.topy ) {
+		 Pa=sc.topy;
+		 point1.y=Pa;
+		 point1.x=Ta/Pa;
+	   } else {
+		 point1.y=Pa;
+	   }
+	   if( t != Ta ) {
+		 $('#Ta').val(Ta);
+		 $('#Ta').slider('refresh');
+	   }
+	   report();
+	 }
+	 function changeTB() {
+	   var t=Number($('#Tb').val());
+	   if( t>Ta ) {
+		 Tb=Ta;
+	   } else {
+		 Tb=t;
+	   }
+	   var Pb=Tb/point2.x;
+	   if( Pb > sc.topy ) {
+		 Pb=sc.topy;
+		 point2.y=Pb;
+		 point2.x=Tb/Pb;
+	   } else {
+		 point2.y=Pb;
+	   }
+	   if( t != Tb ) {
+		 $('#Tb').val(Tb);
+		 $('#Tb').slider('refresh');
+	   }
+	   report();
+	 }
+    </script>
+  </head> 
+  <body>
+	<div data-role="page" id="carnotint">
+	  <div data-role="header">
+		<h2>カルノーサイクル</h2>
+	  </div>
+	  <div data-role="content">
+		  <p>　等温操作と断熱操作を組み合わせて以下のような運動をさせる（アニメーションが次のページにある）。</p>
+		  <p><img src="pvzu2.png" width="40%" class="floatnone"></p>
+		  <p>　図のA→Bは等温操作で、温度を$T$に保ちつつ、体積を$V_0$→$V_1$と膨張させる。</p>
+		  <p>　図のB→Cは断熱操作で、周りとの接触を断って体積を$V_1$→$V'_1$と膨張させる（このあいだに、温度は$T$→$T'$に変化する）。</p>
+		  <p>　図のC→Dは等温操作で、温度を$T'$に保ちつつ、体積を$V'_1$→$V'_0$と収縮させる。</p>
+		  <p>　図のD→Aは断熱操作で、周りとの接触を断って体積を$V'_0$→$V_0$と収縮させる（このあいだに、温度は$T'$→$T$に変化する）。</p>
+		  
+		  <p>　これは何をやりたいかというと、一周して元の状態に戻す間にこの気体に仕事をさせたい。図のように動くと、膨張しているときは収縮しているときに比べて圧力が高いから、全体としてプラスの仕事をしていることになる。エネルギー収支の式$\Delta U=Q-W$を考えると、一周回って元に戻るから$\Delta U=0$となり、このとき$Q=W$である。</p>
+		  <p>　断熱操作では熱の出入りがない。図で温度$T$の等温操作（A→B）で入ってくる熱を$Q_{\rm in}$、温度$T'$の等温操作（C→D）で出ていく熱を$Q_{\rm out}$とすると、全体で熱は$Q_{\rm in}-Q_{\rm out}$入ってきたことになり、これが仕事になるから、$Q_{\rm in}-Q_{\rm out}=W$である。ガソリンで動く車のエンジンであれば、$Q_{\rm in}$はガソリンによって生まれる熱量であり、それを（車のラジエータなど）で冷やす過程がC→Dである。</p>
+		  <div class="setsumei">ではまず、次のページでカルノーサイクルの動きを見よう。</div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="内部エネルギー" data-icon="arrow-l" onclick="location.href='./dannetsu.html#defU'">　
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">　
+		<input type="button" value="戻る" data-icon="back" onclick="history.back();">　				
+		<input type="button" value="カルノーサイクルのアニメーション" data-icon="arrow-r" onclick="location.href='#carnot'">　
+	  </div>
+	</div>
+	   <div data-role="page" id="carnot">
+      <div data-role="header">
+        <h2>カルノーサイクルのアニメーション</h2>
+      </div>
+      <div data-role="content">
+        <p><canvas id="carnotcanvas"></canvas></p>
+		<p><span id="now"></span></p>
+		<p><canvas id="pistoncanvas"></canvas></p>
+		<p>温度計→（低温）<canvas id="tempcanvas"></canvas>（高温）</p>
+		<p><span class="aka">●</span>の温度：<input type="range" id="Ta" min="4" max="25" value="16" step="0.2" data-inline="true" onchange="changeTA();"></p>
+		</p>
+		<p><span class="ao">●</span>の温度：<input type="range" id="Tb" min="4" max="25" value="10" step="0.2" data-inline="true" onchange="changeTB();"></p>
+		<p>
+		  カルノーサイクルの効率＝<span id="ratio"></span>
+		</p>
+		<p><span class="aka">●</span>の温度での吸熱量Q<sub>1</sub>=<span id="Qin"></span>　<span class="ao">●</span>の温度放熱量Q<sub>2</sub>=<span id="Qout"></span>　仕事量W=<span id="Work"></span></p>
+		<hr>
+		<div class="setsumei">
+		  <p>　物質量Nと気体定数Rは1にして計算してある。</p>
+		  <p>　二つの温度は変更できるし、図の赤と青の●はドラッグして動かせるので、サイクルの行程を変化させていろいろ試してみて欲しい。</p>
+		  <p>　ただし、温度は4から25の範囲までしか変化しないし、<span class="aka">●</span>の温度は<span class="ao">●</span>の温度より高くないといけない。</p>		  
+		</div>
+		<div class="box">しばらく遊んで、カルノーサイクルの雰囲気をつかむべし。</div>
+		<p>　なお、仕事がマイナスになるのは、サイクルが時計回りではなく反時計回りになったとき。そのときは、膨張するときの方が圧力が低くなっている。</p>
+      </div>
+	  <div data-role="footer" align="center">
+		<input type="button" onclick="location.href='#carnotint'" data-icon="arrow-l" value="カルノーサイクル">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+		<input type="button" onclick="location.href='#carnotth'" data-icon="arrow-r" value="カルノーの定理">
+      </div>
+	</div>
+	<div data-role="page" id="carnotth">
+		  <div data-role="header">
+			  <h1>カルノーの定理</h1>
+		  </div>
+		  <div data-role="content">
+			  <p>　カルノーはこのサイクルをガソリンエンジンのような内燃機関のモデルと考えた。すると$Q_{\rm in}$は言わば「投入する燃料」である。</p>
+			  <p><img src="carnot2.png" width="40%" class="floatnone"></p>
+			  <p>　同じだけの燃料を使う（同じ$Q_{\rm in}$で考える）ならサイクルがする仕事は大きい方がよく、それは$Q_{\rm out}$が小さい方がいい、ということである。$Q_{\rm out}$はどうやったら小さくできるか、と考えているうちにカルノーはもっとも効率がいい場合であっても、</p>
+			  <p>${Q_{\rm out}\over Q_{\rm in}}={T'\over T}$</p>
+			  <p>であること（カルノーの定理）を見つけてしまった。$T>T'$で$T'$は常に正（$PV=NRT$で温度が表現されていることを考えると、これは0にも負にもなりようがない）であるから、$Q_{\rm out}$を0にすることはできない。</p>
+			  <div class="A">　たとえば6000Kの高温熱源（これはだいたい太陽の温度）が用意できて、常温300Kを「排熱先」として使うと、$ {Q_{\rm out}\over Q_{\rm in}}={T'\over T}={300\over 6000}=0.05$となる。つまりこんな高温熱源が用意できても、5％分は絶対損失となる（現実はもっと厳しいのはもちろんのこと）。</div>
+			  <p>　この定理は一般的に証明できる（つまり、物体が何かにも依らない）。実は理想気体でなくたっていい。とりあえず理想気体と考えてこの量を計算して、実際に${T'\over T}$になることを示そう。</p>
+			  <div class="setsumei">ただし、ここで${T'\over T}$という形になるのは、理想気体で$PV=NRT$となるような温度を採用しているからである。一般的に証明されるカルノーの定理では、${f(T')\over f(T)}$のように温度の関数の比になる、ということまでがわかる。$f(T)=T$となるのは「うまい温度を最初から使っていたから」ということになる。</div>
+			  <p>理想気体の場合、温度$T$で等温準静的に体積が$V_0\to V_1$と変化した時の吸収する熱が$NRT\log\left({V_1\over V_0}\right)$だというのはすでに計算してあるので、今の場合に当てはめると$Q_{\rm in}=NRT\log\left({V_1\over V_0}\right)$である。同様に考えると$Q_{\rm out}=NRT'\log\left({V'_1\over V'_0}\right)$となる。</p>
+				<p>　実はこの${Q_{\rm out}\over Q_{\rm in}}$は系がどのような物質でできているかによらず同じ値を取ることが証明される（これがCarnotの定理）ので、どのような物質でできた系においても、${Q_{\rm out}\over Q_{\rm in}}={T'\over T}$となる。これを変形した${Q_{\rm out}\over T'}={Q_{\rm in}\over T}$という式は次の章で定義するエントロピーという量と関係していいて、とても重要。</p>
+				<h3>カルノーの定理の一般的証明</h3>
+				<p>　この証明には、</p>
+				<div class="box"><p align="center"><span class="fukidasi">ケルビンの原理</span></p>　等温操作で$(T,X)$から$(T,X)$に戻る操作をしたとき、その系のする仕事を$W_{\rm cyc}$とすると、$W_{\rm cyc}\leq0$である。</div>
+				<p>を使う。カルノーサイクルはそのままでは二つの温度（$T,T'$）の熱源と相互作用するサイクルだから、ケルビンの原理の適用範囲外である。そこで、ある意味<span class="fukidasi">二つの熱源のうち１つの効果を打ち消す</span>ようなことを行う<span class="footnote">以下の証明は少し雑である。気になる人は<a href="http://www.gakushuin.ac.jp/~881791/td/comments.html">「熱力学―現代的な視点から」への補足</a>を読むこと。</span>。</p>
+				<p>　もう一度カルノーサイクルの図を見よう。</p>
+				<p><img src="pvzu3.png" width="35%" class="floatnone"></p>
+				<p>　ここで吸収、放出されている熱は教科書では</p>
+				<p>$Q_{\rm in}=Q(T;X_0\to X_1)$</p>
+				<p>$Q_{\rm out}=Q(T';X'_0\to X'_1)$</p>
+				<p>と書かれている<span class="footnote">$Q_{\rm out}$の方、図で起こる変化は$X'_1\to X'_0$なのに式では$X'_0\to X'_1$となっていて「逆では？」と思うかもしれないが、この$Q(T';X'_0\to X'_1)$の定義は状態$X'_0$から状態$X'_1$に行くときに吸収する熱量で、$Q_{\rm out}$は放出する熱量という定義なので、二回符号がひっくり返ってこれでよい。</span>。</p>
+				<p>　もう１つ、逆向きに操作する（元のカルノーサイクルが時計回りなのに対して反時計回りである）「逆カルノーサイクル」を動かそう。</p>
+				<p><img src="pvzu4.png" width="30%" class="floatnone"></p>
+				<p>　こちらは吸収、放出する熱は</p>
+				<p>$q_{\rm in}=Q(T';Y'_0\to Y'_1)$</p>
+				<p>$q_{\rm out}=Q(T;Y_0\to Y_1)$</p>
+				<p>となる（逆回転なのでinとoutの位置が違う。また示量変数は$X$ではなく$Y$で表現している）。</p>
+				<p>　ここでカルノーサイクルが吸収する熱$Q_{\rm in}$と逆カルノーサイクルが放出する熱$q_{\rm out}$が$\alpha$倍違っていたとする（すなわち、$Q_{\rm in}=\alpha q_{\rm out}$）。</p>
+				<p>　ここで逆カルノーサイクルを$\alpha$個用意しよう。たとえば$\alpha=3$だとしたら３つのカルノーサイクルを</p>
+				<p><img src="pvzu5.png" width="90%" class="floatnone"></p>
+				<p>のように組み合わせ、カルノーサイクルが吸収する熱が逆カルノーサイクル３つが放出する熱と釣り合うようにする。</p>
+				<p>　このカルノーサイクルの組み合わせが吸収した熱は</p>
+				<p>$\alpha q_{\rm in}-Q_{\rm out}=\alpha Q(T';Y'_0\to Y'_1)-Q(T';X'_0\to X'_1)$</p>
+				<p>で、この熱のやりとりは温度$T'$の環境とのみ行われる。</p>
+				<p>　サイクル運動だから、この式はサイクルのする仕事$W_{\rm cyc}$に等しい。ところがケルビンの原理によりその仕事は0以下であるから、</p>
+				<p>$\alpha Q(T';Y'_0\to Y'_1)\leq Q(T';X'_0\to X'_1)$</p>
+				<p>が言える。</p>
+				<div class="Q">　温度$T$があるのに、ケルビンの原理（等温操作）は使えるんですか？</div>
+				<div class="A">　この温度$T$で熱をやりとりしている部分（$Q_{\rm in}$を吸収し$\alpha q_{\rm out}$を放出）は、いわば今作った「カルノーサイクルと逆カルノーサイクルの複合機械」の内側にあって、外からは見えない部分だと思ってください。で、外から見ると$Q_{\rm out}$が出てきたことと、$\alpha q_{\rm in}$が入ったことしかわからない。そう思うと、ケルビンの原理が使える状況そのものです。</div>
+				<p>　一方、すべてのサイクルを逆回転させると以上の計算のすべてが逆になるから、</p>
+				<p>$\alpha Q(T';Y'_0\to Y'_1)\geq Q(T';X'_0\to X'_1)$</p>
+				<p>も言える。結局、</p>
+				<p>$\alpha Q(T';Y'_0\to Y'_1)=Q(T';X'_0\to X'_1)$</p>
+				<p>であり、$\alpha$の定義を思い出せば、</p>
+				<p>${Q_{\rm in}\over q_{\rm out}}\times Q(T';Y'_0\to Y'_1)=Q(T';X'_0\to X'_1)$</p>
+				<p>すなわち、</p>
+				<p>${Q(T;X_0\to X_1)\over Q(T';X'_0\to X'_1)}={Q(T;Y_0\to Y_1)\over Q(T';Y'_0\to Y'_1)}$</p>
+				<p>となって、最大吸熱の比は系が変わっても変わらないことになる。そして、理想気体ではこれが${T'\over T}$であることはすでに見たから、$ {Q(T;X_0\to X_1)\over Q(T';X'_0\to X'_1)}={T'\over T}$が全ての系に対して言える。</p>
+				<div>　<span class="fukidasi">理想気体以外では計算してないのに、理想気体の式が使える</span>ことに注意。ここの計算では、理想気体かどうかに関係ないことだけを使って計算したので、結果は使っているものが理想気体かどうかによらない。そこで、理想気体の場合をそこに使ってもよい。</div>
+				<div class="A">　実際理想気体ではない気体で計算しても、（当然計算はそれだけ難しくなるんだけど）、ちゃんと${T'\over T}$という結果が出せる。</div>
+				<h3>カルノーサイクルではないサイクル</h3>
+				<p>　カルノーサイクル以外のサイクル（以下「謎のサイクル」）の場合でも同様の議論を繰り返して、</p>
+				<p><img src="pvzu6.png" width="90%" class="floatnone"></p>
+				<p>のように考えて同様に、</p>
+				<p>$\alpha q_{\rm in}\leq Q_{\rm out}$</p>
+				<p>が言える。「謎のサイクル」は逆操作ができるとは限らないから、$\alpha q_{\rm in}\geq Q_{\rm out}$の方は出ない。このことから「謎のサイクル」の吸熱比は等号にならず、</p>
+				<p>${Q_{\rm out}\over Q_{\rm in}}\geq {Q(T;Y_0\to Y_1)\over Q(T';Y'_0\to Y'_1)}={T'\over T}$</p>
+				<p>となる。よって「謎のサイクル」の吸熱比は、カルノーサイクルより大きくなる（つまり、熱機関の効率はカルノーサイクルより悪くなる）。</p>
+				<p>　「謎のサイクル」が「ケルビンの原理」を満たさないような「謎の物質」でできていればこうはならないが、ケルビンの原理を破るような系は見つかってない。誰がが「ぼくの作った最強のサイクル」を持ってきたとしても、ケルビンの原理に反するサイクルを持ってきてない限り、そのサイクルはカルノーサイクルに負ける。</p>
+u			  <p>　以上から、</p>
+			  <p>${Q_{\rm out}\over Q_{\rm in}}={NRT'\log\left({V'_1\over V'_0}\right)\over NRT\log\left({V_1\over V_0}\right) }={T'\over T}$
+			  </p>
+			  <p>となる。</p>
+			  <p>$\log\left({V'_1\over V'_0}\right)$と$\log\left({V_1\over V_0}\right)$が消えるのは、断熱過程の条件（$T^c V=$一定）から、比${V'_1\over V'_0}$と比${V_1\over V_0}$が等しいことが示せるから。</p>
+
+			  <p>理想的なエンジンは、与えられる熱をすべて仕事にできる（つまり、$Q_{\rm out}=0$）ものだが、それは$T'=0$でないと有り得ない（しかし、$T'$は0にも、負にもならない）。</p>
+			  <p>　こうして「効率のエンジンを作ろう」としても「投入した熱の${T'\over T}$倍の部分は常に無駄になる、ということになる。</p>
+			  <p>　なお、じゃあ$T'=0$にしよう」というのはダメ。$T'$は摂氏や華氏ではなく、ケルビンで測定する絶対温度である。0Kは達成できない。</p>
+			  <p>　カルノーの定理からわかることは「サイクルに仕事をさせるのに大事なのは温度差である」ということ。そこで水飲み鳥（平和鳥）にもう一度登場してもらう。</p>
+			  <p>　平和鳥が動くのは「濡れたくちばしの温度が下がるから」だった。温度差が大事なので、くちばしを冷やすのではなく胴体部を温めても、この鳥は動く。具体的には</p>
+			  <p><img src="dB.jpg" width="40%" class="floatnone"></p>
+			  <p>のようにして体温で胴体部を温めると、ちゃんと鳥はお辞儀をするのである。</p>
+		  </div>
+		  <div data-role="footer" align="center">
+			<input type="button" onclick="location.href='#carnot'" data-icon="arrow-l" value="カルノーサイクルのアニメーション">
+			<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+			<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			<input type="button" value="カルノーサイクルとエントロピー" data-icon="arrow-r" onclick="location.href='./entropy.html'">
+		  </div>
+	</div>
+  </body>
+</html>

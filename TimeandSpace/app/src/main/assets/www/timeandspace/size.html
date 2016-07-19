@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <title>第１講　空間的距離の測定法</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<script src="jquery.js" type="text/javascript"></script>
+	<link href="jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<!-- 	<script type="text/javascript" src="js/index.js"></script> -->
+	<!-- >	<script type="text/javascript"> -->
+	<!-- app.initialize(); -->
+	<!-- </script> -->
+	<style type="text/css">
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	  padding:5px;
+	  background-color: #CCC;
+	  color: #00F; 
+	  border: solid #333 thin;
+	  border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<title>第一講　空間的距離の測定法</title>
+	<script type="text/javascript">
+	 $(document).delegate('#page1','pageinit',function(e) {
+       gs1=new RescaleScreen("canvas1",2,1.2,0.9);
+       gs1.setLeft(-1);
+       gs1.setBottom(-0.6);
+       gs1.gobackOriginalSize();
+       gs1.writeContents=function() {
+		 earthWrite_sub();
+       }; 
+       gs1.writeAndGo=function() {
+		 earthWrite();
+       }; 
+	   nowgs=gs1;
+	   earthWrite_sub();
+	 });
+	 $(document).delegate('#page1','pageshow',function(e) {
+	   nowgs=gs1;
+	   stopFlg=false;
+	   if( !nowAnimeFlg ) { 
+		 earthWrite();
+	   }
+	 });
+	 $(document).delegate('#page2','pageinit',function(e) {
+       gs2=new RescaleScreen("canvas2",2,1.2,0.9);
+       gs2.setLeft(-1);
+       gs2.setBottom(-0.6);
+       gs2.gobackOriginalSize();
+       gs2.writeContents=function() {
+		 solarSystemWrite_sub();
+       }; 
+       gs2.writeAndGo=function() {
+		 solarSystemWrite();
+       }; 
+	   nowgs=gs2;
+	   solarSystemWrite_sub();
+	 });
+	 $(document).delegate('#page2','pageshow',function(e) {
+	   nowgs=gs2;
+	   stopFlg=false;
+	   if( !nowAnimeFlg ) { 
+		 solarSystemWrite();
+	   }
+	 });
+	 $(document).delegate('#page3','pageinit',function(e) {
+       gs3=new RescaleScreen("canvas3",2,1.2,0.9);
+       gs3.setLeft(-1);
+       gs3.setBottom(-0.6);
+       gs3.gobackOriginalSize();
+       gs3.writeContents=function() {
+		 solWrite_sub();
+       }; 
+       gs3.writeAndGo=function() {
+		 solWrite();
+       }; 
+	   nowgs=gs3;
+	   solWrite_sub();
+	 });
+	 $(document).delegate('#page3','pageshow',function(e) {
+	   nowgs=gs3;
+	   stopFlg=false;
+	   if( !nowAnimeFlg ) { 
+		 solWrite();
+	   }
+	 });
+	 function earthWrite() {
+	   if( !nowAnimeFlg ) {
+		 nowAnimeFlg=true;
+	   }
+	   earthWrite_sub();
+	   if( R != R2 ) {
+		 if( R2 > R1 ) {
+		   R *= 1.090507732665258;
+		   if( R >= R2 ) {
+			 R=R2;
+		   }
+		 } else if( R2 < R1 ) {
+		   R *= 0.91700404320467;
+		   if( R <= R2 ) {
+			 R=R2;
+		   }
+		 }
+		 setTimeout("earthWrite();",300);
+	   }
+	 }
+	 function solarSystemWrite() {
+	   if( !nowAnimeFlg ) {
+		 nowAnimeFlg=true;
+	   }
+	   solarSystemWrite_sub();
+	   if( RS != RS2 ) {
+		 if( RS2 > RS1 ) {
+		   RS *= 1.090507732665258;
+		   if( RS >= RS2 ) {
+			 RS=RS2;
+		   }
+		 } else if( RS2 < RS1 ) {
+		   RS *= 0.91700404320467;
+		   if( RS <= RS2 ) {
+			 RS=RS2;
+		   }
+		 }
+		 setTimeout("solarSystemWrite();",300);
+	   }
+	 }
+	 function solWrite() {
+	   if( !nowAnimeFlg ) {
+		 nowAnimeFlg=true;
+	   }
+	   solWrite_sub();
+	   if( RSS != RSS2 ) {
+		 if( RSS2 > RSS1 ) {
+		   RSS *= 1.090507732665258;
+		   if( RSS >= RSS2 ) {
+			 RSS=RSS2;
+		   }
+		 } else if( RSS2 < RSS1 ) {
+		   RSS *= 0.91700404320467;
+		   if( RSS <= RSS2 ) {
+			 RSS=RSS2;
+		   }
+		 }
+		 setTimeout("solWrite();",300);
+	   }
+	 }
+	 var nowAnimeFlg=false;
+	 var R=100;
+	 var R1=100;
+	 var R2=100;
+	 function earthWrite_sub() {
+	   var x;
+	   var ct=nowgs.ctx;
+	   nowgs.setScale();
+       nowgs.clearALL();
+
+	   ct.fillStyle="rgb(205,225,225)";
+	   ct.fillRect(nowgs.leftwx,nowgs.bottomy,nowgs.w,nowgs.h*0.5);
+	   ct.fillStyle="rgb(235,255,255)";
+	   ct.fillRect(nowgs.leftwx,0,nowgs.w,nowgs.h);
+
+
+	   var i;
+
+
+	   ct.fillStyle="rgb(0,255,0)";
+	   ct.beginPath();
+	   if( R< 1 ) {
+		 ct.arc(0,-R,R,0,2*Math.PI,true);
+	   } else {
+		 ct.moveTo(nowgs.rightwx,nowgs.bottomy);
+		 ct.lineTo(nowgs.leftwx,nowgs.bottomy);
+		 for(i=0; i<=200 ; i++ ) {
+		   x=nowgs.leftwx+0.005*i*nowgs.w;
+		   if( R>x && -R < x ) {
+			 ct.lineTo(x,-R+Math.sqrt(R*R-x*x));
+		   }
+		 }
+	   }
+	   ct.closePath();
+	   ct.fill();
+
+	   ct.beginPath();
+	   if( R2 > R ) {
+		 ct.strokeStyle="rgba(255,0,0,0.1)";
+		 ct.strokeRect(-R/ R2,-0.6*R/ R2, 2*R/ R2, 1.2*R/ R2);
+	   } else if ( R2< R ) {
+		 ct.strokeStyle="rgba(0,0,255,0.1)";
+		 ct.strokeRect(-R/ R1,-0.6*R/ R1, 2*R/ R1, 1.2*R/ R1);
+	   }
+
+	   var w=6400 / R;
+	   $("#width").html(marume4(w)+"km");
+	   if( R>1 ) {
+		 $("#sizumi").html("画面端の地面は水平線より"+marume6(w*(R-Math.sqrt(R*R-1)))+"km下がっている。");
+	   } else {
+		 $("#sizumi").html("画面端にはもう地面はない。");
+	   }
+	 }
+	 var gs1,gs2,gs3,nowgs;
+
+	 function marume4(x) {
+	   var xx=x*10000;
+	   xx=Math.round(xx);
+	   xx /= 10000;
+       if( x- xx == 0 ) {
+		 return xx;
+       } else {
+		 return xx+"…";
+       }
+	 }
+	 function marume6(x) {
+	   var xx=x*1000000;
+	   xx=Math.round(xx);
+	   xx /= 1000000;
+     if( x- xx == 0 ) {
+	   return xx;
+     } else {
+	   return xx+"…";
+     }
+	 }
+	 var hajimeFlg=false;
+	 var uraFlg=false;
+	 var taniFlg=false;
+	 var yamaFlg=false;
+	 var stopFlg=false;
+	 function zoomout3() {
+	   if( RSS2== RSS ) {
+		 RSS1=RSS;
+		 RSS2 = 0.5*RSS1;
+		 solWrite();
+	   }
+	 }
+	 function zoomin3() {
+	   if( RSS2 == RSS ) {
+		 RSS1=RSS;
+		 RSS2 = 2*RSS1;
+		 solWrite();
+	   }
+	 }
+	 function zoomout2() {
+	   if( RS2== RS ) {
+		 RS1=RS;
+		 RS2 = 0.5*RS1;
+		 solarSystemWrite();
+	   }
+	 }
+	 function zoomin2() {
+	   if( RS2 == RS ) {
+		 RS1=RS;
+		 RS2 = 2*RS1;
+		 solarSystemWrite();
+	   }
+	 }
+	 function zoomout() {
+	   if( R2 == R ) {
+		 R1=R;
+		 R2 = 0.5*R1;
+		 earthWrite();
+	   }
+	 }
+	 function zoomin() {
+	   if( R2 == R ) {
+		 R1=R;
+		 R2 = 2*R1;
+		 earthWrite();
+	   }
+	 }
+
+	 function solarSystemWrite_sub() {
+	   var x;
+	   var ct=nowgs.ctx;
+	   nowgs.setScale();
+       nowgs.clearALL();
+
+	   ct.fillStyle="rgb(120,120,120)";
+	   ct.fillRect(nowgs.leftwx,nowgs.bottomy,nowgs.w,nowgs.h);
+
+	   var i;
+
+	   ct.fillStyle="rgb(0,255,0)";
+	   ct.beginPath();
+	   ct.arc(0,0,RS,0,2*Math.PI,true);
+	   ct.closePath();
+	   ct.fill();
+
+	   ct.fillStyle="rgb(150,150,0)";
+	   ct.beginPath();
+	   ct.arc(-60.4*RS,0,0.27*RS,0,2*Math.PI,true);
+	   ct.closePath();
+	   ct.fill();
+
+	   ct.strokeStyle="rgba(200,200,200,0.3)";
+	   ct.beginPath();
+	   ct.arc(0,0,60.4*RS,0,2*Math.PI,true);
+	   ct.stroke();
+
+	   ct.fillStyle="rgb(255,150,0)";
+	   ct.beginPath();
+	   ct.arc(-23452*RS,0,109*RS,0,2*Math.PI,true);
+	   ct.closePath();
+	   ct.fill();
+
+	   ct.strokeStyle="rgba(200,0,0,0.3)";
+	   ct.beginPath();
+	   ct.arc(-23452*RS,0,23452*RS,0,2*Math.PI,true);
+	   ct.stroke();
+
+	   ct.beginPath();
+	   if( RS2 > RS ) {
+		 ct.strokeStyle="rgba(255,0,0,0.1)";
+		 ct.strokeRect(-RS/ RS2,-0.6*RS/ RS2, 2*RS/ RS2, 1.2*RS/ RS2);
+	   } else if ( RS2< RS ) {
+		 ct.strokeStyle="rgba(0,0,255,0.1)";
+		 ct.strokeRect(-RS/ RS1,-0.6*RS/ RS1, 2*RS/ RS1, 1.2*RS/ RS1);
+	   }
+
+	   var w=6400 / RS;
+	   $("#widthS").html(marume4(w)+"km");
+	 }
+	 function solWrite_sub() {
+	   var x;
+	   var ct=nowgs.ctx;
+	   nowgs.setScale();
+       nowgs.clearALL();
+
+	   ct.fillStyle="rgb(120,120,120)";
+	   ct.fillRect(nowgs.leftwx,nowgs.bottomy,nowgs.w,nowgs.h);
+
+	   var i;
+
+	   ct.fillStyle="rgb(255,150,0)";
+	   ct.beginPath();
+	   ct.arc(0,0,109*RSS,0,2*Math.PI,true);
+	   ct.closePath();
+	   ct.fill();
+
+	   ct.fillStyle="rgb(0,255,0)";
+	   ct.beginPath();
+	   ct.arc(0,0,RSS,0,2*Math.PI,true);
+	   ct.closePath();
+	   ct.fill();
+
+	   ct.fillStyle="rgb(150,150,0)";
+	   ct.beginPath();
+	   ct.arc(0,0,0.27*RSS,0,2*Math.PI,true);
+	   ct.closePath();
+	   ct.fill();
+
+
+	   ct.beginPath();
+	   if( RSS2 > RSS ) {
+		 ct.strokeStyle="rgba(255,0,0,0.1)";
+		 ct.strokeRect(-RSS/ RSS2,-0.6*RSS/ RSS2, 2*RSS/ RSS2, 1.2*RSS/ RSS2);
+	   } else if ( RSS2< RSS ) {
+		 ct.strokeStyle="rgba(0,0,255,0.1)";
+		 ct.strokeRect(-RSS/ RSS1,-0.6*RSS/ RSS1, 2*RSS/ RSS1, 1.2*RSS/ RSS1);
+	   }
+
+	   var w=6400 / RSS;
+	   $("#widthSS").html(marume4(w)+"km");
+	 }
+	 var RS=1;
+	 var RS1=1;
+	 var RS2=1;
+	 var RSS=1;
+	 var RSS1=1;
+	 var RSS2=1;
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page1">
+	  <div data-role="header">
+		<h1>1.1 地球の大きさの大きさを測る</h1>
+	  </div>
+	  <div data-role="content">
+		<div class="setsumei">以下のプログラムで、地球の「丸さ」がどれくらい「平たい」かを実感しましょう。画面の緑が地球です。最初、画面の中央から端までの距離が64kmの場合に地球がどう見えるかを表示しています。ボタンを押してズームイン・ズームアウトしてください。すると、どの程度「地球が丸いか」がわかります。</div>
+		<p></p>
+		<canvas id="canvas1" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<button data-inline="true" id="zoom2" onClick="zoomout();">２倍ズームアウト</button>
+		  </div>
+		  <div class="ui-block-b">
+			<button data-inline="true" id="zoom2" onClick="zoomin();">２倍ズームイン</button>
+		  </div>
+		</div>
+		<div>画面中央から画面端までの距離は<span id="width" class="red"></span>、<span id="sizumi" class="blue"></span>
+		</div>
+		<hr>
+		<div class="setsumei"><p>ちなみに…</p>
+		  <p>　琉大から辺戸岬まで：約80km<br>
+			<p>　琉大から奄美大島まで：約250km</p>
+			<p>　琉大から種子島まで：約500km</p>
+			<p>　琉大から関西空港まで：約1200km</p>
+			<p>　琉大から東京まで：約1600km</p>
+			<p>　琉大から札幌まで：約2200km</p>
+		</div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<input type="button" value="太陽・地球・月の位置関係" data-icon="arrow-r" onclick="location.href='#page2'">
+	  </div>
+	</div> 	
+	<div data-role="page" id="page2">
+	  <div data-role="header">
+		<h1>太陽・地球・月の位置関係</h1>
+	  </div>
+	  <div data-role="content">
+		  <div class="setsumei">　以下のプログラムで地球・月・太陽の大きさと位置関係を実感しましょう。</div>
+		  <p></p>
+		  <canvas id="canvas2" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+		  <div class="ui-grid-a">
+			<div class="ui-block-a">
+			  <button data-inline="true" onClick="zoomout2();">２倍ズームアウト</button>
+			</div>
+			<div class="ui-block-b">
+			  <button data-inline="true" onClick="zoomin2();">２倍ズームイン</button>
+			</div>
+		  </div>
+		  <div>画面中央から右端までの距離は<span id="widthS" class="red"></span></div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="地球の大きさを実感する" data-icon="arrow-r" onclick="location.href='#page1'">
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<input type="button" value="太陽・地球・月のサイズ" data-icon="arrow-r" onclick="location.href='#page3'">
+
+	  </div>
+	</div>
+	<div data-role="page" id="page3">
+	  <div data-role="header">
+		<h1>太陽・地球・月のサイズ</h1>
+	  </div>
+	  <div data-role="content">
+		<div class="setsumei">前のページのプログラムでは、太陽と月と地球を同時に見るのが難しかったので、以下のプログラムで地球・月・太陽の大きさの違いを実感しましょう。</div>
+		<p></p>
+		<canvas id="canvas3" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<button data-inline="true" onClick="zoomout3();">２倍ズームアウト</button>
+		  </div>
+		  <div class="ui-block-b">
+			<button data-inline="true" onClick="zoomin3();">２倍ズームイン</button>
+		  </div>
+		</div>
+		<div>画面中央から右端までの距離は<span id="widthSS" class="red"></span></div>
+	  </div>
+		<div data-role="footer" align="center">
+			<input type="button" value="太陽・地球・月の位置関係" data-icon="arrow-l" onclick="location.href='#page2">
+			<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+			<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			<input type="button" value="地球中心に見た太陽と月の動き" data-icon="arrow-r" onclick="location.href='./planets.html#page1'">
+		</div>
+	</div>
+  </body>
+</html>

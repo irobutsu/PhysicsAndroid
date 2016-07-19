@@ -1,0 +1,398 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebText 動く！熱力学（断熱過程）</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="dragmanscreen.js" type="text/javascript"></script>
+	<script src="draggablepoint.js" type="text/javascript"></script>
+	<script src="vector.js" type="text/javascript"></script>
+	<script src="yajirushi.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	 var point1;
+	 var piston;
+	 var pTemp;
+	 var ctt,cttnow;
+	 $(document).delegate('#adiabatic','pageshow',function(e) {
+	   sc.writeContents();
+	   scp.writeContents();
+	   sct.writeContents();
+	   sctnow.writeContents();
+	 });
+	 $(document).delegate('#adiabatic','pageinit',function(e) {
+	   sc=new DragmanScreen("graphcanvas",11,7,0.7);
+	   scp=new DragmanScreen("pistoncanvas",11,4,0.7);
+	   sctnow=new DragmanScreen("tempcanvas",10,1,0.4);
+	   sct=new DragmanScreen("tempsetcanvas",10,1,0.4);
+	   sc.setBottom(-1);
+	   sc.setLeft(-1);
+	   scp.setBottom(-1);
+	   scp.setLeft(-1);
+	   sct.setBottom(0);
+	   sct.setLeft(0);
+	   sctnow.setBottom(0);
+	   sctnow.setLeft(0);
+	   sc.gobackOriginalSize();
+	   scp.gobackOriginalSize();
+	   sctnow.gobackOriginalSize();
+	   sct.gobackOriginalSize();
+	   yaP=new Yajirushi("rgba(200,200,100,0.9)");
+	   ct=sc.canvas.getContext("2d");
+	   ctp=scp.canvas.getContext("2d");
+	   ctt=sct.canvas.getContext("2d");
+	   cttnow=sctnow.canvas.getContext("2d");
+	   sc.writeContents=function() {
+		 write_func();
+		 point1.write(ct);
+	   }
+	   scp.writeContents=function() {
+		 write_piston(point1.x,PT1V(point1.x),Ta,minT,maxT);
+	   }
+	   sctnow.writeContents=function() {
+		 write_tempnow();
+	   }
+	   sct.writeContents=function() {
+		 write_temp();
+	   }
+	   piston=new DraggablePoint(Va,0,0.4,"rgba(255,0,0,0.5)");
+	   point1=new DraggablePoint(Va,Ta/Va,0.4,"rgba(255,0,0,0.5)");
+	   pTemp=new DraggablePoint(10*(Ta-minT)/(maxT-minT),0,0.4,"rgba(0,0,0,0.5)");
+	   pTemp.setXY=function(xx,yy,x0,y0,x1,y1) {
+		 if( xx >10 ) { xx=10;}
+		 if( xx <0 ) {xx=0;}
+		 this.x=xx;
+		 this.y=0.5;
+		 T1=0.1*xx*(maxT-minT)+minT;
+		 point1.setXY(point1.x,0,0,0,0,0);
+		 sc.writeContents();
+		 scp.writeContents();
+		 sctnow.writeContents();
+	   };
+	   piston.setXY=function(xx,yy,x0,y0,x1,y1) {
+		 point1.setXY0(xx,0,0,0,0,0);
+		 this.setXY0(point1.x,0,0,0,0,0);
+		 sc.writeContents();
+		 // scp.writeContents();
+		 sctnow.writeContents();
+	   };
+	   piston.inP=function(xx,yy) {
+		 if( this.canDrag ) {
+		   return (xx > this.x && xx < 0.3+this.x);
+		 } else {
+		   return false;
+		 }
+	   };
+	   piston.write=function() {};
+	   piston.setXY0=function(xx,yy,x0,y0,x1,y1) {
+		 this.x=xx;
+		 this.y=1;
+	   };
+	   point1.setXY=function(xx,yy,x0,y0,x1,y1) {
+		 this.setXY0(xx,yy,x0,y0,x1,y1);
+		 piston.setXY0(this.x,0,0,0,0,0);
+		 //		 sc.writeContents();
+		 scp.writeContents();
+		 sctnow.writeContents();
+	   };
+	   point1.setXY0=function(xx,yy,x0,y0,x1,y1) {
+		 this.x=xx;
+		 Ta=TT1V(this.x);
+		 this.y=PT1V(xx);
+		 if( this.y > sc.topy || this.x <0 ) {
+		   this.y=sc.topy;
+		   this.x=VT1P(this.y);
+		 }
+	   };
+	   scp.pushDragObjList(piston);
+	   sc.pushDragObjList(point1);
+	   sct.pushDragObjList(pTemp);
+	   reset();
+     });
+	 function reset() {
+	   point1.setXY(Va,0,0,0,0,0);
+	 }
+	 var minT=4;
+	 var maxT=35;
+	 var N=50;
+	 function writeC() {
+	   sc.writeContents();
+	   scp.writeContents();
+	 }
+	 function marume(x) {
+	   var xx=100*x;
+	   return Math.round(xx)/100;
+	 }
+	 var gamma=5.0/ 3.0;
+	 var gammamone=2.0/ 3.0;
+	 var Ta=10;
+	 var T1=10; // Ta = T1*(V1/Va)^(γ-1)
+	 var Va=5;
+	 var V1=5;
+	 function TT1V(v) {
+	   return T1*Math.pow(v/V1,-gammamone);
+	 }
+	 // T1とVを設定してPを得る。
+	 // P=T_1(V_1)^(γ-1)/ V^γ
+	 function PT1V(v) {
+		return T1*Math.pow(V1,gammamone)*Math.pow(v,-gamma);
+	 }
+	 // T1とPを設定してVを得る。
+	 // P=NRT/V=
+	 // PV^γ=P_1 (V_1)^γ=T_1(V_1)^(γ-1)
+	 // V^γ=T_1(V_1)^(γ-1)/P
+	 function VT1P(p) {
+		return Math.pow(T1*Math.pow(V1,gammamone)/p,1.0/gamma);
+	 }
+	 function VTP(t,p) {
+		return Math.pow(t/p,1.0/gamma);
+	 }
+    function write_func() {
+	   sc.clearALL();
+	   sc.writeCoordinate();
+	   ct.strokeStyle="rgba(255,0,50,0.5)";
+
+	   var minV=VT1P(sc.topy);
+	   var maxV=sc.rightwx;
+
+	   var stepV=(maxV-minV)/ N;
+
+	   ct.strokeStyle=rgb_temp(TT1V(minV),minT,maxT-minT);
+
+	   ct.beginPath();
+	   ct.moveTo(minV,PT1V(minV));
+	   for(i=1; i<=N ; i++ ) {
+           ct.lineTo(minV+stepV*i,PT1V(minV+stepV*i));
+		   ct.stroke();
+		   ct.strokeStyle=rgb_temp(TT1V(minV+stepV*i),minT,maxT-minT);
+		   ct.beginPath();
+           ct.moveTo(minV+stepV*i,PT1V(minV+stepV*i));
+       }
+     }
+	 var yaP;
+	 function write_piston(v,p,T,tmin,tmax){
+	   ctp.fillStyle="rgb(255,255,255)";
+	   ctp.fillRect(scp.leftwx,scp.bottomy,scp.w,scp.h);
+	   ctp.fillStyle="rgb(0,0,0)";
+	   ctp.fillRect(0,0,scp.w,2);
+	   ctp.fillStyle="rgb(255,255,255)";
+	   ctp.fillRect(0.1,0.1,scp.w,1.8);
+	   ctp.fillStyle="rgb(50,50,50)";
+	   ctp.fillRect(v,0.1,0.3,1.8);
+	   var tdiff=tmax-tmin;
+	   if( tdiff <0 ) {
+		 tdiff = -tdiff;
+		 tmin=tmax;
+	   }
+	   
+	   var i;
+	   for(i=0; i<4; i++ ) {
+		 yaP.setXY(v+0.04,0.5*i+0.25,p*0.5);
+		 yaP.setTheta(-0.5*Math.PI);
+		 yaP.setL(p*0.25);
+		 yaP.draw(ctp);
+	   }
+	   ctp.fillStyle=rgb_temp(T,tmin,tdiff);
+	   ctp.fillRect(0.1,0.1,v-0.1,1.8);
+	   var ofset=0;
+	 }
+	 function rgb_temp(T,tmin,tdiff) {
+	   var r=Math.ceil((T-tmin)/ tdiff*255);
+	   var b=255-r;
+	   var g=Math.ceil(b*0.8+50);
+	   return "rgb("+r+","+g+","+b+")";
+	 }
+	 function write_temp0(ct,sc) {
+	   var i;
+	   var step=sc.w/ N;
+	   for(i=0; i<N; i++ ) {
+		 ct.fillStyle=rgb_temp(i,0,N);
+		 ct.beginPath();
+		 ct.moveTo(i*step,1);
+		 ct.lineTo(i*step,0.5);
+		 ct.lineTo((i+1.1)*step,0.5);
+		 ct.lineTo((i+1.1)*step,1);
+		 ct.closePath();
+		 ct.fill();
+	   }
+	 }
+
+
+	 function write_temp() {
+	   write_temp1(T1,ctt,sct,0.3);
+	 }
+	 function write_tempnow() {
+	   write_temp1(Ta,cttnow,sctnow,0.1);
+	 }
+	 function write_temp1(t,ct,sc,w) {
+	   write_temp0(ct,sc);
+	   ct.fillStyle="rgb(200,200,200)";
+	   ct.fillRect(0,0,sc.w,0.5);
+	   var x=10*(t-minT)/ (maxT-minT);
+
+	   ct.fillStyle="rgb(0,0,0)";
+	   ct.beginPath();
+	   ct.moveTo(x,0.5);
+	   ct.lineTo(x+w,0);
+	   ct.lineTo(x-w,0);
+	   ct.closePath();
+	   ct.fill();
+	 }
+    </script>
+  </head> 
+  <body>
+	<div data-role="page" id="adiabaticP">
+	  <div data-role="header">
+		<h1>断熱操作とエネルギー</h1>
+	  </div>
+	  <div data-role="content">
+		<h3>断熱操作</h3>
+		<p>　ここまでは「等温操作」を考えてきたが、もうひとつの重要な操作である「断熱操作」について考えよう。</p>
+		<p>　まだ「熱」を定義していないが、「断熱」という言葉は「仕事以外のエネルギーの出入りがない」という意味だと定義することにする。</p>
+		<p>　等温操作のときと同様に、示量変数の組が$X$で指定される状態から、$X'$で指定される状態に変化させる（とりあえず$X$の例として体積$V$を考えて、「膨張させたり圧縮したりする」という操作だと思っておけばよい）。この変化を</p>
+		<p align="center">$(T;X){{\rm a}\atop\longrightarrow}(T';X')$</p>
+		<p>のように書こう（aはadiabaticのa）。</p>
+		<p>　等温操作と同様にすばやくやったりゆっくりやったりといろいろな操作がある。等温操作では定義により最後は環境と同じ温度で平衡状態になるのを待ったが、断熱の場合はそうではない（平衡になるまで待つのはいいが、断熱されているので環境と等温にならない）ので、操作の仕方により到着点の温度は違う。</p>
+		<p align="center"><img src="dannetsus.png" width="70%" class="floatnone"></p>
+		<p>　重要なこととして、等温操作と断熱操作では、温度$T$の変数としての意味が違うことを指摘しておきたい。</p>
+		<p>　等温操作では$T$は環境の温度、つまり「これから実験を始めようというときの実験室の温度」であって、実験を始める時に人間が手で（エアコンの調節をして）制御できる量である。つまり、<span class="fukidasi">等温操作での$T$</span>は「独立変数」である。</p>
+		<p>　一方、断熱操作では$T$は操作のしかたによって変わる量であり、人間の手で直接操作できない（人間は体積$V$を操作し、結果として$T$が変わる。つまり、<span class="fukidasi">断熱操作での$T$</span>は「従属変数」なのである。</p>
+		<div class="A">では「断熱操作」において$T$の替りとなる独立変数はないのか？---ということは、今後の楽しみに置いておこう。</div>
+		<p>　$X$に含まれる体積$V$はどちらの場合でも独立変数である。</p>
+		<div class="Q">体積$V$ではなく圧力$P$の方を独立変数にしてはいけないのか？</div>
+		<div class="A">　もちろんそうする方法もある。気体にかける圧力が定数になるようにして実験する場合は、その方が都合がよい。その場合、また別の物理量が「仕事によりその分だけ増減する量として定義される量（「エネルギーのようなもの」）」として現れる。</div>
+		<p>　等温操作のときと同様に、これに「準静的に変化させる」という制約を加えた操作を「断熱準静操作」と呼び、</p>
+		<p align="center">$(T;X){{\rm aq}\atop\longleftrightarrow}(T';X')$</p>
+		<p>と書く。（これも等温操作と同様に）準静的だと逆が可能なので、矢印が双方向になる（この場合の$T'$は１つに決まる）。</p>
+		<div class="setsumei">では、次のページで断熱準静的操作をプログラムで実感しよう。</div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="ヘルムホルツ自由エネルギー" data-icon="arrow-l" onclick="location.href='Helmholtz.html#Helmholtz'">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<input type="button" value="断熱準静的操作のプログラム" data-icon="arrow-r" onclick="location.href='#adiabatic'">
+      </div>
+	</div>
+	<div data-role="page" id="adiabatic">
+	  <div data-role="content">
+		<div class="setsumei">　このページでは、断熱準静的操作による圧力と温度の変化を「動くグラフ」で表現している。<br>
+		  　ピストン、グラフの<span class="aka">●</span>、および基準点温度計の▲（←基準点での温度を変化させる）は動かすことができるので、いろいろ動かしてみて断熱準静的操作での変化の様子を実感すること。</div>
+		<hr>
+		<canvas id="graphcanvas"></canvas></p>
+		<p><span id="now"></span></p>
+		<p><canvas id="pistoncanvas"></canvas></p>
+		<p>現在時温度計→（低温）<canvas id="tempcanvas"></canvas>（高温）</p>
+		<p>基準点温度計→（低温）<canvas id="tempsetcanvas"></canvas>（高温）</p>
+		<p>↑この基準点温度計は、$V=5$での温度を示している（現在温度ではないことに注意）</p>
+		<hr>
+		<p>　<input data-inline="true" type="button" value="等温操作での同様のプログラム" data-icon="arrow-l" onclick="location.href='Helmholtz.html#isothermal'">と比較してみよう。</p>
+		<p>　断熱準静的操作では、温度が体積$V$の変化によって変わってしまう「従属変数」であること（「制御できる変数」ではないこと）に注意しよう。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="断熱操作" data-icon="arrow-l" onclick="location.href='#adiabaticP'">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<input type="button" value="温度を上げる断熱操作の存在と断熱仕事" data-icon="arrow-r" onclick="location.href='#Tup'">
+      </div>
+	</div>
+	<div data-role="page" id="Tup">
+	  <div data-role="header">
+		<h2>温度を上げる断熱操作の存在と断熱仕事</h2>
+	  </div>
+	  <div data-role="content">
+		<h3>温度を上げる断熱操作の存在</h3>
+		<p>　等温操作では示量変数が元に戻るように操作すると（温度も等温操作の定義により元と同じだから）、その操作はサイクルになった。ところが断熱操作では示量変数$X$が元に戻っても、温度は一般に元に戻らない。つまり、</p>
+		<p align="center">$(T;X){{\rm a}\atop\longrightarrow}(T';X)$</p>
+		<p>という操作で、$T\neq T'$である。実際に起こる現象を考えると、実は$T\leq T'$である（準静的に行って帰った場合のみ等号が成り立つ）。</p>
+		<p>　この</p>
+		<div class="yousei">「示量変数を変化させずに温度を上げる断熱操作は常に可能」</div>
+		<p>ということも要請とする。</p>
+		<div class="A">　寒い時に手をこすると手を温めることができる一方、暑い日に何をしても身体を冷やすことはできない（むしろ動けばもっと暑い）。</div>
+		<h4>断熱操作の存在</h4>
+		<p>　上の例（温度を上げる操作はあるが、下げる操作はない）でもわかるように、断熱操作は常に存在できるわけではない。しかし、$(T;X)\to (T';X')$と$(T';X')\to (T;X)$のどちらかは１つは実現できる。</p>
+		<p align="center"><img src="kanoudannetsu.png" width="80%" class="floatnone"></p>
+		<p>　ここで、$(T;X)\to (T'';X')$という断熱準静操作を考える。もし、$T'$＞$T''$なら、あとは温度を上げるだけなので、<span class="yousei">上の要請</span>で存在を要請された温度を上げる断熱操作をすれば$(T';X')$に到着する。</p>
+		<p>　もし$T'$＜$T''$なら、その時は要請により$(T'';X')\to(T';X')$は必ず存在する。そして$(T;X)\to (T'';X')$という断熱準静操作は（準静的なので）逆が存在するから逆をたどればよい。こうして、どちらの操作も可能になる。</p>
+		<div class="A">両方が可能になるのは、最初から断熱準静操作でつながっていた場合に限る。</div>
+		<h3>熱力学におけるエネルギー保存則と断熱仕事</h3>
+		<p>　断熱操作は「仕事以外のエネルギーの出入りがない」状況を考えているので、エネルギーはちょうどした仕事の量だけ増減する（等温操作ではそうではなかったことに注意）。</p>
+		<p>　そのためにはもちろん、（力学で位置エネルギーが定義できる条件がそうであったように）「はじめの状態と終わりの状態が決まればその間にする仕事は１つに決まる」という条件が成り立っていなくてはいけない。力学の場合、系が質点や剛体でできていて摩擦や空気抵抗がなく保存力しか働かないならこれは導くことができる定理になる。しかし熱力学ではこうなることも要請にしておく。</p>
+		<div class="yousei">断熱操作で系が行う仕事は、最初と最後の平衡状態だけで決まり、途中経過によらない。</div>
+		<p>　この、「最初$(T;X)$と最後$(T';X')$が決まれば途中経過によらず決まる仕事の量」を$W_{\rm ad}\left((T;X)\to (T';X')\right)$と書いて「断熱仕事」と呼ぶことにする。断熱仕事は最大仕事と同様に、示量性と相加性を持つ。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="断熱操作のプログラム" data-icon="arrow-l" onclick="location.href='#adiabatic'">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<input type="button" value="内部エネルギー" data-icon="arrow-r" onclick="location.href='#defU'">
+      </div>
+	</div>
+	<div data-role="page" id="defU">
+	  <div data-role="header">
+		<h2>内部エネルギー</h2>
+	  </div>
+	  <div data-role="content">
+		<h3>エネルギーの定義と基本的性質</h3>
+		<p>　断熱仕事により増減する量として「内部エネルギー$U(T;X)$」という量を</p>
+		<div class="box">
+		  <p align="center">$U(T;X)=W_{\rm ad}\left((T;X)\to (T^*;X^*)\right)$</p>
+		  <p>または</p>
+		  <p align="center">$U(T;X)=-W_{\rm ad}\left((T^*;X^*)\to (T;X)\right)$</p>
+		</div>
+		<p>として定義する。$T^*,X^*$は$U$の基準点で、$U(T^*;X^*)=0$と決められているものとする。</p>
+		<p>　定義が二つあるのは、$(T;X)\to (T^*;X^*)$という断熱操作が常に可能とは限らないからで、その場合は$(T^*;X^*)\to (T;X)$という操作を使って定義する。</p>
+		<p>　別の書き方をすれば、</p>
+		<p align="center">$W_{\rm ad}\left((T;X)\to (T';X')\right)=U(T;X)-U(T';X')$</p>
+		<p>ということ（ただしこう書けるのは$(T;X)\to (T';X')$という断熱操作が可能な時に限る）。</p>
+		<p>　$U$の定義は上のようになっているから、この定義から「$U(T;V,N)$を$T,N$を一定にして$V$で微分する」ということはできない（温度$T$が変化している式しかないから）。</p>
+		<P>　ここまでで、$W_{\rm max}$を使って定義されたヘルムホルツの自由エネルギーと、$W_{\rm ad}$を使って定義された内部エネルギーの二つが出てきた。この二つは状況が違うが、どちらも「どれだけの仕事ができるか」という量になっている。状況の違いは一言で言えば「熱の関与」だから、この二つの差を考えていくことで「熱」の意味がわかってくる。</P>
+		<p>　断熱操作は、<span class="fukidasi">仕事という形の「目に見える」エネルギー移動だけが起こっている状況での操作</span>というのがその定義であった。このことを前に</p>
+		<p align="center"><img src="dannetsus.png" width="60%" class="floatnone"></p>
+		<p>のような図を描いて説明したが、断熱操作で出発点と到着点をそろえる（つまり、最初と最後で温度が同じ温度になるようにする）場合を図で表現すると以下のようになる。</p>
+		<p align="center"><img src="dannetsu2.png" width="60%" class="floatnone"></p>
+		<p>　断熱操作で同じ変化を起こす場合、その間に系のする仕事の総量は変化のさせ方によらず、同じ（$W_{\rm ad}$）である。</p>
+		<div class="A">↑は「要請」であることに注意。</div>
+		<h3>定積熱容量と、理想気体の場合の断熱操作</h3>
+		<p>　温度を変える場合の$U(T;X)$の変化を考える。断熱操作では「熱」は関与しないので、温度が上がるということは外部から仕事の形でエネルギーが入ってきた、ということ。温度変化を$T\to T+\Delta T$とすれば、</p>
+		$$U(T;X)\to U(T+\Delta T;X)$$
+		<p>というエネルギーの変化が起こる。エネルギーの変化量は</p>
+		$$U(T+\Delta T;X)-U(T;X)= {U(T+\Delta T;X)-U(T;X)\over \Delta T}\Delta T\simeq \left({\partial U(T;X)\over \partial T}\right)_X\Delta T$$
+		<p>と書くことができる。よって、「$X$などの示量変数を変化させずに温度を単位温度（1ケルビン）だけ上げるために必要なエネルギー」を<span class="fukidasi">定積熱容量</span>と呼ぶことにすると、その量は</p>
+		$$C_V =  \left({\partial U(T;X)\over \partial T}\right)_X$$
+		<p>である。理想気体の場合、$C_V=cNR$（$R$は気体定数。$c$は単原子分子気体では${3\over2}$、二原子分子気体では${5\over2}$）となることが実験的に確かめられている。</p>
+		<p>　歴史的には、「熱」と「エネルギー」は別々の量だと考えられていたが、「ジュール熱」に名を残すジュールたちが「仕事をされること（別の言い方をすれば力学的エネルギーが外部から投入されること）」が「温度上昇」を起こすという現象（ジュール熱が出るのもまさにこの現象だ）を詳しくしらべ、熱がエネルギーの移動そのものにほかならないことに気づいて今日の熱力学の基礎ができあがる（ジュールは新婚旅行に温度計を持って行って滝の上と下で$mgh$の分水温が上がることを確かめようとしたという）。</p>
+		<p>　また、エネルギー保存則は熱の移動を含めて考えないと一般的に成立しないから、これがわかって初めて「ああエネルギーは保存量だ」と考えることができるようになったということになる。</p>
+		<p>　大学での勉強の手順では、まず力学で「運動の法則からエネルギー保存則を導く（ただしこのときに力は保存力に限るなどの限定条件が必要）」をした後で熱力学に入るので、エネルギー保存則は「証明できるもの」というイメージを持ってしまうが、実際に人類がそれを認めるには、「熱」という量をちゃんと把握する必要があったわけである（だから熱力学におけるエネルギー保存則は、何かから導くものではなく、要請になっている）。</p>
+
+		<p>　理想気体で実験的に確かめられていることは、「$U$が$V$によらない」ということである。具体的には、Gay-Lussacの実験により、気体を真空に向けて膨張させた時は気体の温度が（近似的に）変わらないことがわかっている（もちろん現実の気体は理想気体でない分だけ温度は変化する）。</p>
+		<p>　さて、理想気体の内部エネルギーについて</p>
+		<ul>
+		  <li>体積によらない。</li>
+		  <li>$\left({\partial U(T;X)\over \partial T}\right)_X=cNR$</li>
+		</ul>
+		<p>がわかったから、これから$U$がどんな関数かはわかる。
+		  $$
+		  U=cNRT + Nu
+		  $$
+		  となる。$Nu$の部分は「$T$で微分すると消える部分（いわば$\left({\partial U(T;X)\over \partial T}\right)_X=cNR$を積分したときの積分定数）」である（$V$の変数でもない）。$U$が示量変数だから、$N$に比例することがわかる（$N^2$とか${1\over N}$に比例する項はない）。$u$の意味はずっと後でやる。</p>
+		<p>　理想気体を断熱操作した場合、$U$が$V$によらないから$U$の変化は${\partial U\over \partial T}\mathrm dT$になり、そのときする仕事$P\mathrm dV$は（状態方程式を使って${NRT\over V}\mathrm dV$となる。よって、</p>
+		$$cNR \mathrm dT = - {NRT\over V}\mathrm dV$$
+		<p>という微分方程式を解いて、</p>
+		$$ c \log T = - \log V+A$$
+		<p>（$A$は積分定数）より、$ T^c V=$（一定）という答が出る。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="温度を上げる断熱操作の存在と断熱仕事" data-icon="arrow-l" onclick="location.href='#Tup'">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+		<input type="button" value="カルノーサイクル" data-icon="arrow-r" onclick="location.href='./carnot.html'">
+	  </div>
+	</div>
+  </body>
+</html>

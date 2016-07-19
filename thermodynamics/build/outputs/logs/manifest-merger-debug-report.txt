@@ -1,45 +1,47 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:2:1-27:12
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:2:1-27:12
 	package
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:3:5-49
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:3:5-49
 	android:versionName
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:5:5-30
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:5:5-30
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml
 	android:versionCode
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:4:5-28
-		INJECTED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml
-		INJECTED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:4:5-28
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml
+		INJECTED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:2:11-69
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:2:11-69
 uses-sdk
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:7:5-9:41
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:7:5-9:41
 	android:targetSdkVersion
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:9:9-38
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:9:9-38
 	android:minSdkVersion
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:8:9-34
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:8:9-34
 application
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:11:5-25:19
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:11:5-25:19
 	android:label
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:14:9-41
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:14:9-41
 	android:allowBackup
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:12:9-35
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:12:9-35
 	android:icon
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:13:9-45
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:13:9-45
 activity#jp.ac.u_ryukyu.phys.thermodynamics.MainActivity
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:16:9-24:20
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:16:9-24:20
 	android:screenOrientation
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:18:46-82
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:18:46-82
 	android:label
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:18:13-45
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:18:13-45
 	android:name
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:17:13-41
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:17:13-41
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:19:13-23:29
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:19:13-23:29
 action#android.intent.action.MAIN
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:20:17-69
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:20:17-69
 	android:name
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:20:25-66
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:20:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:22:17-77
+ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:22:17-77
 	android:name
-		ADDED from /Users/maeno/Dropbox/AndroidStudioProjects/thermodynamics/AndroidManifest.xml:22:27-74
+		ADDED from /Users/maeno/Dropbox/gitHub/PhysicsAndroid/thermodynamics/AndroidManifest.xml:22:27-74

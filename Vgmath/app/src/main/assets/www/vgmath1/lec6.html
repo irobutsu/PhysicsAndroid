@@ -1,0 +1,348 @@
+<!Doctype html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>自然科学のための数学2015年度第６講</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+		<script src="zoominggraph.js" type="text/javascript"></script>
+		<link rel="STYLESHEET" href="ss.css" type="text/css">
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="jquery.mobile-1.4.2.min.css?lec=4" rel="stylesheet" type="text/css"/>
+		<script src="jquery.js?lec=4" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+		<script src="rescalescreenxy.js" type="text/javascript"></script>
+		<script src="graphscreenxy.js" type="text/javascript"></script>
+		<script src="three.min.js" type="application/javascript"></script>
+		<script src="TrackballControls.js" type="application/javascript"></script>
+		<script src="threejsscreen.js" type="application/javascript"></script>
+		<script src="funccomposite.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div data-role="page" id="katamuki">
+			<div data-role="header">
+				<h1>自然科学のための数学2015年度第６講</h1>
+			</div>
+			<div data-role="content">
+				<h2>グラフの傾きを知る方法</h2>
+				<h3>関数の局所的ふるまいを知る</h3>
+				<img src="../sizensuugaku/dxdy0.png" width="40%">
+				<p>　関数を考える時、「ある点の近所での様子」だけを知ればよい、ということがある。この「近所の様子」を「局所的なふるまい」と呼ぼう。逆に全体を見てわかるのが「大局的ふるまい」である。局所的なふるまいを知るには、「その点での値」と「その点での傾き（正確には背線の傾き）」を知れば十分な場合がある。この章で考える微分という計算は「傾き」を知るという目標のためにある。</p>
+				<div class="A">
+					たとえば車にガソリンを入れる。重要な情報は「今日はリッター何円？」（現在値）である。<br>
+					次に重要な情報は「今値上がり中か？」（変化＝傾き）である。<br>
+					今値上がり中なら「今のうちに入れておかないと明日はもっと高くなる」と、値下がり中なら「入れるのは明日にしよう」などと決断できる。<br>
+					詳細な「予言」のためにはもっとデータが必要だが、「今日ガソリンを入れるか」の決断なら、「値」と「傾き」がわかっていれば十分である。
+					<br>　なお、さらに次の情報としては「曲がり具合」なのだが、それはまた次の段階で考えよう。
+				</div>
+				<p><span class="fukidasi">傾きしかわからないのでは知るべき情報が足りないのではないか？</span></p>
+
+				<p>と思うかもしれない<span class="footnote">一方で「局所的なふるまい」という情報を取り出すことで、全体を俯瞰していたのではわからないことに気づくことだってある。</span>。それはもちろんのことであるが、実は我々は「大局的なふるまいから局所的なふるまいを知る方法」、逆に「局所的なふるまいから大局的ふるまいを知る方法」、その両方を持っている。ここではまず前者の方を考えよう、というわけである。</p>
+				<p>　この方法は万能というわけではないが、ありがたいことに自然法則というのは局所的な法則になっていることが多い。少なくともこれまでの科学の歴史においてはまず局所的ふるまいを知り、それから大局的法則を出す、という筋道で理論を組み立てて結果として成功したこと（ニュートン力学がまさにこれ）が多い。だからこそ、局所的なふるまいを計算する方法である微分が自然科学において重要な役割をになうことになる。</p>
+
+				<p>例として、関数$y=x^2-x$を考えよう。この関数の原点での値は0であり、グラフを書いてみると傾きは1である。この傾きが1であるということを知る方法として、<span class="fukidasi">$x^2$の項は$x=0$付近では効かない</span>として忘れる、という方法がある<span class="A">（これまでの授業で「次数の高い項は関係ない」という話を繰り返ししたのは、この感覚に馴染んでもらうため）</span>。</p>
+				<p>では、$x=1$付近を考えるときにはどうしよう。</p>
+				<div class="A">　ここで聞いてみたら、「微分する」という答が返ってきた。
+					<br>　もちろん、「微分する」ってのが答なんだけど、ここはその微分ってどんな計算か、ということを説明しようと思っているところなので、とりあえず「微分は知らないふり」で答えてくださいということで聞き直すと、
+					<br>
+					<br>直前と直後の値を計算して変化を見る。
+					<br>
+					<br>という答えが出てきた。
+				</div>
+				<p>　この計算はもちろん、微分の考え方そのものである。</p>
+				<p>　ところで、もう１つの計算方法がある。我々は$x=0$付近での傾きの計算方法は知っているから、関数を平行移動して$x=1$が原点に来るように変えてしまう（$y=x^2-x \to y=(x+1)^2-(x+1)$）という手もある。</p>
+				<p>　こうして計算すると$y=x^2 + x$となるから、この点での傾きは1である。</p>
+
+				<h3>極限としての接線の傾き</h3>
+
+				<p>　上で出てきた「直前と直後の値を計算」に近い計算で傾きを出してみる。</p>
+				
+				<p>　${y}=f(x)=x^2$という、単純な関数の場合で傾きの計算をしてみよう。直前というのは$x=1$にして、直後は「$x$が1よりちょっと大きいところ」にしよう。</p>
+
+				<p>　x=1として、Δxを変化させていった時の各項の様子を表にしてみると、</p>
+				<table border="1">
+					<tr>
+						<th>Δx</th>
+						<th>x+Δx</th>
+						<th>(x+Δx)<sup>2</sup></th>
+						<th>2xΔx</th>
+						<th>(Δx)<sup>2</sup></th>
+						<th>2x+Δx</th>
+					</tr>
+					<tr>
+						<td>  1</td>
+						<td>2</td>
+						<td>4 </td>
+						<td>2 </td>
+						<td>1 </td>
+						<td>3 </td>
+					</tr>
+					<tr><td>0.1</td><td>1.1</td><td>1.21 </td><td>0.2 </td><td>0.01 </td><td>2.1</td></tr>
+					<tr><td> 0.01</td><td>1.01</td><td>1.0201 </td><td>0.02 </td><td>0.0001</td><td>2.01 </td></tr>
+					<tr><td> 0.001</td><td>1.001</td><td>1.002001 </td><td>0.002 </td><td>0.000001</td><td>2.001 </td></tr>
+					<tr><td> 0.0001</td><td>1.0001</td><td>1.00020001 </td><td>0.0002 </td><td>0.00000001</td><td>2.0001 </td></tr>
+				</table>
+				<p>のようになる。Δxを小さくするに従って、${{\Delta y}\over {\Delta x}}$は2に近づく。つまり、「Δxが0に近づいた時の値」が2である。</p>
+
+				<p>　いちいちこうやって数字で計算するのもたいへんなので、一般的な式を出そう。</p>
+				<p>　独立変数と従属変数であるxと${y}$は${y}=x^2$という関係式を満たしながら変化するのだから、変化後も</p>
+\begin{equation}
+\underbrace{{y+\Delta y}}_{変化後の{y}}=(\underbrace{{x+\Delta x}}_{変化後のx})^2
+\end{equation}
+	<p>という式が成立する。この式の右辺を$({{x+\Delta x}})^2=x^2 + 2{x\Delta x} + ({\Delta x})^2$と展開した後、元の式${y}=x^2$と辺々の引き算を行なう。</p>
+
+	<img src="../sizensuugaku/y=x^2.png" class="floatnone">
+\begin{equation}
+\begin{array}{rrrll}
+& {y}&+{\Delta y}=&x^2+&2{x\Delta x}+({\Delta x})^2 \\
+-)& {y}&=&x^2 &\\ \hline
+&&{\Delta y} =&& 2{x\Delta x}+ ({\Delta x})^2
+\end{array}\label{dy2xdx}
+\end{equation}
+
+	<p>　こうして二つの変数の変化量の間は、${\Delta y}=2{x\Delta x}+({\Delta x})^2$という関係があることがわかった。当たり前だが、${\Delta x}=0$と置くと、${\Delta y}=0$になる。</p>
+
+
+	<img src="../sizensuugaku/y=x^22.png" class="floatnone">
+	<p>　ここで、</p>
+\begin{equation}
+ {{\Delta y}\over {\Delta x}}=2x+{\Delta x}
+\end{equation}
+	<p>となるが、この量は図に破線で描いた直線の傾きになる。</p>
+
+	<p>　試しに${\Delta x}=0.01$としてみると、$\left({\Delta x}\right)^2=0.0001$になる。つまりΔxをどんどん小さくするという文脈において、$\left({\Delta x}\right)^2$は「Δxより、もっと小さい」量になっている。</p>
+
+	<img src="../sizensuugaku/y=x^23.png" class="floatnone">
+	<p>　${\Delta x}\to0$という極限を取っていくと（この時同時に${\Delta y}$も0に近づくわけだが）、第２項はなくなってしまって、</p>
+\begin{equation}
+  \lim_{{\Delta x}\to0}{{\Delta y}\over {\Delta x}}=2x\label{diffxsq}
+\end{equation}
+	<p>がわかる。つまり接線の傾きは$2x$である。xが変化すると傾き${{\Delta y}\over {\Delta x}}$が変化する様子を示したのがt次のグラフである。</p>
+	<img src="../sizensuugaku/katamukihenka.png" width="50%" class="floatnone">
+	<p>　各々の場所において接線の傾きが変化しつづけている。$x<0$では傾きも負になっていることに注意しよう<span class="footnote">x=0のところでは傾き0、すなわち水平な線が接線となる。しかし、図では高さ0の三角形になって見えなくなってしまうので描いていない。}。</p>
+
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#bibunkeisan" data-icon="arrow-r">微分の定義と計算練習</a>
+			</div>
+		</div>
+		<div data-role="page" id="bibunkeisan">
+			<div data-role="header">
+				<h1>微分の定義と計算練習</h1>
+			</div>
+			<div data-role="content">
+				<h3>微分の定義</h3>
+				<p>　一般的な関数$f(x)$に対し、</p>
+				<p>$f'(x)=\lim_{\Delta x\to0}{f(x+\Delta x)-f(x)\over \Delta x}$</p>
+				<p>で定義される新しい関数$f'(x)$を「$f(x)$の導関数」とか「$f(x)$の微係数」あるいは、「$f(x)$の微分」と呼ぶ。</p>
+				<h3>計算演習</h3>
+				<p>　少し計算練習をしてみよう（テキストとは少し順番を変えた）。</p>
+				<p>　$y=x^3$の場合、</p>
+				<p>$\Delta y= (x+\Delta x)^3-x^3=3x^2\Delta x + 3x(\Delta x)^2 +(\Delta x)^3$</p>
+				<p>となるから、これを$\Delta x$で割って極限を取ると、</p>
+				<p>$\lim_{\Delta x\to0}{\Delta y\over\Delta x}=\lim_{\Delta x\to0}\left(3x^2\Delta x + 3x(\Delta x)^2 +(\Delta x)^3\right)=3x^2$</p>
+				<p>となる。こうして「$x^3$を微分すると$3x^2$」がわかった。</p>
+				<p>　次の例として、$y={1\over x}$を考えると、</p>
+				<p>$\Delta y= {1\over x+\Delta x}-{1\over x}={x-(x+\Delta x)\over x(x+\Delta x)}=-{\Delta x\over x(x+\Delta x)} $</p>
+				<p>となるから、これを$\Delta x$で割って極限を取ると、</p>
+				<p>$\lim_{\Delta x\to0}{\Delta y\over\Delta x}=\lim_{\Delta x\to0}\left(-{1\over x(x+\Delta x)}\right)=-{1\over x^2}$</p>
+				<p>である。</p>
+				<div class="box">　ここで、今日の小テスト。<br>　ここまでと同様の計算をして、$y={1\over x^2}$の微分を求めよ。</div>
+y				<div class="A">　答は以下の通り。<br>
+					$\lim_{\Delta x\to0}{\Delta y\over\Delta x}=\lim_{\Delta x\to0}{1\over \Delta x}\left({1\over (x+\Delta x)^2}-{1\over x^2}\right)=\lim_{\Delta x\to0}{1\over \Delta x}\left({-2x\Delta x -(\Delta x)^2\over x^2(x+\Delta x)^2}\right)=-{2\over x^3}$
+				</div>
+				<br>
+				<p>　以上でせっせと計算したが、たとえば$3x^2\Delta x + 3x(\Delta x)^2 +(\Delta x)^3$の後の２項は「どうせ0になる項だから」と思えば計算しなくてもよい項だった。</p>
+				<p>　このような項は${\cal O}((\Delta x)^2)$のように表現する。これは「$\Delta x$の2次式以上で表現される量なので、ここでは省略して書きませんよ」という意味だと思えば良い。</p>
+				<p>　${\cal O}$は「オーダー」と読む。意味は「桁」である。</p>
+				<p>　この記号をつかって表現すると、微分の定義式である</p>
+				<p>$f'(x)=\lim_{\Delta x\to0}{f(x+\Delta x)-f(x)\over \Delta x}$</p>
+				<p>を、</p>
+				<p>$f(x+\Delta x)=f(x)+f'(x)\Delta x + {\cal O}((\Delta x)^2)$</p>
+				<p>と書くこともある。実際に使うときはこちらの式を使うことが多い。この式は</p>
+				<div class="fukidasi">$f(x)$の$x$を$\Delta x$だけ変えると、もとの$f(x)$に$\Delta x$に比例した量が足算される。その「$\Delta x$の前の比例係数」が$f'(x)$である。</div>
+				<p>という読み方もできる（だから、「微係数」という呼び方をする）。</p>
+				<p>　${\Delta x}$や${\Delta y}$は「変化量」という意味があった。微分を行う時は、${\Delta x}$を0に近づける（連動して、${\Delta y}$も0に近づく）。このようにここから先の計算ではしばしば、${\Delta x}$や${\Delta y}$に「変化量」という意味に加えて「0に近づく」という属性が加わる。この「0に近づけていく変化量」という量を表すために、新しい記号として$\mathrm dx,\mathrm dy$を導入しよう。</p>
+
+				<p>　$\Delta$の替りに$\mathrm d $という記号を使って<span class="fukidasi">後で$\to0$という極限を取ることが約束されている変化量</span>を示す。</p>
+
+				<p>　$\mathrm dx$や$\mathrm dy$を「微小変化」と呼ぶが、この呼び方は少し説明が不足していて、単に「微小」ではなく「後で0になる極限を取ることが運命づけられている」という点が重要である。</p>
+
+				<p>　この「運命」があることで実際の計算上何が違うかというと、「$\mathrm dx$や$\mathrm dy$の二次以上の量（${\cal O}(\mathrm dx^2)$や${\cal O}(\mathrm dy^2)$）を無視する」というルールで計算していけばよい。</p>
+				<div class="A">具体的な計算については、次回。</div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#katamuki" data-icon="arrow-l">グラフの傾きを知る方法</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#pageQA" data-icon="arrow-r">受講者の感想・コメント</a>
+			</div>
+		</div>
+		<div data-role="page" id="pageQA">
+			<div data-role="header">
+				<h1>受講者の感想・コメント</h1>
+			</div>
+			<div data-role="content">
+				<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+				<div class="Q">「微分する」ということの意味をくわしく知ることができてよかったです。</div>
+				<div class="A">これをどう使うか、というところが大事です。</div>
+				<p></p>
+				<div class="Q">１次関数の傾きが式からすぐわかるように二次関数の傾きはxが負に近いか正に近いかで式よりおおまかにわかるということがすごかった。</div>
+				<div class="A">？　ちょっと「負に近いか正に近いか」の意味がわからないけど、とにかく「関数を１次関数に近似して考える」という考え方が大事です。</div>
+				<p></p>
+				<div class="Q">$f(x+\Delta x)=f(x)+f'(x)\Delta x+{\cal O}((\Delta x)^2)$の式によって、「オーダー」の部分の計算を省くことができることを知った。</div>
+				<div class="A">どうせ消えるものは計算しなくていいですからね。</div>
+				<p></p>
+				<div class="Q">微分めっちゃすきです！計算するのが楽しかった。$x=1$のときの傾きの見つけ方にびっくりしました。</div>
+				<div class="A">微分好きってのはいいな。これからしばらく微分三昧です。</div>
+				<p></p>
+				<div class="Q">微分の定義と単純計算の方法を習った。</div>
+				<div class="A">これからいろいろ計算していきましょう。</div>
+				<p></p>
+				<div class="Q">導関数の定義を使って分数を微分したのは初めてだった。</div>
+				<div class="A">そうですか。どの微分もまずは定義から、ですよ。</div>
+				<p></p>
+				<div class="Q">１限だし雨なのに来た自分えらい！！</div>
+				<div class="A">あまり褒めたくないなぁ、普通だし。</div>
+				<p></p>
+				<div class="Q">微分のことが詳しくわかった。極限を使って計算することでしくみが計算できた。</div>
+				<div class="A">まずは仕組みが大事です。</div>
+				<p></p>
+				<div class="Q">$f$がなかなかかっこよく書けなくて困ってます。</div>
+				<div class="A">う〜ん、私もかっこよくは書けないなぁ。読めればいいんでは。</div>
+				<p></p>
+				<div class="Q">微分は苦手なので次の授業までに復習しておこうと思う。</div>
+				<div class="A">苦手は早めに克服しましょう。特に微分は今後も御世話になります。</div>
+				<p></p>
+				<div class="Q">微分の本質がわかりました。自然科学を学ぶ上で微分はとても重要なので、しっかりおさえたいです。</div>
+				<div class="A">はい、とっても重要です。</div>
+				<p></p>
+				<div class="Q">今までの授業が完全に微分への伏線だったことに気づいたときは感動しました。というか気づいてなくてすみません。昨日丁度物理で速度とかの微分の話の説明をするのに苦労したところだったのですが、先生の教え方がとっても分かりやすぎすました。</div>
+				<div class="A">微分（と積分）の考え方を知って、それを使う、というのがこの授業の目標なので。</div>
+				<p></p>
+				<div class="Q">微分の意味を理解できた。微小変位の内容を理解できた。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">$f(x+\mathrm dx)=f(x)+f'(x)\mathrm dx$を使って導関数を求める方法がおもしろいと思った。微分という計算が実際にどのような事が行われているか実感できた。</div>
+				<div class="A">この式は今後もたくさん使います。</div>
+				<p></p>
+				<div class="Q">微分の雰囲気に慣れてきた。微分することの意味などを知れた。単純に見れるようにしたい。有意義な90分でした。</div>
+				<div class="A">微分を使いこなしていきましょう。</div>
+				<p></p>
+				<div class="Q">微分をやった！！　傾きを小さい変化率で考えるというのは知ってたけど、$x=0$付近では$x$の次数が低い方が大事という考えを利用するのは面白いと思った。$f(x+\Delta x)=f(x)+f'(x)\Delta x$ってものすごい式な気がする。変化後の値を元の値に変化量と傾きの積を加えて出せるって、色々使えそう。</div>
+				<div class="A">結局微分というのは「狭い近所だけを考える」やり方なのです。</div>
+				<p></p>
+				<div class="Q">微小項の考え方が分かった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">高校のときにこの授業を受けたかった。</div>
+				<div class="A">高校のときに習った微分も、中身は同じです。もう一度勉強してみましょう。</div>
+				<p></p>
+				<div class="Q">微分公式ができるまでの成り立ちがどんなものなのかを理解することができた。</div>
+				<div class="A">この後もいろんな関数で式を作っていきます。</div>
+				<p></p>
+				<div class="Q">とても小さい数字を省略することについて学びましたが、やはり0でない数を0として考えるのは抵抗があるので、まだまだ数学初心者だなと思いました。</div>
+				<div class="A">そこは最初は抵抗あるのは仕方ないですが、やっているうちに間違ったことをやってないということが実感できてくると思います。</div>
+				<p></p>
+				<div class="Q">評価に入る小テストだったので慎重に解いていたら時間がまにあわなかった。必要ない計算を省けなかった。言い訳ですが、目安の時間を教えて欲しいです。くやしいです。</div>
+				<div class="A">すいませんが、目安の時間は、皆の出来の状態で決まるので、最初にはわかりません。どんまい、次があります。</div>
+				<p></p>
+				<div class="Q">$\Delta x$と$\mathrm dx$が違うことに気づきました。確かに$\Delta$は変化量であって、それを0に近づけるという意味がないのは熱力学の$\Delta Q$や$\Delta U$などでも使っていて、無意識に$\Delta x$と$\mathrm dx$と使い分けていたけど、今日その違いがよくわかりました。${\cal O}$の考えは、これまで少しは値が異なると考えていたことを解決しました。</div>
+				<div class="A">$\mathrm dx$と書くときの意味については、またじっくり話しましょう。</div>
+				<p></p>
+				<div class="Q">今日は$\mathrm dx$とか、微分を丁寧に習ったのでとてもよかった。自分の中で$\mathrm dx$があいまいだったので、今日のはためになった。</div>
+				<div class="A">$\mathrm dx$というのがどういう意味のある量なのか、はとても大事。</div>
+				<p></p>
+				<div class="Q">微分の定義があやふやになっていたので思い出せてよかったです。微分が少し苦手なのでもう少し復習したいと思います。</div>
+				<div class="A">苦手克服してください。</div>
+				<p></p>
+				<div class="Q">高校のとき特に何も考えず微分の計算をしていたけど、今回の講義でさらに細かいところまで学べました。</div>
+				<div class="A">何も考えずに計算しちゃダメですよ（どんなことも）。</div>
+				<p></p>
+				<div class="Q">直線の傾きを知る時${\Delta y\over \Delta x}$と計算するが、曲線の傾きを知るときも${\Delta y\over \Delta x}(\Delta x\to0)$と計算するので、結局同じことをやっているんだなと思った。</div>
+				<div class="A">はい、そういうことです。</div>
+				<p></p>
+				<div class="Q">導関数を計算していると、ついただ単に$\Delta x=0$とおいてしまうことがあるが、0に近づけているだけだということはしっかり意識するようにしたい。</div>
+				<div class="A">極限を取るという計算は単に0にするより難しいですね。</div>
+				<p></p>
+				<div class="Q">数式を使って具体的に計算をしたが難しく感じた。</div>
+				<div class="A">今日は計算自体はたいしたことはしてないので、これで難しいと言われると、この先が不安だ。</div>
+				<p></p>
+				<div class="Q">$\Delta x$を小さくしていくにつれて、${\Delta y\over \Delta x}$の値が収束していくことに気づいた。新しく${\cal O}$を学んだ。これからは大学の計算のやり方で解けるように心がけたい。</div>
+				<div class="A">他の関数でも収束を確かめてみてください。</div>
+				<p></p>
+				<div class="Q">微分の定義について詳しく学ぶことができた。実際に定義のなぞを調べてみて楽しかった。</div>
+				<div class="A">定義をしっかり理解しておくこと、大事です。</div>
+				<p></p>
+				<div class="Q">微分の定義に従ってて計算するのがつかれた。</div>
+				<div class="A">この程度で疲れているようだとこの先がまた心配だ…。</div>
+				<p></p>
+				<div class="Q">高校の時は微分の公式だけで計算をしていたけど、今回で微分はそんなものなのかと少しは理解できた。</div>
+				<div class="A">「公式だけで計算」ってのはやってはダメです。中身がわからずに計算するのは意味がない。</div>
+				<p></p>
+				<div class="Q">$f(x+\mathrm dx)=f(x)+f'(x)\mathrm dx$として微分を元の値からの変化量の比例係数だとする考え方は目からうろこだった。</div>
+				<div class="A">この考え方は今後も使います。</div>
+				<p></p>
+				<div class="Q">微分を深く理解できました。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">オーダーの意味が初めてわかった。</div>
+				<div class="A">これからも使いますよ。</div>
+				<p></p>
+				<div class="Q">微分は、グラフの上のある点での傾きを調べている。傾き＝（yの変化量）／（xの変化量）</div>
+				<div class="A">はい、そういうことです。</div>
+				<p></p>
+				<div class="Q">$\mathrm dx$の意味を初めてちゃんと学んだ。高校の時のよい復習になった。</div>
+				<div class="A">$\marhrm dx$を使った計算はこれからもどんどん使うので、意味は理解しておきましょう。</div>
+				<p></p>
+				<div class="Q">計算の練習が必要だと思った。もっと練習します。</div>
+				<div class="A">やりましょう。</div>
+				<p></p>
+				<div class="Q">$f(x+\Delta x)\fallingdotseq f(x)+f'(x)\Delta $は数IIIで習っていましたが、それがどういう意味なのかは詳しく習っていなかったので、今回の授業で知ることができてとてもうれしかったです。</div>
+				<div class="A">この式は重要。これからも使います。</div>
+				<p></p>
+				<div class="Q">高校でやった微分のやり方とはまた少し違っていたので新鮮でした。</div>
+				<div class="A">中身は同じです（来週またちょっと違う方法をやります）。</div>
+				<p></p>
+				<div class="Q">$(\Delta x)^2$をしたときに${\cal O}$を使って計算しないということがわかった。小テストで軽い計算ミスがくやしかった。</div>
+				<div class="A">$(\Delta x)^2$を計算しなくてよい理由を認識しておきましょう。</div>
+				<p></p>
+				<div class="Q">最後の$\mathrm dx$のところがわからなかったです。</div>
+				<div class="A">その時にすぐ質問をしましょう。</div>
+				<p></p>
+				<div class="Q">定義や表現が大切なのはわかるが、もっと解き甲斐のある問題を、ばりばり解きたい。</div>
+				<div class="A">では、自分で問題練習をしてみましょう。授業ではやはり基本をきっちり、というところから始めます（そのうち難しい話もでてきますが）。</div>
+				<p></p>
+				<div class="Q">微分についても理解が深まってよかったです。積分も頑張りたいです。</div>
+				<div class="A">はい頑張りましょう。</div>
+				<p></p>
+				<div class="Q">微分積分には苦手意識があるので、しっかり復習しつつ来週にのぞみたいと思います。</div>
+				<div class="A">復習よろしく。</div>
+				<p></p>
+				<div class="Q">いつもは$y=x^a$→$y'=ax^{a-1}$のやり方でやっているのでこのちゃんとした求め方はなつかしく感じました。</div>
+				<div class="A">もちろんそれで覚えておけばいいといえばいいんですが「微分ってどういう計算なのか」は理解しておかないとね。</div>
+				<p></p>
+				<div class="Q">$x=0$付近では$y=x^2-x$の傾きは$-x$をみるということがわかった。</div>
+				<div class="A">それも大事なことではあるけど、授業の最初でやった部分だよね。後半部分は大丈夫？？？</div>
+				<p></p>
+				<div class="Q">limとsinとlogを筆記体で書けるようになりたくて練習しているのでｓぐあ、logの筆記体の書き方がわかりません。</div>
+				<div class="A">？？？　それ練習したことないなぁ。書き方といっても、読めるように書けばそれでいいと思いますが。</div>
+				<p></p>
+				<div class="Q">今日はちょっとした計算をたくさんしたから、いい頭の体操になった。</div>
+				<div class="A">本当に「ちょっと」だったので、もう少しやってもらった方がいいかな。</div>
+				<p></p>
+				<div class="Q">微分の定義と単純計算の方法を習った。${\cal O}$という新しい表示と、$(\mathrm dx)^2$の消去をこれから用いていいというので、使ってみようと思った。</div>
+				<div class="A">どんどん使ってください。</div>
+				<p></p>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#bibunkeisan" data-icon="arrow-l">微分の定義と計算練習</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>

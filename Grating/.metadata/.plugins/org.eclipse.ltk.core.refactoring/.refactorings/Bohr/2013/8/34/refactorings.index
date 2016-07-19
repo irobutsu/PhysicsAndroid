@@ -1,0 +1,24 @@
+1377130487896	Rename type 'ChargesView'
+1377130512577	Rename type 'Charges3DView'
+1377130672374	Delete elements
+1377130683714	Delete element
+1377130714520	Delete element
+1377130744531	Delete element
+1377130773537	Rename type 'Denba3DView'
+1377179238465	Rename field 'toggleButton1'
+1377179290308	Rename field 'checkBox1'
+1377179299946	Rename field 'checkBox2'
+1377179311280	Rename field 'checkBox3'
+1377179324000	Rename field 'checkBox4'
+1377179333810	Rename field 'checkBox5'
+1377179362636	Rename field 'checkBox6'
+1377179383943	Rename field 'toggleButton2'
+1377179516613	Rename type 'Denba3DView'
+1377182233502	Rename type 'DenbaView'
+1377207591335	Delete element
+1377315181162	Rename type 'PotentialRenderer'
+1377318535547	Delete element
+1377324551485	Copy compilation unit
+1377324578920	Rename type 'PotentialGraph'
+1377325556107	Copy compilation unit
+1377325570969	Rename type 'Torus'

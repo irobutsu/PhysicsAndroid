@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Electric Field of LineCharge</string>
+    <string name="circleMode">(circle)</string>
+    <string name="lineMode">[Line]</string>
+    <string name="move">go</string>
+    <string name="resetScreen">Reset 3D Screen</string>
+    <string name="stop">stop</string>
+    <string name="totalE">(total E)</string>
+    <string name="totalEon">[total E]</string>
+    <string name="x_off">(x-comp)</string>
+    <string name="x_on">[x-comp]</string>
+    <string name="y_off">(y-comp)</string>
+    <string name="y_on">[y-comp]</string>
+    <string name="z_0_0_">"Z=0.0 "</string>
+    <string name="z_off">(z-comp)</string>
+    <string name="z_on">[z-comp]</string>
+</resources>

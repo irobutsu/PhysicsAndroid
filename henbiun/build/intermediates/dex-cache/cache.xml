@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/maeno/Dropbox/gitHub/PhysicsAndroid/henbiun/libs/cordova-3.1.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="3e9938fb17cf1a413f42cf92b3988a5b8d1f3d54">
+        <dex dex="/Users/maeno/Dropbox/gitHub/PhysicsAndroid/henbiun/build/intermediates/pre-dexed/debug/cordova-3.1.0_1dba73f91b569118edc4b41a1486fea18602379d.jar" />
+    </item>
+    <item
+        jar="/Users/maeno/Dropbox/gitHub/PhysicsAndroid/henbiun/libs/android-support-v4.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="3b20dc871d179ba476082efe543dc1b38db46e30">
+        <dex dex="/Users/maeno/Dropbox/gitHub/PhysicsAndroid/henbiun/build/intermediates/pre-dexed/debug/android-support-v4_c167e9efb1daac560e178ee19a5160e6a4383e5d.jar" />
+    </item>
+
+</items>

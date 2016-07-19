@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>微分ってなあに？（その３）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="../jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="../vg.css" rel="stylesheet" type="text/css"/>
+		<script src="../jquery.js" type="text/javascript"></script>
+		<script src="../jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<style type="text/css">
+		body {
+			background-color: #FFFFFF;
+		}
+		img {
+			vertical-align:middle;
+		}
+		</style>
+		<script type="application/javascript" src="bibuntoha.js"></script>
+		<script type="application/javascript">
+			$(document).delegate('#page','pageinit',function(e) {
+				init(); katamukiOn();
+			});
+		</script>
+	</head>
+	<body>
+		<div data-role="page" id="page">
+			<div data-role="header">
+				<h1>微分ってなあに？（その3）</h1>
+			</div>
+			<div data-role="content">
+				<p>　プログラムはさっきと同じですが、緑色の線で接線を表示してみました。
+					<p>
+						<form action="#">
+							<label for="func">どの関数？</label>
+							<select name="func" id="func">
+								<option value="linearx">y=x</option>
+								<option selected="selected" value="sqx">y=x^2</option>
+								<option value="cbx">y=x^3</option>
+								<option value="totsuhb">y=1-x^2</option>
+								<option value="sinx">y=sin 3x</option>
+							</select>
+						</form>
+					</p>
+					<br>
+					<br>
+					<canvas id="maincanvas" width="600" height="450" style="-ms-touch-action:none;">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+					<br>
+					<br>　$x$の位置を動かすと、接線も変化します。$x+\Delta x$の位置を動かして$\Delta x\to0$の極限を取る時、${\Delta f\over\Delta x}$の値が「接線の傾き」に近づいていっていることを確認しましょう！
+			</div>
+			<div data-role="footer" align=center>
+				<input type="button" value="その2" data-icon="arrow-l" onclick="location.href='./bibuntoha2.html'">
+		  		<input type="button" value="微分ってなあに？の目次" data-icon="arrow-u" onclick="location.href='./index.html'">
+		  		<input type="button" value="HOME" data-icon="home" onclick="location.href='../index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<input type="button" value="その4" data-icon="arrow-r" onclick="location.href='./bibuntoha4.html'">
+			</div>
+		</div>
+	</body>
+<hr>
+<div align=center><a href="bibuntoha4.html">その４へ進む</a></div>
+</html>
+

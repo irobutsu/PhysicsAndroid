@@ -18,7 +18,7 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
                 android:text="常伝導状態"
@@ -26,12 +26,12 @@
 
             <Button
                 android:id="@+id/btSuper"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.3"
                 android:text="冷やす"
-                android:textSize="10dp" />
+                android:textSize="16dp" />
         </LinearLayout>
 
 
@@ -44,4 +44,4 @@
         </LinearLayout>
 
     </LinearLayout>
-</LinearLayout><!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/SuperConductor/res/layout/main.xml -->
+</LinearLayout>

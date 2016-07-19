@@ -1,0 +1,81 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>第９章　微分方程式序論（兵力自乗の法則）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="vg.css" rel="stylesheet" type="text/css"/>
+		<script src="jquery.js" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script type="text/javascript" src="graphscreen.js"></script>
+		<script type="text/javascript" src="yajirushi.js"></script>
+		<script type="text/javascript" src="sensou.js"></script>
+	</head> 
+	<body> 
+		<div data-role="page" id="square">
+			<div data-role="header">
+				<h3>兵力自乗の法則</h3>
+			</div>
+			<div data-role="content">
+				<script>
+				$(document).delegate('#square','pageinit',function(e) {
+					init();
+				});
+				</script>
+				<div class="box">
+					この例は変数が二つなので連立微分方程式になり、ここまでで解説してない式であるが、解くのは簡単なので例として挙げておく。
+				</div>
+				<p>二つの軍隊が戦争をしている。それぞれの兵力を${A},{B}$とする。時間が経つと、${A}$は${B}$に比例して減り、${B}$は${A}$に比例して減るから、</p>
+				\begin{eqnarray}
+				{\mathrm d A} &=& -\alpha {B} \mathrm dt,~~ {\mathrm d B}=-\alpha {A} \mathrm dt
+				\end{eqnarray}
+				<p>という式が成立する。これはいわば「連立微分方程式」になっているのだが、$(第1式)\times {A}-(第2式)\times {B}$という計算をすると、</p>
+				\begin{equation}
+				\begin{array}{rl}
+				{A}{\mathrm d A} - {B}{\mathrm d B}=&-\alpha {A}{B}\mathrm dt +\alpha {A}{B}\mathrm dt \\
+				\mathrm d ({A}^2-{B}^2)=&0\\
+				{A}^2 -{B}^2 =& 一定
+				\end{array}
+				\end{equation}
+				<p>という式が導かれる。これは「兵力自乗の法則」（またはランチェスターの第2法則）として知られる。たとえば${B}=B_0,{A}=2B_0$（${A}$の方が２倍の兵力を持っていた）場合、この式の右辺は$3(B_0)^2$となるから、${A}=\sqrt{3}B_0$になったところで${B}=0$となる。${B}$の兵力が文字通り全滅<span class="footnote">軍事用語で「全滅」は「全兵力が死んだ」という意味ではなく、兵力として機能しなくなった状態を意味していて、${B}\simeq 0.7B_0$ぐらいでもう「全滅」と判定する。ここで「文字通り全滅」と書いたのは${B}=0$という意味。</span>した時、${A}$は（$2{B_0}\to\sqrt{3}B_0$と変化したので）最初の${\sqrt{3}\over 2}$倍が残っている。</p>
+				<div class="setsumei">以下はその様子のアニメーションである。<span class="aka">A</span>が<span class="ao">B</span>に比例して減り、<span class="ao">B</span>が<span class="aka">A</span>に比例して減るところを確認しよう。
+				</div>
+				<hr>
+				<p><canvas id="maincanvas" width="400" height="200">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+					<canvas id="subcanvas" width="200" height="200">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+				</p>
+				<div class="setsumei">右のボタンを押すと最初から戦闘開始→<input type="button" data-inline="true" value="再スタート" id="restart" onClick="restart();"></div>
+				<div class="ui-grid-a">
+
+					<div class="ui-block-a">
+						次回のAの初期値：<input type="range" id="slA" value="100" min="1" max="100" step="1" onchange="A0=this.valueAsNumber; rewrite();">
+					</div>
+					<div class="ui-block-b">
+						次回のBの初期値：<input type="range" id="slB" value="50" min="1" max="100" step="1" onchange="B0=this.valueAsNumber; rewrite();">
+					</div>
+					<div class="ui-block-a">
+						A<sub>0</sub>=<span id="A0"></span><br>
+						B<sub>0</sub>=<span id="B0"></span><br>
+						(A<sub>0</sub>)<sup>2</sup>-(B<sub>0</sub>)<sup>2</sup>=<span id="A0B0sq"></span>
+					</div>
+					<div class="ui-block-b">
+						A=<span id="A"></span><br>
+						B=<span id="B"></span><br>
+						A<sup>2</sup>-B<sup>2</sup>=<span id="A0B0sqnow"></span>
+					</div>
+				</div>
+				<hr>
+				<div class="setsumei">なお、上の式では(A<sub>0</sub>)<sup>2</sup>-(B<sub>0</sub>)<sup>2</sup>とA<sup>2</sup>-B<sup>2</sup>が一致しないが、これはプログラム上の計算誤差によるものであって、本質的ではない。</div>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>
+

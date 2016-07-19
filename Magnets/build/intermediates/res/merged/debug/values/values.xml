@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Magnets/res/values/dimens.xml -->
-    <eat-comment/>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Magnets/res/values/strings.xml -->
-    <eat-comment/>
     <string name="E_Line_off">(H-line)</string>
     <string name="E_Line_on">[H-line]</string>
     <string name="V_Line_off">(V-line)</string>
@@ -13,8 +9,6 @@
     <string name="allErase">erase All Magnet</string>
     <string name="app_name">Magnets</string>
     <string name="rm_Charge">remove a magnet </string>
-    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Magnets/res/values/styles.xml -->
-    <eat-comment/>
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in

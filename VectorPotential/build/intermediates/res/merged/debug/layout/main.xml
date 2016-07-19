@@ -11,14 +11,14 @@
 
         <Button
             android:id="@+id/btResetScreen"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="0.1"
             android:text="@string/resetScreen" />
 
         <ToggleButton
             android:id="@+id/tbA"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="0.18"
             
@@ -27,7 +27,7 @@
 
         <ToggleButton
             android:id="@+id/tbrotAx"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="0.18"
            
@@ -36,7 +36,7 @@
 
         <ToggleButton
             android:id="@+id/tbrotAy"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="0.18"
             
@@ -45,7 +45,7 @@
 
         <ToggleButton
             android:id="@+id/tbrotAz"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="0.18"
           
@@ -54,7 +54,7 @@
 
         <ToggleButton
             android:id="@+id/tbB"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="0.18"
          
@@ -69,4 +69,4 @@
         android:orientation="vertical" >
     </LinearLayout>
 
-</LinearLayout><!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/VectorPotential/res/layout/main.xml -->
+</LinearLayout>

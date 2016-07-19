@@ -1,0 +1,320 @@
+<!Doctype html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebText 動く！熱力学</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script src="vector.js" type="text/javascript"></script>
+	<script src="yajirushi.js" type="text/javascript"></script>
+    <script src="rescalescreen.js" type="text/javascript"></script>
+    <script src="dragmanscreen.js" type="text/javascript"></script>
+    <script src="draggablepoint.js" type="text/javascript"></script>
+    <script type="text/javascript">
+     $(document).delegate('#vanderWaals','pageinit',function(e) {
+	   sc=new DragmanScreen("carnotcanvas",21,21,0.7);
+	   sc.setBottom(-5);
+	   sc.setLeft(-0.5);
+	   sc.gobackOriginalSize();
+	   yaP=new Yajirushi("rgba(200,200,100,0.9)");
+	   ct=sc.canvas.getContext("2d");
+	   reset();
+	   report();
+	   write_func();
+     });
+	 function reset() {
+	   a=141;
+	   b=39;
+	   Temp=300;
+	   write_func();
+	 }
+	 var a=141;
+	 var b=39;
+	 var unitP=100000;
+	 var unitV=0.001;
+
+	 function report() {
+	   
+	 }
+	 function marume(x) {
+	   var xx=100*x;
+	   return Math.round(xx)/100;
+	 }
+
+	 var gamma=5.0/ 3.0;
+	 var gammamone=2.0/ 3.0;
+
+	 function vdWP(V,T) {
+	   return (8.31446*T/(V-0.000001*b)-0.001*a/(V*V))/unitP;
+	 }
+	function vdWF(V,T) {
+		// RT(-1.5log(T)-log(V-b))-a/V
+	   return (8.31446*T*(-1.5*Math.log(T)-Math.log(V-0.000001*b))-0.001*a/V)/unitF;
+	 }
+	function vdW(V,T) {
+		if( fFlg ) {
+			p=vdWF(V,T);
+		} else {
+			p=vdWP(V,T);
+		}
+		return p;
+	}
+	var unitF=5000;
+	var fFlg=true;
+    function write_func() {
+	   sc.clearALL();
+	   sc.writeCoordinate();
+	   ct.strokeStyle="rgba(100,100,0,0.3)";
+	   var i;
+	   var j;
+	   var unitX=sc.w/300;
+	   var startX= 0.000001*b/unitV;
+
+	   i=Math.ceil(startX/unitX);
+
+	   startX=i*unitX;
+	   
+	   
+	   ct.beginPath();
+	   for( i=50; i<800; i+=50 ) {
+		 ct.moveTo(0.000001*b/unitV,1000);
+		 for( j=startX; j<sc.rightwx; j+=unitX ) {
+			 var p;
+			 p=vdWP(j*unitV,i);
+			 ct.lineTo(j,p);
+		 }
+	   }
+	   ct.stroke();
+
+		ct.strokeStyle="rgba(255,0,0,0.3)";
+	   i=Temp;
+	   ct.beginPath();
+	   ct.moveTo(0.000001*b/unitV,1000);
+	   for( j=startX; j<sc.rightwx; j+=unitX ) {
+		 var p=vdWP(j*unitV,i);
+		 ct.lineTo(j,p);
+	   }
+	   ct.stroke();
+		ct.strokeStyle="rgba(0,0,255,0.3)";
+	   i=Temp;
+	   ct.beginPath();
+	   ct.moveTo(0.000001*b/unitV,1000);
+	   for( j=startX; j<sc.rightwx; j+=unitX ) {
+		 var p=vdWF(j*unitV,i);
+		 ct.lineTo(j,p);
+	   }
+	   ct.stroke();
+     }
+	 var Temp=300;
+	 function rgb_temp(T,tmin,tdiff) {
+	   var r=Math.ceil((T-tmin)/ tdiff*255);
+	   var b=255-r;
+	   var g=Math.ceil(b*0.8+50);
+	   return "rgb("+r+","+g+","+b+")";
+	 }
+	 function changeA(){
+	   a=Number($('#a').val());
+	   //	   $('#avalue').html(a);
+	   write_func();
+	 }
+	 function changeB(){
+	   b=Number($('#b').val());
+	   //	   $('#bvalue').html(b);
+	   write_func();
+	 }
+	 function selectV() {
+	   var vv=$('#unitV').val();
+	   if( vv == "oneL") {
+		 unitV=0.001;
+	   }
+	   if( vv == "dottwoL") {
+		 unitV=0.0002;
+	   }
+	   if( vv == "dotfiveL") {
+		 unitV=0.0005;
+	   }
+	   if( vv == "dotoneL") {
+		 unitV=0.0001;
+	   }
+	   if( vv == "dotzerofiveL") {
+		 unitV=0.00005;
+	   }
+	   if( vv == "dotzerotwoL") {
+		 unitV=0.00002;
+	   }
+	   if( vv == "twoL") {
+		 unitV=0.002;
+	   }
+	   write_func();
+	 }
+	 function selectF() {
+	   var pp=$('#unitF').val();
+	   if( pp == "one" ) {
+		 unitF=1000;
+	   }
+	   if( pp == "two" ) {
+		 unitF=2000;
+	   }
+	   if( pp == "five" ) {
+		 unitF=5000;
+	   }
+	   if( pp == "ten" ) {
+		 unitF=10000;
+	   }
+	   if( pp == "twenty" ) {
+		 unitF=20000;
+	   }
+	   write_func();
+	 }
+	 function selectP() {
+	   var pp=$('#unitP').val();
+	   if( pp == "one" ) {
+		 unitP=100000;
+	   }
+	   if( pp == "two" ) {
+		 unitP=200000;
+	   }
+	   if( pp == "five" ) {
+		 unitP=500000;
+	   }
+	   if( pp == "ten" ) {
+		 unitP=1000000;
+	   }
+	   if( pp == "twenty" ) {
+		 unitP=2000000;
+	   }
+	   write_func();
+	 }
+	 function selectA() {
+	   var s=$('#shurui').val();
+	   if( s=="N") {
+		 a=141; b=39;
+	   }
+	   if( s=="H2O") {
+		 a=553; b=33;
+	   }
+	   if( s=="He") {
+		 a=3; b=24;
+	   }
+	   if( s=="H2" ) {
+		 a=25; b=27;
+	   }
+	   if( s=="CO2" ) {
+		 a=365; b=43;
+	   }
+	   $('#a').val(a);
+	   $('#b').val(b);
+	   write_func();
+	 }
+    </script>
+  </head> 
+  <body>
+	<div data-role="page" id="vanderWaals">
+	  <div data-role="content">
+		<div data-role="header">
+		  <h1>ファンデルワールスの状態方程式</h1>
+		</div>
+		<div data-role="content">
+		  <p>　下に「動くグラフ」があるので、いろいろな場合で温度を変化させて、</p>
+		  <div class="box">
+			<ul>
+			  <li>ある「臨界温度」より高いとき、グラフは単調減少になること。</li>
+			  <li>臨界温度より低いときは、同じ圧力に対して体積が三つ存在することがあること。</li>
+			</ul>
+		  </div>
+		  <p>を確認しよう。</p>
+		  <p>　青い線はヘルムホルツ自由エネルギーのグラフである。やはり、</p>
+		   <div class="box">
+			<ul>
+				<li>臨界温度より高いとグラフは常に下に凸。</li>
+				<li>臨界温度より低いときは、グラフに下に凸でない領域が出現する。</li>
+			</ul>
+		   </div>
+		   <p>ことを確認しよう。</p>
+		   <p><canvas id="carnotcanvas"></canvas></p>
+		   <p><span id="now"></span></p>
+		   <p>a[10<sup>-3</sup>Pa・m<sup>6</sup>・mol<sup>-2</sup>]<input type="range" id="a" min="0" max="1000" value="141" step="1" data-inline="true" onchange="changeA();"></p>
+		   <p>b[10<sup>-6</sup>m<sup>3</sup>・mol<sup>-1</sup>]<span id="bvalue"></span>:<input type="range" id="b" min="0" max="100" value="39" step="0.0001" onchange="changeB();"></p>
+		   <p>T[K]<span id="tvalue"></span>:<input type="range" id="temp" min="20" max="1000" value="300" step="1"" onchange="Temp=Number($('#temp').val()); write_func();";"></p>
+		   <p>　体積（横軸）は1目盛が　<select id="unitV" value="oneL" onchange="selectV();" data-inline="true">
+			   <option value="dotzerotwoL">0.02リットル（0.00002 m^<sup>3</sup>）</option>
+			   <option value="dotzerofiveL">0.05リットル（0.00005 m^<sup>3</sup>）</option>
+			   <option value="dotoneL">0.1リットル（0.0001 m^<sup>3</sup>）</option>
+			   <option value="dottwoL">0.2リットル（0.0002 m^<sup>3</sup>）</option>
+			   <option value="dotfiveL">0.5リットル（0.0005 m^<sup>3</sup>）</option>
+			   <option selected value="oneL">1リットル（0.001 m^<sup>3</sup>）</option>
+			   <option value="twoL">2リットル（0.002 m^<sup>3</sup>）</option>
+		   </select></p>
+		   <p>　圧力（縦軸）は1目盛が　<select id="unitP" selectedIndex="0" onchange="selectP();" data-inline="true">
+			   <option selected value="one">1×10^<sup>5</sup>パスカル</option>
+			   <option value="two">2×10^<sup>5</sup>パスカル</option>
+			   <option value="five">5×10^<sup>5</sup>パスカル</option>
+			   <option value="ten">1×10^<sup>6</sup>パスカル</option>
+			   <option value="twenty">2×10^<sup>6</sup>パスカル</option>
+		   </select></p>
+		   <p>　ヘルムホルツ自由エネルギー（縦軸）は1目盛が　<select id="unitF" selectedIndex="2" onchange="selectF();" data-inline="true">
+			   <option value="one">1000ジュール</option>
+			   <option value="two">2000ジュール</option>
+			   <option selected value="five">5000ジュール</option>
+			   <option value="ten">10000ジュール</option>
+			   <option value="twenty">20000ジュール</option>
+		   </select>
+		   <p>　初期値であるa=141、b=39は窒素の場合の値。
+			   <select id="shurui" onchange="selectA();" data-inline="true">
+				   <option value="N">窒素（a=141,b=39）</option>
+				   <option value="H2O">水（a=553,b=33）</option>
+				   <option value="He">ヘリウム（a=3,b=24）</option>
+				   <option value="H2">水素（a=25,b=27）</option>
+				   <option value="CO2">二酸化炭素（a=365,b=43）</option>
+			   </select>
+		   </p>
+		   <hr>
+		   <p>　たとえば水蒸気（水）の場合でどうなるか、などを見てみよう。</p>
+		   <p>　下の図の赤く塗った部分では、圧力すなわち$-{\partial F\over\partial V}$が一定のままで体積が変化する。これが「気相・液相の共存領域」になる。</p>
+		   <p><img src="gijiF.png" width="50%" class="floatnone"></p>
+		   <p>　上の「動くグラフ」でも温度に応じて（低温のときに）このような領域が現れることを確認しよう。</p>
+		   <p>　この共存領域を$V$-$P$のグラフ上に表現すると↓のようになる。</p>
+		   <p><img src="kiekiVP.png" width="50%" class="floatnone"></p>
+		   <p>　この間に、たとえば液体→気体と相転移したなら、ぐっと体積が増える（液体窒素→気体窒素の場合で700倍）。</p>
+		</div>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" onclick="location.href='#phase'" data-icon="arrow-l" value="相転移">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+		<input type="button"  onclick="location.href='#cp'" data-icon="arrow-r" value="臨界点">
+	  </div>
+	</div>
+	<div data-role="page" id="cp">
+	  <div data-role="header">
+		<h1>臨界点</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　温度がある程度より高いと、$V$-$P$グラフは理想気体同様の単調減少な関数になり、先に説明したような液相←→気相の変化（相転移）が起きなくなる。このときの温度を「臨界温度」と言う。</p>
+		<h3>相図</h3>
+		<p>　よって、気相と液相がどうなっているかを$T$-$P$のグラフ上に書くと、</p>
+		<p><img src="kieki.png" width="40%" class="floatnone"></p>
+		<p>のようになる。臨界点より温度が高い状況では、液体と気体は劇的な相転移を経ることがない。むしろ、「臨界点より外では液体と気体の区別がない」という状況になる。</p>
+		<div class="Q">　その赤い線のところで、体積が飛ぶんですか？</div>
+		<div class="A">　飛ぶというより、一つ前の図の「共存領域」という面積のあった部分が、この線にぺしゃっと潰れてしまっている感じです。こっちのグラフは$T$-$P$のグラフで、共存領域では$P$が変化せずに$V$が変化して、液体←→気体と変化するから。</div>
+		<div class="Q">　じゃあ、臨界点より向こうを回りこんだら、相転移せずに気体が液体になりますか？</div>
+		<div class="A">　なるよ、こんな↓感じ。</div>
+		<p><img src="kieki2.png" width="40%" class="floatnone"></p>
+		<p>　さらに固体という相も入れると、相図は</p>
+		<p><img src="kiekiko.png" width="40%" class="floatnone"></p>
+		<p>のようになる。三つが共存しているのが「三重点」である。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" onclick="location.href='#phase'" data-icon="arrow-l" value="相転移">
+		<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+		<input type="button" onclick="location.href='./gibbs.html#HG'" data-icon="arrow-r" value="エンタルピーとギッブス自由エネルギー">
+	  </div>
+	</div>
+  </body>
+</html>

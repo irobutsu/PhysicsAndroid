@@ -1,0 +1,232 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>空気抵抗を受ける質点</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+	<link href="vg.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="vector.js"></script>
+	<script type="text/javascript" src="yajirushi.js"></script>
+	<script type="text/javascript" src="rescalecanvas.js"></script>
+	<script type="text/javascript" src="graphcanvas.js"></script>
+	<script type="text/javascript" src="phystem.js"></script>
+	<script type="text/javascript" src="phystemwithtygraph.js"></script>
+	<script type="text/javascript" src="connector.js"></script>
+	<script type="text/javascript" src="bane.js"></script>
+	<script type="application/javascript">
+	 var ps,ps2;
+	 var m1,m2;
+	 var air;
+		 var v0=4;
+		 var v02=4;
+		 var t=0;
+		 var gy0=0;
+	   $(document).delegate('#example','pageinit',function(e) {
+		 ps=new Phystem("canvas1",12,1.5,0.8,-2,-0.75);
+		 ps.drawFFlg=true;
+		 ps.hasNoEdge=true;
+		 ps.writeX=true;
+		 m1=new DynamicalObject(ps,0,0,v0,0,1,"rgba(255,255,0,0.5)");
+		 air=new NonDynamicalObject(ps);
+		 air.interactionForce=function(to) {
+		   return new Vector(-to.v.x,-to.v.y);
+		 }
+		 air.draw=function() {};
+		 ps.start();
+		 ps2=new Phystem("canvas2",2,12,0.1,-1,-2); 
+		 graph=new RescaleCanvas("canvas3",12,12,0.6,-1,-2);
+		 graph.writeBackGround();
+		 ps2.drawFFlg=true;
+		 ps2.hasNoEdge=true;
+		 ps2.writeY=true;
+		 t=0;
+		 ps2.writeContents=function() {
+		   Phystem.prototype.writeContents.call(this);
+		   graph.writeLine(t,gy0,t+0.04,m2.p.y,"rgb(255,0,0)");
+		   t+=0.04;
+		   gy0=m2.p.y;
+	   };
+	   m2=new DynamicalObject(ps2,0,0,0,v02,1,"rgba(255,255,0,0.5)");
+	   air2=new NonDynamicalObject(ps2);
+	   air2.interactionForce=function(to) {
+		 return new Vector(-to.v.x,-to.v.y);
+	   }
+	   air2.draw=function() {};
+	   ps2.start();
+	   });
+	   function start() {
+		 m1.p.setXY(0,0);
+		 m1.v.setXY(v0,0); 
+	   }
+	   function clearStart2() {
+		 graph.clearALL();
+		 graph.writeBackGround();
+		 start2();
+	   }
+	   function start2() {
+		 t=0;
+		 gy0=0;
+		 m2.p.setXY(0,0);
+		 m2.v.setXY(0,v02); 
+	   }
+	  </script>
+	</head> 
+	<body>
+	  	<div data-role="page" id="example">
+			<div data-role="header">
+			  <h1>空気抵抗を受ける質点</h1>
+			</div>
+			<div data-role="content">
+				<h3>定数係数の二階線形方程式の例</h3>
+
+				<p>質量$m$の物体が$F$という力を受けるとき、物体の位置座標${x}$に関する微分方程式である<span class="box">運動方程式$m\left({\mathrm d\over\mathrm dt}\right)^2 {x}= F$</span>が成り立つことが力学で知られている。この$F$が$-K{\mathrm d\over\mathrm dt}{x}$（$K$は比例定数）のように${x}$の時間微分に比例する場合<span class="footnote">実際、速度が遅い場合の空気抵抗はだいたいこの式であっている。</span>、すなわち、
+					\begin{equation}
+					m\left({\mathrm d\over\mathrm dt}\right)^2 {x}= -K{\mathrm d\over\mathrm dt}{x}\label{FKv}
+					\end{equation}
+					という微分方程式が成り立つ場合を考えよう。</p>
+				<p>　この方程式に${x}=\mathrm e^{\lambda{t}}$を代入すると、</p>
+				<p>
+					\begin{equation}
+					m\lambda^2 \mathrm e^{\lambda{t}} = -K\lambda \mathrm e^{\lambda{t}}
+					\end{equation}
+					となり、特性方程式は<span class="box">$m\lambda^2=-K\lambda$</span>となる。この方程式の解は<span class="box">$\lambda=0,-{K\over m}$</span>なので、
+				\begin{equation}
+					{x}({t})= C_1 + C_2 \mathrm e^{-{K\over m}{t}}
+					\end{equation}
+					が解である。グラフは右に描いたようになり、積分定数の意味は、$C_1$が${t}\to\infty$での${x}$の値、$C_1+C_2$が${t}=0$での${x}$の値である。</p>
+				<div class="A">　つまり、初速度を決めることが$C_2$を決め、最初の位置を決めることが$C_1$を決める。未定のパラメータはこのような初期条件が決めることになるのである。</div>
+			  	<p>この微分方程式の解は、ボールなどを床に転がした時<span class="footnote">この状況であればボールは水平に動くので、重力は運動とは関係ない。</span>にどのようにボールが運動するかを表している。</p>
+				<div class="setsumei">運動は、下のように起こる。初速度を変えて「再スタート」させてみよう（初期位置は固定されている）</div>
+			  <p><canvas id="canvas1"></canvas></p>
+			  <p>初速度=<input type="range" value="4" min="0" max="10" step="0.1" onchange="v0=this.valueAsNumber;"></p>	
+			  <p><button onClick="start();">再スタート</button></p>
+
+			  <hr>
+
+			  <div class="setsumei">　横軸に時間$t$、縦軸に$x$を取ってグラフにしたのが以下の図である。<br>
+				  初速度をいろいろ変えて運動の様子を見よう。
+			  </div>
+
+					  <p><canvas id="canvas2"></canvas><canvas id="canvas3"></canvas></p>
+				  <p>初速度=<input type="range" value="4" min="0" max="10" step="0.1" onchange="v02=this.valueAsNumber;"></p>	
+				  <p><button onClick="start2();" data-inline="true">再スタート</button>
+					<button onClick="clearStart2();" data-inline="true">クリアして再スタート</button>
+				  </p>
+			  <p>　この微分方程式の解は
+				  \begin{equation}
+				  {\mathrm d\over\mathrm dt}{x}({t})= -{K\over m}C_2\mathrm e^{-{K\over m}{t}}
+				  \end{equation}
+				  であるから、<span class="box">$C_1=v_0{m\over K},C_2=-v_0{m\over K}$</span>のとき<span class="box">${x}(0)=0,{{\mathrm d\over\mathrm dt}}{x}(0)=v_0$</span>になる。初速度に比例した距離だけ移動できることがわかる。「止まるまでの時間」は$\infty$である！<span class="footnote">とはいえ、速度は指数関数で急速に0に近づくので、見た目は止まったように見えるだろう。厳密に式の通りの運動が起こるのなら、「無限に遅い速度で永遠に動き続ける」ということになる。しかしここで扱っているのは理想化した状態で、実際には式に表した以外の力も働いている。</span>。
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#airfall" data-icon="arrow-r">空気抵抗を受けて落下する質点</a>
+			</div>
+		</div>
+		<div data-role="page" id="airfall">
+			<div data-role="header">
+				<h2>空気抵抗を受けて落下する質点</h2>
+			</div>
+			<script type="application/javascript">
+			var p3;
+			var m3;
+			var air3;
+			var v03=0;
+			var t3=0;
+			var gy03=0;
+			var graph2;
+			var p4;
+			var m4;
+			var air4;
+			var v04=0;
+			var t4=0;
+			var gy04=0;
+			var graph4;
+			$(document).delegate('#airfall','pageinit',function(e) {
+				ps3=new Phystem("canvas4",2,12,0.1,-1,-10); 
+				graph2=new RescaleCanvas("canvas5",12,12,0.6,-1,-10);
+				graph2.writeBackGround();
+				ps3.drawFFlg=true;
+				ps3.hasNoEdge=true;
+				ps3.writeY=true;
+				t3=0;
+				ps3.writeContents=function() {
+					Phystem.prototype.writeContents.call(this);
+					graph2.writeLine(t3,gy03,t3+0.04,m3.p.y,"rgb(255,0,0)");
+					t3+=0.04;
+					gy03=m3.p.y;
+				};
+				m3=new DynamicalObject(ps3,0,0,0,v03,1,"rgba(255,255,0,0.5)");
+				air3=new NonDynamicalObject(ps3);
+				air3.interactionForce=function(to) {
+					return new Vector(-to.v.x,-to.v.y);
+				}
+				air3.draw=function() {};
+				earth=new NonDynamicalObject(ps3);
+				earth.interactionForce=function(to) {
+					return new Vector(0,-to.mass);
+				}
+				earth.draw=function() {};
+				ps3.start();
+			});
+			function clearStart3() {
+				graph2.clearALL();
+				graph2.writeBackGround();
+				start3();
+			}
+			function start3() {
+				t3=0;
+				gy03=0;
+				m3.p.setXY(0,0);
+				m3.v.setXY(0,v03); 
+			}
+			function clearStart4() {
+				graph4.clearALL();
+				graph4.writeBackGround();
+				start4();
+			}
+			function start4() {
+				t4=0;
+				gy04=-v04;
+				m4.p.setXY(0,gy04);
+				m4.v.setXY(0,v04); 
+			}
+			</script>
+			<div data-role="content">
+				<h4>空気抵抗を受けて落下する質点</h4>
+				<p>　運動方程式に重力$F=-mg$を加えて<span class="footnote">$-mg$とマイナス符号をつけるのは、図に書いたように上向きに${x}$軸を取ったから。</span>、線形非斉次な方程式
+				  \begin{equation}
+					m\left({\mathrm d\over\mathrm dt}\right)^2 {x}= -K{\mathrm d\over\mathrm dt}{x}-mg\label{Fkvmg}
+				  \end{equation}
+					にしてみよう。方程式を非斉次にしている$-mg$を消せばさっきの式になるが、その解はすでにわかっている。つまり斉次方程式の一般解は既に知っているから、非斉次方程式の特解を一つ見つけて足せばよい。</p>
+				
+				<p>　特解を見つける方法はいろいろあるが、ここでは「できるだけ式を簡単に」ということで「両辺が0になるのはどんなときかな？」と考えてみよう。左辺（二階微分）が0になるのは$x$が$t$の1次式なとき。そこで簡単な、<span class="box">${x}=v{t}$</span>を試すと、<span class="box">$0= -Kv -mg$</span>となるから<span class="box">$v=-{mg\over K}$</span>とすれば<span class="box">${x}=-{mg\over K}{t}$</span>という特解を得る。一般解は以下の通りである。
+				  \begin{equation}
+					{x}= \underbrace{C_1 + C_2 \mathrm e^{-{K\over m}{t}}}_{斉次方程式の一般解} \underbrace{- {mg\over K}{t}}_{非斉次方程式の特解}
+					\end{equation}
+				</p>
+				<p>　二階微分方程式だから未定のパラメータ二つでちょうどよい。そのため、${x}$-${t}$のグラフで一点を指定しても曲線は決まらない。一点と、「その点での傾き（微係数）」を指定すると、曲線が一つ決まる。</p>
+				<p class="A">　結果はもちろん、特解$-{mg\over K}t$が足されるという形になる。よってさっきの場合は「静止状態」になっていったが、この場合は「等速運動」に変化していく。</p>
+				<div class="setsumei">　これも下のプログラムで動きを見ながら解を確認しよう。</div>
+				<p><canvas id="canvas4"></canvas><canvas id="canvas5"></canvas></p>
+				<p>初速度=<input type="range" value="0" min="-4" max="4" step="0.1" onchange="v03=this.valueAsNumber;"></p>	
+				<p><button onClick="start3();" data-inline="true">再スタート</button>
+					<button onClick="clearStart3();" data-inline="true">クリアして再スタート</button>
+				</p>
+
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#example" data-icon="arrow-l">空気抵抗を受ける質点</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+  </body>
+</html>
+

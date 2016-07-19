@@ -1,0 +1,651 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>第１章　関数（続き：指数関数対数関数）＆第２章　一変数の微分Introduction</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="jquery.mobile-1.4.2.min.css?lec=4" rel="stylesheet" type="text/css"/>
+		<script src="jquery.js?lec=4" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+		<script src="rescalescreenxy.js" type="text/javascript"></script>
+		<script src="graphscreenxy.js" type="text/javascript"></script>
+		<script src="three.min.js" type="application/javascript"></script>
+		<script src="TrackballControls.js" type="application/javascript"></script>
+		<script src="threejsscreen.js" type="application/javascript"></script>
+		<script src="funccomposite.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		function marume6(x) {
+			var xx=x*1000000;
+			xx=Math.round(xx);
+			xx  /= 1000000;
+			if( x- xx == 0 ) {
+				return xx;
+			} else {
+				return xx+"…";
+			}
+		}
+		function marume4(x) {
+			x*=10000;
+			x=Math.round(x);
+			x /= 10000;
+			return x;
+		}
+		var nowgs;
+		var gs_e;
+		$(document).delegate('#page_e','pageinit',function(e) {
+			gs_e=new GraphScreenXY("canvas_e",4.5,3,0.7,1);
+			gs_e.setLeft(-2.25);
+			gs_e.setBottom(-0.5);
+			gs_e.gobackOriginalSize();
+			gs_e.setFunction(function(x) { return Math.pow(a_e,x);});
+			gs_e.setFunction(function(x) { return 1+x;},"rgba(0,0,255,0.3)");
+			nowgs=gs_e;
+		});
+		$(document).delegate('#page_e','pageshow',function(e) {
+			nowgs=gs_e;
+			gs_e.writeGraph();
+		});
+		function upA_E(k) {
+			a_e +=k;
+			if( a_e>10 ) { a_e=10; }
+			changeA_E();
+		}
+		function downA_E(k) {
+			a_e-=k;
+			if( a_e<0.1 ) { a_e=0.1;}
+			changeA_E();
+		}
+		function changeA_E() {
+			a_e *=100;
+			a_e=Math.round(a_e);
+			a_e = a_e/ 100;
+			$('#a_e_value').html(a_e);
+			nowgs.writeGraph();
+		}
+		function zoomnormal() {
+			nowgs.o_h=3;
+			nowgs.o_syx=1;
+			nowgs.setBottom(-0.5);
+			nowgs.gobackOriginalSize();
+			nowgs.writeGraph();
+		}
+		function zoomin2() {
+			nowgs.o_h=1.5;
+			nowgs.o_syx=0.5;
+			nowgs.setBottom(0.25);
+			nowgs.gobackOriginalSize();
+			nowgs.writeGraph();
+		}
+		function zoomin4() {
+			nowgs.o_h=0.75;
+			nowgs.o_syx=0.25;
+			nowgs.setBottom(0.625);
+			nowgs.gobackOriginalSize();
+			nowgs.changeScale(0.25);
+			nowgs.writeGraph();
+		}
+		var a_e=2;
+		var gs_log;
+		var a_log=2;
+		$(document).delegate('#page_log','pageinit',function(e) {
+			gs_log=new GraphScreenXY("canvas_log",6.5,7,0.7,1);
+			gs_log.setLeft(-2.25);
+			gs_log.setBottom(-3.5);
+			gs_log.gobackOriginalSize();
+			gs_log.setFunction(function(x) { return Math.pow(a_log,x);},"rgba(255,0,0,0.4)");
+			gs_log.setFunction(function(x) { return Math.log(x)/ Math.log(a_log);},"rgb(0,0,255)");
+			nowgs=gs_log;
+		});
+		$(document).delegate('#page_log','pageshow',function(e) {
+			nowgs=gs_log;
+			gs_log.writeGraph();
+		});
+		function upA_LOG() {
+			a_log +=0.1;
+			if( a_log>10 ) { a_log=10; }
+			changeA_LOG();
+		}
+		function downA_LOG() {
+			a_log-=0.1;
+			if( a_log<0.1 ) { a_log=0.1;}
+			changeA_LOG();
+		}
+		var s_log=4;
+		function upS_LOG() {
+			s_log +=1;
+			if( s_log>100 ) { s_log=100; }
+			changeS_LOG();
+		}
+		function downS_LOG() {
+			s_log-=1;
+			if( s_log<2 ) { s_log=2;}
+			changeS_LOG();
+		}
+		function changeS_LOG() {
+			$('#s_log_value').html(s_log);
+			var scale=(s_log+0.5)/ 4.5;
+			gs_log.setScaleYX(scale);
+			gs_log.setScale();
+			gs_log.writeGraph();
+		}	   
+		function changeA_LOG() {
+			a_log *=10;
+			a_log=Math.round(a_log);
+			a_log = a_log/ 10;
+			$('#a_log_value').html(a_log);
+			$('#a_log_value2').html(a_log);
+			nowgs.writeGraph();
+		}
+		</script>
+		<style type="text/css">
+		table { display: inline; }
+		tr { display: inline-table; }
+		.ki{
+			color:#880;
+		}
+		.teihen {
+			color: #D00;
+		}
+		.takasa {
+			color: #00D;
+		}
+		.shahen {
+			color: #880;
+		}
+		.warning{
+			padding:5px;
+			color:#F00;
+			background-color: #FF0;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		img {float:left;}
+		img.withb{border: 2px #880 solid;}
+		h2{
+			color:#300;
+			background-color: #9CC;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		h3{
+			color:#300;
+			background-color: #CC9;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.footnote {
+			font-size:50%;
+			padding:5px;
+			background-color: #FEE;
+			color:#009;
+			border: solid #008 double;
+			border-radius:8px;
+		}
+		.floatright{
+			float:right;
+		}
+		.floatleft{
+			float:left;
+		}
+		.floatnone{
+			float:none;
+		}
+		.case{
+			color:#000;
+			background-color: #FCC;
+			border: solid #800 thin;
+			border-radius:10px;
+		}
+		.fukidasi{
+			padding:5px;
+			color:#000;
+			background-color: #DDF;
+			border: solid #800 thin;
+			border-radius:10px;
+		}
+		.faq{
+			padding:5px;
+			color:#400;
+			background-color: #CCF;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.setsumei{
+			padding:5px;
+			color:#008;
+			background-color: #CFC;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.box{
+			padding:5px;
+			color:#000;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.question{
+			padding:5px;
+			color:#003;
+			background-color: #CCF;
+			border: solid #333 double;
+			border-radius:13px;
+		}
+		.keyword{
+			padding:3px;
+			color:#050;
+			background-color:#FCF;
+			border: solid #FF8 double;
+			border-radius:8px;
+		}
+		.akansetsumei{
+			padding:5px;
+			color:#080;
+			background-color: #FCC;
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.gray{
+			color:#888;
+		}
+		.magenta{
+			color: #D0D;
+		}
+		.aka{
+			color: #F00;
+		}
+		.A{
+			color: #F00;
+		}
+		.red{
+			color: #D00;
+		}
+		.green{
+			color: #0D0;
+		}
+		.yellow{
+			color: #DD0;
+		}
+		.Q { 
+			padding:5px;
+			background-color: #CCC;
+			color: #00F; 
+			border: solid #333 thin;
+			border-radius:10px;
+		}
+		.ao {
+			color: #00F;
+		}
+		.blue{
+			color: #00D;
+		}
+		</style>
+	</head> 
+	<body> 
+		<div data-role="page" id="page_e">
+			<div data-role="header">
+				<h1>指数関数（続き）</h1>
+			</div>
+			<div data-role="content">
+				<h3>指数関数の傾きとネイピア数</h3>
+				<img src="../sizensuugaku/exp112233.png" width="40%" class="floatright">
+				<p>　底が大きくなると指数関数は増加の度合いが大きくなる。$a$が1より小さい場合は、むしろ減少する関数となる。</p>
+				<p>　本講義ではここまででも何度か強調しているが、「関数のある点の近傍でのふるまい」を考えることは重要である。そこで指数関数の原点付近でのふるまいを見ておこう。</p>
+				<p>　グラフにも示されているように、$x=0$のときの$y=a^{x}$の値はすべての$a$で等しく1である。一方、$x=0$でのグラフの傾きは、底$a$が大きいほど大きい。そこで、この傾きがちょうど1になるところの$a$を探す。そのときの$a$を e と書いて「ネイピア数(Napier's constant)」もしくは「自然対数の底」と呼ぶ<span class="footnote">対数とはなにかは、まだ説明してない。言葉の定義の順番が混乱しているのは許して欲しい。</span>。シンプルに e （いー）と呼んでいることも多い<span class="footnote">変数$e$と区別するために、 e は立体で書く（イタリックにしない）ことにする。</span>。</p>
+				<p>　e の値を知る方法について考えよう。下の図は$y=2^{x}$と$y=3^{x}$と、傾き1で$(0,1)$を通る直線$y=x+1$のグラフである。</p>
+				<p align="center"><img src="../sizensuugaku/motomeruE.png" width="75%" class="floatnone"></p>
+				<p>　これを見ると、$x=0$で傾き1になるためには、2よりは大きく3よりは小さい数を底にしなくてはいけない。数字をどんどん細かくしていきながら考えていく。たとえば次の段階では、$y=2.7^{x}$と$y=2.8^{x}$のグラフの間に直線$y=x+1$があることから、 e が2.7より大きく2.8より小さいことがわかる。この手続を繰り返すことで、 e の値を精密にしていくことができるだろう（グラフは重なってしまってわかりにくいが）。</p>
+				<div class="setsumei">
+					　下のグラフはスライダでaが変化できるようになっているので、傾きが1になるところを探そう（ちょっと見難いかもしれない）。
+				</div>
+				<div align="center"><canvas id="canvas_e" width="100" height="100" ></canvas></div>
+				<div class="setsumei">
+					　上のグラフは指数関数<span class="ao">y</span>=a<sup><span class="aka">x</span></sup>（<span class="aka">赤い線</span>）と、<span class="ao">y</span>=1+<span class="aka">x</span>（<span class="ao">薄い青の線</span>）のグラフである。
+					<br>　下↓のスライダーでaの値を変えられるので、原点での傾きが二つのグラフで一致する場所を探してみよう。
+				</div>
+				<div>
+					<input type="range" id="slider_a_e" value="2" min="1.1" max="4" step="0.01" onChange="a_e=Number($('#slider_a_e').val()); changeA_E();" />
+				</div>
+				<div class="setsumei">
+					下↓のボタンで画像全体を縦方向のみ拡大できる（もっとも拡大してもなかなかわかりにくいが）。</div>
+				<div data-role="fieldcontain">
+					<a href="#" data-role="button" data-inline="true" onClick="zoomnormal();">最初の状態へ</a>
+					<a href="#" data-role="button" data-inline="true" onClick="zoomin2();">縦方向２倍拡大</a>
+					<a href="#" data-role="button" data-inline="true" onClick="zoomin4();">縦方向４倍拡大</a>
+				</div>
+				<div class="setsumei">だいたい、2.71と2.72のあたりで傾きが一致するのがわかるだろうか。</div>
+				<p>　こうやって求めた e の大きさは e=2.718281828459045… である。この e は無理数であることが証明されていて、無限に続く小数である。この値をどうやって計算するのかについては、ここでは「いろんな値を入れてグラフを描いていき、傾きが1になるところを探せば e は計算できるだろう」という程度の大雑把な理解にとどめておこう。実際にはこんな面倒なことはやらない。実際的で、かつ大雑把でない理解のために微分という計算が必要になる。</p>
+				<p>　なぜ傾き1がそんなに大事なのかについては後でわかるが、ここでは「傾きはすなわち微分であり、微分を知ることが自然法則を知る手がかりになる」ということを思い出しておこう。</p>
+				<p align="center">電卓でeを計算する方法</p>
+				<div class="box">　まず<span class="fukidasi">1</span>を押して次に<span class="fukidasi">M+</span>を2回押す（この段階で電卓のメモリには$1+1$が入っている）。次にそこにある1を2で割る。結果（$0.5$）が出たところで、また<span class="fukidasi">M+</span>を押す（これで$1+1+{1\over 2}$）。次に3で割って<span class="fukidasi">M+</span>、さらに4で割って<span class="fukidasi">M+</span>…と繰り返す（これは${1\over n!}$を順番に計算しては足している<span class="footnote">$n!$は、「階乗」と言って、$n(n-1)(n-2)\cdots4\times 3\times 2\times 1$という積を表す記号。</span>）。電卓の精度以下の数字になったところで<span class="fukidasi">MR</span>を押すとこれまで<span class="fukidasi">M+</span>でメモリに入れた数字の和が出てくるが、その値はe=2.718281828…になっているはずだ。</div>
+				<p>　上のようにして e が計算できる理由は、後で出てくる<span class="Small">（だからまだわからなくてもよい）</span>、</p>
+				\begin{equation}
+				{\mathrm e}^x = 1+x+{x^2\over 2!}+{x^3\over 3!}+{x^4\over 4!}+{x^5\over 5!}+\cdots\label{extenkai}
+				\end{equation}
+				<p>という式（${\mathrm e}^x$のテイラー展開の式）があって、この式に$x=1$を代入すると、</p>
+				\begin{equation}
+				{\mathrm e} = 1+1+{1\over 2!}+{1\over 3!}+{1\over 4!}+{1\over 5!}+\cdots
+				\end{equation}
+				<p>になるからである。\式{extenkai}がどうやって出てくるかは後のお楽しみであるが、とりあえず${\mathrm e}^{x}=1+x+\cdots$までは「$x=0$での値が1で傾きが1」ということからわかる。</p>
+				<p>　この特別な数字 e を使った指数関数$y={\mathrm e}^{x}$は、「微分方程式を解く」という作業において頻出する。そこでこれを特に、$y=\exp(x)$のように書くこともある。$\exp$は「イクスポーネンシャル」と読む<span class="footnote">${\mathrm e}^{x}$を「イクスポーネンシャルエックス」のように読むこともある。</span>。</p>
+
+				<h3>指数関数の底の変換</h3>
+
+				<p>$y=2^{x}$という関数と$y=4^{{X}}$という関数を考えよう。${X}=2x$ならばこの二つが等しい、すなわち</p>
+				\begin{equation}
+				2^{2{X}}= (2^2)^{X}=4^{X}
+				\end{equation}
+				<p>である（たとえば、$2\times 2\times 2\times 2=(2\times 2)\times(2\times 2)=4^2$）。今は2と4という単純な例で考えたが、もっと一般的に$y=a^x$と$y=b^{X}$の関係を考えよう。たとえば、$a$と$b$の間に$a=b^c$（$c$もまた別の定数）という関係があるなら、</p>
+				\begin{equation}
+				a^x= (b^c)^x=b^{cx}
+				\end{equation}
+				<p>となるから、${X}=cx$とすればこの二つの関数が同じ関数になる。</p>
+			</div>
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#page_log" data-icon="arrow-r">「対数関数」へ</a>
+			</div>
+		</div>
+		<div data-role="page" id="page_log">
+			<div data-role="header">
+				<h1>対数関数</h1>
+			</div>
+			<div data-role="content">
+				<h3>対数関数の定義：指数関数の逆関数</h3>
+				<p><span class="fukidasi">10は2の何乗か？</span>という疑問を考えた。より一般的に<span class="fukidasi">${x}$は${a}$の何乗か？</span>という問題を考えることにしよう。つまり、${x}=a^{y}$という式が成り立つときに、${y}\to{x}$という対応関係を知りたい。つまり今考えたい関数は指数関数${y}=a^{x}$の逆関数であり、これを「対数関数」と呼ぶ。対数関数を表現するには、$\log$という記号を使う。一般的定義は</p>
+				<p align="center">対数関数</p>
+				<div class="box">
+					　1ではない正の定数$a$を底とする指数関数${y}=a^{{x}}$（${x}$が独立変数で${y}$が従属変数）に対し、${y}$を先に決めてそれに対応する${x}$を対応させる関数を対数関数といい、
+					\begin{equation}
+					{x}=\log_a {y}\label{defoflog}
+					\end{equation}
+					と書く<span class="footnote">$\log$は「logarithm」の略。「log-」の部分は「論理」を意味するlogicと同語源（「-arithm」の部分は数学を意味する）。「論理」と「対数」が同じ意味なのは理解しにくいが当時の人にとってはそうだったのだろう。</span>（この式では、${y}$が独立変数で${x}$が従属変数）。
+				</div>
+				<p>$\log_a$の$a$のことを指数関数の時と同様、「底（てい）」と呼ぶ。底が$2,{\mathrm e},10$およびその逆数${1\over 2},{1\over {\mathrm e}},{1\over 10}$の場合の指数関数（実線）と対数関数（破線）のグラフを下に示した（互いに逆関数になっていることを確認せよ）。</p>
+				<p align="center"><img src="../sizensuugaku/logexp.png" class="floatnone" width="80%"></p>
+				<p>　左右を見比べると、指数関数の性質$a^{-{x}} = \left({1\over a}\right)^{{x}}$ということが（${x}\to-{{x}}$という変化がグラフ上では左右反転となって）見て取れる。対数関数はこれの逆関数（${x}$と${y}$の立場が入れ替わる）だから、</p>
+				\begin{equation}
+				\log_a {x} = -\log_{1\over a}{x}
+				\end{equation}
+				<p>という関係がわかる（グラフでは上下反転として読み取れる）。</p>
+				<div class="setsumei">　下に、例によって動くグラフがあるので動かしていろんな場合のlogのグラフを見ておこう。</div>
+				<div align="center">
+					<canvas id="canvas_log" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+				</div>
+				<p>　上の<span class="ao">青い線が</span>対数<span class="ao">y</span>=log<sub>a</sub><span class="aka">x</span>、薄い<span class="aka">赤の線</span>が指数関数<span class="ao">y</span>=a<sup><span class="aka">x</span></sup>のグラフである。
+				</p>
+				<p>この二つが互いに逆関数であることを確認しよう。</p>
+				<div class="setsumei">
+					下↓のボタンでaの値を変えられるので、いろいろと変えてみよう（ただし、a=1.0は意味が無い）。</div>
+				<div>
+					<input type="range" id="slider_a_log" value="2" min="0.1" max="5" step="0.1" onChange="a_log=Number($('#slider_a_log').val()); changeA_LOG();" />
+				</div>
+				<p><span class="ao">青い線：y</span>=log<sub><span  class="a_log" id="a_log_value">2.0</span></sub><span class="aka">x</span></p>
+				<p><span class="red">薄い赤い線：</span><span class="ao">y</span>=<span class="a_log" id="a_log_value2">2.0</span><sup><span class="aka">x</span></sup></p>
+				<p>　指数関数と対数関数は逆関数である。しかし、$\log_a\left(a^{x}\right)=x$はどんな実数${x}$に対しても成り立つが、$a^{\log_a {x}}={x}$は、${x}\geq0$でないと今の段階では定義できていない（負の数の$\log$をちゃんと定義した後でなら考えられる）。</p>
+
+				<h3>対数関数の公式</h3>
+				<p>　指数関数が持っていた「$\mathrm e^{{x}}$の肩の${x}$の足算は掛算になる」という性質は、対数においては逆になり、以下の式が成り立つ。</p>
+				<p align="center">$\log$の引数の${掛算\atop 割算}$は$\log$の${足算\atop 引算}$になる</p>
+				<div class="box">
+					\begin{equation}
+					\log_a\left(x_1x_2\right)=\log_a{x_1} + \log_a {x_2}
+					\end{equation}
+					\begin{equation}
+					\log_a\left({x_1\over x_2}\right)=\log_a{x_1} -\log_a x_2
+					\end{equation}
+				</div>
+				<p>　上の式が確かに成り立つことは、$a^{\log_a(x_1x_2)}=x_1x_2$という式に$x_1=a^{\log_a x_1}$と$x_2=a^{\log_a x_2}$を代入してみれば、</p>
+				\begin{equation}
+				a^{\log_a(x_1x_2)}=a^{\log_a x_1}\times a^{\log_a x_2}
+				\end{equation}
+				<p>となるからわかる。</p>
+				<p>　また、$(a^{x_1})^{x_2}=a^{x_1x_2}$となることから逆に、</p>
+				<p align="center">冪の対数は底の対数の指数倍</p>
+				<div class="box">
+					\begin{equation}
+					\log_a x^b = b\log_a x
+					\end{equation}
+				</div>
+				<p>もわかる。</p>
+				<p>　なかなか対数関数（$\log$）の「気持ち」がわからない、という人のために$10^{x}$を例にして説明しよう。</p>
+				<p>　$10^2=100$は0が2桁、$10^3=1000$は0が3桁、$10^4=10000$は0が4桁、と増えていくことを考えると、${y}=10^{{x}}$という関数は</p>
+				<p><span class="box">$n$を入れると「1の後ろに0が$n$個並んだ数」が出てくる関数</span><span class="footnote">この関数が定義できるためには「$n$は0以上の整数」ということになるから、任意の実数を定義域とする${y}=10^{{x}}$より定義域が狭くなってしまっている。</span></p>
+				<p>であるとも言える。ここで逆関数である${x}=\log_{10}{y}$は</p>
+				<p><span class="box">「1の後ろに0が$n$個並んだ数」を入れると$n$が出てくる関数</span></p>
+				<p>という関数になる。すなわち、$10\to1,100\to2,1000\to3,\cdots,100000000\to8,\cdots$のような対応関係（言わば、「桁数$-1$を求める関数」である）が、${x}=\log_{10}{y}$という関数が表現する対応関係の「一部」である（実際には${x}=\log_{10}{y}$の${y}$には正の実数<span class="footnote">負だとどうなるのかは、またこの先で。</span>なら何を入れてもよいから、もっと広い範囲で使える）。</p>
+				<p>　「車の修理代が6桁もかかったわ〜」「え〜っ」のように、数字の大きさを「○桁」で表現することはないだろうか。あれが$\log$の考え方なのである。</p>
+				<p>　対数関数は「掛算の簡略化」にも使える。たとえば$1000\times 1000=1000000$だが、これを「0が3桁ある数字と0が3桁ある数字を掛けたから、0が6桁ある数字になる」という計算をすることができる。こう考えると、積の対数関数を対数関数の和に直す式を、</p>
+				\begin{equation}
+				\log_{10} \underbrace{1000000}_{0が6つ}=\log_{10}\underbrace{1000}_{0が3つ}+\log_{10}\underbrace{1000}_{0が3つ}
+				\end{equation}
+				<p>のように理解できる。</p>
+				<div class="A">　この「掛算の簡略化」は小学生で掛算を勉強した時にみんなやった筈。これが「対数」の考え方の基本とつながっている。</div>
+				<p>　このやり方は$10^n$（$n$が整数）の場合しかできないが、そうでない場合に拡張することはできる。なお、$\log_{10}{x}$のように底を10にした対数関数を「常用対数(common logarithm)」と呼ぶ。$\mathrm e$を底にした対数関数$\log_{\mathrm e}{x}$は「自然対数(natural logatithm)」である。以後、$\log{x}$のように底を省略した場合は自然対数である<span class="footnote">「自然（natural）」のnを取って、$\log_{\mathrm e} {x}=\ln {x}$のように書くこともある。</span>。</p>
+				<p>　下に、${y}=\log_{10}{x}$の、${x}=1$から${x}=20$までのグラフを示した。</p>
+				<img src="../sizensuugaku/log-20.png" class="floatnone" width="95%">
+				<p>　図を見て、たとえば$\log_{10}2+\log_{10}3=\log_{10}6,\log_{10}2+\log_{10}5=1$あるいは$\log_{10}9=2\log_{10}3$などのように、「掛算が足算に翻訳されること」を確認しよう<span class="footnote">こんなふうに具体的な数で「対数」というものの勘所をつかむことも重要。この図を見てしばらく「遊ぶ」ぐらいに対数に親しんで欲しい。</span>。</p>
+
+				<p>$\log_{10}$の値を前もって調べておくことができると、例えば$5343342\times234234234$という計算を</p>
+				\begin{equation}
+				\log_{10} \left(5343342\times234234234\right)
+				=\underbrace{\log_{10} 5343342}_{6.7278\cdots} + \underbrace{\log_{10} 234234234}_{8.3696\cdots}
+				\fallingdotseq15.0974\label{daitailog}
+				\end{equation}
+				<p>のように、対数を介することで足算を使って実行できる。逆に$10^{15.0974}$を計算すれば、1251411091802385を得る。この値は、真面目に計算した結果の1251593620370028と比べて、４桁めまで正しい<span class="footnote">足算の結果を15.0974と小数点以下4桁までしか計算していないので、この程度の精度なのは仕方ない。}。今なら電卓なりコンピュータなりで計算するが、昔はいろんな数とその対数の表（「対数表」）が作ってあって、それを使って掛算をしていた<span class="footnote">対数で目盛を打った物差しのようなもの（計算尺）を使って計算したりもしていた。</span>。</span></p>
+				<div class="box">
+					　上の計算を大雑把に$5000000\times200000000$として答えを見積もると以下のようになる。<br><br>
+					　「0が6個の数と0が8個の数の掛算だから、0が14個の数になる。一方、$5\times2=10$だから10の後ろに0を14個並べればいいや」と考えて、$10\times\underbrace{100000000000000}_{0が14個}=\underbrace{1000000000000000}_{0が15個}$である。<br>
+					約15.0974という答えは「0が15個よりちょっと大きい」を意味しているわけである。
+				</div>
+				<p>　対数関数は「桁数で比較する」という感覚で使われるわけだが、これは概算しているというわけではなく、大きさの変化があまりに大きい物を比較する時に便利な方法であるとも言える。たとえば地球の質量は$5.97\times 10^{24}$ kg、太陽の質量は$1.99\times 10^{30}$ kgである。これを普通の数字で書けば</p>
+				\begin{equation}
+				\begin{array}{rr}
+				地球の質量：&約5970000000000000000000000 {\rm ~kg}
+				\\
+				太陽の質量：&約1990000000000000000000000000000 {\rm ~kg}
+				\end{array}
+				\end{equation}
+				<p>なのだが、こう書かれるよりむしろ$10^？$の形で書いて肩に乗った24や30を見た方が「ああ約$10^6$倍程度違うんだな」ということが実感しやすい（というより、そういう感覚を持てるようにならないと、大きさの違いが甚だしい量を比較できるようになれない）。</p>
+				<h3>対数関数の底の変換</h3>
+				<p>　指数関数同様、対数関数も底を変換したいことがよくある。</p>
+				<p>　指数関数の底は<span class="fukidasi">$a=b^c$の時、$a^{x}=b^{c{x}}$</span>のように変換したから、${y}=a^{x}=b^{c{x}}$とおいて、$\log_a{y}$と$\log_b{y}$を計算すると、</p>
+				\begin{equation}
+				\log_a {y}= {x},
+				~~~\log_b {y}= c{x}
+				\end{equation}
+				<p>という式が出て、$c \log_a {y}= \log_b {y}$とわかる。ここで${y}=a$とすると、$c=\log_b a$である（この式は$a=b^c$からもわかるし、$c \log_a {y}= \log_b {y}$に${y}=a$を代入しても出てくる）から、</p>
+				\begin{equation}
+				\log_b a \log_a {y}= \log_b {y}
+				\end{equation}
+				<p>となり、</p>
+				<p align="center">対数関数の底の変換</p>
+				<div class="box">
+					\begin{equation}
+					\log_a {x}= {\log_b {x}\over \log_b a}= {\log {x}\over \log a}
+					\end{equation}
+				</div>
+				<p>という公式を得る（最後の形では分母分子とも自然対数にしている）。</p>
+				
+				<p>　なお、以上で使った計算で$a=b^c$の時$c=\log_b a$だったので、$b={\mathrm e}$を代入してできる式$a={\mathrm e}^{\log a}$をさらに${x}$乗して、</p>
+				\begin{equation}
+				a^{{x}}={\mathrm e}^{(\log a){x} }
+				\end{equation}
+				<p>という式を作ることができる。つまり全ての指数関数は（$2^{x}$だろうが、$1991^{{x}}$だろうが）適切な係数をつけた${\mathrm e}$を底とする指数関数（${\mathrm e}^{k{x}}$）の形で表現できることになる。実は${\mathrm e}^{なんとか}$の形の関数が一番扱いやすいことが後でわかるので、どんな指数関数でもこの形で考えられるというのは朗報なのである。</p>
+				<div class="setsumei">
+					<p>　残りの時間で微分の導入をやったが、今日はとりあえず、<a href="http://irobutsu.a.la9.jp/movingtext/bibuntoha5/index.html">ここにあるアニメーション「微分ってなあに？」</a>と同じ内容のandroidアプリで、微分が「関数のグラフの傾きを計算する」ものであることと、そのイメージを感じてもらうところまでを行った。</p>
+					<p>　特に、<a href="http://irobutsu.a.la9.jp/movingtext/bibuntoha5/bibuntoha4.html">その４</a>のところで見せた「ややこしそうに見える関数も十分拡大すれば（つまり、Δxが小さい場合を考えれば）直線とみなせる」というところが大事である。</p>
+				</div>
+			</div>
+			<div data-role="footer" align="center">
+				<a href="#page_e" data-icon="arrow-l">指数関数（続き）</a>
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				<a href="#pageQA" data-icon="arrow-r">受講者の感想・コメントへ</a>
+			</div>
+		</div>
+		<div data-role="page" id="pageQA">
+			<div data-role="header">
+				<h1>受講者の感想・コメント</h1>
+			</div>
+			<div data-role="content">
+				<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+				<div class="Q">本当にネイピア数は簡単でした。指数関数、対数関数について、よくわかりました。微分はandroidで遊んだだけなのでまだ良くわかりませんが、グラフを弄くることで何となくわかった気がします。</div>
+				<div class="A">微分の計算については、次回。</div>
+				<p></p>
+				<div class="Q">ネイピア数がよくわからなくてe=2.7…がどこから出てきているかもわからず勉強していたけど、今日で指数関数$y=a^x$の$x=0$での傾きが1に近づく値だということがわかってよかったです。</div>
+				<div class="A">eがどのように役立つかは、またこれから話していきましょう。</div>
+				<p></p>
+				<div class="Q">logが授業で習ったような積を和にして計算するという使われ方をするのを初めて知った。グラフを拡大して曲線が直線になるのも見れてよかった。</div>
+				<div class="A">関数にはいろんな使い途があるのです。</div>
+				<p></p>
+				<div class="Q">新しい電卓の機能を使った。</div>
+				<div class="A">使って遊んでみてください。</div>
+				<p></p>
+				<div class="Q">微積の授業でネイピアがなんなのか疑問に思っていたので、理解できてよかった。</div>
+				<div class="A">わりと単純な話しでしょ、傾きが1になるようにするだけのことなので。</div>
+				<p></p>
+				<div class="Q">電卓でeを計算できなかったので、家に帰ったらもう一度挑戦したい。</div>
+				<div class="A">挑戦してみてください。</div>
+				<p></p>
+				<div class="Q">1000×100の計算がlogであることに感動した。</div>
+				<div class="A">考え方は単純でしょ。</div>
+				<p></p>
+				<div class="Q">指数と対数のしくみが分かった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">今まで何も考えずに使っていた対数関数も詳しく考えてみると面白い。</div>
+				<div class="A">これからは考えながら使いましょう。</div>
+				<p></p>
+				<div class="Q">高校の時にも同じような授業を受けていたのでおもしろかったです！</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">対数関数が楽しかった。androidが楽しかった。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">対数関数の公式$\log(XY)=\log X+\log Y$の意味（考え方）を知れてよかったです。</div>
+				<div class="A">exp(X+Y)=exp(X)exp(Y)と結びつけて理解しておきましょう。</div>
+				<p></p>
+				<div class="Q">微分を拡大する図に感動した。</div>
+				<div class="A">イメージを持っておきましょう。</div>
+				<p></p>
+				<div class="Q">拡大したら直線になるのがすごかった。</div>
+				<div class="A">複雑な関数も近づいて見れば単純なのです。</div>
+				<p></p>
+				<div class="Q">関数の傾きがだいたい直線になることはおもしろいと思った。</div>
+				<div class="A">Δxが小さいとき、を考えるイメージをつけておいてください。</div>
+				<p></p>
+				<div class="Q">どんな関数でも最終的に細かく拡大すると直線に近づいていくことがわかった。</div>
+				<div class="A">「どんな関数でも」はちょっと言い過ぎで、そうじゃない関数もあるにはあります。</div>
+				<p></p>
+				<div class="Q">なぜこの関数が生まれたのか、この関数が使われる場面が知れてよかった。微分では、$\lim_{\Delta x\to0}$という意味がわからなかったが、拡大することで微分の雰囲気をつかめました。</div>
+				<div class="A">どんな関数も使い途があるから勉強しているのです。</div>
+				<p></p>
+				<div class="Q">来週から微分ということで気合いれていきたいです。</div>
+				<div class="A">はい、気合いれていきましょう。</div>
+				<p></p>
+				<div class="Q">自然対数の底eは高校の数学でもでてきたがeはいったい何なのか全然やらなかったので、eがどういうものかわかってよかったです。</div>
+				<div class="A">う〜ん、高校でも一回はやっているはずだと思うんだけど。</div>
+				<p></p>
+				<div class="Q">微分の意味がわかりました。</div>
+				<div class="A">それはよかった。次回から計算です。</div>
+				<p></p>
+				<div class="Q">指数・対数関数について違う見方で見てみるととてもおもしろかったです。</div>
+				<div class="A">いろんな方向から理解しておいてください。</div>
+				<p></p>
+				<div class="Q">どんなに複雑な関数でも拡大したら直線になるのを、実際に動いているところを見て感動した。</div>
+				<div class="A">その観察が微分につながるわけです。</div>
+				<p></p>
+				<div class="Q">指数・対数の持つ性質を今までただ単に暗記するだけでしたが、指数・対数が何を表しているのかを理解できた。</div>
+				<div class="A">う〜ん、暗記するのではなく意味と使い方を理解していかないと。</div>
+				<p></p>
+				<div class="Q">対数関数よくわかった。y=sin(1/x)のグラフをズームしていくと、最初は直線ではないと思ったが、最終的には直線だったので面白かった。</div>
+				<div class="A">おかしな関数でない限り、ちゃんとそうなります。</div>
+				<p></p>
+				<div class="Q">指数・対数関数をもう一度根本から学んだ。計算として機械的に用いることがおおかったので理論に新鮮さを感じた。</div>
+				<div class="A">機械的に計算してはダメですよ、意味が大事。</div>
+				<p></p>
+				<div class="Q">微分についてタブレットのグラフを用いることでよく理解できました。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">どんな関数でもどんどん拡大していけば結局は直線とみなせるようになるということを自分の目で確認でき、とても良かった。</div>
+				<div class="A">イメージつけておきましょう。</div>
+				<p></p>
+				<div class="Q">今回は微分のさわりの部分をやりました。次回からは本格的なものをやりそうなのでがんばりたいです。</div>
+				<div class="A">計算とイメージと両方で理解していってください。</div>
+				<p></p>
+				<div class="Q">対数関数は意外と便利ですね。使いこなせるようにしたいです。</div>
+				<div class="A">これからどんどん使います。</div>
+				<p></p>
+				<div class="Q">高校のときからイクスポーネンシャルに興味があったので面白かった。</div>
+				<div class="A">今回で十分理解できましたか？</div>
+				<p></p>
+				<div class="Q">x=1のとき傾きが1になるネイピア数ってのはどんなことに使うんですが。</div>
+				<div class="A">ここから先で微分方程式を解くときになるとどんどん出てきます。</div>
+				<p></p>
+				<div class="Q">最後にやったグラフの一部をズームしてみるというのは大変おもしろかった。次回からの微分が楽しみになった。</div>
+				<div class="A">次回から、数式を使ってより具体的にやっていきましょう。</div>
+				<p></p>
+				<div class="Q">eのことを深く考えたことはなかったけど、実際に電卓で計算できたので少し実感できた。あと、あんなに複雑な$\sin{1\over x}$のグラフでさえも超拡大したらほぼ直線になるのを実際目で見てすげーと思いました。速度とかとの関係も早く習いたいです。</div>
+				<div class="A">そこは深く考えようよ。</div>
+				<p></p>
+				<div class="Q">指数・対数で、eの計算がうまくいかなかった。対数の計算で$\log_a(a^{100})=100$、$a$を何乗すると$y$になるか？答は100みたいな内容がとてもわかりやすくて、理解が深まった。どんな関数も拡大すると直線のように見えることを感覚的に触れた。</div>
+				<div class="A">eの計算は是非、成功するまでやってみてください。</div>
+				<p></p>
+				<div class="Q">eの出し方は初めてみたのでしんせんだった。</div>
+				<div class="A">電卓でもいろいろ遊べます。</div>
+				<p></p>
+				<div class="Q">2.7182818まで計算機で出てきたのに感動した。</div>
+				<div class="A">ちゃんと出るでしょ。</div>
+				<p></p>
+				<div class="Q">対数の意味を確認できたのでよかった。直線になることが実感できた。</div>
+				<div class="A">それはよかった。</div>
+				<p></p>
+				<div class="Q">高校でやったような内容だったので、頭にはいってきやすかったです。logの説明わかりやすかったです。</div>
+				<div class="A">そろそろ高校範囲から抜け出します。</div>
+				<p></p>
+				<div class="Q">普段、対数を取りながら生活していると考えると、やっぱり数学と人の生活は親密なのだな、と感じた。</div>
+				<div class="A">人間の思考形態を整理して数学が作られてますからね。</div>
+				<p></p>
+				<div class="Q">exp(x)（イクスポーネンシャル（x））。かっこいい</div>
+				<div class="A">かっこいいかな？　まぁこれから使ってください。</div>
+				<p></p>
+				<div class="Q">スマホの電卓にも威圧感に押されたのかM+がなく、もう微分に入ったのでここからがんばりたい。</div>
+				<div class="A">威圧感は関係ないと思うけど。他の電卓でeは出してみてください。</div>
+				<p></p>
+				<div class="Q">iPhone6にデフォルトで入っている電卓にメモリー機能がなかった。電卓アプリを入れておこうと思う。</div>
+				<div class="A">アプリでならメモリー機能があるのもあるので、是非試してみてください。</div>
+				<p></p>
+				<div class="Q">$y=\sin{1\over x}$のグラフを拡大したときの振動はこんなにも激しいのかと驚きました。30回くらい拡大したらすごいことになりました。</div>
+				<div class="A">1/xというのがx=0付近でどどっと大きくなりますから。</div>
+				<p></p>
+				<div class="Q">早く微分・積分始まってほしい。</div>
+				<div class="A">とりあえず微分始まりました。</div>
+				<p></p>
+				<div class="Q">対数関数の数値の表を作った人がすごいと思った。</div>
+				<div class="A">最初に作った時は計算機とか使ってないでしょうね。</div>
+				<p></p>
+				<div class="Q">指数・対数関数の復習ができてよかった。eの計算方法や対数の奥深さを少し見ることができてよかった。</div>
+				<div class="A">いろいろ奥深いし、役に立ちます。</div>
+				<p></p>
+				<div class="Q">eを電卓で計算できるのを知って驚きました。</div>
+				<div class="A">もちろん、できます。</div>
+				<p></p>
+				<div class="Q">電卓は偉大だと思います。</div>
+				<div class="A">中でどういう計算をしているのかを知ると、もっと偉大さがわかります。</div>
+				<p></p>
+				<div class="Q">対数関数が実用的にどう使われていたかを初めて知った。対数に関して興味を持った。</div>
+				<div class="A">なかなか面白いでしょ。</div>
+				<p></p>
+				<div class="Q">$\sin{1\over x}$の関数がxが0に近いところを拡大していったときに激しい処がだんだんゆるやかになり最終的に山になっている部分も直線になってびっくりした。</div>
+				<div class="A">sinという関数である以上、x=0の場所以外ではちゃんとなめらかに連続変化する関数になっているのです。</div>
+				<p></p>
+				<div data-role="footer" align="center">
+					<a href="#page_log" data-icon="arrow-l">対数関数</a>
+					<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+					<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+				</div>
+			</div>
+	</body>
+</html>

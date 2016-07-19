@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,target-densityDpi=device-dpi,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>第４講　万有引力は世界を回す</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script tyype="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery-1.8.2.min.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.2.0.min.js" type="text/javascript"></script>
+	<script src="Vector.js" type="text/javascript"></script>
+	<script src="Yajirushi.js" type="text/javascript"></script>
+	<script src="MovingObject.js" type="text/javascript"></script>
+	<script src="falling.js" type="text/javascript"></script>
+	<style type="text/css">
+	 .figure {
+	   margin:0pt auto;
+	 }
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .floatnone{
+	   float:none;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .box{
+	   padding:5px;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:13px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<title>第４講　静止しているのは誰？</title>
+	<script type="text/javascript">
+	 var ct1,ct2,ct3,ct4,lastct;
+	 var maincanvas;
+	 var earthcanvas;
+	 var canvas;
+	 var firstCall=true;
+	 var firstCall_g=true;
+	 $(document).delegate('#page1','pageinit',function(e) {
+	   a=0;
+	   v=0.5;
+	   t=0;
+	   maincanvas = document.getElementById("maincanvas");
+	   canvas=maincanvas;
+	   init();
+	   if( firstCall ) {
+		 anime();
+		 firstCall=false;
+	   }
+	 });
+	 $(document).delegate('#page1','pageshow',function(e) {
+	   a=0;
+	   t=0;
+	   canvas=maincanvas;
+	   init();
+	   fallFromTop();
+	 });
+	 function throwUp() {
+	   t=0;
+	   box.setXY(0,-0.25);
+	   box.setVXY(0,-0.92);
+	 }
+	 function fallFromTop() {
+	   t=0;
+	   box.setXY(1,-3.25);
+	   box.setVXY(0,0);	
+	   ball.setXY(0,-3.25);
+	   ball.setVXY(0,0);	
+	 }
+	 function startstop() {
+	   if( moveFlg ) {
+		 moveFlg=false;
+		 $("#startstop").siblings('.ui-btn-inner').children('.ui-btn-text').text("一時停止解除");
+	   } else {
+		 moveFlg=true;
+		 $("#startstop").siblings('.ui-btn-inner').children('.ui-btn-text').text("一時停止する");
+		 anime();
+	   }		
+	 }
+	 $(function() {
+       $("[name='g']").click(function(){
+        var num = $("[name='g']").index(this);
+        if(num == 1){
+           constGFlg=true;
+        } else {
+		   constGFlg=false;
+         }
+       });
+	 });
+	 function checkTeikou() {
+       if ($('#teikoucb').is(':checked')) {
+         teikouFlg=true;
+       } else {
+         teikouFlg=false;
+       }
+	 }
+
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>第４講　万有引力は地球を回す</h1>
+	  </div>
+	  <p>　先週の、ガリレオが破壊したもう一つの<strong>常識</strong>（こっちの方が有名かも）と、それに続いて起こった「科学の革命」について述べておきます。</p>
+
+	  <h3>4.1 もう一つのアリストテレス的`常識'---物体の落下</h3>
+
+	  <p>　アリストテレス的考えの中では、重い物ほど早く落下します。実際ものを落としてみるとそうなるような気がしますが、これも、見た目からくる<strong>`常識'</strong>であって、真実ではありません。摩擦などの外因を取り去った世界でなら、全てのものが同じ速さで落下します。ガリレオはそのことを、前回にも書いた斜面の実験で確かめました（斜面だと、摩擦の影響が小さくなります）。</p>
+
+	  <p>　ガリレオは実験的にだけでなく、理論的にも「重い物体ほど速く落下する」という法則がおかしいことを示しています。</p>
+
+	  <img src="omoi.png" class="floatright" width="30%">
+
+	  <p>右の図を見てください。もし、重い物体の方が速く落ちるというのが本当ならば、右にあるような重い物体と軽い物体を連結させた物体はどのように落下するでしょう？---二つの考え方ができます。</p>
+
+	  <ul>
+		<li>もっと重い物体なのだから、もっと速く落下する。</li>
+		<li>軽い物体はゆっくり落ちるのだから、重い物体を引っ張りあげることになり、中間の速度で落下する。</li>
+	  </ul>
+
+
+	  <p>「重い物体ほど速く落下する」という法則を信じてしまうと、全く矛盾するこの二つの結果がどちらも正解という、おかしなことになってしまいます。</p>
+
+
+	  <p>　ガリレオはピサの斜塔で実際に二つの重さの違う物体を落下して実験したという話があります（もっともこれは伝説の類で、実際にはやっていないらしいです）。現代に生きる我々は、もっと明確な実験ができます。たとえば月面の上で、宇宙飛行士が羽毛と鉄球を落下させてみると、全く同じ時間で落下しました（実は月面までいかなくても、ポンプを使ってガラス瓶の中の空気を抜けば、その中でできる実験です）。</p>
+
+	  <p>　実際のところは、もし空気の抵抗がなければ、全ての物体は同じように落下します。</p>
+	  <div class="A">　これを実演するために、ホワイトボード−マーカーと紙をまず落とす。当然紙の方がひらひらとゆっくり落ちる。では次に紙を小さく小さく折りたたんで落とすと？？---この場合、ほぼ同時に落ちる。</div>
+
+	  <p>　力は「物体の運動を変化させる」という作用を持つ、ということを前回述べましたが、その「運動の変化」（物理的にはこれを「加速度＝速度の時間変化」で測ります）に質量を掛けたものが力に等しい、という法則</p>
+
+	  <div class="box">
+ニュートンの運動方程式
+$$
+ （力）＝\underbrace{（質量）}_{動かしにくさ\atop を表す}×\underbrace{（加速度）}_{運動の変化\atop を表す}
+$$
+	  </div>
+
+	  <p>をニュートンは見つけています。重いものには質量に比例して強い重力が働きますが、質量が大きいと運動を変化させるのに必要な力も大きくなり、結果としてこの効果が消し合って「重い物でも軽い物でも加速度は同じ」という結果になるわけです。</p>
+
+	  <p>ちなみにアリストテレスの考え方を（彼は数式では表していませんが）式で表現したとすると、</p>
+	  <div class="box">
+アリストテレス的（？）運動方程式
+$$
+ （力）＝\underbrace{（質量）}_{動かしにくさ\atop を表す}×\underbrace{（速度）}_{運動\atop を表す}
+$$
+	  </div>
+	  <p>となるでしょう（これは前回考えた慣性の法則からしても、間違っているのです）。</p>
+	  <div data-role="content">
+		<div class="setsumei">　では、次のページで落体の運動をアニメーションで見ましょう。</div>
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page1" data-icon="arrow-r">「落体の運動」へ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page1">
+	  <div data-role="header">
+		<h1>落体の運動</h1>
+	  </div>
+	  <div data-role="content">
+		<div class="figure"><canvas id="maincanvas" width="600" height="600" ></canvas></div>
+		<br>
+	  <div>
+	  <button data-inline="true" onClick="fallFromTop();zanzouList=new Array();">上から同時に初速度０で落とす</button>
+	  <button data-inline="true" onClick="startstop();" id="startstop">一時停止する</button>
+	  </div>
+
+		<div>
+		  <label><input type="radio" id="mg" name="g" checked="true">質量に比例した万有引力</label>
+		  <label><input type="radio" id="constF" name="g" >質量に無関係な一定力</label>
+		</div>
+		<br>
+		<div>	
+		  <label><input type="checkbox" id="teikoucb" onclick="checkTeikou();">空気抵抗ON/OFF</label>
+
+
+		</div>
+		<div class="setsumei">　上の図は、力が働いている場合の物体の運動の様子を表しています。
+		  <br>　色が黒目の方の物体は、白目の方の物体の2倍の質量を持っています。そのため、「質量に比例した万有引力」がかかる時は、2倍の強さの万有引力がかかっています。
+		  <br>　青い矢印は速度、赤い矢印は加速度（それ以外の矢印は力）です。速度の変化の様子を確認してください。
+		  <br>　物体をマウスでつかんで投げることができます。投げると、青い矢印（速度）が赤い矢印（加速度）の分だけ変化していく様子がわかると思います。
+		  <br>　チェックボックスを操作することで「質量に比例した万有引力」ではなく「質量に無関係な一定力」がかかるようにすることができます。すると、「質量の大きいものは動かしにくい」ので、重い方が遅く落ちることになります。
+		</div>
+		<div class="A">　手抜きで、このプログラムでは二つの物体は衝突しません。</div>
+	  </div>
+
+	  <img src="omoikarui.png" width="20%">
+	  <p>　では普段我々が（なんとなく）「重いものの方が速く落ちる」というイメージを持っているのはなぜかというと、現実においては常に空気の抵抗やら摩擦やら、重力以外の力が働いているからです。たとえば空気の抵抗は形と（空気に対する）速さで決まります。さっきの図では重いものの方が大きかったのですが、（空気抵抗が）比較がしやすいように同じ大きさだとしてみましょう。</p>
+	  <p>　空気抵抗がない場合、働く力は万有引力だけです。そして、その万有引力は重いものほど大きい力が働きます。しかし、重い物を動かすにはそれだけ大きな力が必要（2倍重い物体は2倍動かしにくい）なので、軽いものと重いものを同時に落とすと、落ちていく速さは同じになります。単位は無視して大雑把な数字で話をすると、軽い物体に100の万有引力が働いて、重い物体が2倍重かったとすれば、重い物体には200の万有引力が働きます。ところが2倍重い分質量も2倍大きいので、上のニュートンの運動方程式を使うと「加速度は同じ！」という結果になるわけです。</p>
+	  <span class="setsumei">　上の「空気抵抗ON/OFF」のところをONにすることで、空気抵抗がある場合の動画を見ることができます。</span>
+
+	  <img src="omoikarui2.png" width="25%">
+	  <p>　次に空気抵抗がある（つまり、空気が物体の運動の邪魔をする）場合を考えてみます。今は二つの物体の大きさを同じにしたので、もし速さも同じなら、この物体の邪魔をする空気も同じだけあるので、空気抵抗の出す力は同じです。</p>
+
+	  <p><span class="setsumei">　上の動画の空気抵抗は一定ではなく、速度に比例するようになってます。</span></p>
+	  <p><span class="setsumei">　実際の空気抵抗も、単純な比例ではありませんが速いほど強くなります。</span></p>
+	  <p><span class="setsumei">　落下速度が速くなると空気抵抗と万有引力と打ち消し合うことがわかると思います。</span></p>
+	  <p><span class="A">　だから、雨粒の落ちてくる速度は、ほぼ一定になり、落ちれば落ちるほど速くなったりはしません。</span></p>
+	  <p>　図に空気抵抗を描き入れてみました。空気抵抗は万有引力よりは小さいです（図では物体の横側に働いているように描いていますが、実際には物体の下面全体に働きます）。この力がたとえば50だとしましょう（実際にはこんなに大きくないけど）。すると軽い物体に働く力は下向きに100（万有引力）と上向きに50（空気抵抗）で、足すと下向きに50となります。一方思い物体は下向き200（万有引力）と上向き50（空気抵抗）で足して下向き150です。すると重い物体に働く力は軽い物体に働く力の3倍、ということになりますから、質量が2倍でも、重い物体の方が加速度が大きくなります。</p>
+	  <p>　慣性の法則もそうでしたが、最終的に見出された「自然法則」は直観的に理解できるとは限りません。それは現実に起っている減少においては力は一つではないし、（ここでは省略していますが空気抵抗というのは複雑な式で書けます）いろいろ複雑です。ガリレオやニュートンはその複雑な運動から、周到な実験で本質を探り物理法則を導くのに成功したわけですが、それには長い時間がかかったのです。</p>
+	  <div data-role="footer" align=center>
+		<a href="#page0" data-icon="arrow-l">講義前半のページへ</a>
+		<a href="#page0" data-icon="back">第４講最初に戻る</a>
+		<a href="./lec4_2.html" data-icon="arrow-r">講義後半のページへ</a>
+	  </div>
+	</div>
+  </body>
+</html>

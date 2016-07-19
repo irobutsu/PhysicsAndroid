@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/maeno/Dropbox/AndroidStudioProjects/Kepler/res/values-ja/strings.xml -->
-    <eat-comment/>
     <string name="Mverm_equal">M/m=</string>
     <string name="accel">加速度</string>
     <string name="app_name">Kepler</string>

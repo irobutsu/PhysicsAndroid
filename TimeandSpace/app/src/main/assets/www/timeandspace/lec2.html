@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,target-densityDpi=device-dpi,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>第２講　地球中心から太陽中心へ</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+	<script src="plotscreen.js" type="text/javascript"></script>
+	<!-- >	<script type="text/javascript"> -->
+	<!-- app.initialize(); -->
+	<!-- </script> -->
+	<style type="text/css">
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .floatnone{
+	   float:none;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:13px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<title>第２講　地球中心から太陽中心へ</title>
+	<script type="text/javascript">
+	 var angle=0;
+	 var angle2=0;
+	 var angle4=0;
+	 var EarthImage;
+	 var gssub;
+	 $(document).load(function(e) {
+	   loadImages();
+	 });
+	 function loadImages() {
+	   if( EarthImage == undefined ) {
+		 EarthImage=new Image();
+		 EarthImage.src="EarthN.png";
+	   }
+	 }
+	 var gs;
+	 var gssub;
+	 $(document).delegate('#page1','pageinit',function(e) {
+	   loadImages();
+       gs=new PlotScreen("canvas1","turn");
+       gs.writeGraphs=function() {
+		 graphWrite_sub();
+       }
+	   gssub=document.getElementById("canvas1sub");
+	   //gs.canvas.style.position="absolute";
+	   //gssub.style.position="absolute";
+	   gssub.width=gs.canvas.width/4;
+	   gssub.height=gs.canvas.height/9;
+	   //gssub.style.zIndex=1;
+	   // gs.canvas.style.zIndex=0;
+	   //gssub.clientLeft=gs.canvas.getBoundingClientRect().left;
+	   //gssub.clientTop=gs.canvas.getBoundingClientRect().top;
+	   graphWrite();
+	 });
+	 $(document).delegate('#page1','pageshow',function(e) {
+	   gs.setMouseEvent();
+	   moveStop('#stopbtn','graphWrite()');
+	 });
+	 var gs2;
+	 var gs2sub;
+	 $(document).delegate('#page2','pageinit',function(e) {	
+														   loadImages();
+														   gs2=new PlotScreen("canvas2","turn");
+														   gs2.writeGraphs=function() {
+		 graphWrite2_sub();
+       }
+														   gs2sub=document.getElementById("canvas2sub");
+														   //gs.canvas.style.position="absolute";
+														   //gssub.style.position="absolute";
+														   gs2sub.width=gs2.canvas.width/2;
+														   gs2sub.height=gs2.canvas.height/9;
+														   graphWrite2();
+														   });
+	 $(document).delegate('#page2','pageshow',function(e) {
+	   gs2.setMouseEvent();
+	   moveStop('#stopbtn2','graphWrite2()');
+	 });
+	 var gs3;
+	 $(document).delegate('#page3','pageinit',function(e) {	
+														   loadImages();
+														   gs3=new PlotScreen("canvas3","turn");
+														   gs3.writeGraphs=function() {
+		 graphWrite3_sub();
+       }
+														   graphWrite3();
+														   });
+	 $(document).delegate('#page3','pageshow',function(e) {
+	   gs3.setMouseEvent();
+	   moveStop('#stopbtn3','graphWrite3()');
+	 });
+	 function graphWrite_sub() {
+	   gs.clearALL();
+	   gs.ctx.beginPath();
+	   gs.ctx.fillStyle="#8888ff";
+	   gs.ctx.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+	   var x=6*Math.cos(angle);
+	   var y=-6*Math.sin(angle);
+	   var xx=3*Math.cos(angle2);
+	   var yy=-3*Math.sin(angle2);
+	   
+	   writeEarth(gs.ctx,0,0,angle4,-angle);
+	   writeSun(gs.ctx,x,y);
+	   writeMoon(gs.ctx,xx,yy,Math.atan2(x-xx,y-yy));
+	   writeMoonShape(gssub,x,y,xx,yy,0,0);
+	 }
+	 function graphWrite() {
+	   this.graphWrite_sub();
+	   if( moveFlg ) {
+		 if( sunmoveFlg ) {
+		   angle +=0.09;
+		   angle2 += 0.087;
+		 } else {
+		   angle2 -= 0.003;
+		   angle4 +=0.09;
+		 }
+		 setTimeout("graphWrite()",100);
+	   }
+	 }
+	 function writeMoonShape(g,sx,sy,mx,my,ex,ey) {
+	   var ww=g.width;
+	   var hh=g.height;
+	   var ct=g.getContext("2d");
+	   //ct.fillStyle="#FF0000";
+	   //ct.fillRect(ww*0.1,hh*0.1,ww*0.8,hh*0.8);
+	   var smx=sx-mx;
+	   var smy=sy-my;
+	   var emx=ex-mx;
+	   var emy=ey-my;
+	   var anglesm=Math.atan2(smx,smy);
+	   var angleem=Math.atan2(emx,emy);
+
+	   var angle=anglesm - angleem;
+	   
+	   while( angle > Math.PI ) {
+		 angle -= 2*Math.PI;
+	   }
+	   while( angle < -Math.PI ) {
+		 angle += 2*Math.PI;
+	   }
+	   
+	   var rr;
+	   if( ww > hh ) {
+		 rr=hh/3;
+	   } else {
+		 rr=ww/3;
+	   }
+	   ct.fillStyle="#DDDD66";
+	   ct.beginPath();
+	   ct.arc(ww*0.5,hh*0.5,rr,0,2*Math.PI,false);
+	   ct.fill();
+	   ct.fillStyle="rgba(0,0,0,0.7)";
+	   ct.beginPath();
+	   if( angle >0) {
+		 ct.arc(ww*0.5,hh*0.5,rr,-Math.PI*0.5,Math.PI*0.5,false);
+		 var i;
+		 var cos=Math.cos(angle);
+		 var pitch=Math.PI*0.125;
+		 for( i= 1; i<9 ; i++ ) {
+		   var theta=i*pitch;
+		   ct.lineTo(ww*0.5+rr*Math.sin(theta)*cos,hh*0.5+rr*Math.cos(theta));
+		 }
+	   } else{
+		 ct.arc(ww*0.5,hh*0.5,rr,Math.PI*0.5,Math.PI*1.5,false);
+		 var i;
+		 for( i= 1; i<11 ; i++ ) {
+		   var theta=i*Math.PI*0.1;
+		   ct.lineTo(ww*0.5-rr*Math.sin(theta)*Math.cos(angle),hh*0.5-rr*Math.cos(theta));
+		 }
+	   }
+	   ct.fill();
+	 }
+	 function writeMoon(ct,X,Y,A) {		
+								   ct.beginPath();
+								   ct.fillStyle="#DDDD66";
+								   ct.arc(X,Y,0.3,0,2*Math.PI,false);
+								   ct.fill();
+
+								   ct.fillStyle="rgba(0,0,0,0.7)";
+								   ct.beginPath();
+								   ct.arc(X,Y,0.3,-A+Math.PI,-A+2*Math.PI,false);
+								   ct.fill();
+								   }
+
+	 function writeSun(ct,X,Y) {
+	   ct.fillStyle="#ffff00";
+	   ct.beginPath();
+	   ct.arc(X,Y,0.6,0,2*Math.PI,false);
+	   ct.fill();
+	 }
+	 function writeEarth(ct,X,Y,A,B) {
+	   ct.fillStyle="#ffffff";
+	   ct.arc(X,Y,1,0,2*Math.PI,false);
+	   ct.fill();
+	   ct.fillStyle="#ffffdd";
+	   ct.save();
+	   ct.translate(X,Y);
+	   ct.rotate(A);
+	   ct.drawImage(EarthImage,-1,-1,2,2);
+	   ct.restore();
+	   
+	   ct.fillStyle="rgba(0,0,0,0.5)";
+	   ct.beginPath();
+	   ct.arc(X,Y,1,B+0.5*Math.PI,B-0.5*Math.PI,false);
+	   ct.fill();
+	 }
+	 var angle5=0.75*Math.PI;
+	 var angle6=-0.25*Math.PI;
+	 var angle7=0;
+	 function graphWrite2_sub() {
+	   gs2.clearALL();
+	   gs2.ctx.beginPath();
+	   gs2.ctx.fillStyle="#8888ff";
+	   gs2.ctx.fillRect(gs2.leftwx,gs2.bottomy,gs2.w,gs2.h);
+	   
+	   var x=6*Math.cos(-angle5);
+	   var y=-6*Math.sin(-angle5);
+	   var xx=3*Math.cos(angle6);
+	   var yy=-3*Math.sin(angle6);
+	   
+	   writeEarth(gs2.ctx,-x,-y,angle7,angle5);
+	   writeSun(gs2.ctx,0,0);
+	   writeMoon(gs2.ctx,-x+xx,-y+yy,Math.atan2(x-xx,y-yy));
+	   writeMoonShape(gs2sub,0,0,-x+xx,-y+yy,-x,-y);
+	 }
+	 function graphWrite2() {
+	   this.graphWrite2_sub();
+
+	   if( moveFlg ) {
+		 angle7 +=0.09*366.24/365.24;
+		 angle5 +=(0.09/365.24);
+		 angle6 -= (0.09/27.3);
+		 setTimeout("graphWrite2()",100);
+	   }
+	 }
+	 var angleE=0;
+	 var angleM=0;
+	 var angleV=0;
+	 var earthCenterFlg=true;
+	 var orbitWriteFlg=false;
+	 function graphWrite3_sub() {
+	   gs3.clearALL();
+	   gs3.ctx.beginPath();
+	   gs3.ctx.fillStyle="#8888ff";
+	   gs3.ctx.fillRect(gs3.leftwx,gs3.bottomy,gs3.w,gs3.h);
+	   var x=3*Math.cos(angleE);
+	   var y=-3*Math.sin(angleE);
+	   var xx=3*1.52*Math.cos(angleM);
+	   var yy=-3*1.52*Math.sin(angleM);
+	   var xxx=3*0.72*Math.cos(angleV);
+	   var yyy=-3*0.72*Math.sin(angleV);
+	   
+
+	   if( earthCenterFlg ) {
+		 writeSmallEarth(gs3.ctx,0,0,Math.atan2(-x,-y));
+		 
+		 if( enkinFlg ) {
+		   writeSun(gs3.ctx,-x,-y);
+		   writeMars(gs3.ctx,xx-x,yy-y,Math.atan2(-xx,-yy));
+		   writeVenus(gs3.ctx,xxx-x,yyy-y,Math.atan2(-xxx,-yyy));
+		   writeOrbit(gs3.ctx,-x,-y);
+		 } else {
+		   writeSun(gs3.ctx,-2*x,-2*y);
+		   var X=xx-x;
+		   var Y=yy-y;
+		   var L=Math.sqrt(X*X+Y*Y);
+		   X *= 6/L;
+		   Y *= 6/L;
+		   writeMars(gs3.ctx,X,Y,Math.atan2(-xx,-yy));
+		   X=xxx-x;
+		   Y=yyy-y;
+		   var L=Math.sqrt(X*X+Y*Y);
+		   X *= 6/L;
+		   Y *= 6/L;
+		   writeVenus(gs3.ctx,X,Y,Math.atan2(-xxx,-yyy));
+		   gs3.ctx.strokeStyle="#888888";
+		   gs3.ctx.beginPath();
+		   gs3.ctx.arc(0,0,6,0,2*Math.PI,false);	
+		   gs3.ctx.stroke();
+		 }
+	   } else {
+		 writeSmallEarth(gs3.ctx,x,y,Math.atan2(-x,-y));
+		 writeSun(gs3.ctx,0,0);
+		 writeMars(gs3.ctx,xx,yy,Math.atan2(-xx,-yy));
+		 writeVenus(gs3.ctx,xxx,yyy,Math.atan2(-xxx,-yyy));
+		 writeOrbit(gs3.ctx,0,0);
+	   }
+	 }
+	 function graphWrite3() {
+	   graphWrite3_sub();
+	   if( moveFlg ) {
+		 angleE +=0.09;
+		 angleM += 0.09/1.88;
+		 angleV += 0.09/0.62;
+		 
+		 setTimeout("graphWrite3()",100);
+	   }
+	 }
+	 function writeOrbit(ct,X,Y) {
+	   if( orbitWriteFlg ) {
+		 ct.strokeStyle="#888888";
+		 ct.beginPath();
+		 ct.arc(X,Y,3,0,2*Math.PI,false);	
+		 ct.stroke();
+		 ct.beginPath();
+		 ct.arc(X,Y,3*1.52,0,2*Math.PI,false);	
+		 ct.stroke();
+		 ct.beginPath();
+		 ct.arc(X,Y,3*0.72,0,2*Math.PI,false);
+		 ct.stroke();
+	   }			
+	 }
+	 function writeMars(ct,X,Y,A) {
+	   ct.beginPath();
+	   ct.fillStyle="#CC8888";
+	   ct.arc(X,Y,0.3,0,2*Math.PI,false);
+	   ct.fill();
+
+	   ct.fillStyle="rgba(0,0,0,0.5)";
+	   ct.beginPath();
+	   ct.arc(X,Y,0.3,-A+Math.PI,-A+2*Math.PI,false);
+	   ct.fill();
+	 }
+	 function writeVenus(ct,X,Y,A) {
+	   ct.beginPath();
+	   ct.fillStyle="#CCCC88";
+	   ct.arc(X,Y,0.3,0,2*Math.PI,false);
+	   ct.fill();
+
+	   ct.fillStyle="rgba(0,0,0,0.5)";
+	   ct.beginPath();
+	   ct.arc(X,Y,0.3,-A+Math.PI,-A+2*Math.PI,false);
+	   ct.fill();
+	 }
+	 function writeSmallEarth(ct,X,Y,A) {
+	   ct.beginPath();
+	   ct.fillStyle="#88CC88";
+	   ct.arc(X,Y,0.4,0,2*Math.PI,false);
+	   ct.fill();
+
+	   ct.fillStyle="rgba(0,0,0,0.5)";
+	   ct.beginPath();
+	   ct.arc(X,Y,0.4,-A+Math.PI,-A+2*Math.PI,false);
+	   ct.fill();
+	 }
+	 function fullmoon() {
+	   angle2=angle+Math.PI;
+	 }
+	 function newmoon() {
+	   angle2=angle;
+	 }
+	 function changeECFlg() {
+	   if( $('#earthcenter').prop('checked') ) {
+		 earthCenterFlg=true;
+	   } else {
+		 earthCenterFlg=false;
+	   }
+	 }
+	 function changeOWFlg() {
+	   if( $('#orbitwrite').prop('checked') ) {
+		 orbitWriteFlg=true;
+	   } else {
+		 orbitWriteFlg=false;
+	   }
+	 }
+	 var sunmoveFlg=true;
+	 function changeFlg() {
+	   if( $('#sunstop').prop('checked') ) {
+		 sunmoveFlg=false;
+	   } else {
+		 sunmoveFlg=true;
+	   }
+	 }
+	 var moveFlg=true;
+	 function moveStop(btn,prog) {
+	   if( $(btn).prop('checked') ) {
+		 moveFlg=false;
+	   } else {
+		 moveFlg=true;
+		 setTimeout(prog,50);
+	   }
+	 }
+	 var enkinFlg=true;
+	 function changeEKFlg() {
+	   if( earthCenterFlg ) {
+		 if( $('#enkincut').prop('checked') ) {
+		   enkinFlg=false;
+		 } else {
+		   enkinFlg=true;
+		 }
+	   }
+	 }
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>第２講　地球中心から太陽中心へ</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　さて、前回は地球が丸いという話、地球や太陽や、宇宙を「測る」話をしました。こうやって測定していった結果、人類が「見る」宇宙の姿はどう変わって行ったでしょうか。</p>
+		<a data-role="button" data-transition="pop" href="#page1">地球中心に見た太陽と月の動き</a>
+		<a data-role="button" data-transition="pop" href="#page2">太陽中心に見た地球と月の動き</a>
+		<a data-role="button" data-transition="pop" href="#page3">太陽と地球・金星・火星の動き</a>
+		<a data-role="button" data-transition="pop" href="#page4">今日の問題と感想・コメント</a>
+		<hr>
+		<p><a href="./lec1.html">←第１講に戻る</a><a href="./index.html">「時間と空間」講義録に戻る</a></p>
+	  </div>
+	  <div data-role="footer">
+		　　プログラムについて御質問、御要望、バグ報告などございましたら、<a href="mailto:maeno@sci.u-ryukyu.ac.jp">前野昌弘へメール</a>くださるか、または、twitterにて<a href="https://twitter.com/irobutsu">irobutsu</a>までメンションしてください。
+	  </div>
+	</div>
+
+	<div data-role="page" id="page1">
+	  <div data-role="header">
+		<h1>地球中心に見た太陽と月の動き</h1>
+	  </div>
+	  <div data-role="content">
+		<h3>2.1 コペルニクス的転換までのあれこれ</h3>
+		<img src="simpletendou.png" width="50%">
+		<p>　昔は地球の回りを太陽が回っていると思っていた（天動説）が、実は太陽の回りを地球が回っているのである（地動説）という話は、みなさんも聞いたことがあるでしょう。実際の歴史を調べてみると、そう単純にこの二つの説が入れ替わったわけではないことがわかります。</p>
+
+		<p>　まず少しの間、「太陽の回りを地球が回っている」という「学校で教わった知識」のことは忘れて、昔の人の素朴な考え方にたって、太陽と月の運動を考えてみましょう。地球人の素朴な「自己中心的な見方」で見ると、太陽は24時間で一回、地球の回りを回っているように見えます（右の図は北極側から見下ろした形で描いてあります）。月の方は、一晩ごとに太陽に比べて少しずつ西から東へ移動していくので、24時間で一回転より少し回転数が少ないことになります<span class="footnote">図で月の方が太陽より近いところを回っています。昔の人（アリスタルコスのように距離を測った人は別として）は太陽と月の距離は知りませんが、日食で月が太陽を隠すということは、月の方が近い、ということはわかったはずです。</span>。
+		  <img src="singetsu.png" width="30%" class="floatleft">
+		  <p>　月が太陽より遅く回っているために、太陽と月の相対的な位置関係は日々変わっていき、約30日で太陽との位置関係において（ほぼ）元の位置に（例えば新月から新月へ）戻ります。これから、月の（地球中心の立場で見た）回転速度は、24時間に約$\left(1-{1\over 30}\right)$回転だ、ということになります。上の図は地球が固定した場合ですが、太陽の位置を固定して描いたのが左の図です。太陽を固定して考えると、月は逆に回っていることになります。</p>
+
+		  <div class="aka">では、下のアニメーションで地球を中心とした場合の月と太陽の動きを見てみましょう。</div>
+		  <div align="center"><canvas id="canvas1" width="300" height="300"></canvas>
+		  </div>
+		  <div class="ui-grid-c">
+			<div class="ui-block-a"><label><input type="checkbox" onChange="changeFlg();" id="sunstop">太陽が静止<br><small><small>（チェック外すと地球静止）</small></small></label></div>
+			<div class="ui-block-b"><label><input type="checkbox" onChange="moveStop('#stopbtn','graphWrite()');" id="stopbtn">一時停止</label></div>
+			<div class="ui-block-c"><button onClick="fullmoon();" >満月にする</button><button onClick="newmoon();" >新月にする</button></div>
+			<div class="ui-block-d"><canvas id="canvas1sub" width="100",height="100"></canvas></div>
+		  </div>
+		  <div class="setsumei">　地球の位置を固定した時の、太陽と月の「見かけの」運動をアニメーションで表現したものです。中心にあるのが地球、少し薄い黄色の丸（<span class="white">●</span>）が太陽、半分（月にとっての夜の部分）が黒い黄色い丸（<span class="yellow">●</span>）が月です。
+			<br>　一番左にある、「太陽を止める」ボタンを押すと太陽が止まりますが、代わりに地球が自転を始めます。「地球を止める」ボタンを押すと元に戻ります。その隣の「一時停止」ボタン（「運動再開」ボタンにもなる）で運動を停止／再開することができます。さらにその隣の「満月」ボタンと「新月」ボタンは、それぞれの状態に対応する場所に月を持っていきます。</p>
+			<br>　太陽に比べ、月は約1/30だけ回転数が遅いため、地球が止まっていて太陽と月が回る状態にすると、太陽から月がだんだん遅れていくこと、それによって月の見え方（満月か新月か、はたまた半月か三日月か）などが変わっていきます。		
+			<br>　なお、実際の太陽はもっと遠いところ（地球から１億５千万キロ、地球の直径の約１万2千倍離れています）を回っています。こんなに遠いところにいる、しかもその分大きい（太陽の直径は地球の直径の109倍）太陽が、小さな地球の周りを回っているなんて、変なことですね（もちろん、実は地球の方が回っているのです）。
+		  </div>
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page2" data-icon="arrow-r">2 ページへ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page2">
+	  <div data-role="header">
+		<h1>太陽中心に見た地球と月の動き</h1>
+	  </div>
+	  <div data-role="content">
+		<img src="simpletendou2.png" width="50%">
+		<p>　ここまでの話でも月・太陽・恒星がそれぞれ少しずつ違う動きをしていて、「ややこしいなぁ」と感じたことでしょう。後知恵ではありますが、３つの動きが全部24時間に近い動きをしている、ということは、実は「各天体が示しあわせて（？）同じぐらいの周期で回っている」のではなく、地球の自転の周期がほぼ24時間だったからなのです<span class="footnote">こんなふうに似たような数値が出てきた時「これは偶然なのか？---それとも理由があるのか？」と考えるのは大事なことです。</span>。なお、図は平面なので書きませんでしたが、実は地球から見た時の太陽の回る面（黄道面）と月の回る面（白道面）、さらに恒星の回る面（天の赤道）は少しずつ傾いています<span class="footnote">この傾きがあるために、日食や月食は毎回起こるわけではないのです。</span>。</p>
+		<p>　天動説はよく「プトレマイオス体系」と呼ばれます。ギリシャの天文学者であるプトレマイオスが確立したからですが、その「確立」はすんなりとできたわけでもありません。例えば<a href="lec1.html">第1講</a>でも出てきたアリスタルコスは太陽中心説を唱えています。太陽の方が地球より大きいということを``測定''<span class="footnote">アリスタルコスによれば、太陽の直径は地球の6.7倍。実際には109倍と、もっと大きい。</span>していたアリスタルコスが太陽が中心と考えるのは、当然だったかもしれません。</p>
+		<img src="toncachi.png" width="30%" class="floatright">
+		<p>　大きいもの（重いもの）と小さいもの（軽いもの）が互いに力を及ぼしあいながら回るとき、重いものに近いところが中心に回るだろうな、ということはトンカチでも投げてみれば（物理法則など知らなくても）実感できると思います。</p>
+		<div class="A">授業では、実際にトンカチ投げました。</div>
+		<p>ちなみに、太陽の質量は$2.0\times10^{30}$kgです<span class="footnote">$2.0\times10^{30}$というのは、おおよそ、2の後に0が30個並ぶと思っておけばよい。地球の質量の方は6の後に0が24個並ぶ。0の数が6個も違う。</span>。地球の質量は$6.0\times10^{24}$kgで、太陽がだいたい33万倍重い、ということになります。</p>
+		<p>　シンプルな、「教育をされてない」観点で見ると、太陽が地球の周りを回っているように思えます。しかし太陽や月の大きさに考えが及ぶと、「なんかそれはおかしいのではないか？」と感じられてくるわけです。</p>
+		<div align="center"><canvas id="canvas2" width="300" height="300" ></canvas></div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a"><label><input type="checkbox" onChange="moveStop('#stopbtn2','graphWrite2()');" id="stopbtn2">一時停止</label></div>
+		  <div class="ui-block-b" align="center"><canvas id="canvas2sub" width="100",height="100"></canvas></div>
+		</div>
+		<div class="setsumei">　今度は実際の運動に近く、太陽を静止させて地球がその周りを周り、さらに月が地球の周りを回る、という図です。
+		  <br>　地球は１公転する（太陽を一周する）間に、366.24回自転します。すると、１公転の間に365.24回正午がくる（小数以下は閏年のせい）ことになります（自転回数より正午がくる回数の方が1少ない理由がわかりますか？）。
+		</div>
+	  </div>
+	  <div data-role="footer" align=center>
+		<a href="#page1" data-icon="arrow-l">1 ページへ</a>
+		<a href="#page3" data-icon="arrow-r">3 ページへ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page3">
+	  <div data-role="header">
+		<h1>太陽と地球・金星・火星の動き</h1>
+	  </div>
+	  <div data-role="content">	
+
+		<p>さて、恒星と太陽と月だけでもかなりややこしい話になっているのに、さらにもう一つ、惑星という問題があります。</p>
+
+		<img src="gykkou.png" width="50%">
+		<p>　惑星は月や太陽同様、星空の中を動いていく（つまり24時間に一回転とは少し違う、別の運動をする）のですが、単純に地球の周りを円を描いて回っているとするのでは、惑星が行う複雑な運動を説明できません。地球から見ていると、惑星は毎日、星空の中でふらふらとさまようように位置を変えていくように見えます（「惑星」という名前はここから来ています）。特に惑星は普段とは逆の方向に運動する時期（逆行）があります（左の図）。</p>
+
+		<div class="aka">では下の図で惑星がどんな動きをするのかを見ましょう。</div>
+		<div align="center"><canvas id="canvas3" width="60" height="60" ></canvas></div>
+		<div class="ui-grid-c">
+		  <div class="ui-block-a"><label><input type="checkbox" onChange="changeECFlg();" id="earthcenter" checked="true" >地球を中心<br><small><small>（チェック外すと太陽中心）</small></small></label></div>
+		  <div class="ui-block-b" ><label><input type="checkbox" onChange="changeEKFlg();" id="enkincut">遠近感をなくす<br><small><small>（地球中心の時のみ有効）</small></small></label></div>
+		  <div  class="ui-block-c" ><label><input type="checkbox" onChange="changeOWFlg();" id="orbitwrite">軌道を描く</label></div>
+		  <div  class="ui-block-d"><label><input type="checkbox" onChange="moveStop('#stopbtn3','graphWrite3()');" id="stopbtn3">一時停止</label></div>
+		</div>
+		<div class="setsumei">　惑星の運動も見てみましょう。緑が地球、赤が火星、黄色が金星です（明るい黄色で影がついていないのは太陽です）。惑星はもちろんもっとたくさんあるのですが、ここでは残りは省略しました。惑星や太陽の大きさはかなり誇張してます（軌道のサイズにくらべてずっと小さいです）。
+		  <br>　最初の状態だと、惑星はふらふらと動き回っているように見えると思います。この図は“上”から見た図になっていますが、実際に我々が観測する時は地球上から見ているため、惑星までの距離はすぐにはわかりません。だから、惑星の動きはもっともっと不思議な動きに見えます。		
+		  <br>　距離がわかったとしてこの動きを見ていると、「地球を中心にして考えているから変な動きに見えるのだ」ということがわかってきます。</p>
+		  <br>　太陽を中心にして考えるとどうなるか、「太陽を中心に」ボタンを押してみて、太陽と地球、どちらを中心とすることが「素直」な動きなのか、を考えてみましょう。
+		  <br>　「遠近感をなくす」にチェックを入れると、地球と太陽／金星／火星の距離が同じになります。惑星の距離を測るのは簡単ではないので、我々が観測する星の動きに近いのはこの状態です。この状態から、「実際はどう動いているのか？」を考えていった、と思うと、なかなか簡単にはいかなかったろうな、と思われます。
+		  <br>　「軌道を描く」にチェックを入れると、惑星がどのような軌道にそって動いているのかを表示します。		
+		  <br>　地球を中心にしつつ軌道を描くと、「地球の周りを太陽が周り、太陽の周りを惑星が回る」というイメージがわかるかと思います。見たまんまで考えるとこうなるわけですが、太陽の大きさ（実際は直径で比較して地球の109倍もある）を考えると、それは不自然に思えてきます。</p>
+		  <br>　太陽を中心として考える立場で見ると、地球も「惑星」の仲間であった、ということがわかってきて、そちらの方が素直な見方だと感じられるのではないかと思います。
+		</div>
+		<p>　単純な円運動では、このようなふらつきや逆行は説明できません。そこで惑星は単純に地球の回りを円を描いて運動しているのではないと考えなくてはいけないのです。ピタゴラスの時代の人々にとって、天にある惑星が規則的でない運動をするというのは考えにくいことでした。そこで彼らは、規則的な回転運動を組み合わせて惑星の不規則に見える運動を説明できるはずだと考えたのです。</p>
+
+		<img src="dousintendou.png" width="50%">
+		<p>　有名なのは下で説明する「周転円」というやつなのですが、それ以外にもいろいろな「モデル」がありました。太陽・月・惑星はそれぞれの（中心が地球の位置にある）球の上に乗っている（一番外側に恒星の乗った球がある）という考え方がエウドクソスの同心球モデルです。図のように、地球の回りを巨大な球が回り、この巨大な球の内側にある別の球は、この回転する球にとりつけられた（？）軸の回りを回転します。球が組み合さって運動するので、内側の球に張り付いている惑星は複雑な運動をすることになります。観測データに合わせるためにはこの球の中にさらに球をどんどん考えていかなくてはいけません。最初は４つぐらいですんでいた同心球は、最終的には５０個以上も必要になりました。非常に複雑な計算が必要になったことは言うまでもありません。さらにこのモデルには一つの弱点があります。実際に惑星を観測していると、逆行する時には明るさが大きくなることがわかるのですが、このモデルでは惑星と地球との距離が一定なので、明るさの変化が説明できません。</p>
+
+		<img src="shuuten.png" width="25%">
+		<p>　最終的に天動説体系の中で採用されたのは、惑星が円運動するのではなく、導円という仮想的な円が地球の回りを円運動すると考えるモデルです。その導円のうえに周転円が乗り、惑星は周転円の上に乗っていると考えるます。これを導円周転モデルと呼びます。</p>
+		<p>　惑星は導円の運動と周転円の運動がプラスされた複雑な運動を行います。この場合は明るさの変化もある程度説明できます。逆行する時というのは惑星が地球に近づいた時だからです。しかし、観測データにあわせるためには、周転円の上に周転円をのせ、さらにその上に周転円をのせて---のようにたくさんの周転円を使わなくてはならなくなり、非常に複雑な計算が必要になってしまいます。</p>
+		<p>　コペルニクスは逆行のような惑星の不規則運動は、地球も惑星も両方動いていることの効果だと考えれば説明できるとして地動説を唱えました。地動説では、次の図のような考え方で逆行を説明します。</p>
+		<img src="chidou.png" width="30%">
+		<p>　左の図は火星などの外惑星（地球より外を回っている惑星）の場合の逆行の説明図です。地球と火星の運動速度が違うので、地球が火星を追い抜く時、後戻りするように見えてしまうのだ、というわけです。ただし、惑星の逆行は天動説の周転円を使わなくても地動説でなら説明できる---と言うのは、初期の地動説においては正しくありません。コペルニクスの地動説では、まだ周転円が使われているのです。その理由は惑星の運動が「円」であるということにこだわりすぎたからです。実際には惑星の運動は楕円であり、円だと思って計算したのでは正しい結果を得ることができません。どうしても周転円のようなトリックを入れる必要があるのです。当時の人々が地動説をなかなか認めなかった理由は、そのような事情もあります。</p>
+
+		<p>　しかし、これで「地球中心」から「太陽中心」にすぐに移行した、というわけではありません。ティコ・ブラーエは地球の回りを太陽が回り、その太陽の回りを惑星が回るという、地動説に近いが地球は動かないというモデルを考えています。彼はこう考えました。</p>
+
+		<p><img src="shisa.png" width="80%" class="floatnone"></p>
+
+		<div class="fukidasi">もし地球が動いているのなら、星の位置が地球の運動にしたがって変化してみえる筈だ</div>
+		<p>　そう、<a href="lec1.html">第1講</a>でも説明した年周視差です。現在でも恒星の距離を測定するのに使われてますがしかし、当時（望遠鏡の発明前！）の観測データの精度の中ではその動きは見つかりませんでした。ティコが思っていたより、ずっとずっと遠くに星があったからです。</p>
+		<p>　ともあれ、ティコはそのデータから「地球は動いていない」と結論したのであって、けっしてただの頑固者だったわけではありません。彼は実証的裏付けをもって判断しようとしたのですが、そのティコの想像を遥かに越えて宇宙が広かったということです。</p>
+		<p>　古代ギリシャの人々は、「宇宙は規則的であるべきだ」という信念から「円」にこだわりました。その信念をひっくり返すには長い時間がかかりました。しかし、それは決して「昔の人は頑固だった」というような単純な理由のせいではありません。我々の持っている空間の概念を変化させるためにはそれだけたくさんの観測・実験などのデータが必要であり、それが蓄積されるまでにこれだけの長い時間がかかったのだ、と考えるべきでしょう。</p>
+		<p>　最終的にティコ・ブラーエの膨大な観測データを解析したケプラーが惑星の運動を楕円と考えれば周転円のようなトリックを持ち込むことなく、観測される現象をうまく説明できることを示します。これがケプラーの法則です。</p>
+		<p>さて、太陽が止まっていて地球が動いているのだ、と言われると、</p>
+		<p><span class="fukidasi">その動いている地球から落っこちてしまいませんか？</span></p>
+		<p>というような疑問（恐怖？）が生まれることになる。そしてそれは、</p>
+		<p><span class="fukidasi">惑星はどうして太陽の回りを回っているの？？？</span></p>
+		<p>という疑問にもつながります。</p>
+		<p>　そして、ケプラーの法則をもとにして、ニュートンが万有引力の法則、そして「ニュートン力学」と呼ばれる力学の基礎という、新しい「宇宙の規則」を発見するに至ったのです。</p>
+	  </div>				
+	  <div data-role="footer" align=center>
+		<a href="#page2" data-icon="arrow-l">2 ページへ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page4">
+	  <div data-role="header">
+		<h1>問題の解答と感想について、コメント</h1>
+	  </div>
+	  <div data-role="content">
+		<div class="setsumei">今日の問題<br>
+		  <img src="chidou.png" width="15%">
+		  　地球から火星を見た図（←）を参考に、地球から金星を見るとどのように見えるかを図解してください。<br>
+		  　ヒントとして、地球と金星では金星の方が速く回ってます。
+	<br><br>↓の状態までは黒板に絵が書いてありました。
+		</div>
+		<img src="kinseiQ.png" class="floatnone" width="40%">
+			<p>
+		<img src="kinseiA.png" width="25%">
+		<p>　正解は左の通りです。地球から金星を見たらどんなふうにみえるか、なので、地球→金星と結ぶ線（いわば視線）を伸ばして、「地球から見ると金星がどっちに見えるか」を表現して欲しかったわけです。</p>
+		<p>　図をさらにどんどん書き進めてくれた人もいて、そういう人は金星が「いったりきたり」する様子がわかったのではないかと思います。</p>
+		<img src="kinseiWA.png" width="25%" class="floatright">
+		右の図が一番多かった間違い。これだと金星→地球という線になってますから、「金星から見ると地球がどう見えるか」という図になってしまっています。金星人の気持ちになってしまいました。</p>
+		<p>　この他にも、<br>
+		  <br>
+		  <br>・なぜか地球が中心にいて金星が周りを回ってしまっている図
+		  <br>・地球から金星まで線を引っ張っているが、そこで止まってしまっている図（これでは、「どっちに見えるか」が示せてない）。
+		  <br>・なぜか地球が動いてない図？？
+		  <br>
+		  <br>などなどの変な解答がありました。わざと細かい図の書き方などを説明せずに出した問題なので、かなり変なのもありましたが甘〜〜〜〜〜〜く採点してます。</p>
+		<div class="setsumei">感想・コメントなど</div>
+		<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+		<div class="Q">虹も太陽の７色の光によって出来たものですか？</div>
+		<div class="A">そうです。水中にある水滴（雲とか雨とか）に光が入って屈折しつつ反射する時に角度が色によって違うために色がつきます。</div>
+		<p></p>
+		<div class="Q">日本の空よりアメリカの空の方が青色が薄く見えたのも、太陽との距離が違うからなのかな、と思いました。</div>
+		<div class="A">日本の空でも、空気の状態によって違ったりもするので、なかなか単純ではないです。沖縄の空は綺麗です。</div>
+		<p></p>
+		<div class="Q">惑星の動画の動きが面白かった。よくこんなのから実際の運動がわかるなと思った。</div>
+		<div class="A">確かに、これ結果を知ってなくて予想するのは難しいですよねぇ。</div>
+		<p></p>
+		<div class="Q">ブラックホールを人工的に作ることは可能ですか？</div>
+		<div class="A">現代の技術で、ということなら無理です。超未来の「太陽のような天体をほいほい動かすほどの技術」があればできます。</div>
+		<p></p>
+		<div class="Q">なぜ学者は宇宙のことを知る必要があるのかと思った。</div>
+		<div class="A">「知りたいから」という以外には必要性はないんじゃないかと思います。知ったことで何か役に立つことがあるかもしれないし、ないかもしれない。でも「知りたい」という気持ちは大事です。「役に立つ」は後からついてくる。</div>
+		<p></p>
+		<div class="Q">宇宙の端っこを観測することはできないのではないだろうか。</div>
+		<div class="A">宇宙が膨張しているために、「ここから向こうは観測できない」という地平線のようなものはできます。そういう話もこの授業でいつかできるかな。</div>
+		<p></p>
+		<div class="Q">トンカチで太陽中心を実感できるのは驚きだった。</div>
+		<div class="A">物理現象を見る力があれば、宇宙のこともわかるようになる、という例です。</div>
+		<p></p>
+		<div class="Q">惑星は互いにぶつかったりしないのかな？</div>
+		<div class="A">今日の図で見たように、軌道が重なっていないので大丈夫です。小惑星だとか彗星だとかは惑星にぶつかったりすることもあります。</div>
+		<p></p>
+		<div class="Q">惑星の軌道はずれたりしないで、ずっとこのままですか？</div>
+		<div class="A">だいたい、そのままです。これも万有引力の法則からくるんですが。しかし何百万年の間には少しずつ変化します（たとえば月は１年に数センチという割合で少しずつ遠くなっている）。</div>
+		<p></p>
+		<div class="Q">当時の常識が覆されたように、現代にも桃園のようで実は間違っているということがあるのかなと感じました。</div>
+		<div class="A">あるかもしれません。ただ大事なことは、常識を覆すにはそれだけの証拠の積み上げが必要になる、ということです（天動説→地動説にしても、長い努力があってやっと認められた）。だからこれから常識が覆されることがあったとしても、それは「地道な努力の結果」として得られるものだろうと思います。</div>
+		<p></p>
+		<div class="Q">だいぶ前に相対性理論が間違っていた（光より速い物質が見つかった）というニュースがありましたが、続報を効いてません。</div>
+		<div class="A">結論を先に言うと、あれは実験のミスでした（それは報道されたんですが、訂正ニュースってたいてい、最初のニュースより扱いが小さくなるんですよ）。それが「相対性理論が間違っていた」というニュースになってしまったのは、いろいろ問題があって、もともとその実験結果を論文にした人達も「おかしなデータが出ていて、これが本当だったら相対論間違えてることになっちゃうかもしれないからみんなで理由考えて」というふうに発表したのに、それが報道だと「相対論間違ってた！」「超光速だ！」になっちゃうんですね（やっぱり大げさに言った方がニュース見てもらえるからか）。あと、一つの実験データが出たからといって、即座に「相対論間違っていた」ということには、普通なりません。上にも書きましたが、常識を覆すには「地道な努力」の積み上げが必要です。</div>
+		<p></p>
+		<div class="Q">地球が住めない環境になった時、地球以外の惑星に人が移住するというのは有り得る話ですか？</div>
+		<div class="A">太陽系内だと、普通に人が住める場所は（地球以外には）ありません。太陽系の外だと、遠すぎてなかなかいけません（行けるようになれば、地球みたいな星を探せるでしょう）。地球を大事にするしかないようです。</div>
+		<p></p>
+		<div class="Q">問題が難しすぎるので優しくして欲しいです。</div>
+		<div class="A">その分、採点を甘くしてます。</div>
+		<p></p>
+		<div class="Q">惑星以外の星は動いてないのですか。</div>
+		<div class="A">いえ、もちろん動いてます。</div>
+		<p></p>
+		<div class="Q">太陽もどこかを回ってますか。</div>
+		<div class="A">太陽は他の恒星と一緒に「銀河系」という星の集まりを作ってますが、その銀河が回転してます。つまり太陽も銀河中心の周りを回っています。</div>
+		<p></p>
+		<div class="Q">教卓を横にずらしてもらえるとプロジェクタが見やすいです。</div>
+		<div class="A">はい。</div>
+		<p></p>
+		<div class="Q">太陽が沈まない国があるという話を聞きましたが、どういう原理で沈まないのですか。</div>
+		<div class="A">地球の自転軸が傾いているからです。</div>
+		<img src="yorunonaikuni.png" class="floatnone">
+		<p></p>
+		<div class="Q">惑星は全部同じ方向に回っているのですか。</div>
+		<div class="A">公転はそうです（物質がそういう方向に回っている状態から惑星ができていったのでしょう）。自転は逆回り（金星）や横倒し（天王星）があります。</div>
+		<p></p>
+		<div class="Q">地球と太陽の距離はどれくらいですか。</div>
+		<div class="A">１億５千万キロ程度です。</div>
+		<p></p>
+		<div class="Q">STAP細胞の件ですが、論文云々よりもSTAP細胞自体に興味がある。もう一度実験してSTAP細胞自体が存在するのか確かめて欲しいと思います。</div>
+		<div class="A">論文というのは「STAP細胞存在の証拠を示す」ためのものです。それに不備があって、今はあると思っていた「証拠」がなくなってしまった、という状況です。あるかどうかを示すには、ちゃんと証拠が出せる実験を積み上げていくしかないわけです（それが科学というもの）。</div>
+		<p></p>
+		<div class="Q">夜空に結構早めのスピードで動いている光があったんですが、人工衛星って地球から見えますか？</div>
+		<div class="A">見えますよ。早めに動く光というと、人工衛星の可能性は高いと思います。特によく見えるのがISS（国際宇宙ステーション）で、JAXAが<a href="http://kibo.tksc.jaxa.jp/">国際宇宙ステーションが見える時間や方向を教えてくれるサイト(http://kibo.tksc.jaxa.jp/)</a>を作ってくれてます。ここをチェックしてから見てみてください。</div>
+		<p></p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page3" data-icon="arrow-l">その３に戻る</a>
+		<a href="#page0" data-icon="back">目次に戻る</a>
+	  </div>
+	</div>
+  </body>
+</html>

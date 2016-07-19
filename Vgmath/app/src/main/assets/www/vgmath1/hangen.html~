@@ -1,0 +1,677 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>第５章　微分の応用（高階微分）</title>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+		<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+		<link href="jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css"/>
+		<link href="vg.css" rel="stylesheet" type="text/css"/>
+		<script src="jquery.js" type="text/javascript"></script>
+		<script src="jquery.mobile-1.4.4.min.js" type="text/javascript"></script>
+		<script src="rescalescreen.js" type="text/javascript"></script>
+		<script src="dragmanscreen.js" type="text/javascript"></script>
+		<script src="draggablepoint.js" type="text/javascript"></script>
+	</head> 
+	<body> 
+	<div data-role="page" id="taylor">
+	  <div data-role="header">
+		<h1>微係数の意味をグラフで</h1>
+	  </div>
+	  <div data-role="content">
+		<script type="text/javascript">
+		 var x1=1;
+		 var x2=0;
+		 var x3=0;
+		 var x4=0;
+		 var gsT;
+		 function F4(x) {
+		   return x1*x+x2*x*x/ 2 + x3*x*x*x/ 6+x4*x*x*x*x/ 24;
+		 } 
+		 function F1(x) {
+		   return x1*x;
+		 } 
+		 function F2(x) {
+		   return x1*x+x2*x*x/ 2;
+		 } 
+		 function F3(x) {
+		   return x1*x+x2*x*x/ 2 + x3*x*x*x/ 6;
+		 } 
+		 function changeT() {
+		   x1=Math.round(x1*10)/ 10;
+		   document.getElementById('sl1').value=x1;
+		   x2=Math.round(x2*10)/ 10;
+		   document.getElementById('sl2').value=x2;
+		   x3=Math.round(x3*10)/ 10;
+		   document.getElementById('sl3').value=x3;
+		   x4=Math.round(x4*10)/ 10;
+		   $("#sl4").val(x4);
+		   $("#sl1").slider("refresh");
+		   $("#sl2").slider("refresh");
+		   $("#sl3").slider("refresh");
+		   $("#sl4").slider("refresh");
+
+		   rewriteT();
+		 }
+		 function rewriteT() {
+		   gsT.clearALL();
+		   gsT.writeContents();
+		 };
+		 $(document).delegate('#taylor','pageinit',function(e) {
+		   gsT=new GraphScreen("canvasT",6,6,0.8);
+		   gsT.setLeft(-3);
+		   gsT.setBottom(-3);
+ 		   gsT.gobackOriginalSize();
+		   gsT.writeGraphs=function() {
+			 gsT.setFunction(F1);
+			 gsT.writeFunction("rgba(100,100,100,0.2)");
+			 gsT.setFunction(F2);
+			 gsT.writeFunction("rgba(0,0,255,0.4)");
+			 gsT.setFunction(F3);
+			 gsT.writeFunction("rgba(0,255,255,0.6)");
+			 gsT.setFunction(F4);
+			 gsT.writeFunction("rgb(255,0,0)");
+		   };
+		   gsT.writeContents();
+		 });
+		</script>
+		<div class="setsumei">ここで、原点を通るグラフの1,2,3,4階微分が変化した時にグラフの形がどのように変わるかを下の図で確認しておこう。</div>
+		<p><canvas width="400" height="400" id="canvasT" style="-ms-touch-action: none;"></canvas></p>
+		
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<input type="button" value="＜"  data-inline="true" onClick="if( x1>-5 ) { x1 -= 0.1; } changeT();">一階微分<input type="button" data-inline="true" value="＞" onClick="if( x1 < 5 ) { x1 += 0.1; } changeT();">
+		  </div>
+		  <div class="ui-block-b">
+			<input type="range" class="slider" data-inline="true" id="sl1" value="1" min="-5" max="5" step="0.1" onchange="x1=this.valueAsNumber; rewriteT();">
+		  </div>
+		  <div class="ui-block-a">
+			<input type="button" data-inline="true" value="＜" onClick="if( x2 > -5 ) { x2 -= 0.1; } changeT();">二階微分<input type="button" data-inline="true" value="＞" onClick="if( x2 < 5 ) { x2 += 0.1; } changeT();">
+		  </div>
+		  <div class="ui-block-b">
+			<input type="range" class="slider" data-inline="true" id="sl2" value="0" min="-5" max="5" step="0.1" onchange="x2=this.valueAsNumber; rewriteT();">
+		  </div>
+		  <div class="ui-block-a">
+			<input type="button" data-inline="true" value="＜" onClick="if( x3 > -5 ) { x3 -= 0.1; } changeT();">三階微分<input type="button" data-inline="true" value="＞" onClick="if( x3 < 5 ) { x3 += 0.1; } changeT();">
+		  </div>
+		  <div class="ui-block-b">
+			<input type="range" class="slider" id="sl3" value="0" min="-5" max="5" step="0.1" onchange="x3=this.valueAsNumber; rewriteT();">
+		  </div>
+		  <div class="ui-block-a">
+			<input type="button" data-inline="true" value="＜" onClick="if( x4 > -5 ) { x4 -= 0.1; } changeT();">四階微分<input type="button" data-inline="true" value="＞" onClick="if( x4 < 5 ) { x4 += 0.1; } changeT();"></div>
+			<div class="ui-block-b">
+			  <input type="range" class="slider" id="sl4" value="0" min="-5" max="5" step="0.1" onchange="x4=this.valueAsNumber; rewriteT();">
+			</div>
+		</div>
+		<div class="setsumei">
+		  ここで、赤の実線が４次まで考えたグラフで、薄い色（水色、青、灰）の線は、それぞれ３次まで、２次まで、１次までを考えた線である。
+		  <br>
+		  それぞれの微分（微係数）の変化でどのようにグラフの形が変わるかを確認しよう。特に大事なのが、以下の二つ。
+		  <br>・一階微分はグラフのこの点での傾きである。
+		  <br>・二階微分はグラフのこの点での曲がり具合である。
+		</div>
+	<h3>微分方程式の分類</h3>
+	<p>微分方程式を解くテクニックは解くべき微分方程式により様々なので、後のために微分方程式の形を分類しておこう（ここでは分類だけで、実際の解き方はこの後でじっくり考える）。</p>
+
+	<h4>階数による分離</h4>
+
+	<p>微分方程式を分類する方法の一つが「何階微分を含むか」という点での分類である。$n$階以下の導関数を含む微分方程式を「$n$階微分方程式」と呼ぶ。</p>
+\begin{equation}
+ \Phi\left({x},{y},{\mathrm d\over \mathrm dx}{y}\right)=0
+\end{equation}
+	<p>となるのが一階微分方程式である。同様に、</p>
+\begin{equation}
+ \Phi\left({x},{y},{\mathrm d\over \mathrm dx}{y},{\mathrm d^2\over \mathrm dx^2} {y}\right)=0
+\end{equation}
+	<p>は二階微分方程式である。後で具体的な計算をやってみせるが、$n$階の微分方程式を解くということは不定積分を$n$回やることと同じなので、不定積分のたびに積分定数が出て来る。結果、微分方程式の解である${y}$は$n$個の「未定のパラメータ」を含む。つまり<span class="fukidasi">$n$階微分方程式の解は$n$個の（微分方程式だけでは決まらない）パラメータを含む</span>と考えてよい（ただし、微分が不連続性を持つ関数では、積分定数が領域によって違うということもあるので、その場合パラメータの数は増える）。</p>
+
+
+	<h4>線型か非線型か</h4>
+	<p>微分方程式を使って求めたい関数を${y}$とした時、微分方程式が${y}$に対して線型（つまり定数と${y}$の1次式しか含んでいない場合）を「線型微分方程式」と呼ぶ。そうでない場合を「非線型微分方程式」と呼ぶが、線型か非線型かで微分方程式の解き方は大きく違う。</p>
+
+	<p>線型の微分方程式は</p>
+\begin{equation}
+A({x}){\mathrm d ^2 \over \mathrm dx^2}{y}+B({x}) {\mathrm d\over \mathrm dx} {y} +C({x}) {y}+D({x})=0\label{senkeiy}
+\end{equation}
+	<p>のような形をしている（${y}$の微分についても線型であることに注意）。この式は${y}$の線型二階微分方程式ということになる（一階もしくは三階以上の微分方程式も同様に考えられる）。</p>
+
+	<p>この式は$D({x})$という「定数項」を含んでいるが、これを含まない場合（つまり$D({x})=0$の場合）は（次数がそろっているという意味で）「斉次線型微分方程式」と呼ぶ（$D({x})\neq0$の時は「非斉次線型微分方程式」である）。</p>
+
+
+
+	<h4>正規形と非正規形</h4>
+	<p>一階微分方程式を適当に変形することで、</p>
+\begin{equation}
+ {{\mathrm d\over \mathrm dx}}{y}=F({x},{y})
+\end{equation}
+	<p>の形にできた時、この式は正規形である、と言う。右辺が定まらない場合は非正規形である。一例を挙げると</p>
+\begin{equation}
+ \left({{\mathrm d\over \mathrm dx}}{y}\right)^2+{y}^2 = 1
+\end{equation}
+	<p>で、これを変形しても、</p>
+\begin{equation}
+  {{\mathrm d\over \mathrm dx}}{y}=\pm\sqrt{1-{y}^2}
+\end{equation}
+	<p>となってしまって${{\mathrm d\over \mathrm dx}}{y}$が一つに決まらない。</p>
+
+
+
+
+	<h4>完全形かそうでないか</h4>
+	<p>微分方程式が</p>
+\begin{equation}
+ \mathrm d \left(f({x},{y})\right)=0
+\end{equation}
+	<p>という形に直せるとき、この形の微分方程式を「完全形の微分方程式」と呼ぶ。この形に直せれば、</p>
+\begin{equation}
+ f({x},{y})=一定
+\end{equation}
+	<p>が解なので、非常に簡単に答えが求められることになる。たとえば</p>
+\begin{equation}
+ m{x}^{m-1}{y}^n \mathrm dx
++ n{x}^m{y}^{n-1}\mathrm dy=0
+\end{equation}
+	<p>は</p>
+\begin{equation}
+ \mathrm d \left({x}^m{y}^n\right)=0
+\end{equation}
+	<p>と直せるから完全形である。</p>
+
+	<h4>変数分離が可能かどうか</h4>
+
+	<p>「変数分離」とは、「微分方程式を</p>
+\begin{equation}
+ f({y})\mathrm dy = g({x})\mathrm dx\label{hensuubunri}
+\end{equation}
+	<p>の形に変形する」ということである。変数分離される前は、$ {\mathrm dy\over \mathrm dx}={g({x})\over f({y})} $という形である。つまりは${x}$と${y}$という二つの変数が左辺と右辺に分離できるということ。これができる場合の方が解きやすい。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page_index" data-icon="arrow-l">「微分方程式とは」</a>
+		<a href="#linear" data-icon="arrow-r">「答えが直線になる微分方程式」</a>
+		<p align="center">←<a href="lec16.html">第16講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>　<a href="lec18.html">第18講へ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="linear">
+	  <div data-role="header">
+		<h1>答えが直線になる微分方程式</h1>
+	  </div>
+	  <div data-role="content">
+		<div class="A">以下の式、プリントでは分母と分子のdx,dyが逆でした。訂正しておいてください。</div>
+		<p>最も単純な微分方程式は</p>
+$${\mathrm dy\over \mathrm dx}=0$$
+		<p>である。これは計算するまでもなく「微分して0になるのは定数」と判断して、</p>
+$$y=C$$
+		<p>が解となる。これは上の式を積分した結果が下の式だと考えても同じことである。</p>
+		<p>右辺が0でなく</p>
+$${\mathrm dy\over\mathrm dx}=a$$
+		<p>のような定数の場合、傾きが一定であるということを示している。解はもちろん、</p>
+$$y=ax+C$$
+		<p>となる。</p>
+
+		<script type="text/javascript">
+		 var x1L=0;
+		 var C=0;
+		 var gsL;
+		 function F(x) {
+		   return x1L*x+C;
+		 } 
+		 function changeL() {
+		   x1L=Math.round(x1L*10)/ 10;
+		   document.getElementById('Lsl1').value=x1L;
+		   $('#Lsl1').slider("refresh");
+		   rewriteL();
+		 }
+		 function rewriteL() {
+		   gsL.clearALL();
+		   gsL.writeContents();
+		 };
+		 var lineMode=false;
+		 $(document).delegate('#linear','pageinit',function(e) {
+		   gsL=new GraphScreen("canvasL",7,7,0.8);
+		   gsL.setLeft(-3.5);
+		   gsL.setBottom(-3.5);
+		   gsL.gobackOriginalSize();
+		   gsL.writeGraphs=function() {
+			 var i;
+
+			 var x,y;
+			 var ya=new Yajirushi("rgba(0,200,0,0.5)");
+			 var r=1/ Math.sqrt(1+x1L*x1L);
+			 ya.setVXY(r,x1L*r);
+			 var ct=gsL.ctx;
+			 for( x=gsL.leftwx+0.5; x< gsL.rightwx; x += 1 ) {
+			   for( y=gsL.bottomy+0.5; y< gsL.topy; y += 1 ) {
+				 ya.setXY(x-0.5*r,y-0.5*r*x1L);
+				 ya.draw(ct);
+			   }
+			 }
+			 if( lineMode ) {
+			   var minC;
+			   var maxC;
+			   if( x1L > 0 ) {
+				 minC = -gsL.rightwx*x1L+gsL.bottomy;
+				 maxC = -gsL.leftwx*x1L+gsL.topy;
+			   } else {
+				 maxC = -gsL.rightwx*x1L+gsL.topy;
+				 minC = -gsL.leftwx*x1L+gsL.bottomy;
+			   }
+			   for(i=minC; i<=maxC ; i+=0.5 ) {
+				 C=i;
+				 gsL.setFunction(F);
+				 gsL.writeFunction("rgb(255,0,0)");
+			   }
+			 }
+		   };
+		   gsL.writeContents();
+		 });
+		 var Vector=function(xx,yy) {
+		   this.x=xx;
+		   this.y=yy;
+		 }
+		 Vector.prototype={
+		   copy:function(V) {this.x=V.x; this.y=V.y;},
+		   makeCopy:function() { return new Vector(this.x,this.y); },
+		   setXY:function(xx,yy) { this.x=xx; this.y=yy;},
+		   add:function(V) {this.x += V.x; this.y += V.y;},
+		   sub:function(V) {this.x -= V.x; this.y -= V.y;},
+		   sum:function(V) { return new Vector(this.x +V.x,this.y+V.y); },
+		   diff:function(V) { return new Vector(this.x -V.x,this.y-V.y); },
+		   mul:function(a) { this.x *= a; this.y *=a; },
+		   div:function(a) { this.x /= a; this.y /=a; },
+		   prod:function(a) { return new Vector(this.x*a,this.y*a); },
+		   iprod:function(V) { return this.x*V.x+this.y*V.y;},
+		   eprod:function(V) { return this.x*V.y-this.y*V.x;},
+		   quot:function(a) { return new Vector(this.x/a,this.y/a); },
+		   addVt:function(V,t){ this.x += V.x*t,this.y += V.y*t; }
+		 }
+		 // 矢印のコンストラクタ。色と長さの初期値をセットするだけ。
+		 var Yajirushi=function(cl) {
+		   this.color=cl;
+		   this.len=1;
+		   this.p=new Vector(0,0); // .pは根元の位置。
+		   this.v=new Vector(0,1); // .vは矢印の向きのベクトル
+		   this.theta=0; // θ=0は真下（y軸向き）。
+		 }
+
+		 Yajirushi.prototype=
+		 {	
+		  setXY:function(xx,yy) {this.p.x=xx; this.p.y=yy;},
+		  setL:function(l) { this.len=l; this.v.x=-l*Math.sin(this.theta); this.v.y=l*Math.cos(this.theta);},
+		  setTheta:function(th) {this.theta=th; this.v.x=-this.len*Math.sin(th); this.v.y=this.len*Math.cos(th);},
+		  setVXY:function(vx,vy) {
+			 this.v.x=vx; this.v.y=vy;
+			 this.len=Math.sqrt(vy*vy+vx*vx);
+			 this.theta=Math.atan2(-vx,vy);
+		   },
+		  draw:function(ct) {
+			 //ct.strokeStyle="rgb(0,0,0)";
+			 ct.fillStyle=this.color;
+			 ct.save();
+			 
+			 ct.translate(this.p.x,this.p.y);
+			 ct.rotate(this.theta);
+			 ct.beginPath();
+			 var ll=0.05*this.len;
+			 var lll=0.8*this.len;
+			 ct.moveTo(ll,0);
+			 ct.lineTo(-ll,0);
+			 ct.lineTo(-ll,lll);
+			 ct.lineTo(-2*ll,lll);
+			 ct.lineTo(0,this.len);
+			 ct.lineTo(2*ll,lll);
+			 ct.lineTo(ll,lll);
+			 ct.closePath();
+			 ct.fill();
+			 ct.restore();
+		   }
+		  }
+		</script>
+
+		<p><canvas width="400" height="400" id="canvasL" style="-ms-touch-action: none;"></canvas></p>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<input type="button" data-inline="true" value="＜" id="aDown" onClick="if( x1L > -5 ) { x1L -= 0.1; } changeL();">傾きa<input data-inline="true" type="button" value="＞" id="aUp" onClick="if( x1L < 5 ) { x1L += 0.1; } changeL();">
+		  </div>
+		  <div class="ui-block-b">
+			<input type="range" id="Lsl1" value="0" min="-5" max="5" step="0.1" onchange="x1L=this.valueAsNumber; rewriteL();">
+		  </div>
+		</div>
+		<p>どのような線が引かれるか見たかったら、ボタン→<input type="button" data-inline="true" value="グラフOn" id="lineModeOn" onClick="lineMode = true; changeL();">を押すこと。消したい時はこっち→<input data-inline="true" type="button" value="グラフOff" id="lineModeOff" onClick="lineMode = false; changeL();">を押す。</p>
+	<div class="box">
+	  これらの簡単な微分方程式も、<span class="fukidasi">微分方程式の解は、微分方程式だけでは決まらない</span>という一般的性質を持っている。「決まらない」理由は積分定数という任意の定数が入ってくるからであると考えておけばよい。あるいは、微分が決まるということは「その点での傾き」が決まるだけであるから、「どの点で始めるか」を決めないことには線が引けない（関数が決まらない）と考えてもよい。</div>
+
+
+	<p>この本当に簡単な例からでも、${\mathrm dy\over \mathrm dx}=$<span class="fukidasi">なんとか</span>の形の微分方程式を解く方法として、</p>
+	<ol>
+	  <li> 微分すると<span class="fukidasi">なんとか</span>になる式を探す。</li>
+	  <li> 両辺を積分する。</li>
+	  <li> 傾きの式が右辺になるような図形を探す。</li>
+	</ol>
+	<p>の三つの方法があることがわかる。この後様々な微分方程式を解くテクニックを説明していくが、だいたいはこの３つの組み合わせである。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#taylor" data-icon="arrow-l">「微係数の意味をグラフで」</a>
+		<a href="#exp" data-icon="arrow-r">「答えが指数関数になる微分方程式」</a>
+		<p align="center">←<a href="lec16.html">第16講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>　<a href="lec18.html">第18講へ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="exp">
+	  <div data-role="header">
+		<h1>答えが指数関数になる微分方程式</h1>
+	  </div>
+	  <div data-role="content">
+		<script type="text/javascript">
+		 var Ex1=1;
+		 var C=0;
+		 var gsE;
+		 function F_E(x) {
+		   return Ex1*Math.exp(x);
+		 } 
+		 function changeE() {
+		   Ex1=Math.round(Ex1*10)/ 10;
+		   document.getElementById('sl1').value=Ex1;
+		   rewrite();
+		 }
+		 function rewrite() {
+		   gsE.clearALL();
+		   gsE.writeContents();
+		 };
+		 var lineModeE=false;
+		 $(document).delegate('#exp','pageinit',function(e) {
+		   gsE=new GraphScreen("canvasE",3,3,0.8);
+		   gsE.setLeft(-1.5);
+		   gsE.setBottom(-1.5);
+		   gsE.gobackOriginalSize();
+		   gsE.writeGraphs=function() {
+			 var i;
+
+			 var x,y;
+			 var ya=new Yajirushi("rgba(0,200,0,0.5)");
+			 var ct=gsE.ctx;
+			 for( x=gsE.leftwx+0.25; x< gsE.rightwx; x += 0.25 ) {
+			   for( y=gsE.bottomy+0.25; y< gsE.topy; y += 0.25 ) {
+				 var r=1/Math.sqrt(1+y*y)/4;
+				 ya.setVXY(r,y*r);
+				 ya.setXY(x-0.5*r,y-0.5*y*r);
+				 ya.draw(ct);
+			   }
+			 }
+			 if( lineModeE ) {
+			   var minC=-7;
+			   var maxC=7;
+			   var savex1=Ex1;
+			   for(i=minC; i<=maxC ; i+=0.1 ) {
+				 Ex1=i;
+				 gsE.setFunction(F_E);
+				 gsE.writeFunction("rgba(255,0,0,0.2)");
+			   }
+			   Ex1=savex1;
+			   gsE.setFunction(F_E);
+			   gsE.writeFunction("rgb(255,0,0)");
+			 }
+		   };
+		   gsE.writeContents();
+		 });
+		</script>
+	<p>これまでもでてきた</p>
+\begin{equation}
+{\mathrm dy\over \mathrm dx}={y}
+\end{equation}
+	<p>も微分方程式である。</p>
+
+	<p>この解の、少なくとも一つ、つまり「微分すると${y}$に戻る関数」を、我々はとっくに知っていて、</p>
+\begin{equation}
+{y}=\mathrm e^{{x}}\label{solex}
+\end{equation}
+	<p>がその答えである。ただし、これは「一つの解」ではあるが「全ての解」ではない（上に書いたように<span class="fukidasi">微分方程式の解は、微分方程式だけでは決まらない</span>のである）。</p>
+	<p><canvas width="400" height="400" id="canvasE" style="-ms-touch-action: none;"></canvas></p>
+	<p>この式がグラフの傾きを決めている、という立場に立って考えてみると、上のような「傾きの図」が描けるが、${y}=\mathrm e^{{x}}$という一本の線では、「このような傾きを持った線」の全てが表現されていない、ということはわかるだろう。</p>
+	<div class="setsumei">どのような線が引かれるか見たかったら、ボタン→<input type="button" data-inline="true" value="グラフOn" id="lineModeOn" onClick="lineModeE = true; changeE();">を押すこと。消したい時はこっち→<input type="button" data-inline="true" value="グラフOff" id="lineModeEOff" onClick="lineModeE = false; changeE();">を押す。低線のAは下のスライダもしくはボタンで調整できる。</div>
+	<div class="ui-grid-a">
+	  <div class="ui-block-a">
+			<input type="button" data-inline="true" value="＜" id="aDown" onClick="if( Ex1 > -5 ) { Ex1 -= 0.1; } changeE();">係数A<input type="button" data-inline="true" value="＞" id="aUp" onClick="if( Ex1 < 5 ) { Ex1 += 0.1; } changeE();">
+	  </div>
+	  <div class="ui-block-b">
+		<input type="range" id="sl1" value="0" min="-5" max="5" step="0.1" onchange="Ex1=this.valueAsNumber; rewrite();">
+	  </div>
+	</div>
+	<p>数式の側面から「複数の解がある」ということを見てみよう。この微分方程式をよく見ると、$\mathrm e^{{x}}$に定数$A$を掛けた${y}=A\mathrm e^{{x}}$もまた、微分方程式を満たすことがわかる。それは、式の両辺が$f({x})$の1次式であることからもわかる。一般に、微分方程式が求めるべき関数$f({x})$に関して同次（1次なら1次ばかり、2次なら2次ばかりを含んでいる）ならば、定数倍しても解である。ということは、</p>
+\begin{equation}
+{y}=A\mathrm e^{{x}}
+\end{equation}
+	<p>がこの方程式の解である。</p>
+
+	<p>ここで注意しておいて欲しいのは、${x}$が負の場合。この点を気にして右辺を$\log|{x}|+C$のように絶対値をつけて表現することもある。しかし$\log(-1)=\mathrm i\pi$と考えれば${x}$が負の時は${x}=-|{x}|$とすれば、</p>
+\begin{equation}
+\log {x}= \log(-|{x}|)=\log|{x}|+ 
+\log(-1)=\log|{x}|+\mathrm i \pi
+\end{equation}
+	<p>となり、絶対値があるかないかは定数$\mathrm i\pi$がつくかつかないかの差だということになる。よってこの$\mathrm i\pi$も含めて積分定数$C$にすると思えば、これで問題ない。</p>
+
+	<p>もう一つ注意しておくと、${1\over {x}}$は${x}=0$で不連続であり、実は${x}>0$と${x}<0$の関数はつながっていない。よって積分結果も正の領域と負の領域では別物である。したがって不定積分は厳密には、</p>
+\begin{equation}
+ \int\!\mathrm dx~ {1\over {x}} = 
+\begin{cases}
+\log{x}+C_1& {x}<0のとき\\
+\log{x}+C_2& {x}>0のとき
+\end{cases}
+\end{equation}
+	<p>のように領域により別の積分定数をもってよい（微分すればちゃんと${1\over {x}}$に戻る）。これは他の不連続な点を持つ関数でも同様である。</p>
+	<p>「一つの解」である${y}=\mathrm e^{{x}}$を「特別な解」という意味で「特解」と呼ぶのに比べ、${y}=A\mathrm e^{{x}}$という解を「一般解(general solution)」（これで微分方程式のすべての解を表現している、という意味で「一般」をつける<span class="footnote">「一般解」という用語の意味は少し混乱がある。後で述べる。</span>）である、と言う。</span></p>
+
+	<p>一般解はたくさんある（上の場合、$A$が変われば解が変わるから、無限個の解がある）。つまり微分方程式だけでは、解を一つに定めることはできない。解を一つに定める時には、たとえば「${x}=0$で${y}=1$とする（この場合$A=1$）」のようになんらかの付加的な条件を置く。</p>
+
+	<p>このような条件は状況に応じて「境界条件(boundary condition)」あるいは「初期条件(initial condition)」などと呼ばれる<span class="footnote">条件を定める場所が時間的な「最初」である時は「初期条件」という言葉がよく選ばれる。</span>。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#linear" data-icon="arrow-l">「答えが直線になる微分方程式」</a>
+		<a href="#hangen" data-icon="arrow-r">「指数関数が出てくる自然現象」</a>
+		<p align="center">←<a href="lec16.html">第16講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>　<a href="lec18.html">第18講へ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="hangen">
+	  <div data-role="header">
+		<h1>指数関数が出てくる自然現象</h1>
+	  </div>
+	  <div data-role="content">
+	  <script>
+	   $(document).delegate('#hangen','pageinit',function(e) {
+		 init();
+		 setN(2500); setBq(25);  radGO();
+	   });
+	  </script>
+		<p>このような方程式に従う自然現象の例としては、放射性物質の崩壊がある。放射性物質は、「半減期」と呼ばれる一定期間（以下$T$とする）を経過すると元の量のうち半分が崩壊<span class="footnote">注意すべきは「半減期の2倍」の時間が経過すると全部なくなるのではなく、元の量の${1\over 4}$になる、ということ。</span>し、別の物質に変化する。よって、時刻$t$における放射性物質の量${N}(t)$は</p>
+\begin{equation}
+\begin{array}{rll}
+  {N}({t})=&{N}(0)\left({1\over 2}\right)^{{t}\over T}
+&({1\over 2}=\mathrm e^{-\log 2})\\
+ =&{N}(0)\mathrm e^{-{\log 2\over T}{t}}
+\end{array}\label{hangenki}
+\end{equation}
+		<p>という式で表すことができる。これは言わば大局的な情報としての式である（そして、実験的にもよく確認された式であると言える）。では、この式にはどのような自然法則が隠れているだろうか。「微分」という作業によりこの現象の局所的情報を取り出すことでそれがわかる。</p>
+	<p>この式を微分してみると、</p>
+ \begin{equation}
+ {\mathrm d \over \mathrm dt}{N}({t})=-{\log2\over T} {N}({t})
+ ~~または~~
+ dN=-{\log2\over T}{N} \mathrm dt\label{hangenDE}
+ \end{equation}
+	<p>のように、${\mathrm dy\over\mathrm dx}={y}$に似た式が出てくる（違いは${x}\to{t},{y}\to {N}({t})$という変数の違いと、右辺に定数係数$-{\log2\over T}$がついていること）。</p>
+
+	<p>この式$dN=-{\log2\over T}{N} \mathrm dt$の意味は、微小時間$\mathrm dt$の間に放射性物質の量が${\log 2\over T}{N}\mathrm dt$だけ減るということである。${N},\mathrm dt$以外の量は定数なので、「今ある量に比例して減る」という法則を示している。これは、ある一個の放射性物質の原子を取り出して考えると、その原子はまわりの状況や物質の状態とは無関係に一定確率で崩壊するということを示している<span class="footnote">まわりの状況によって変化する確率が違ってくる場合は、また別の形の微分方程式が出てくることになる。</span>。これが生物の死であれば「年老いた個体は死にやすい」「密集した環境では食料が確保できず死にやすい」などの理由で確率が変わる。放射性物質原子には「年齢」のような個性がないということがわかる。逆にいえば、そういう性質を持っている物が起こす現象は、これと同様の微分方程式で記述できるだろう。</p>
+	<div class="setsumei">以下は放射性物質が崩壊していく様子を表している。<br>一個一個の原子は一定時間ごとにある確率で崩壊する。結果として、原子の数が多いほど崩壊数も多い。<br>グラフは、横軸が時間で、縦軸が「どれだけ残っているか」を表す。確かに指数関数的になっていることを確認しよう。</div>
+	<hr>
+	<p><canvas id="maincanvas" width="500" height="500">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+		  <canvas id="subcanvas" width="500" height="500">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas></p>
+	<p><input type="button" value="再スタート" id="restart" onClick="restart();"></p>
+	<hr>
+	<p>【問い1】</p>
+	<p>放射性物質が単に崩壊している時の微分方程式は上の式であるが、ここで、一定時間ごとに放射性物質の「補給」が行われたとしよう。単位時間ごとに定数$A$ずつ外部から追加されるとすると、微小時間$\mathrm dt$ごとに$A\mathrm dt$ずつ増えることになる。この時の微分方程式を作り、解がどうなるかを考えよ。</p>
+	<hr>
+
+	<p>このように、微分方程式はある狭い範囲（空間的な範囲であることもあるし、時間的な範囲であることもある）で成り立つ法則を記述している。微分方程式を解くということ（つまり積分するということは）、「狭い範囲で成り立つ法則」から「広い範囲で成り立つ式」を作っていくことである。自然現象は複雑なものであり、それを一気に理解することが人間の思考の範疇を超えている場合がある。そのような時に狭い範囲だけを見てまず「微小領域で成り立つ法則」を導き出すという方法をとることで理解していこうというのが微分方程式を作り解いていくときの考え方である。</p>
+
+	<p>自然科学を深く勉強していけば、この「まずは微小領域で考える」という考え方が、多くの場面で有効であることに驚くに違いない。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#exp" data-icon="arrow-l">「答えが指数関数になる微分方程式」</a>
+		<a href="#qa" data-icon="arrow-r">受講者の感想・コメント</a>
+		<p align="center">←<a href="lec16.html">第16講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>　<a href="lec18.html">第18講へ</a>
+	  </div>
+	</div>
+	<div data-role="page" id="qa">
+	  <div data-role="header">
+		<h1>受講者の感想・コメント</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　<span class="Q">青字</span>は受講者からの声、<span class="A">赤字</span>は前野よりの返答です。</p>
+
+		<div class="Q">覚えるというより理解するということですか？</div>
+		<div class="A">もちろん、そうです。まず理解して概念や考え方を自分のものにすること。そうすれば自動的に覚えます。</div>
+		<p></p>
+		<div class="Q">微分方程式の特徴が少しわかった。</div>
+		<div class="A">この後の授業で「少し」でなく「完璧」にしてください。</div>
+		<p></p>
+		<div class="Q">完全形など初めて聞くものもあったので、復習して理解する。もっと勉強して、複雑な自然現象も式で表せるようにしたい。</div>
+		<div class="A">完全形などについては後の授業でじっくりやりましょう。</div>
+		<p></p>
+		<div class="Q">今日は微分方程式を考えました。いろんな考え方から解くことができたので楽しかったです。</div>
+		<div class="A">まだまだ他にもいろんな解き方があります。</div>
+		<p></p>
+		<div class="Q">計算のミスに気づくのが遅いから、もっと気づけるようになりたいです。少し難しかったです。</div>
+		<div class="A">じっくり考えてみてください。</div>
+		<p></p>
+		<div class="Q">線型の意味を知りませんでいた。先生の計算ミスに気づかなかったりしたので、もう少し気づいて質問できるようになりたいです。</div>
+		<div class="A">今後もよく使う言葉です→線型。</div>
+		<p></p>
+		<div class="Q">微分方程式を勉強します。</div>
+		<div class="A">しましょう、どんどん。</div>
+		<p></p>
+		<div class="Q">微分が苦手で微分方程式はとても難しそうだけど、苦手な分、もっと頑張る。</div>
+		<div class="A">微分が苦手なままだと物理はできないので、克服してむしろ得意にしましょう。</div>
+		<p></p>
+		<div class="Q">微分方程式の基本の理解ができてよかった。自然現象と対応させて考えられて面白くなった。</div>
+		<div class="A">数学は自然を語るための言語です。</div>
+		<p></p>
+		<div class="Q">今まで2.7…という数をeというように定義していたのを、なぜこんあ複雑な数を１つの文字で定めるのだろうと思っていたけど、今回の放射性物質の崩壊についての話を聞いて、自然現象の中での計算に使われていることに驚いた。</div>
+		<div class="A">今後、微分方程式を解くことをやっていくと、eには物凄くお世話になるでしょう。</div>
+		<p></p>
+		<div class="Q">${\mathrm d\over \mathrm dx}(\mathrm e^x)=\mathrm e^x$が$2\mathrm e^x,3\mathrm e^x$と変化していっても同じように成り立つことと、${\mathrm dy\over \mathrm dx}=y^2$では成り立たない理由が今までなんとかなく分かるようではっきりと分からなかったので、おもしろかったです。</div>
+		<div class="A">「線型」と「同次」の面白いところです。</div>
+		<p></p>
+		<div class="Q">${\mathrm dy\over \mathrm dx}=y$の意味について理解できたのでよかった。</div>
+		<div class="A">簡単な式だけど、いろいろおもしろい。</div>
+		<p></p>
+		<div class="Q">微分方程式について初めて学び、難しいと感じましたが、半減期を絡めた話が面白かったです。今後も興味を持って授業に臨みたいと思います。</div>
+		<div class="A">自然現象を記述するのに、微分方程式は強力です。</div>
+		<p></p>
+		<div class="Q">先生の変数分離の説明がとてもわかりやすかったです。</div>
+		<div class="A">変数分離の具体的なところはまた話しましょう。</div>
+		<p></p>
+		<div class="Q">式からどんなグラフかをすぐわかれるようにしたいと思いました。</div>
+		<div class="A">そうですね。式←→グラフが頭の中で結びついてないと。</div>
+		<p></p>
+		<div class="Q">今日の授業はいつも以上に具体例が多くてわかりやすかった。微分方程式の理解がとても深まった。</div>
+		<div class="A">具体例と照らし合わせながら理解していくようにしましょう。</div>
+		<p></p>
+		<div class="Q">グラフの変化を映像で見たことで、とても理解しやすかったです。</div>
+		<div class="A">イメージを大事にしていってください。</div>
+		<p></p>
+		<div class="Q">自分は微分とか今までほとんどできなかったけど、この授業を通してちゃんと理解して問題を解けるようになりたい。</div>
+		<div class="A">微分ができないと今後の勉強で絶対困ります。この機会にしっかり理解しましょう。</div>
+		<p></p>
+		<div class="Q">微分方程式の区別とかがよくわかった。</div>
+		<div class="A">いろんな微分方程式を解いていきましょう。</div>
+		<p></p>
+		<div class="Q">微分方程式がとけるようになると便利そうなので、いろんなのを解けるようになりたい。</div>
+		<div class="A">『解けると便利』というより、『解けないとすごく困る』です。</div>
+		<p></p>
+		<div class="Q">今日は、微分方程式について知れたので、今日のことをしっかり復習しようと思う。</div>
+		<div class="A">復習をよろしく。</div>
+		<p></p>
+		<div class="Q">微分方程式の理解が深まったと思う。しっかり復習して定着していきたいです。</div>
+		<div class="A">じっくり理解していきましょう。</div>
+		<p></p>
+		<div class="Q">微分方程式の基本的な解き方が分かった。微分方程式の分類もある程度わかった。</div>
+		<div class="A">解き方は、まだまだこの先があります。</div>
+		<p></p>
+		<div class="Q">Cはコンスタントから来ている。文字の意味や言葉には、ちゃんと意味がある、その意味をわかる必要があると思った。</div>
+		<div class="A">意味はある程度は知っておいた方がいいですね。</div>
+		<p></p>
+		<div class="Q">$y=A\mathrm e^x(y=\mathrm e^C\mathrm e^x)$で$C=\mathrm i \pi$の時$A$は負になる！　脚注で納得しました。</div>
+		<div class="A">一般的な式にしようとすると複素数が出てくるというのはここだけではない現象で、面白いところです。</div>
+		<p></p>
+		<div class="Q">${\mathrm dy\over y}$のyにまったく気づかなかったので、日頃から注意していきたい。</div>
+		<div class="A">y=0の場合を考慮するってことですね。</div>
+		<p></p>
+		<div class="Q">微分方程式が面白く感じられました。</div>
+		<div class="A">面白いですよ、解ける時は特に。</div>
+		<p></p>
+		<div class="Q">微分方程式の解き方について知ることができてよかったです。これらを基本にして解いていくと思うので、しっかり勉強します。</div>
+		<div class="A">これから先もいろいろ微分方程式の解き方をやります。</div>
+		<p></p>
+		<div class="Q">半減期という割に２倍しても0にはならないじゃないかと思っていたので、ようやく腑に落ちる形になりました。</div>
+		<div class="A">理屈を理解しておきましょう。</div>
+		<p></p>
+		<div class="Q">微分方程式について学んだ。放射性物質の崩壊についての説明がわかりやすかったです。</div>
+		<div class="A">自然現象に隠れた法則を理解しておきましょう。</div>
+		<p></p>
+		<div class="Q">自然現象をしらべると指数関数が出てくる事が面白いと思った。</div>
+		<div class="A">指数関数はわりと頻出です。</div>
+		<p></p>
+		<div class="Q">指数関数がでてくる自然現象に放射性物質の崩壊があることがわかった。放射性物質の話も楽しかった。</div>
+		<div class="A">実はこれからも沢山でてきます→指数関数。</div>
+		<p></p>
+		<div class="Q">半減期の話は興味があったのでおもしろかった。自然現象と数学が結びついている。</div>
+		<div class="A">もちろん！</div>
+		<p></p>
+		<div class="Q">後半で、物理現象と微分方程式が結びついておお！すごい！と思った。これからこういうときに使える勉強だと思うとやる気でてきた。</div>
+		<div class="A">自然のいろんなところに数学があります。</div>
+		<p></p>
+		<div class="Q">放射性物質の崩壊の話がおもしろかったです。また、${\mathrm dy\over\mathrm dx}=y$は左辺右辺のyが同次数であるから倍にした数も解になると知りました。次に解く時気をつけたいと思いました。</div>
+		<div class="A">同次の時はいろいろ面白いことがあります。</div>
+		<p></p>
+		<div class="Q">放射性物質の崩壊は割りと最近の話題なのでおもしろいとおもいました。</div>
+		<div class="A">案外ちゃんと理解してない人が多かったりする問題ですね。</div>
+		<p></p>
+		<div class="Q">半減期の式$\left({1\over2}\right)^{t\over T}$はなんとなく美しいな〜と思いました。</div>
+		<div class="A">シンプルで強力な式です。</div>
+		<p></p>
+		<div class="Q">微分方程式が自然現象を知るうえでどう役に立つかがわかった。</div>
+		<div class="A">と〜〜〜〜っても、役に立ちます。</div>
+		<p></p>	
+		<div class="Q">放射性物質の崩壊について高校でもさらっとやりましたが、前野先生のお話だとわかりやすく楽しんで聞けました。</div>
+		<div class="A">微分方程式とのつながりを理解しておいてください。</div>
+		<p></p>
+		<div class="Q">早く死ぬ放射性物質もいれば、ずっと生き続けるヤツもいる。なんかロマン</div>
+		<div class="A">しかし確率的に少しずつはかならず死んでいくのです（ロマンだけと冷酷）。</div>
+		<p></p>
+		<div class="Q">${\mathrm dN\over \mathrm dt}=-{\log 2\over T}N$のところの、周りの影響を受けずに、というところのhじゃなしに興味が湧きました。</div>
+		<div class="A">周りの影響を受けないからこそ、こういう単純な微分方程式になるのですね。</div>
+		<p></p>
+		<div class="Q">数学を自然現象でどう役に立つかというのをもっと知りたいと思った。</div>
+		<div class="A">もちろん、これからもどんどんそういう話をしていきますよ。</div>
+		<p></p>
+		<div class="Q">放射性物質の崩壊は「今ある量に比例して減る」ちう１つの法則で起こっていると知ることができた！！どこかでこの知識を話したいと思った。</div>
+		<div class="A">どっかで話してみてください(^_^;)。</div>
+		<p></p>
+		<div class="Q">先日ノーベル物理学賞を日本人が取りましたが一言お願いします。</div>
+		<div class="A">う〜ん、実は専門がだいぶ違うんで賞の対象自体はよくわからないのです。もちろん、めでたいことだと思います。</div>
+		<p></p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#exp" data-icon="arrow-l">指数関数が出てくる自然現象</a>
+		<p align="center"> <a href="lec16.html">第16講へ</a>　<a href="index.html">講義録目次ページに戻る</a></p>　<a href="lec18.html">第18講へ</a>
+	  </div>
+	</div>
+  </body>
+</html>
+		
+			<div data-role="footer" align="center">
+				<input type="button" value="HOME" data-icon="home" onclick="location.href='./index.html'">
+				<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+			</div>
+		</div>
+	</body>
+</html>
+

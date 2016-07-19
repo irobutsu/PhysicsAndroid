@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/ttPF" android:title="未来への時間旅行" android:visible="true"></item>
+    <item android:id="@+id/ttFP" android:title="過去への時間旅行" android:visible="true"></item>
+    <item android:id="@+id/ttNone" android:title="時間旅行者不在" android:visible="true"></item>
+
+    
+
+</menu>

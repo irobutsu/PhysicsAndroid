@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>微分ってなあに？（その３）</title>
+<style type="text/css">
+	body {
+		background-color: #FFFFFF;
+	}
+	img {
+	vertical-align:middle;
+	}
+</style>
+</head>
+<body onload="init(); katamukiOn();">
+<script type="application/javascript" src="bibuntoha.js"></script>
+<h1>微分ってなあに？（その３）</h1>
+<div align=center><a href="bibuntoha2.html">その２に戻る</a></div>
+<hr>
+<p>　プログラムはさっきと同じですが、緑色の線で接線を表示してみました。
+<p>
+<form action="#">
+<label for="func">どの関数？</label>
+<select name="func" id="func">
+<option value="linearx">y=x</option>
+<option selected="selected" value="sqx">y=x^2</option>
+<option value="cbx">y=x^3</option>
+<option value="totsuhb">y=1-x^2</option>
+<option value="sinx">y=sin 3x</option>
+</select>
+</form>
+</p>
+<br>
+<br>
+<canvas id="maincanvas" width="600" height="450" style="-ms-touch-action:none;">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+<br>
+<br>　xの位置を動かすと、接線も変化します。x+Δxの位置を動かしてΔx→0の極限を取る時、<img src="dfdx.png" width="30" height="40">の値が「接線の傾き」に近づいていっていることを確認しましょう！
+</body>
+<hr>
+<div align=center><a href="bibuntoha4.html">その４へ進む</a></div>
+</html>
+

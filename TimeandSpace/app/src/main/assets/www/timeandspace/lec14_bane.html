@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,target-densityDpi=device-dpi,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>第14講　ヒッグス粒子と質量の謎</title>
+  <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script><script type="text/javascript" src="http://www.phys.u-ryukyu.ac.jp/~maeno/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link href="jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery-1.8.2.min.js" type="text/javascript"></script>
+	<script src="jquery.mobile-1.2.0.min.js" type="text/javascript"></script>
+	<style type="text/css">
+	 button {
+	   font-weight:bold;
+	   border:3px solid #999;
+	   border-right-color:#333;
+	   border-bottom-color:#333;
+	   border-radius:10px;
+	   color:#333;
+	   width:auto;
+	   text-decoration:none;
+	   float:left;
+	   margin-right:10px;
+	   background-color: #DDE;
+	 }
+	 .figure {
+	   margin:0pt auto;
+	 }
+	 img {float:left;}
+	 img.withb{border: 2px #880 solid;}
+	 h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .footnote {
+	   font-size:50%;
+	   padding:5px;
+	   background-color: #FEE;
+	   color:#009;
+	   boder: solid #008 double;
+	   border-radius:8px;
+	 }
+	 .floatright{
+	   float:right;
+	 }
+	 .floatleft{
+	   float:left;
+	 }
+	 .floatcenter{
+	   float:center;
+	 }
+	 .floatnone{
+	   float:none;
+	 }
+	 .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	 }
+	 .setsumei{
+	   padding:5px;
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .box{
+	   padding:5px;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .fukidasi{
+	   padding:5px;
+	   color:#000;
+	   background-color: #CCF;
+	   border: solid #333 thin;
+	   border-radius:13px;
+	 }
+	 .keyword{
+	   padding:3px;
+	   color:#050;
+	   background-color:#FCF;
+	   boder: solid #FF8 double;
+	   border-radius:8px;
+	 }
+	 .akansetsumei{
+	   padding:5px;
+	   color:#080;
+	   background-color: #FCC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .gray{
+	   color:#888;
+	 }
+	 .magenta{
+	   color: #D0D;
+	 }
+	 .kussetsukaku{
+	   color: #D00;
+	 }
+	 .aka{
+	   color: #F00;
+	 }
+	 .A{
+	   color: #F00;
+	 }
+	 .red{
+	   color: #D00;
+	 }
+	 .green{
+	   color: #0D0;
+	 }
+	 .yellow{
+	   color: #DD0;
+	 }
+	 .Q { 
+	   padding:5px;
+	   background-color: #CCC;
+	   color: #00F; 
+	   border: solid #333 thin;
+	   border-radius:10px;
+	 }
+	 .ao {
+	   color: #00F;
+	 }
+	 .blue{
+	   color: #00D;
+	 }
+	</style>
+	<script type="application/javascript" src="banefield.js"></script>
+	<script type="application/javascript">
+	 $(document).delegate('#page0','pageinit',function(e) {
+	   bane_init();
+	 });
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>第14講　ヒッグス粒子と質量の謎（「場」のイメージ）</H1><br>
+	  </div>
+	  <div data-role="content">
+		<h3>全ての「粒子」は「場のさざなみ」である</h3>
+
+		<p>さて、このようにして「電場や磁場が波にもなる」とわかったのが１９世紀なのですが、なんとその電磁場（光）が「粒子としての性質を持つ」というのが２０世紀にわかりました（前回のお話）。量子力学により「波でもあり、粒子でもある」と分かったのは、光だけではありません。なんとこの世の（知られている限り）全ての物質がこの性質を持っていました。物質（たとえば、電子）は最初は「粒子」だと思っていたのに、波の性質もあることがわかったのです（光の場合と逆の道筋で、最終的には「波でもあり、粒子でもある」という状態に落ち着いたわけです）。</p>
+
+	  <p>一番身近な場は電場・磁場そして重力場（重力ももちろん、『場』で伝わるのです！）ですが、このうち電場と磁場（合わせて電磁場）は「光子」という粒子でもあることがわかっています。 全ての素粒子は『場』の波でもあるのです。</p>
+
+	  <p>『場』というのは結局「空間の各点各点に“状態を伝えてくれるもの”があって、それが伝わってくる」というものです。そこで、あくまでもイメージとしてですが、「空間の各点各点にバネ振り子が一個ずつあって、しかもそれが互いにとなりとつながっている」という状況を考えましょう。 </p>
+
+	  <p>「真空」ではなく「粒子がいる」という状況は、この「空間の各点各点に存在する無限個のバネ振り子」のどこかを、誰かが「ぺしっ」と叩いて、そうやって起こった『場』の振動が伝わっていっている状態です。ただし、この振動の振動方向は「架空の方向」です。現実の方向とは何の関係もありません！<span class="footnote">空間の各点各点に振動が、というとどうしても　上下方向の振動？　などとイメージしたくなるのですが、ここで起きている「振動」は『場』という直接測定できない量の時間変化です。</span></p>
+
+
+
+
+
+	  <p>「空間」という言葉は（英語の「space」もそうですが）「空っぽな隙間、何もないところ」を意味しています。『場』の理論ができるまでは、真空はまさに「なにもない」状態だと考えられてきました。しかし、『場』の考え方からすると、「なにもない」状態とは、『場』が「真空状態」と言われる「もっともエネルギーの低い状態」になっている状態です。つまり「何もない」ように思えるところにも「真空状態（最もエネルギーが低い状態）の『場』」がある、というのが現代物理における「空間」の考え方です。</p>
+
+   <br>
+    　下の図の●が「場」を表す「バネ振り子」です（両端の振り子は固定してあるので、色を変えて<span class="red">●</span>にしています）。<span class="cyan">水色の線</span>は●と●をつなぐバネのようなもので、これが隣同士で力を伝え合います。動いていない時には見えてませんが、<span class="green">緑色の線</span>は●を「原点」に引き戻そうとするバネを表しています（ただし、初期設定ではそのバネのバネ定数を0にしてあります）。
+    <br>
+    　とりあえず下の図の●を指またはマウスでつかんで（上下にしか動かせませんが、どっちでもいいので）動かして離してみてください。振動が発生し、左右に伝わっていくはずです。
+    <hr>
+	<br>
+	<div class="A">↓に画像が出てない場合は、リロードしてください。</div>
+    <br>
+    <canvas width="500" height="500" id="banecanvas">ごめんなさい、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+    <br>
+    <button id="Ndown" data-inline="true" onclick="Ndown();document.getElementById('Nlabel').innerHTML=N;">（←減）</button>N=<span id="Nlabel">20</span><button id="Nup"  data-inline="true" onclick="Nup();document.getElementById('Nlabel').innerHTML=N;">（増→）</button>　　<button id="startstop"  data-inline="true"onclick="togglestartstop();">停止/再開</button><span id="startstoplabel">運動中</span>　　<button id="reset"  data-inline="true" onclick="setN(N);">初期化</button>
+    <br>
+    <br>
+    <button id="Mdown" data-inline="true" onclick="Mdown();document.getElementById('Mlabel').innerHTML=M;">（←減）</button>M=<span id="Mlabel">0</span><button id="Mup" data-inline="true" onclick="Mup();document.getElementById('Mlabel').innerHTML=M;">（増→）</button>
+    <hr>
+    <p><br>
+    「停止/再開」とあるボタンを押すと運動を止めたりまた動かしたりできるので、●を自由に配置してから運動をさせてみてください（一直線の状態に戻したかったら「初期化」ボタンを押してください）。
+    <br>
+    <br>
+    <br>
+    　図の下にN=20とかM=0とか書いてありますが、Nは●の数です。両脇のボタンで増やしたり減らしたりできます。
+    <br>
+    　Mは<span class="green">緑色のバネ</span>のバネ定数と関係した数字です。最初は0ですが、M=1,2,3と増えるにつれて、バネ定数が1,4,9…と増えていきます。<span class="blue">実はこの「M」は質量と関係した数字なのですが、その理由は後で述べます。</span>    </p>
+    <p><span class="A">ここで、バネが２種類あることを覚えておいてください。</span><br>
+    <br>
+    　上の図を動かすプログラムの中でやっていることはとっても単純で●が「<span class="green">原点につながれたバネ（緑の線）</span>」と「<span class="cyan">両サイドにつながれたバネ（水色の線）</span>」から受ける力でどう動くかを計算しているだけです。それなのに、こんなふうに「1点で起こった現象が左右に伝わっていく」という“物理”がそこに見えてきます。    </p>
+
+	  <p>アニメーションで見せたように、バネが空間上「●と隣りの●」との間にだけある場合、ここに起こった振動はその場に留まることなく、両側に飛び去ってしまいます。これは光の粒子である光子が光の速さで飛んでいくところに対応します。特に大事なことは、このようなバネによって起こされる波は「止まることができない」ということです<span class="footnote">相対性理論のところで話したように、光の速度はこの世の最高速度です。場の理論によれば、隣どうしをつなぐバネだけがある時、そこにできた波は常に最高速度である光速で走ります。</span>。</p>
+
+	  <p>この「●と●をつなぐバネ」の他に、●を「原点」（つまり場の最低エネルギーの点）に引き寄せるようなもう一つのバネがついていると、この波の様子は大きく変わってきます。「原点と●をつなぐバネ」がないと波はかならず左右に動いていきますが、「原点と●をつなぐバネ」がある場合は（波なので広がりつつも）、「その場所で振動して進行しない波」が存在するのです。つまり、場をバネで繋がれた●の集まりと考えた時、●が原点と繋がれているかどうかが、「その粒子が質量を持つか、持たないか」の違いだということが言えます。より詳しく言うと、「原点と●をつなぐバネ」の強さ（バネ定数）が粒子の質量の自乗に比例します。こっちのバネが強いと「その場での振動」の方が主に起こる運動となり、物体が静止することができるようになります。また、振動が起こっているときその場所のバネが大きなエネルギーがあることになるので、エネルギーを移動させるのには外部から「力」を作用させることが必要になります。こうして「質量」が生まれるわけです。</p>
+
+
+	  <h3>どうしてその波は広がっていかないのですか？</h3>
+
+
+	  <p>という疑問が出てくるのは当然だと思います。一つの理由は、「場と場の相互作用」のおかげです。ここまでで考えた波は互いに影響を及ぼし合わずにただ勝手に走っていく（両端では跳ね返る）だけですが、実際の波は互いに影響を及ぼします。</p>
+
+	  <p><img src="magar.png" width="50%" class="floatnone"></p>
+
+	  <p>たとえば最初に説明したように、電子の場（電子でなくても電荷を持っている粒子の場ならなんでも）が0でない値を持っている場所では、光子の場がそれに影響を受けて生まれます（たとえば電子を動かすと電磁波が発生したりする）。</p>
+
+	  <p>その影響はたとえば、「波を屈折させる」ように起こります。たとえば原子核の周りを回る電子がなぜ「曲がる」かというと、原子核というプラス電気の作る電場が、マイナス電気を持った電子の波の「原子核に近い部分の波長を短くする」という「相互作用」をするからです<span class="footnote">実は波長が短いということは、持っている運動エネルギーが高いということになります。原子核に近いところでは位置エネルギーが下がるかわりに運動エネルギーが上がる、と考えても、この波長の違いは理解できます。</span>。こうして波の波長を変えることで波を曲げる作用を我々は「力」として観測し、この力のおかげで電子は原子核から離れません。</p>
+
+	  <p>プログラムで『場』が振動しているところのイメージを見てもらいました。実は、我々の回りにある物質は全て『場』です。 </p>
+	  <p>ただし、『場』＝「粒子」ではありません。</p>
+	  <p>「粒子がある」状態は、プログラムで見てもらったような、場がびよ〜ん、びよ〜んと振動している状態です<span class="footnote">難しい言葉では「励起」とか「励起状態」とか言います。</span>。</p>
+	  <p>電磁場も『場』ですから、「電磁場がある」というのも同じように『場』がある値を持っている状態です（電磁波がある状態なら、やっぱり振動してます）。 電磁場の『場』もあれば、「電子の場」や「陽子の場」や「中性子の場」もあり、さらに（今日の話の主役である）ヒッグス粒子に関係する「ヒッグス場」もあるというわけです。我々の体を作っている物質もみんな『場』の作る波のようなもの、と言ってもいいでしょう。 </p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="lec14.html" data-icon="arrow-l">14講の最初に戻る</a>　<a href="lec14_higgs.html" data-icon="arrow-r">「ヒッグス粒子は何をするか」に進む</a>
+	  </div>
+	</div>
+  </body>
+</html>

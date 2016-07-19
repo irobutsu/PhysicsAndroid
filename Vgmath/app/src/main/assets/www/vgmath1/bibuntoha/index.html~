@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>微分ってなあに？（表紙）</title>
+<style type="text/css">
+	body {
+		background-color: #FFFFFF;
+	}
+	img {
+	vertical-align:middle;
+	}
+</style>
+</head>
+<body onload="init(); katamukiOn(); autoMode();">
+<script type="application/javascript" src="bibuntoha.js"></script>
+<h1>微分ってなあに？（表紙）</h1>
+<p>　高校で微分を勉強したものの、「なんだかわからないけどただ計算方法だけ覚えた」という困ったレベルに留まっている人は（残念ながら）多いようです。</p>
+<p>　まずは「微分って何なのか」を図形で理解して欲しいと思います。そこで動く図形で、微分の雰囲気を知って欲しいと思います。
+<br>　そのための教材の一つとして、授業などで使うべく作成しました。
+</p>
+<br>
+<br>
+<canvas id="maincanvas" width="600" height="450">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+<br>
+<br>　その１から順に読んで、動かしていってください。　
+<hr>
+<div align=center><a href="bibuntoha1.html">その１へ進む</a></div>
+<hr>
+<div align=center>
+<a href="bibuntoha1.html">その１</a>
+<br><a href="bibuntoha2.html">その２</a>
+<br><a href="bibuntoha3.html">その３</a>
+<br><a href="bibuntoha4.html">その４</a>
+</div>
+</body>
+</html>
+

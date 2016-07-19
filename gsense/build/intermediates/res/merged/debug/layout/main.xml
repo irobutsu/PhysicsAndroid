@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+  <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <ToggleButton
+            android:id="@+id/tbx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:text="ToggleButton"
+            android:textOff="（x成分）"
+            android:textOn="【x成分】"
+            android:textSize="10sp" />
+
+        <ToggleButton
+            android:id="@+id/tby"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:text="ToggleButton"
+            android:textOff="（y成分）"
+            android:textOn="【y成分】"
+            android:textSize="10sp" />
+
+        <ToggleButton
+            android:id="@+id/tbz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:text="ToggleButton"
+            android:textOff="（z成分）"
+            android:textOn="【z成分】"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/btTurn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="15"
+            android:text="90度回転" />
+
+        <ToggleButton
+            android:id="@+id/tbStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:checked="true"
+            android:text="ToggleButton"
+            android:textOff="中断中"
+            android:textOn="実行中"
+            android:textSize="11dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mainscreen"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="fill"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+</LinearLayout>

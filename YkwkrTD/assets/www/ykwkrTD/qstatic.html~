@@ -1,0 +1,558 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WebText 動いてよくわかる熱力学（準静的過程）</title>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<link rel="STYLESHEET" href="td.css" type="text/css">
+	<link rel="stylesheet" href="jquery.mobile-1.4.4.min.css" />
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="jquery.mobile-1.4.4.min.js"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="vector.js" type="text/javascript"></script>
+	<script src="yajirushi.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	 function rgb_temp(T,tmin,tmax,P,pmin,pmax) {
+	   var tdiff=tmax-tmin;
+	   var t=T;
+	   var p=P;
+	   if( P>pmax ) { p=pmax; }
+	   if( P<pmin ) { p=pmin; }
+	   if( T>tmax ) { t=tmax;}
+	   if( T<tmin ) { t=tmin; }
+	   var r=Math.ceil((t-tmin)/ tdiff*255);
+	   var b=255-r;
+	   var g=Math.ceil(b*0.8+50);
+	   var a=(P-pmin)/(pmax-pmin);
+	   return "rgba("+r+","+g+","+b+","+a+")";
+	 }
+	 var Piston=function(canvas_string,gFlg) {
+	   this.gammaminusone=2.0/ 3.0;
+	   this.A=0.0001; // 断熱変化の時定数（大きくし過ぎると変化がおかしくなる）
+	   this.K=0.1; // 熱伝導の時定数
+	   this.speed=0.01;
+	   if( gFlg ) {
+		 this.gFlg=true;
+		 h=12.5;
+	   } else {
+		 this.gFlg=false;
+		 h=2.5;
+	   }
+	   this.sc=new RescaleScreen(canvas_string,16,h,0.95);
+	   this.sc.setBottom(-0.25);
+	   this.sc.setLeft(-1);
+	   this.sc.gobackOriginalSize();
+	   this.ct=this.sc.canvas.getContext("2d");
+	   this.T=[]; // 各々ブロックの絶対温度
+	   this.P=[]; // 各々ブロックの圧力
+	   this.V=[];
+	   this.KX=[]; 
+	   this.BX=10;
+	   this.BY=2
+	   this.t=0;
+	   this.stepX=0.8;
+	   this.maxTemp=700;
+	   this.minTemp=100;
+	   this.minP=100;
+	   this.maxP=700;
+	   this.stopFlg=false;
+	   this.isothermal=false;
+	   this.init_blocks();
+	   if( gFlg) {
+		 this.initHistory();
+	   }
+	 };
+	 Piston.prototype.initHistory=function() {
+	   this.history=[];
+	   this.history[0]=new Object;
+	   this.history[0].v=8;
+	   this.history[0].p=this.BY+6;
+	 };
+	 Piston.prototype.writeContents=function() {
+	   this.write_blocks();
+	 };
+	 Piston.prototype.init_blocks=function() {
+	   this.pushPiston=0;
+	   this.pullPiston=0;
+	   this.oldV=[];
+	   var i,j;
+	   for(i=0; i< this.BX; i++ ) {
+		 this.T[i]=400;
+		 this.P[i]=400/this.stepX; //  400/0.8=500;
+		 this.V[i]=this.stepX;
+		 this.oldV[i]=this.stepX;
+		 this.KX[i]=(1+i)*this.stepX;
+	   }
+	 };
+	 Piston.prototype.write_oneBlock=function(Temp,Pres,x1,x2) {
+	   this.ct.fillStyle=rgb_temp(Temp,this.minTemp,this.maxTemp,Pres,this.minP,this.maxP);
+	   this.ct.strokeStyle=rgb_temp(Temp,this.minTemp,this.maxTemp,Pres,this.minP,this.maxP);
+	   this.ct.beginPath();
+	   this.ct.moveTo(x1,0);
+	   this.ct.lineTo(x1,this.BY);
+	   this.ct.lineTo(x2+0.01,this.BY);
+	   this.ct.lineTo(x2+0.01,0);
+	   this.ct.closePath();
+	   this.ct.fill();
+	 };
+	 Piston.prototype.write_blocks=function() {
+	   var i;
+	   this.ct.fillStyle="rgb(0,0,0)";
+	   this.ct.beginPath();
+	   this.ct.moveTo(-0.3,-0.3);
+	   this.ct.lineTo(this.sc.rightwx,-0.3);
+	   this.ct.lineTo(this.sc.rightwx,this.BY+0.3);
+	   this.ct.lineTo(-0.3,this.BY+0.3);
+	   this.ct.closePath();
+	   this.ct.fill();
+	   if( this.isothermal ) {
+		 this.ct.fillStyle="rgb(169,187,169)";
+		 this.ct.beginPath();
+		 this.ct.moveTo(-0.25,0);
+		 this.ct.lineTo(-0.04,0);
+		 this.ct.lineTo(-0.04,this.BY);
+		 this.ct.lineTo(-0.25,this.BY);
+		 this.ct.closePath();
+		 this.ct.fill();
+	   }
+	   this.ct.fillStyle="rgb(80,80,80)";
+	   this.ct.beginPath();
+	   this.ct.moveTo(this.BX*this.stepX,-0.3);
+	   this.ct.lineTo(this.sc.rightwx,-0.3);
+	   this.ct.lineTo(this.sc.rightwx,this.BY+0.3);
+	   this.ct.lineTo(this.BX*this.stepX,this.BY+0.3);
+	   this.ct.closePath();
+	   this.ct.fill();
+	   this.ct.fillStyle="rgb(255,255,255)";
+	   this.ct.beginPath();
+	   this.ct.moveTo(0,0);
+	   this.ct.lineTo(0,this.BY);
+	   this.ct.lineTo(this.sc.rightwx,this.BY);
+	   this.ct.lineTo(this.sc.rightwx,0);
+	   this.ct.closePath();
+	   this.ct.fill();
+	   
+	   this.write_oneBlock(this.T[0],this.P[0],0,this.KX[0]);
+	   for(i=1; i<this.BX ; i++ ) {
+		 this.write_oneBlock(this.T[i],this.P[i],this.KX[i-1],this.KX[i]);
+	   }
+	   this.ct.fillStyle="rgb(0,40,40)";
+	   this.ct.beginPath();
+	   this.ct.moveTo(this.KX[this.BX-1],0);
+	   this.ct.lineTo(this.KX[this.BX-1],this.BY);
+	   this.ct.lineTo(this.KX[this.BX-1]+0.5,this.BY);
+	   this.ct.lineTo(this.KX[this.BX-1]+0.5,0);
+	   this.ct.closePath();
+	   this.ct.fill();
+	   this.ct.fillStyle="rgb(255,0,0)";
+	   this.ct.strokeStyle="rgb(180,180,180)";
+	   this.ct.beginPath();
+	   if( this.pullPiston >0 ) {
+		 this.ct.moveTo(this.KX[this.BX-1]+0.7,this.BY*0.5);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.5,this.BY*0.5+0.2);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.5,this.BY*0.5+0.1);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.2,this.BY*0.5+0.1);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.2,this.BY*0.5-0.1);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.5,this.BY*0.5-0.1);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.5,this.BY*0.5-0.2);
+		 this.ct.closePath();
+		 this.ct.fill();
+		 this.ct.stroke();
+	   } else if( this.pushPiston >0 ) {
+		 this.ct.moveTo(this.KX[this.BX-1]+0.2,this.BY*0.5);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.4,this.BY*0.5+0.2);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.4,this.BY*0.5+0.1);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.7,this.BY*0.5+0.1);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.7,this.BY*0.5-0.1);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.4,this.BY*0.5-0.1);
+		 this.ct.lineTo(this.KX[this.BX-1]+0.4,this.BY*0.5-0.2);
+		 this.ct.closePath();
+		 this.ct.fill();
+		 this.ct.stroke();
+	   }
+	   var pp=this.P[this.BX-1]/200;
+
+	   this.ct.fillStyle="rgb(0,100,255)";
+	   this.ct.beginPath();
+	   this.ct.moveTo(this.KX[this.BX-1]+0.7*pp,this.BY*0.2);
+	   this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.2+0.2);
+	   this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.2+0.1);
+	   this.ct.lineTo(this.KX[this.BX-1],this.BY*0.2+0.1);
+	   this.ct.lineTo(this.KX[this.BX-1],this.BY*0.2-0.1);
+	   this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.2-0.1);
+	   this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.2-0.2);
+	   this.ct.closePath();
+	   this.ct.fill();
+	   this.ct.beginPath();
+	   this.ct.moveTo(this.KX[this.BX-1]+0.7*pp,this.BY*0.8);
+	   this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.8+0.2);
+	   this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.8+0.1);
+	   this.ct.lineTo(this.KX[this.BX-1],this.BY*0.8+0.1);
+	   this.ct.lineTo(this.KX[this.BX-1],this.BY*0.8-0.1);
+	   this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.8-0.1);
+	   this.ct.lineTo(this.KX[this.BX-1]+0.5*pp,this.BY*0.8-0.2);
+	   this.ct.closePath();
+	   this.ct.fill();
+	   if( this.gFlg ) {
+		 this.ct.fillStyle="rgb(255,255,255)";
+		 this.ct.beginPath();
+		 this.ct.moveTo(this.sc.leftwx,this.sc.topy);
+		 this.ct.lineTo(this.sc.rightwx,this.sc.topy);
+		 this.ct.lineTo(this.sc.rightwx,this.BY+0.5);
+		 this.ct.lineTo(this.sc.leftwx,this.BY+0.5);
+		 this.ct.closePath();
+		 this.ct.fill();
+		 this.ct.strokeStyle="rgb(200,200,200)";
+		 this.ct.beginPath();
+		 this.ct.moveTo(this.sc.leftwx,this.BY+2);
+		 this.ct.lineTo(this.sc.rightwx,this.BY+2);
+		 this.ct.moveTo(0,this.BY+0.5);
+		 this.ct.lineTo(0,this.BY+10);
+		 this.ct.stroke();
+		 this.ct.strokeStyle="rgb(0,0,200)";
+		 this.ct.beginPath();
+		 this.ct.moveTo(4,this.BY+10);
+		 var i;
+		 for( i=4; i< 16; i+=0.1 ) {
+		   this.ct.lineTo(i,this.BY+2+32/i);
+		 }
+		 this.ct.stroke();
+		 this.ct.strokeStyle="rgba(0,200,200,0.4)";
+		 this.ct.beginPath();
+		 var N=this.history.length;
+		 var newV=this.KX[this.BX-1];
+		 var newP=this.BY+2+this.P[this.BX-1]*0.008;
+		 if( this.history[N-1].v == newV && this.history[N-1].p == newP ) {
+		   // 前と同じデータだったら何もしない。
+		 } else {
+		   this.history[N]=new Object;
+		   this.history[N].v=newV;
+		   this.history[N].p=newP;
+		 }
+		 this.ct.moveTo(this.history[0].v,this.history[0].p);
+		 for(i=1; i< this.history.length ; i++ ) {
+		   this.ct.lineTo(this.history[i].v,this.history[i].p);
+		 }
+		 this.ct.stroke();
+	   }
+	 };
+	 Piston.prototype.ad_phase=function() {
+	   // this.KX[this.BX-1]は手で変更されている可能性があるので、これに関係する部分だけもう一回計算する。
+	   var newV=this.KX[this.BX-1]-this.KX[this.BX-2];
+	   if( newV <= 0 ) {
+		 newV=0.1;
+		 this.KX[this.BX-1]=this.KX[this.BX-2]+0.1;
+	   }
+	   this.T[this.BX-1]*=Math.pow(this.oldV[this.BX-1]/newV,this.gammaminusone);
+	   this.P[this.BX-1]=this.T[this.BX-1]/newV;
+	   
+	   var i;
+	   this.KX[0] +=(this.P[0]-this.P[1])*this.A;
+	   if( this.KX[0]>=this.KX[1] ) {
+		 this.KX[0]=this.KX[1]-0.001;
+	   }
+	   
+	   for(i=1 ; i< this.BX-1 ; i++ ) { // this.KX[this.BX-1]は手で動かすのでこのループに入ってない。
+		 this.KX[i] +=(this.P[i]-this.P[i+1])*this.A;
+		 if( this.KX[i]<=this.KX[i-1] ) {
+		   this.KX[i]=this.KX[i-1]+0.001;
+		 }
+		 if( this.KX[i]>=this.KX[i+1] ) {
+		   this.KX[i]=this.KX[i+1]-0.001;
+		 }
+	   }
+	   // 断熱変化による温度変化と、新しい圧力を計算
+	   this.T[0] *= Math.pow(this.oldV[0]/ this.KX[0],this.gammaminusone);
+	   this.P[0]=this.T[0]/this.KX[0];
+	   for(i=1 ; i<this.BX ; i++ ) {
+		 newV=this.KX[i]-this.KX[i-1];
+		 this.T[i]*= Math.pow(this.oldV[i]/ newV,this.gammaminusone);
+		 this.P[i]= this.T[i]/newV;
+	   }
+	   // 次回のために断熱変化前の体積をthis.oldVに保存
+	   // この関数を抜けた後でthis.KX[this.BX-1]はインタラクティブに変更される可能性がある。
+	   this.oldV=[];
+	   this.oldV[0]=this.KX[0];
+	   for(i=1 ; i<this.BX ; i++ ) {
+		 this.oldV[i]=this.KX[i]-this.KX[i-1];
+	   }
+	 };
+	 // 熱伝導を起こす。
+	 Piston.prototype.heattr_phase=function() {
+	   var i;
+	   var newT=[];
+	   newT[0]=this.T[0]+this.K*(this.T[1]-this.T[0]);
+	   for(i=1; i<this.BX-1; i++ ) {
+		 newT[i]=this.T[i]+this.K*(this.T[i+1]+this.T[i-1]-2*this.T[i]);
+	   }
+	   newT[this.BX-1]=this.T[this.BX-1]+this.K*(this.T[this.BX-2]-this.T[this.BX-1]);
+	   for(i=0; i<this.BX; i++) {
+		 this.T[i]=newT[i];
+	   }
+	   if( this.isothermal ) {
+		 this.T[0]=400;
+	   }
+	 };
+	 Piston.prototype.go=function() {
+	   if( this.stopFlg ) {
+		 return;
+	   } else {
+		 if( this.pushPiston >0 ) {
+		   this.pullPiston=0;
+		   this.pushPiston-=this.speed;
+		   if( this.KX[this.BX-1]>this.BX*this.stepX) {
+			 this.KX[this.BX-1] -= this.speed;
+		   } else {
+			 this.pushPiston=0;
+		   }
+		 }
+		 if( this.pullPiston >0 ) {
+		   this.pushPiston=0;
+		   this.pullPiston -=this.speed;
+		   if( this.KX[this.BX-1]<this.sc.rightwx-0.8) {
+			 this.KX[this.BX-1] += this.speed;
+		   } else {
+			 this.pullPiston=0;
+		   }
+		 }
+		 this.ad_phase();
+		 this.heattr_phase();
+		 this.ad_phase();
+		 this.heattr_phase();
+		 this.ad_phase();
+		 this.heattr_phase();
+		 this.write_blocks();
+		 this.t++;
+	   }
+	 };
+	 Piston.prototype.startstop=function() {
+	   if( this.stopFlg ) {
+		 this.stopFlg=false;
+		 this.go();
+	   } else {
+		 this.stopFlg=true;
+	   }
+	 };
+	 Piston.prototype.setspeed=function(v) {
+	   this.speed=Number(v[0].value);
+	 }
+	 function piston_go() {
+	   pistonA.go();
+	   setTimeout("piston_go();",50);
+	 }
+	 function pistonB_go() {
+	   pistonB.go();
+	   setTimeout("pistonB_go();",50);
+	 }
+	 function pistonC_go() {
+	   pistonC.go();
+	   setTimeout("pistonC_go();",50);
+	 }
+	 Piston.prototype.startstop=function() {
+	   if( this.stopFlg ) {
+		 this.stopFlg=false;
+	   } else {
+		 this.stopFlg=true;
+	   }		
+	 };
+	 function startstop() {
+	   pistonA.startstop();
+	 }
+	 function startstopB() {
+	   pistonB.startstop();
+	 }
+	 function startstopC() {
+	   pistonC.startstop();
+	 }
+	 function adiabatic() {
+	   pistonC.isothermal=false;
+	 }
+	 function isothermal() {
+	   pistonC.isothermal=true;
+	 }
+	 var pistonA,pistonB,pistonC;
+	 $(document).delegate('#adiabatic','pageinit',function(e) {
+	   pistonA=new Piston("canvas1",false);
+	   piston_go();
+	 });  
+	 $(document).delegate('#isothermal','pageinit',function(e) {
+	   pistonB=new Piston("canvas2",false);
+	   pistonB.isothermal=true;
+	   pistonB_go();
+	 });  
+	 $(document).delegate('#withGraph','pageinit',function(e) {
+	   pistonC=new Piston("canvas3",true);
+	   pistonC.isothermal=true;
+	   pistonC_go();
+	 });
+	</script>
+  </head> 
+  <body>
+	<div data-role="page" id="isothermal">
+	  <div data-role="header">
+		<h2>準静的操作（等温操作）</h2>
+	  </div>
+	  <div data-role="content">
+		  <p>　<input type="button" data-inline="true" value="はじめに" data-icon="arrow-l" onclick="location.href='./hajimeni.html'">では力学の復習をしながら、</p>
+		  <div class="box">エネルギーは仕事が行われるとその仕事の量だけ増減（仕事をした方はエネルギーが$W$減少、された方はエネルギーが$W$だけ上昇）する物理量である。</div>
+		  <p>というような話をした。</p>
+		  <p>　熱力学では、この仕事とエネルギーの考え方を（熱力学で扱う状況に合わせて）変化させていかなくてはいけない<span class="footnote">そして、仕事以外のエネルギー移動の形態として「熱」というものを登場させていくことになる。</span>。</p>
+		  <p>　まず、等温変化における仕事について考えよう。</p>
+		  <p>　理想気体の状態方程式$PV=NRT$を満たすような気体を考えよう。</p>
+		  <p>　断面積$S$のシリンダーに閉じ込められた圧力$P$の気体を考えると、気体がピストン（やはり断面積$S$を押す力は$PS$だから、ピストンが$\Delta x$動いて気体が膨張したときの仕事は$P\underbrace{S\Delta x}_{\Delta V}$と書くことができる。$P$は変数だから、仕事は$\int P\mathrm dV$であり、$P={NRT\over V}$で、かつ<span class="fukidasi">ずっと等温のままで変化が起こるとすれば、</span>仕事は
+			  $$
+			  W=NRT\int{\mathrm dV\over V}=NRT\left[\log V\right]
+			  $$
+			  となる。</p>
+		  <p>というのはいくつかの仮定を置いた計算としてそうなるのだが、現実はそれとは少しずれが生じる。</p>
+		  <div class="setsumei">上のような計算は初等力学で言えば「摩擦はないとして」「空気抵抗を無視すると」に対応する、「理想的」計算なのである。熱力学の場合でも「現実に起こる変化」と「理想」の間には隔たりがある。以下で、より現実的な話と、その現実を「理想化」したものである準静的操作などについて話していこう。<br>
+		  　熱力学を考えるうえでとても重要な概念が「準静的操作」である。準静的操作は一つの理想的状況であって、現実には存在しない。<br>
+			  　現実には存在しないのではあるが、それを使うことで、熱力学における「状態変化」が記述できる。</div>
+		  <p>　というわけで現実には存在しない準静的操作であるが、では現実とはどのように違うのだろうか。そこで、（まだ現実ではないんだけど）「準静的操作よりは現実に近い状況のシミュレーション」を見せよう。</p>
+		  <p>　下の図で、ピストンを押したり引いたりしてみよう。画像の色は温度を表す（赤が高温、水色が低温である）。</p>
+		  <p align="center"><img src="ondo.png" class="floatnone" width="50%"></p>
+		  <p>　色の透明度が圧力を表しているので、濃い色のところほど圧力が高いと思ってよい（真っ白な部分は真空に近い）。ピストに働いている力（圧力）は矢印<img src="pistonF.png" width="10%" class="floatnone">で表現している。</p>
+		  <p>　押したり引いたりすることで、気体は圧縮され温度が上がったり膨張して温度が下がったりしつつ、圧力や体積が変化していく。ピストンの移動は矢印<img src="pistonM.png" width="7%" class="floatnone">で表現している。</p>
+
+		  <p>　このシリンダーは、左端だけは断熱されておらず、左端に接した部分の気体は温度が一定である壁に接している（↓の図では、左端が黒ではないことで「左端からは熱が出入りする」ことを表現している）。</p>
+		  <hr>
+		  <p><canvas id="canvas2"></canvas></p>
+		  <hr>
+		  <p><button data-inline="true" onclick="pistonB.pushPiston +=0.2;" data-icon="arrow-l">ピストンを押す</button>
+		  <select id="speedB" data-inline="true" onchange='pistonB.setspeed($("#speedB"));'>
+			<option value="0.001" selected="unselected">とっても遅く</option>
+			<option value="0.0025" selected="unselected">遅く</option>
+			<option value="0.005" selected="unselected">中くらい</option>
+			<option value="0.01" selected="selected">速く</option>
+		  </select>
+		  <button data-inline="true" onclick="pistonB.pullPiston +=0.2;" data-icon="arrow-r">ピストンを引く</button></p>
+		<p>	<button id="stop" data-inline="true" onclick="startstopB();">停止／再開</button>
+		  　<button id="restartB" data-inline="true" onclick="pistonB.init_blocks(); pistonB.initHistory();">初期状態に戻す。</button></p>
+		<div class="setsumei">　プログラムの都合上、あまり急速にピストンを押されると（体積が圧縮されすぎて負になったりして）おかしなことが起こるので、ボタンを押したらじわっと動くようになっている。速度は真ん中にある<span class="box">速く</span>などと書いてある部分をクリックすることで変えられる。</div>
+		<hr>
+		<p>　左端の部分は温度一定の壁に接しているので等温に保たれる。そして、時間が経過すれば全体が等温に達する（平衡状態）。左端からだけ熱が出入りするようにしたのは、プログラムの都合（1次元的な現象にしたかった）であって物理的意味はない。</p>
+		<p>　さて、ピストンを引いてみると、引かれた部分は気体を膨張させたことになるので、圧力が下がり温度も下がる。</p>
+		<p><img src="pistonPull0.png" width="70%" class="floatnone"></p>
+		<p class="aka">↑この絵は単なる画像です。動きません。</p>
+		<p>　「等温操作」という名前ではあるがこのように操作を行なうと、操作の間じゅうずっと等温というわけにはいかない。↑の図のように、ピストンに近い部分は温度が下がり、シリンダーの気体内に温度勾配ができる。</p>
+		<p>　そして、その変化が二つの理由で伝わる。二つの理由とは、</p>
+		<ol>
+		  <li>膨張して気圧が下がったので、隣の気体がこちらに移動してくる（いわば、「高気圧から低気圧へ風が吹く」）</li>
+		  <li>ピストン付近の気体の温度が下がったので、隣の気体（まだ温度が下がってない）から熱が移動してきて、ピストン付近の気体は温度が上がり、隣の気体は温度が下がる</li>
+		</ol>
+		<p>である。</p>
+		<p>　ある程度引いた後、しばらく待って気体の状態が一様になったな、と思ったら今度は押して戻してみよう。今度はピストン付近の気体が圧縮されて温度が上がり、さっきとは逆に現象が伝わっていく。</p>
+		<p><img src="pistonPush0.png" width="70%" class="floatnone"></p>
+		<p class="aka">↑この絵は単なる画像です。動きません。</p>
+		<p>　逆にピストンを押す時も同様で、↑の図のように、ピストンに近い部分は温度が上がった温度勾配ができる。</p>
+
+		<p>　ピストンを引いてから押して元の体積にまで戻したとする（上のプログラムで自分でやってみるべし）。温度もしばらく待っていれば外気温と同じ、つまり元の温度に戻る。こうして外気温に戻ると、完全に「元の状態に戻った」ということになる。</p>
+		<p>　力学でエネルギー保存則を考えるときは「一周回って戻ってきたのだから、エネルギーも元の状態に戻っている。だから仕事は0」というふうに考える。しかし、この場合の仕事は明らかに0ではない。</p>
+		<p>　プログラムを動かしながら、ピストンを引く時と戻す時で気体の圧力（青矢印）がどうなっているかを見ると、引く時は比較的圧力が小さく、戻す時は圧力が高くなっていることがわかる。</p>
+		<div class="setsumei">　↑の図でボタンを押していろいろな変化を起こしてみよう。よく観察すれば、「ピストンを引く時」と「ピストンを押す時」で起こる現象が対称でないことがわかるはずだ。</div>
+		<p>　結果として、ピストンが引かれる時に気体のする仕事の量は、戻す時に気体にされる仕事の量より大きいことになる。つまり、外部から仕事をしてやらなくてはいけない（気体は一周の間に負の仕事をする、と言ってもよい）。</p>
+		<div class="setsumei">　仕事をP-Vグラフというグラフ上に表現すると、もっとそのことがわかりやすいかもしれない。すぐそれをやってみたい人は、<input type="button" data-inline="true" value="P-Vグラフつきのページ" data-icon="arrow-r" onclick="location.href='PVGraph.html'">までジャンプせよ。</div>
+		<p>　少し先走っておくと、この「等温操作で気体を元の状態に戻すと、気体はその間に必ず負の仕事をしている」というのは熱力学で初めて登場する新しい物理法則である<input type="button" data-inline="true" value="Kelvinの原理" data-icon="arrow-r" onclick="location.href='touonsousa.html#Kelvin'">となる。</p>
+		<p>　気体が一周の間に負の仕事をしてしまう理由は「ピストンが引かれた時に気体がついていけないから」と「ピストンが押された時にピストン付近の気体が押されてその部分が特に圧縮されるから」だから、変化を十分ゆっくりと起こしてあげればそんなことは起きない。そのような理想的な操作（現実には起こせない）を「準静的操作」と呼ぶことにする。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="分子の運動エネルギーの移動としての「熱」" data-icon="arrow-l" onclick="location.href='./hajimeni.html#bunsi'">　
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">　
+		<input type="button" value="戻る" data-icon="back" onclick="history.back();">　				
+		<input type="button" value="（断熱操作）" data-icon="arrow-r" onclick="location.href='#adiabatic'">　
+	  </div>
+	</div>
+	<div data-role="page" id="adiabatic">
+	  <div data-role="header">
+		<h2>準静的操作（断熱操作）</h2>
+	  </div>
+	  <div data-role="content">
+		<p>　次の例として、周囲と熱のやりとりのない状況で（断熱的に）閉じ込められた気体を考えよう。</p>
+		<hr>
+		<p><canvas id="canvas1"></canvas></p>
+		<button data-inline="true" onclick="pistonA.pushPiston +=0.2;" data-icon="arrow-l">ピストンを押す</button>
+		<select id="speedA" data-inline="true" onchange='pistonA.setspeed($("#speedA"));'>
+		  <option value="0.001" selected="unselected">とっても遅く</option>
+		  <option value="0.0025" selected="unselected">遅く</option>
+		  <option value="0.005" selected="unselected">中くらい</option>
+		  <option value="0.01" selected="selected">速く</option>
+		</select>
+		<button data-inline="true" onclick="pistonA.pullPiston +=0.2;" data-icon="arrow-r">ピストンを引く</button>　←ピストンは右半分の部分でしか動きません。
+		<br>
+		<button id="stop" data-inline="true" onclick="startstop();">停止／再開</button>
+		　<button id="restartA" data-inline="true" onclick="pistonA.init_blocks(); pistonA.initHistory();">初期状態に戻す。</button></p>
+		<hr>
+		<p>　まずピストンを引いてみよう。この場合も、温度や圧力は全体が一斉に変化するのではなく、ピストンに近い部分でまず「気体が膨張する」「気体の温度が下がる」という変化が起こり、それが伝わる。</p>
+		<p><img src="pistonPull.png" width="70%" class="floatnone"></p>
+		<p class="aka">↑この絵は単なる画像です。動きません。</p>
+		<p>　引いたピストンを押して戻すと、今度はピストンに近い部分で温度と圧力の上昇が起こり、それが伝わる。</p>
+		<p><img src="pistonPush.png" width="70%" class="floatnone"></p>
+		<p class="aka">↑この絵は単なる画像です。動きません。</p>
+		<p>　ピストンを引いてしばらくしてから今度は押して、元の体積に戻した時、温度は少々上昇しているはずである。</p>
+		<div class="question"><div class="A" align="center">体積は元の状態に戻しているのに、温度が戻らないのはなぜか？？</div><p align="right">この時気体のする仕事がどうなっているかを手がかりに考えてみよう。</p></div>
+		<div class="box">　等温操作と違って断熱操作ではまわりと熱の出入りを断っているので、気体のした仕事、された仕事はそのまま気体のエネルギーの増減となる。「ピストンを引いて元に戻す」という操作をすると（ピストンが押される時、気体のされる仕事）＞（ピストンが引かれる時、気体のする仕事）となるため、気体のエネルギーは上昇してしまう、ということ。</div>
+		<p>　この場合は準静的に操作した場合に限り、行きと帰りの仕事が一致し、元に戻る（こういうの状況を「この操作は可逆である」という言い方をする）。</p>
+		<div class="Q">　準静的でなくても、ピストン引いた後押していって、温度が同じになるところでピタッと止めれば、温度は同じになりませんか？</div>
+		<div class="A">　その場合、体積が同じになってないから、やっぱり元にはもどってないね。</div>
+		<p>　断熱操作と等温操作を比べると、熱の形でエネルギーが補充されて温度が一定になっているため、される仕事の状況は違う。詳細な計算は後でやるので、とりあえず今は「断熱操作と等温操作とでは、違うタイプの<span class="box">エネルギー</span>が定義できるみたいだ」と感じておこう<span class="footnote">実は等温操作において「最大仕事」によって増減する量として「ヘルムホルツの自由エネルギー」という新しいエネルギーを作る、というのがこの後の流れ。</span>。</p>
+
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="（等温操作）" data-icon="arrow-l" onclick="location.href='#isothermal'">　
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back"  onclick="history.back();">
+		<input type="button" value="最大仕事と準静的操作（P-Vグラフ付き）" data-icon="arrow-r" onclick="location.href='#withGraph'">      </div>
+	</div>
+	<div data-role="page" id="withGraph">
+	  <div data-role="header">
+		<h2>最大仕事と準静的操作（P-Vグラフ付き）</h2>
+	  </div>
+	  <div data-role="content">
+		<p>　最後に、同じピストンの運動を、P（圧力）-V（体積）のグラフを見ながら行ってみよう。</p>
+		<div class="A">ただし、ここでグラフにしている圧力Pとは、「気体全体の圧力」ではない（今考えている操作の途中では気体の圧力・温度は一様ではない）。グラフの縦軸であるPは、「ピストンに掛かる圧力」であり、いわば「ピストンに接している部分の気体の圧力」である。ピストンに接していない部分の気体の圧力は、もちろんこれとは違う。準静的ならば全体の状態が一様だから気体全体の圧力とピストンに接している部分の圧力は同じになる（ただし、このプログラムでは準静的な操作は起こせない）。</div>
+		<p>　下の図の青い線は、気体全体が常に等温を保った場合のP-Vの線である。等温操作でも断熱操作でも、実際の変化はこのようには起きない。</p>
+		<hr>
+		<p><canvas id="canvas3"></canvas></p>
+		<hr>
+		<button data-inline="true" onclick="pistonC.pushPiston +=0.2;" data-icon="arrow-l">ピストンを押す</button>
+		<select id="speedC" data-inline="true" onchange='pistonC.setspeed($("#speedC"));'>
+		  <option value="0.001" selected="unselected">とっても遅く</option>
+		  <option value="0.0025" selected="unselected">遅く</option>
+		  <option value="0.005" selected="unselected">中くらい</option>
+		  <option value="0.01" selected="selected">速く</option>
+		</select>
+
+		<button data-inline="true" onclick="pistonC.pullPiston +=0.2;" data-icon="arrow-r">ピストンを引く</button>
+		<fieldset data-role="controlgroup" data-type="horizontal">
+		  <label><input type="radio" id="adiabatic" onclick="adiabatic();" name="katei"/>断熱操作</label>
+		  <label><input type="radio" id="isothermal" onclick="isothermal();" name="katei" checked/>等温操作</label>
+		</fieldset>
+		<button id="stop" data-inline="true" onclick="startstopC();">停止／再開</button>
+		　<button id="restart" data-inline="true" onclick="pistonC.init_blocks(); pistonC.initHistory();">初期状態に戻す。</button></p>
+		<hr>
+		<div class="setsumei">上の「初期状態に戻す。」ボタンを押すとP-Vグラフの軌跡もクリアされるので、いろんな状況での変化の様子を描いてみよう。</div>
+		<p>　たとえば等温操作でピストンを引き、しばらく待ってから戻した時のグラフが、</p>
+		<p><img src="iso1.png" width="30%" class="floatnone"></p>
+		<p>である。仕事はこの水色の線の下の面積だから、行き→と帰り←を比べると帰りの方が仕事の絶対値は大きい（ただし、収縮しているから気体のする仕事は負である）。</p>
+		<p>　こうして、等温操作で元に戻ってくる操作をすると気体がマイナスの仕事をしそうだ、ということがわかる。</p>
+		<p>　このように現実的な気体では（といっても、ここで見せているシミュレーションはまだまだ実在気体に比べれば簡単化されたモデルにすぎないのだが）、状態方程式から予想されるような変化は起きない。状態が「平衡状態」でない変化をするからである。</p>
+		<p>　「平衡状態」とは単純に言えば「気体の置かれる状況を変えずに放っておくと最終的に到達する状態」である。平衡状態では、シリンダー内の気体の温度・圧力が全く一様になっている。↑のプログラムで起こっている操作途中の状態は、ほぼすべて平衡状態ではない。</p>
+		<p>　変化が十分ゆっくりなら、「平衡状態」を保ったままで状態変化を行うことができると考えよう。そのような変化を「準静的操作」と呼ぶことにする。</p>
+		<div class="setsumei">　変化がゆっくりの場合の気体のP-Vグラフはより、「等温の線」（青色）に近づくことになる。実際にプログラムでピストンの移動速度を遅くしてからやってみよう。</div>
+		<p>　等温操作でピストンを引く場合に気体のする仕事を見ると、なるべく温度が下がらないように、ゆっくりと引くとよい（それが準静的操作）。そして十分にゆっくりと引いたときに、仕事は$NRT\int {\mathrm dV\over V}$と計算した仕事に一致する。この仕事を「最大仕事」と呼ぶことにしよう。現実的に（準静的でなく）ピストンを引くときは、最大仕事よりも小さい仕事になってしまう。つまり準静的にゆっくりと引く時が気体から得られるエネルギーが最大である。</p>
+
+		<p>　前にも述べたように、押す時に気体にされる仕事は、今度は$NRT\int {\mathrm dV\over V}$で計算される仕事より、絶対値が大きくなる。よって等温操作で元に戻る操作をすると、どうやっても気体は負の仕事をする。もし気体に正の仕事をさせることができるなら、気体が元の状態に戻っているのにエネルギーを仕事の形で取り出せたことになり、エネルギー問題なんて解決である（そうはいかないから困っている）。</p>
+		<p>　こうして「状態変化を一周させると気体が負の仕事をする」というがは、エネルギー保存則とは別の、もう一つの新しい物理法則として熱力学に登場してくることになるのである（熱力学第２法則ということになるのだが、それは今後のお楽しみ）。</p>
+		<br>
+		<p>　ここでは、「最大仕事」というキーワードと、最大仕事が実現する理想的な操作として「準静的操作」というものがどういうものなのか、なぜ大事なのかをまず理解して欲しい。それぞれを使ってどのように「等温操作におけるエネルギーにあたるものを定義するのか」ということを次に説明していきたい。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<input type="button" value="（断熱操作）" data-icon="arrow-l" onclick="location.href='#adiabatic'">
+		<input type="button" value="目次" data-icon="home" onclick="location.href='./index.html'">
+		<input type="button" value="戻る" data-icon="back" onclick="history.back();">
+      </div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>三角関数の微分（cos）</title>
+	<link href="ss.css" rel="stylesheet" type="text/css"/>
+	<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });</script>
+	<script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="dragmanscreen.js" type="text/javascript"></script>
+	<script src="draggablepoint.js" type="text/javascript"></script>
+	<style>	 .usuao {
+	   color: #8DD;
+	 }
+	</style>
+  </head> 
+  <script type="text/javascript">
+   function marume4(x) {
+	 x*=10000;
+	 x=Math.round(x);
+	 x /= 10000; //
+     return x;
+   }
+   var Doukei=function(t,c) {
+	 DraggablePoint.call(this,0,0,1,c);
+	 this.val=t;
+	 this.inP=function(xx,yy) {
+	   var t=Math.atan2(-xx,yy);
+	   while( t > this.val +Math.PI ) {
+		 t -=2*Math.PI;
+	   }
+	   while( t < this.val -Math.PI ) {
+		 t +=2*Math.PI;
+	   }
+	   if( Math.abs(t-this.val) < 0.1 ) {
+		 return true;
+	   } else {
+		 return false;
+	   }
+	 };
+	 this.setXY=function(xx,yy) {
+	   xx += this.shiftx;
+	   yy += this.shifty;
+	   this.val0=this.val;
+	   this.val=Math.atan2(-xx,yy);
+	   while( this.val > this.val0+Math.PI ) {
+		 this.val -= 2*Math.PI;
+	   }
+	   while( this.val < this.val0-Math.PI ) {
+		 this.val += 2*Math.PI;
+	   }
+	 };
+	 this.write=function(ct) {
+	   ct.beginPath();
+	   ct.strokeStyle=this.col;
+	   ct.moveTo(0,0);
+	   ct.lineTo(-Math.sin(this.val),Math.cos(this.val));
+	   ct.stroke();
+	   ct.fillStyle="rgba(255,100,0,0.5)";
+	   ct.beginPath();
+	   ct.arc(0,0,0.1,0,2*Math.PI,true);
+	   ct.fill();
+	   var theta=this.val;
+	   ct.fillStyle="rgba(180,180,255,0.5)";
+	   ct.arc(-Math.sin(theta),Math.cos(theta),0.1,0,2*Math.PI,true);
+	   ct.fill();
+	 };
+   };
+   var nowgs;
+
+   Doukei.prototype=Object.create(DraggablePoint.prototype);
+   Doukei.prototype.constructor=Doukei;
+
+
+   function init_diffsin() {
+     gs4_0=new DragmanScreen("canvas4_0",9.2,2.6,0.85);
+	 gs4_0.setLeft(-1.3);
+	 gs4_0.setBottom(-1.3);
+	 gs4_0.gobackOriginalSize();
+	 gs4_0.writeContents=function() {
+	   allSinWrite(gs4_0);
+	 };
+	 gs4_0.theta=0.25*Math.PI;
+	 gs4_0.orgx=3.0;
+	 gs4_0.doukei=new Doukei(0.25*Math.PI,"rgb(100,100,0)");
+	 gs4_0.pushDragObjList(gs4_0.doukei);
+	 nowgs=gs4_0;
+	 anime();
+   }
+   function allSinWrite(gs) {
+	 var ct=gs.ctx;
+	 gs.setScale();
+     gs.clearALL();
+	 ct.fillStyle="rgb(235,255,255)";
+	 ct.fillRect(gs.leftwx,gs.bottomy,2.6,gs.h);
+	 ct.fillStyle="rgb(255,255,235)";
+	 ct.fillRect(1.4,gs.bottomy,gs.w,gs.h);
+	 ct.beginPath();
+	 ct.strokeStyle="rgb(200,200,200)";
+	 ct.arc(0,0,1,0,2*Math.PI,false);
+	 ct.stroke();
+	 ct.strokeStyle="rgb(0,0,0)";
+	 ct.fillStyle="rgb(0,0,0)";
+	 writeTatejiku(ct,1.3,-1.3,0);
+	 writeYokojiku(ct,1.3,-1.3,0);
+	 writeYokojiku2(ct,7.8,1.4,0);
+
+	 var th=gs.doukei.val;
+	 document.getElementById("theta").innerHTML=("θ="+marume4(th)+"ラジアン（"+marume4(th*180/ Math.PI)+"度）");
+	 //
+	 var sinth=Math.sin(th);
+	 var costh=Math.cos(th);
+	 document.getElementById("sin").innerHTML=("sinθ="+marume4(sinth));
+	 document.getElementById("cos").innerHTML=("cosθ="+marume4(costh));
+	 
+	 // thが表示できる範囲にあるかをチェック。
+	 // gs.orgx==3 の時は-0.5*Math.PIから1.5*Math.PIまでを表示している。
+	 // -0.5*Math.PI-(gs.orgx-3)から-(gs.orgx-3)+1.5*Math.PIまでを表示する。
+	 //						  
+	 if( th < -(gs.orgx-3)-0.5*Math.PI ) {
+	   gs.orgx = 3-(th +0.5*Math.PI);
+	 }
+	 if( th > -(gs.orgx-3)+1.5*Math.PI ) {
+	   gs.orgx = 3-(th-1.5*Math.PI);
+	 }
+
+	 if( gs.orgx >= 1.4 && gs.orgx <= 7.8 ) {
+	   writeTatejiku(ct,1.3,-1.3,gs.orgx);
+	 }
+	 ct.strokeStyle="rgb(0,0,200)";
+	 ct.fillStyle="rgb(0,0,200)";
+	 ct.beginPath();
+	 var th1=-(gs.orgx-3)-0.5*Math.PI;
+	 ct.moveTo(3.0-0.5*Math.PI,Math.sin(th1));
+	 var x;
+	 for(x=th1+Math.PI / 50; x<=th1+2*Math.PI ; x+=Math.PI / 50 ) {
+	   ct.lineTo(gs.orgx+x,Math.sin(x));
+	 }
+	 ct.lineTo(gs.orgx+x,Math.sin(x));
+	 ct.stroke();
+	 ct.strokeStyle="rgb(100,200,200)";
+	 ct.beginPath();
+	 var th1=-(gs.orgx-3)-0.5*Math.PI;
+	 ct.moveTo(3.0-0.5*Math.PI,-Math.sin(th1));
+	 var x;
+	 for(x=th1+Math.PI / 50; x<=th1+2*Math.PI ; x+=Math.PI / 50 ) {
+	   ct.lineTo(gs.orgx+x,-Math.sin(x));
+	 }
+	 ct.lineTo(gs.orgx+x,-Math.sin(x));
+	 ct.stroke();
+
+	 ct.strokeStyle="rgb(200,0,0)";
+	 ct.beginPath();
+	 th1=-(gs.orgx-3)-0.5*Math.PI;
+	 ct.moveTo(3.0-0.5*Math.PI,Math.cos(th1));
+	 var x;
+	 for(x=th1+Math.PI/50; x<=th1+2*Math.PI ; x+=Math.PI/50 ) {
+	   ct.lineTo(gs.orgx+x,Math.cos(x));
+	 }
+	 ct.lineTo(gs.orgx+x,Math.cos(x));
+	 ct.stroke();
+	 ct.strokeStyle="rgba(0,0,0,0.1)";
+	 ct.beginPath();
+	 ct.moveTo(-sinth,costh);
+	 ct.lineTo(gs.orgx+th,costh);
+	 ct.stroke();
+
+	 ct.beginPath();
+	 ct.strokeStyle="rgba(100,100,0,0.3)";
+	 ct.moveTo(0,0.8);
+	 if( th > 0 ) {
+	   for( th1=0; th1 < th ; th1 += 0.05 ) {
+		 ct.lineTo(-(0.8-th1*0.01)*Math.sin(th1),(0.8-th1*0.01)*Math.cos(th1));
+	   }
+	 } else {
+	   for( th1=0; th1 > th ; th1 -= 0.05 ) {
+		 ct.lineTo(-(0.8+th1*0.01)*Math.sin(th1),(0.8+th1*0.01)*Math.cos(th1));
+	   }
+	 }
+	 ct.stroke();
+	 gs.doukei.write(ct);
+	 ct.beginPath();
+	 ct.fillStyle="rgba(0,255,0,0.3)";
+	 ct.strokeStyle="rgb(0,0,200)";
+	 ct.moveTo(-sinth,costh);
+	 ct.lineTo(0,costh);
+	 ct.lineTo(0,0);
+	 ct.fill();
+	 ct.beginPath();
+	 ct.moveTo(-sinth,costh);
+	 ct.lineTo(0,costh); 
+	 ct.stroke();
+	 ct.strokeStyle="rgb(150,200,200)";
+	 ct.beginPath();
+	 ct.moveTo(gs.orgx+th-0.01,0);
+	 ct.lineTo(gs.orgx+th-0.01,-sinth);
+	 ct.stroke();
+	 ct.strokeStyle="rgb(200,0,0)";
+	 ct.beginPath();
+	 ct.moveTo(0,0);
+	 ct.lineTo(0,costh);
+	 ct.moveTo(gs.orgx+th+0.01,0);
+	 ct.lineTo(gs.orgx+th+0.01,costh);
+	 ct.stroke();
+	 ct.fillStyle="rgba(180,180,0,0.3)";
+	 ct.beginPath();
+	 ct.moveTo(-sinth,costh);
+	 ct.lineTo(-sinth-0.5*costh,costh-0.5*sinth);
+	 ct.lineTo(-sinth,costh-0.5*sinth);
+	 ct.fill();
+//	 ct.fillStyle="rgba(180,180,255,0.3)";
+//	 ct.beginPath();
+	 var hst;
+	 var hct=0.5*costh;
+	 if( sinth <0 ) {
+	   hst=-0.5*sinth;
+	 } else {
+	   hst=0.5*sinth;
+	 }
+//	 ct.moveTo(gs.orgx+th,sinth);
+//	 ct.lineTo(gs.orgx+th+0.5,sinth+hct);
+//	 ct.lineTo(gs.orgx+th+0.5,sinth);
+//	 ct.fill();
+	 ct.fillStyle="rgba(255,180,180,0.3)";
+	 ct.beginPath();
+	 hst=0.5*sinth;
+	 if( hct < 0 ) {
+	   hct=-hct;
+	 }
+	 ct.moveTo(gs.orgx+th,costh);
+	 ct.lineTo(gs.orgx+th+0.5,costh-hst);
+	 ct.lineTo(gs.orgx+th+0.5,costh);
+	 ct.fill();
+
+	 ct.strokeStyle="rgb(180,180,255)";
+	 ct.beginPath();
+	 ct.moveTo(-sinth-0.5*costh,costh-0.5*sinth);
+	 ct.lineTo(-sinth,costh-0.5*sinth);
+//	 ct.moveTo(gs.orgx+th+0.49,sinth);
+//	 ct.lineTo(gs.orgx+th+0.49,sinth+0.5*costh);
+	 ct.stroke();
+	 ct.strokeStyle="rgb(255,180,180)";
+	 ct.beginPath();
+	 ct.moveTo(-sinth,costh-0.5*sinth);
+	 ct.lineTo(-sinth,costh);
+	 ct.moveTo(gs.orgx+th+0.51,costh-0.5*sinth);
+	 ct.lineTo(gs.orgx+th+0.51,costh);
+	 ct.stroke();
+	 ct.strokeStyle="rgba(0,0,0,0.1)";
+	 ct.beginPath();
+	 var costht=Math.cos(th+t);
+	 var sintht=Math.sin(th+t);
+	 ct.moveTo(0,costht);
+	 ct.lineTo(-sintht,costht);
+	 ct.lineTo(0,0);
+	 ct.moveTo(-sintht,costht);
+	 ct.lineTo(gs.orgx+th+t,costht);
+	 ct.lineTo(gs.orgx+th+t,costh);
+	 ct.stroke();
+	 t +=0.02;
+	 if( t> 0.5 ) {
+	   t=0;
+	 }
+   }
+   var t=0;
+   function anime() {
+	 allSinWrite(nowgs);
+	 setTimeout("anime();",100);
+   }
+
+   function writeYokojiku(ct,x1,x2,y1) {
+	 ct.strokeStyle="rgb(0,0,150)";
+	 ct.fillStyle="rgb(0,0,150)";
+	 ct.beginPath();
+	 ct.moveTo(x2,y1);
+	 ct.lineTo(x2+0.2,y1+0.1);
+	 ct.lineTo(x2+0.2,y1-0.1);
+	 ct.closePath();
+	 ct.fill();
+	 ct.beginPath();
+	 ct.moveTo(x2+0.1,y1);
+	 ct.lineTo(x1,y1);
+	 ct.stroke();
+   }
+   function writeYokojiku2(ct,x1,x2,y1) {
+	 ct.strokeStyle="rgb(0,0,0)";
+	 ct.fillStyle="rgb(0,0,0)";
+	 ct.beginPath();
+	 ct.moveTo(x1,y1);
+	 ct.lineTo(x1-0.2,y1+0.1);
+	 ct.lineTo(x1-0.2,y1-0.1);
+	 ct.closePath();
+	 ct.fill();
+	 ct.beginPath();
+	 ct.moveTo(x1-0.1,y1);
+	 ct.lineTo(x2,y1);
+	 ct.stroke();
+   }
+   function writeTatejiku(ct,y1,y2,x1) {
+	 ct.strokeStyle="rgb(150,0,0)";
+	 ct.fillStyle="rgb(150,0,0)";
+	 ct.beginPath();
+	 ct.moveTo(x1,y1);
+	 ct.lineTo(x1+0.1,y1-0.2);
+	 ct.lineTo(x1-0.1,y1-0.2);
+	 ct.closePath();
+	 ct.fill();
+	 ct.beginPath();
+	 ct.moveTo(x1,y2,0);
+	 ct.lineTo(x1,y1-0.1);
+	 ct.stroke();
+   }
+  </script>
+  <body onload="init_diffsin();"> 
+
+	<h3>cosの微分</h3>
+	<div class="setsumei">　<span class="aka">cosθ</span>とその微分である<span class="usuao">-sinθ</span>を表現している動く図である。</div>
+	<p>　左の単位円の部分は、<a href="diff_sin.html">前ページ</a>のグラフに比べて、90度反時計回りに回した状況になっていることに注意。</p>
+	<div align="center"><canvas id="canvas4_0" width=200 height=200 style="-ms-touch-action:none;"></canvas></div>
+	<div id="theta"></div>
+	<div><span id="sin" class="ao"></span>,<span id="cos" class="aka"></span></div>
+	<div class="setsumei">↑の棒の角度はドラッグによって変えることができる。</div>
+	<p><img src="diffcos.png" width="40%" class="floatnone"></p>
+	<p> 上の図が、それぞれの長さを描き込んだもの。</p>
+	<p>　右のグラフに、<span class="aka">cosθ</span>のグラフの傾きが<img src="diffcos2.png" width="25%" class="floatnone">のように表示されている。これも動径をドラッグすることができるので、動かしながら「<span class="aka">cosθ</span>の微分（傾き）は<span class="usuao">-sinθ</span>だな」ということを実感して欲しい。</p>
+  <hr>
+  <p align="center">←<a href="diff_sin.html">sinの微分のページ
+  </a>に戻る　<a href="diff_tan.html">tanの微分のページ</a>へ→</p>
+  </body>
+</html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <RadioGroup
+                android:id="@+id/radioGroup1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/rdPoint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="光点"
+                    android:textSize="10dp" />
+
+                <RadioButton
+                    android:id="@+id/rdPoints"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="光点連続"
+                    android:textSize="10dp" />
+
+</RadioGroup>
+
+            <Button
+                android:id="@+id/btRestart"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="リスタート"
+                android:textSize="10dp" />
+
+                <ToggleButton
+                    android:id="@+id/tbE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ToggleButton"
+                    android:textOff="（地球静止系）"
+                    android:textOn="【地球静止系】"
+                    android:textSize="10dp" />
+
+                <ToggleButton
+                    android:id="@+id/tbL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ToggleButton"
+                    android:textOff="（ローレンツ短縮）"
+                    android:textOn="【ローレンツ短縮】"
+                    android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/tvV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="地球の速度は光速の0％"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="10dp" />
+            
+            <SeekBar
+                android:id="@+id/sbV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:max="99"
+                android:maxWidth="100dp" />
+
+	<ToggleButton
+	    android:id="@+id/tbStop"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:checked="true"
+	    android:text="ToggleButton"
+	    android:textOff="中断中"
+	    android:textOn="実行中"
+	    android:textSize="10dp" >
+</ToggleButton>
+    
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

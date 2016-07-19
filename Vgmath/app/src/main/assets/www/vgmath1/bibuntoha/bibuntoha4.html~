@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>微分ってなあに？（その４）</title>
+<style type="text/css">
+	body {
+		background-color: #FFFFFF;
+	}
+	img {
+	vertical-align:middle;
+	}
+	.centering{
+		text-align:center;
+	}
+</style>
+</head>
+<body onload="init(); katamukiOn(); zoomOn();">
+<script type="application/javascript" src="bibuntoha.js"></script>
+<h1>微分ってなあに？（その４）</h1>
+<div class=centering><a href="bibuntoha3.html">その３に戻る</a></div>
+<hr>
+<p>　プログラムにズーム機能がつきました。▲以外のところを押すと灰色の■が現れます。自分が拡大したい領域が、その灰色の■の中に入るようにしましょう。
+<br>　押すのをやめると、■の中身が全体に広がります。
+<br>
+<form action="#">
+<label for="func">どの関数？</label>
+<select name="func" id="func">
+<option value="linearx">y=x</option>
+<option selected="selected" value="sqx">y=x^2</option>
+<option value="cbx">y=x^3</option>
+<option value="totsuhb">y=1-x^2</option>
+<option value="sinx">y=sin 3x</option>
+<option value="cosx2">y=cos 5x^2</option>
+<option value="sin1overx">y=sin (1/x)</option>
+</select>
+</form>
+<br>
+<br>
+<canvas id="maincanvas" width="600" height="450" style="-ms-touch-action:none;">すいません、あなたのブラウザはcanvasをサポートしてないようです。</canvas>
+<br>
+<br>
+<br>　うっかりズームしすぎて画面にグラフがなくなってしまった時は、
+<button type=button onclick="undoZoom();">一回戻る</button>を押すと（一回だけ）元に戻ることができます。
+<br>　一番最初の状態に戻すには、
+<button type=button onclick="initCoordinate();">座標をリセット</button>を押してください。
+<br>
+<br>　微分を理解するのに必要な『極限』の考え方は、最初は非常に取っ付きにくいものです。ここではΔｘ→０にするというよりは、グラフの方を拡大していく、という見方をしています。微分可能な関数であれば、どんどん拡大していくといずれは直線とみなせるようになります。そのことを、実際に拡大を繰り返しながら確認しましょう。
+
+<br>　では、思う存分グラフを動かしたり拡大したりしながら「微分のココロ」をつかんでください。
+<br>
+<br>　このページの関数のリストには、sin(1/x)などという恐ろしい関数も入れてあります。x=0付近では(1/x)が∞に向けて発散するので、非常に激しい振動をします。どんどん拡大してみましょう。
+<br>
+<br>　どんどんどんどん拡大していくとグラフがギザギザになります。これはコンピュータが使っている「実数」が実際には拡大することで精度が悪くなるためにおこる現象です。現実の関数はもちろん拡大してもギザギザが現れたりはしません！
+</body>
+</html>
+

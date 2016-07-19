@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+	<!-- , width=device-width, height=device-height, target-densitydpi=device-dpi" /> -->
+    <!-- <link rel="stylesheet" type="text/css" href="css/index.css" /> -->
+    <title>位相速度と群速度</title>
+	<script src="jquery.js" type="text/javascript"></script>
+	<link href="jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+	<script src="jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+	<script src="rescalescreen.js" type="text/javascript"></script>
+	<script src="graphscreen.js" type="text/javascript"></script>
+
+	<style type="text/css">
+	  h3{
+	   color:#300;
+	   background-color: #CC9;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	  }
+	  .case{
+	   color:#000;
+	   background-color: #FCC;
+	   border: solid #800 thin;
+	   border-radius:10px;
+	  }
+	  .setsumei{
+	   color:#008;
+	   background-color: #CFC;
+	   border: solid #333 thin;
+	   border-radius:10px;
+	  }
+	  .wave1{
+	   color: #D00;
+	  }
+	  .wave2{
+	  color: #00D;
+	  }
+	  .wave3{
+	  color: #0DD;
+	  }
+	  .wave4{
+	  color: #DD0;
+	  }
+	 .waveG{
+	   color: #A0A;
+	 }
+	</style>
+	<title>位相速度と群速度</title>
+	<script type="text/javascript">
+	 $(document).delegate('#page0','pageinit',function(e) {
+       gs0=new GraphScreen("canvas0",12,4.2,0.9);
+       gs0.setLeft(-1);
+       gs0.setBottom(-2.1);
+       gs0.gobackOriginalSize();
+       gs0.writeContents=function() {
+		 graphWrite_sub(gs0);
+       }; 
+	   nowgs=gs0;
+	 });
+	 $(document).delegate('#page4','pageinit',function(e) {
+       gs4=new GraphScreen("canvas4",12,4.2,0.9);
+       gs4.setLeft(-1);
+       gs4.setBottom(-2.1);
+       gs4.gobackOriginalSize();
+       gs4.writeContents=function() {
+		 graphWrite_sub(gs4);
+       }; 
+	   nowgs=gs4;
+	 });
+	 $(document).delegate('#page1','pageinit',function(e) {
+       gs1=new GraphScreen("canvas1",12,4.2,0.9);
+       gs1.setLeft(-1);
+       gs1.setBottom(-2.1);
+       gs1.gobackOriginalSize();
+       gs1.writeContents=function() {
+		 graphWrite_sub(gs1);
+       }; 
+	   nowgs=gs1;
+	 });
+	 $(document).delegate('#page2','pageinit',function(e) {
+       gs2=new GraphScreen("canvas2",12,4.2,0.9);
+       gs2.setLeft(-1);
+       gs2.setBottom(-2.1);
+       gs2.gobackOriginalSize();
+       gs2.writeContents=function() {
+		 graphWrite_sub(gs2);
+       }; 
+	   nowgs=gs2;
+	 });	 
+	 $(document).delegate('#page3','pageinit',function(e) {
+       gs3=new GraphScreen("canvas3",12,4.2,0.9);
+       gs3.setLeft(-1);
+       gs3.setBottom(-2.1);
+       gs3.gobackOriginalSize();
+       gs3.writeContents=function() {
+		 graphWrite_sub(gs3);
+       }; 
+	   nowgs=gs3;
+	 });
+	 $(document).delegate('#page4','pageshow',function(e) {
+	   flg1=true;
+	   flg2=true;
+	   flg3=true;
+	   flg4=true;
+	   flgG=true;
+	   nowgs=gs4;
+	   setCheckBoxes();
+	   setVp();
+	   setVg();
+	   setSliders($("#slider"),$("#slider2"),$("#slider3"),$("#slider4"));
+	   if( !nowAnimeFlg ) {
+		 graphWrite(gs4);
+	   }
+	 });
+	 $(document).delegate('#page0','pageshow',function(e) {
+	   flg1=true;
+	   flg2=true;
+	   flg3=false;
+	   flg4=false;
+	   flgG=true;
+	   nowgs=gs0;
+	   if( !nowAnimeFlg ) {
+		 graphWrite(gs0);
+	   }
+	 });
+	 $(document).delegate('#page1','pageshow',function(e) {
+	   flg1=true;
+	   flg2=false;
+	   flgG=false;
+	   flg3=false;
+	   flg4=false;
+	   nowgs=gs1;
+	   setVp();
+	   setSliders($("#slider_1"),$("#slider2_1"),null,null);
+	   if( !nowAnimeFlg ) {
+		 graphWrite(gs1);
+	   }
+	 });
+	 $(document).delegate('#page2','pageshow',function(e) {
+	   flg1=true;
+	   flg2=true;
+	   flgG=false;
+	   flg3=false;
+	   flg4=false;
+	   nowgs=gs2;
+	   setVp();
+	   setSliders($("#slider_2"),$("#slider2_2"),$("#slider3_2"),$("#slider4_2"));
+       if( !nowAnimeFlg ) {
+		 graphWrite(gs2);
+	   }
+	 });
+	 $(document).delegate('#page3','pageshow',function(e) {
+	   flg1=true;
+	   flg2=true;
+	   flg3=false;
+	   flg4=false;
+	   flgG=true;
+	   setVp();
+	   setVg();
+	   nowgs=gs3;
+	   setSliders($("#slider_3"),$("#slider2_3"),$("#slider3_3"),$("#slider4_3"));
+       if( !nowAnimeFlg ) {
+		 graphWrite(gs3);
+	   }
+	 });
+	 function setSliders(sl,sl2,sl3,sl4) {
+	   if( sl != null  ) {
+		 sl.prop('value',k1);
+		 sl.slider('refresh');
+	   }
+	   if( sl2 != null  ) {
+		 sl2.prop('value',omega1);
+		 sl2.slider('refresh');
+	   }
+	   if( sl3 != null  ) {
+		 sl3.prop('value',deltak);
+		 sl3.slider('refresh');
+	   }
+	   if( sl4 != null  ) {
+		 sl4.prop('value',deltaomega);
+		 sl4.slider('refresh');
+	   }
+	 }
+	 var nowAnimeFlg=false;
+	 function graphWrite(gs) {
+	   graphWrite_sub(gs);
+	   if( !nowAnimeFlg ) {
+		 nowAnimeFlg=true;
+	   }
+	   setTimeout("graphWrite(nowgs);",100);
+	 }
+	 function graphWrite_sub(gs) {
+	   var x;
+	   var ct=gs.ctx;
+	   gs.setScale();
+       gs.clearALL();
+	   ct.fillStyle="rgb(235,255,255)";
+	   ct.beginPath();
+	   ct.fillRect(gs.leftwx,gs.bottomy,gs.w,gs.h);
+	   
+	   gs.writeCoordinate();
+	   ct.lineWidth=gs.stdStrokeWidth*0.5;
+	   if( flg1 ) {
+		 ct.beginPath();
+		 ct.strokeStyle="rgba(255,0,0,0.6)";
+		 ct.moveTo(gs.leftwx,wave1(gs.leftwx,t));
+		 for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.02 ) {
+		   ct.lineTo(x,wave1(x,t));
+		 }
+		 ct.stroke();
+	   }
+	   if( flg2 ) {
+		 ct.beginPath();
+		 ct.strokeStyle="rgba(0,0,200,0.6)";
+		 ct.moveTo(gs.leftwx,wave2(gs.leftwx,t));
+		 for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.02 ) {
+		   ct.lineTo(x,wave2(x,t));
+		 }
+		 ct.stroke();
+	   }
+	   if( flg3 ) {
+		 ct.beginPath();
+		 ct.strokeStyle="rgba(0,200,200,0.6)";
+		 ct.moveTo(gs.leftwx,wave3(gs.leftwx,t));
+		 for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.02 ) {
+		   ct.lineTo(x,wave3(x,t));
+		 }
+		 ct.stroke();
+	   }
+	   if( flg4 ) {
+		 ct.beginPath();
+		 ct.strokeStyle="rgba(200,200,0,0.6)";
+		 ct.moveTo(gs.leftwx,wave4(gs.leftwx,t));
+		 for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.02 ) {
+		   ct.lineTo(x,wave4(x,t));
+		 }
+		 ct.stroke();
+	   }
+
+	   ct.lineWidth=gs.stdStrokeWidth;
+	   if( flgG ) {
+		 ct.beginPath();
+		 ct.strokeStyle="rgba(100,0,100,0.6)";
+		 ct.moveTo(gs.leftwx,wave1(gs.leftwx,t)+wave2(gs.leftwx,t));
+		 for(x=gs.leftwx+0.01; x < gs.rightwx ; x += 0.02 ) {
+		   ct.lineTo(x,wave1(x,t)+wave2(x,t));
+		 }
+		 ct.stroke();
+	   }
+	   t += 0.1;
+	 }
+	 function wave1(x,t) {
+	   return Math.sin(k1*x-omega1*t);
+	 }
+	 function wave2(x,t) {
+	   return Math.sin(k2*x-omega2*t);
+	 }
+	 function wave3(x,t) {
+	   return Math.sin(((k1+k2)*x-(omega1+omega2)*t)*0.5);
+	 }
+	 function wave4(x,t) {
+	   return 2*Math.cos(0.5*(deltak*x-deltaomega*t));
+	 }
+	 var gs0,gs1,gs2,gs3,gs4,nowgs;
+	 var flg1=true;
+	 var flg2=true;
+	 var flgG=true;
+	 var flg3=false;
+	 var flg4=false;
+	 var t=0;
+	 var k1=15;
+	 var omega1=3;
+	 var k2=16;
+	 var omega2=3.3;
+	 var deltak=1;
+	 var deltaomega=0.3;
+	 function setCheckBoxes() {
+		 $(".checkboxOne").prop("checked",flg1).checkboxradio('refresh');
+		 $(".checkboxTwo").prop("checked",flg2).checkboxradio('refresh');
+		 $(".checkboxG").attr("checked",flgG).checkboxradio('refresh');
+		 $(".checkboxThree").prop("checked",flg3).checkboxradio('refresh');
+		 $(".checkboxFour").prop("checked",flg4).checkboxradio('refresh');
+	 }
+	 function setVp() {
+	   var vp= omega1/k1;
+	 $(".vp").html("位相速度v<sub>p</sub>="+marume6(vp)+"m/s");
+	 }
+	 function setVp2() {
+	   var vp= (omega1+deltaomega)/(k1+deltak);
+	 $(".vp2").html("波２の位相速度v<sub>p2</sub>="+marume6(vp)+"m/s");
+	 }
+	 function setVg() {
+	   var vg= deltaomega/deltak;
+	 $(".vg").html("群速度v<sub>g</sub>="+marume6(vg)+"m/s");
+	 }
+	 function marume6(x) {
+	   var xx=x*1000000;
+	   xx=Math.round(xx);
+	   xx/=1000000;
+       if( x- xx == 0 ) {
+         return xx;
+       } else {
+         return xx+"…";
+       }
+	 }
+	</script>
+  </head>
+  <body>
+	<div data-role="page" id="page0">
+	  <div data-role="header">
+		<h1>位相速度と群速度</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　これは、「位相速度」と「群速度」を理解するためのアニメーションである。図でわかってもらうためのものなので、数学的な説明については少しだけなので、詳細は教科書等を参照すること。</p>
+		<h3>　下のその１から順に読んでいこう。</h3>
+		<p><canvas id="canvas0" width=200 height=200 style="-ms-touch-action: none;"></canvas></p>
+		<hr>
+		<nav>
+		  <h2>目次</h2>
+		  <p><a href="#page1" data-role="button">その１：波数kと角振動数ωの意味を知る</a></p>
+		  <p><a href="#page2" data-role="button">その２：二つの波を重ねてみよう</a></p>
+		  <p><a href="#page3" data-role="button">その３：合成波を見よう</a></p>
+		  <p><a href="#page4" data-role="button">その４：最後に</a></p>
+		</nav>
+	  </div>
+	</div>
+	<div data-role="page" id="page1">
+	  <div data-role="header">
+		<h1>その１：波数kと角振動数ωの意味を知る</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　まず１つの波</p>
+		<p class="wave1">y<sub>1</sub>=A sin( kx -ωt )</p>
+		<p>の進行を見てみよう。</p>
+		<div align="center">
+		  <canvas id="canvas1" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <label for="slider_1">波数 k:</label>
+			  <input type="range" class="slider" id="slider_1" value="15" min="1" max="50" step="1" onChange="k1=Number($('#slider_1').val()); k2=k1+deltak; setVp();" />
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <label for="slider2_1">角振動数 ω:</label>
+			  <input type="range" class="slider2" id="slider2_1" value="3" min="0.05" max="10" step="0.05" onChange="omega1=Number($('#slider2_1').val()); omega2=omega1+deltaomega; setVp();"/>
+			</div>
+		  </div>
+		</div>
+		<div id="vp1" class="vp">位相速度v<sub>p</sub>=0.2m/s</div>
+		<p>　波数kと角振動数ωを変化させて、波がどう変わるかを見てみよう。波数が大きいとはどういうことか（小さいとはどういうことか）、ωが変わるとどう変わるのか、をわかって欲しい。</p>
+		<p>　kが大きいと波がつまる（山と山、谷と谷の間隔が狭くなる）。kの意味は「2πメートルという長さの中に何個の波が入っているか」と考えてもよい。k=1ならば長さ2πの中に一個の波が入っている（「波数」という名前だから「波の数」なのだが、単位長さではなく2πメートルの中の数であることに注意）。</p>
+		  <p>　一方、同様に表現すればωの意味は「2π秒という時間の中に何個の波が入っているか」である。ωが大きいと、その場所における振動が速くなる。</p>
+		  <p>　波の速度（ここでの速度は「位相速度」の方）は（波数／角振動数）で計算できるので、<span class="wave1">波１</span>の速度は(ω/k)である。</p>
+		  <p>　波の速度が（kが一定ならば）ωに比例するのは、ωが大きければ「ある一点における振動」が速いのだから、波が進む速度も速くなるだろう、と考えれば実感できる。</p>
+		  <h3>　実感できるまで上の図で遊ぼう！</h3>
+		  <p>　波の速度は（ωが一定ならば）kに反比例する。kが大きい（つまり波がつまる＝波長が短い）と遅くなる。これは1回の振動の間に一波長だけ波が進行する（下の図を参照）ということを考えると実感できる</p>
+		  <p><img src="namiikkai.png"></p>
+		  <p>　kが大きいと波がつまり（波長が短くなり）、一回の振動の間に波が進む距離が小さくなるので、速度が遅くなる、ということである。</p>
+		  <p>　kとωをいろいろ変化させながら並の速度の変化を感じ取ろう。</p>
+		  <h3>　特に、ω/kが同じなら同じ速度で波が進行していることも確認して欲しい。</h3>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page0" data-icon="back">最初に戻る</a> <a href="#page2" data-icon="arrow-r">その２に進む</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page2">
+	  <div data-role="header">
+		<h1>その２：二つの波を重ねてみよう</h1>
+	  </div>
+	  <div  data-role="content">
+		<p>　では次に、二つの波を重ねてみよう。<span class="wave1">波１</span>に、波数がΔk大きく、角振動数がΔωだけ大きい、もう一つの波</p>
+		<p class="wave2">y<sub>2</sub>=A sin( (k+Δk)x - (ω+Δw)t )</p>
+		<p>を重ねて表示したのが次のグラフである。</p>
+		<div align="center">
+		  <canvas id="canvas2" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <label for="slider_2">波数 k:</label>
+			  <input type="range" class="slider" id="slider_2" value="15" min="1" max="50" step="1" onChange="k1=Number($('#slider_2').val()); k2=k1+deltak; setVp(); setVp2();" />
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <label for="slider2_2">角振動数 ω:</label>
+			  <input type="range" class="slider2" id="slider2_2" value="3" min="0.05" max="10" step="0.05" onChange="omega1=Number($('#slider2_2').val()); omega2=omega1+deltaomega; setVp();setVp2();"/>
+			</div>
+		  </div>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <label for="slider3_2">波数の差 Δk:</label>
+			  <input type="range" class="slider3" id="slider3_2" value="1" min="0" max="5" step="0.1" onChange="deltak=Number($('#slider3_2').val()); k2=k1+deltak; setVp2();" />
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <label for="slider4_2">角振動数の差 Δω:</label>
+			  <input type="range" class="slider4" id="slider4_2" value="0.3" min="0" max="2" step="0.05" onChange="deltaomega=Number($('#slider4_2').val()); omega2=omega1+deltaomega; setVp2();"/>
+			</div>
+		  </div>
+		</div>
+		<div>
+		  <span class="wave1"><span id="vp3" class="vp">位相速度v<sub>p</sub>=0.2m/s</span></span>　<span class="wave2"><span id="vp32" class="vp2">波２の位相速度v<sub>p2</sub>=0.20625m/s</span></span>
+		</div>
+		<p>　上のグラフには、<span class="wave1">波１</span>と<span class="wave2">波２</span>の両方が表示された。二つの波はΔkだけ波数が違うので、ある場所では<img src="soroiw.png">のように山と山（谷と谷）が重なり、強め合うが、ある場所では<img src="kesiw.png">のように山と谷が重なり、消し合う。重なりのずれていく様子を観察しよう。ずれ方はΔkを変化させると変わるので、それを見てみよう。</p>
+		<p>　Δkが小さいと波の長さの差が小さいので、強め合うところから消し合うところまでの距離が長くなる（逆にΔkが大きいと強め合う場所と消し合う場所が近くなる）。Δωが小さいと波の振動の差も小さいので、強め合った状態から消し合う状態に変化するまでの時間が長くなる。</p>
+		<h3>　いろいろと数値を変化させながら実感しよう。</h3>
+		<p>　では実際に波がどのように強め合っているのかは、次のページで見よう。</p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page1" data-icon="arrow-l">その１に戻る</a>	<a href="#page0" data-icon="back">最初に戻る</a><a href="#page3" data-icon="arrow-r">その３に進む</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page3">
+	  <div data-role="header">
+		<h1>その３：合成波を見よう</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　<span class="waveG">合成波</span>、すなわち<span class="wave1">波１</span>と<span class="wave2">波２</span>を足した波も表示して、合成波の「こぶ」（波が強め合っている部分）が動く様子を見よう。</p>
+		<p>　以下は二つの波、</p>
+		<p class="wave1">y<sub>1</sub>=A sin( kx -ωt )</p>
+		<p>と</p>
+		<p class="wave2">y<sub>2</sub>=A sin( (k+Δk)x - (ω+Δw)t )</p>
+		<p>およびその二つの<span class="waveG">合成波</span>の様子を表したグラフである。</p>
+<div align="center">
+		  <canvas id="canvas3" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <label for="slider_3">波数 k:</label>
+			  <input type="range" class="slider" id="slider_3" value="15" min="1" max="50" step="1" onChange="k1=Number($('#slider_3').val()); k2=k1+deltak; setVp();setVp2();" />
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <label for="slider2_3">角振動数 ω:</label>
+			  <input type="range" class="slider2" id="slider2_3" value="3" min="0.05" max="10" step="0.05" onChange="omega1=Number($('#slider2_3').val()); omega2=omega1+deltaomega; setVp();setVp2();"/>
+			</div>
+		  </div>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <label for="slider3_3">波数の差 Δk:</label>
+			  <input type="range" class="slider3" id="slider3_3" value="1" min="0" max="5" step="0.1" onChange="deltak=Number($('#slider3_3').val()); k2=k1+deltak; setVg();setVp2();" />
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <label for="slider4_3">角振動数の差 Δω:</label>
+			  <input type="range" class="slider4" id="slider4_3" value="0.3" min="0" max="2" step="0.05" onChange="deltaomega=Number($('#slider4_3').val()); omega2=omega1+deltaomega;setVg();setVp2();"/>
+			</div>
+		  </div>
+		</div>
+		<div>
+		  <span class="wave1"><span id="vp3" class="vp">位相速度v<sub>p</sub>=0.2m/s</span></span>
+		  　<span class="wave2"><span id="vp32" class="vp2">波２の位相速度v<sub>p2</sub>=0.20625m/s</span></span>
+		  　<span class="waveG"><span id="vg3" class="vg">群速度v<sub>g</sub>=0.3m/s</span></span>
+		</div>
+		<p>　ΔωやΔkを変化させてこぶの変化の様子を見よう。「こぶ」の動く速さは、<span class="wave1">波１</span>の速さとも<span class="wave2">波２</span>の速さとも違う。式で書くなら(Δω/Δk)になっている。これが群速度である。</p>
+		<p>　群速度というのは波が「強め合う場所（消し合う場所でもよいが）」の移動の速度（あるいは「こぶの速度」）である。位相速度は「波の山（谷でもよいが）」の移動速度であり、この二つは違う。</p>
+		<p>　違う理由を図で説明しよう。このプログラムでは（Δkは0以上なので）<span class="wave1">波１</span>より<span class="wave2">波２</span>の方が波数が大きい（ということは、波長が短い）。どちらの速度が速いかは、ΔkとΔωの大きさにより違う。</p>
+		<p>　今、<span class="wave1">波１</span>の位相速度の方が速かったとしよう。すると、<span class="case">後ろにいる<span class="wave1">波１</span>の山が前にいる<span class="wave2">波２</span>の山に追いつく。</span>という現象が起きる。</p>
+		<p>このため、「次に強め合う場所」は「今強め合っている場所」よりも後ろになる。結果、強め合う場所の移動速度（群速度）は、山の速度（位相速度）より遅くなる。「山の速度＞こぶの速度」である。</p>
+		<div><img src="hayai1.png"></div>
+		<p>　一方、<span class="wave2">波２</span>の位相速度の方が速かったとしよう。すると、<span class="case">前にいる<span class="wave1">波１</span>の山に、後ろにいる<span class="wave2">波２</span>の山が追いつく。</span>という現象が起きる。</p>
+		<p>このため、「次に強め合う場所」は「今強め合っている場所」よりも前になる。結果、強め合う場所の移動速度（群速度）は、山の速度（位相速度）より速くなる。「山の速度＜こぶの速度」である。</p>
+		<div><img src="hayai2.png"></div>
+		<p>　静止画の説明だけではわかりにくい人は、上のアニメーションで二つの波の位相速度を調節して、この説明の通りの現象が起きていることを納得しよう。</p>
+		<p></p>
+	  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page2" data-icon="arrow-l">その２に戻る</a>		<a href="#page0" data-icon="back">最初に戻る</a><a href="#page4" data-icon="arrow-r">その４に進む</a>
+	  </div>
+	</div>
+	<div data-role="page" id="page4">
+	  <div data-role="header">
+		<h1>その４：最後に</h1>
+	  </div>
+	  <div data-role="content">
+		<p>　ここまでの動きをみていて、こんなことを感じたかもしれない。</p>
+		<div class="setsumei">　二つの波の足算をしたが、結果としてできあがった波は、波長の短い波と波長の長い波（「こぶ」の波）の掛算のように見える。</div>
+		<p>　これを数式で表現しておこう。<span class="waveG">合成波</span>は</p>
+		<p>	<span class="wave1">A sin( kx - t )</span> + <span class="wave2">A sin( (k+Δk)x - (ω + Δω)t )</span></p>
+		<p>であるが、三角関数の公式</p>
+		<table cellpadding="2" cellspacing="0"><tr><td> sin α + sin β = 2sin</td><td align="center"> α+β<hr noshade="noshade" size="1">2</td><td> cos</td><td align="center"> α-β<hr noshade="noshade" size="1">2</td></tr></table>
+		<p>を使うと、合成波の式は</p>
+		<table class="waveG" cellpadding="2" cellspacing="0"><td>2A sin</td><td align="center"> (2k+Δk)x-(2ω+Δω)t<hr noshade="noshade" size="1">2</td><td> cos</td><td align="center">Δk x-Δω t<hr noshade="noshade" size="1">2</td></tr></table>
+		<p>となる。これが掛算で表現された式である。次の図では、<span><table cellpadding="2" cellspacing="0" class="wave3"><td>sin</td><td align="center"> (2k+Δk)x-(2ω+Δω)t<hr noshade="noshade" size="1">2</td><td>←これは二つの波の「平均」の波数と角振動数を持つ波。</td></tr></table></span>と<span><table cellpadding="2" cellspacing="0" class="wave4"><td>2cos</td><td align="center"> Δk x - Δω t<hr noshade="noshade" size="1">2</td><td>←これは「こぶ」のでき方を表す。</td></tr></table></span>も表示した（たくさんのグラフが重なって見にくい、という人はBOXをクリックして表示をON/OFFしよう）。</p>
+		<div align="center">
+		  <canvas id="canvas4" width=200 height=200 style="-ms-touch-action: none;"></canvas>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <label for="slider">波数 k:</label>
+			  <input type="range" class="slider" id="slider" value="15" min="1" max="50" step="1" onChange="k1=Number($('#slider').val()); k2=k1+deltak; setVp();" />
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <label for="slider2">角振動数 ω:</label>
+			  <input type="range" class="slider2" id="slider2" value="3" min="0.05" max="10" step="0.05" onChange="omega1=Number($('#slider2').val()); omega2=omega1+deltaomega; setVp();"/>
+			</div>
+		  </div>
+		</div>
+		<div class="ui-grid-a">
+		  <div class="ui-block-a">
+			<div data-role="fieldcontain">
+			  <label for="slider3">波数の差 Δk:</label>
+			  <input type="range" class="slider3" id="slider3" value="1" min="0" max="5" step="0.1" onChange="deltak=Number($('#slider3').val()); k2=k1+deltak; setVg();" />
+			</div>
+		  </div>
+		  <div class="ui-block-b">
+			<div data-role="fieldcontain">
+			  <label for="slider4">角振動数の差 Δω:</label>
+			  <input type="range" class="slider4" id="slider4" value="0.3" min="0" max="2" step="0.05" onChange="deltaomega=Number($('#slider4').val()); omega2=omega1+deltaomega; setVg();"/>
+			</div>
+		  </div>
+		</div>
+		<div>
+		  <span class="wave1"><span id="vp" class="vp">位相速度v<sub>p</sub>=0.2m/s</span></span>
+		  　<span class="wave2"><span id="vp2" class="vp2">波２の位相速度v<sub>p2</sub>=0.20625m/s</span></span>
+		  　<span class="waveG"><span id="vg" class="vg">群速度v<sub>g</sub>=0.3m/s</span></span>
+		</div>
+		<p class="setsumei">　↑にあるスライダーで、k,ω,Δk,Δωの大きさを変化させることができる。</p>
+		<fieldset data-role="controlgroup" data-type="horizontal">
+		  <legend>表示する波を選択</legend>
+			<input type="checkbox" name="checkboxOne" id="checkbox1_1" class="checkboxOne" value="" onchange="flg1=$('#checkbox1_1').prop('checked');" checked="true"/>
+			<label for="checkbox1_1" class="wave1">波１を表示</label>
+			<input type="checkbox" name="checkbox1" id="checkbox2_1" class="checkboxTwo" value="" onchange="flg2=$('#checkbox2_1').prop('checked');" checked="true"/>
+			<label for="checkbox2_1" class="wave2">波２を表示</label>
+			<input type="checkbox" name="checkbox2" id="checkboxG_1" class="checkboxG" value="" onchange="flgG=$('#checkboxG_1').prop('checked');" checked="true"/>
+			<label for="checkboxG_1" class="waveG">合成波を表示</label>
+			<input type="checkbox" id="checkbox3_1" class="checkboxThree" value="" onchange="flg3=$('#checkbox3_1').prop('checked');" checked="false"/>
+			<label for="checkbox3_1" class="wave3"><table cellpadding="2" cellspacing="0"><td>sin</td><td align="center"> (2k+Δk)x-(2ω+Δω)t<hr noshade="noshade" size="1">2</td></tr></table>を表示</label>
+			<input type="checkbox" id="checkbox4_1" class="checkboxFour" value="" onchange="flg4=$('#checkbox4_1').prop('checked');" checked="false"/>
+			<label for="checkbox4_1" class="wave4"><table cellpadding="2" cellspacing="0"><td>2cos</td><td align="center"> Δk x - Δω t<hr noshade="noshade" size="1">2</td></tr></table>を表示</label>
+		  
+		</fieldset>
+		<p class="setsumei">　「<span class="wave1">波１を表示</span>」「<span class="wave2">波２を表示</span>」…などのBOXをクリックすることで表示を切り替えられる（最初は全て表示）。↑</p>
+
+		<p>　他に、以下の様なことは試してみただろうか？</p>
+		<p class="setsumei">位相速度と群速度が同じになってしまうのはどんな時？？（どういう現象が起きてる？？）</p>
+		<p class="setsumei">Δk=0にしたらどうなる？？（群速度はどうなる？そしてそれはどういう現象？？）</p>
+		<p class="setsumei">Δω=0にしたらどうなる？？（群速度はどうなる？そしてそれはどういう現象？？）</p>
+		<p>　まだの人はやってみよう。</p>
+		<h3>　いろんな状況の場合で群速度と位相速度を試してみて欲しい。</h3>
+		  </div>
+	  <div data-role="footer" align="center">
+		<a href="#page3" data-icon="arrow-l">その３に戻る</a>		<a href="#page0" data-icon="back">最初に戻る</a>
+	  </div>
+
+	  <div data-role="footer" align="center">
+
+	  </div>
+	</div>
+  </body>
+</html>
+
